@@ -1,0 +1,14 @@
+<div class="field-tooltip toggle">
+    <span class="field-tooltip-action action-help"
+          tabindex="0"
+          data-toggle="dropdown"
+          data-bind="mageInit: {'dropdown':{'activeClass': '_active'}}"></span>
+
+    <div class="field-tooltip-content"
+         data-target="dropdown">
+        <span data-bind="text: tooltip.description"></span>
+        <!-- ko if: tooltip.image -->
+        <img data-bind="attr: {src: tooltip.image}">
+        <!-- /ko -->
+    </div>
+</div>

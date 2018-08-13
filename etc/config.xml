@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <ingenico>
+                <model>IngenicoFacade</model>
+            </ingenico>
+        </payment>
+        <ingenico_epayments>
+            <model>Netresearch\Epayments\Model\Payment\Ingenico</model>
+            <general>
+                <version>1.3.3</version>
+                <payment_action>authorize</payment_action>
+                <sort_order>10</sort_order>
+                <can_initialize>1</can_initialize>
+                <can_use_checkout>1</can_use_checkout>
+                <can_accept_payment>1</can_accept_payment>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_internal>0</can_use_internal>
+                <can_cancel>1</can_cancel>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+            </general>
+            <settings>
+                <hosted_checkout_subdomain>https://payment.</hosted_checkout_subdomain>
+                <log_all_requests>0</log_all_requests>
+                <log_all_requests_file>ingenico_epayments.log</log_all_requests_file>
+            </settings>
+            <checkout>
+                <inline_payments>0</inline_payments>
+            </checkout>
+            <captures>
+                <capture_mode>authorize</capture_mode>
+            </captures>
+            <payment_method_groups>
+                <TOKEN>Saved payment options</TOKEN>
+                <BANKTRANSFER>Bank transfer</BANKTRANSFER>
+                <CARD>Credit cards</CARD>
+                <CASH>Cash</CASH>
+                <DIRECTDEBIT>Direct debit</DIRECTDEBIT>
+                <EINVOICE>e-Invoice</EINVOICE>
+                <INVOICE>Invoice</INVOICE>
+                <REDIRECT>Redirect</REDIRECT>
+            </payment_method_groups>
+            <payment_statuses>
+                <account_verified><![CDATA[The account has been verified using a validation services like 0$ auth]]></account_verified>
+                <created><![CDATA[The transaction has been created. This is the initial state once a new payment is created.]]></created>
+                <in_progress><![CDATA[Payment status is unknown.]]></in_progress>
+                <redirected><![CDATA[The consumer has been redirected to a 3rd party to complete the authentication/payment]]></redirected>
+                <pending_payment><![CDATA[Instructions have been provided and we are now waiting for the money to come in]]></pending_payment>
+                <pending_capture><![CDATA[The transaction is waiting for you to request one or more captures of the funds]]></pending_capture>
+                <pending_fraud_approval><![CDATA[The transaction has been marked for manual review after an automatic fraud screening]]></pending_fraud_approval>
+                <pending_approval><![CDATA[The transaction is awaiting approval from you to proceed with the capturing of the funds]]></pending_approval>
+                <rejected><![CDATA[The transaction has been rejected]]></rejected>
+                <authorization_requested><![CDATA[We have requested an authorization against an asynchronous system and is awaiting its response]]></authorization_requested>
+                <capture_requested><![CDATA[The transaction is in the queue to be captured]]></capture_requested>
+                <captured><![CDATA[The transaction has been captured and we have received online confirmation]]></captured>
+                <paid><![CDATA[We have matched the incoming funds to the transaction]]></paid>
+                <cancelled><![CDATA[You have cancelled the transaction]]></cancelled>
+                <rejected_capture><![CDATA[We or one of our downstream acquirers/providers have rejected the capture request]]></rejected_capture>
+                <reversed><![CDATA[The transaction has been reversed]]></reversed>
+                <chargebacked><![CDATA[The transaction has been chargebacked]]></chargebacked>
+                <refunded><![CDATA[The transaction has been refunded]]></refunded>
+            </payment_statuses>
+            <fraud>
+                <email_template>fraud_email</email_template>
+            </fraud>
+        </ingenico_epayments>
+    </default>
+</config>

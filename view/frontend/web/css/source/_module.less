@@ -1,0 +1,37 @@
+#ingenico_groups_container {
+
+  max-width: 500px;
+
+  /**
+   * Payment products group
+   */
+  fieldset {
+    border: 2px solid grey;
+    padding: 1em;
+
+    /**
+     * Payment product label
+     */
+    .choice.field {
+      position: relative;
+      margin-bottom: 10px;
+      .label-image {
+        display: inline-block;
+        vertical-align: middle;
+        height: 40px !important;
+        width: 60px !important;
+        padding-right: 10px
+      }
+
+    }
+  }
+
+  /**
+   * Token group
+   */
+  .group-token {
+    .choice.field > .label {
+      font-size: 1.3em;
+    }
+  }
+}

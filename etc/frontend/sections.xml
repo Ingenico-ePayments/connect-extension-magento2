@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Customer:etc/sections.xsd">
+    <action name="rest/*/V1/carts/*/shipping-information">
+        <section name="connect_session"/>
+    </action>
+    <action name="rest/*/V1/guest-carts/*/shipping-information">
+        <section name="connect_session"/>
+    </action>
+    <action name="checkout/onepage/saveOrder">
+        <section name="connect_session"/>
+    </action>
+    <action name="customer/ajax/login">
+        <section name="connect_session"/>
+    </action>
+</config>

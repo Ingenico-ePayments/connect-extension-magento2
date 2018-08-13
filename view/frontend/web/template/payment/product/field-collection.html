@@ -1,0 +1,11 @@
+<!--
+/**
+ * Copyright © 2013-2017 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<div class="fields" data-bind="visible: containerVisible">
+    <each args="data: elems, as: 'element'">
+        <render if="hasTemplate()"/>
+    </each>
+</div>

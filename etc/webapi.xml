@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/epayments/paymentProducts" method="POST">
+        <service class="Netresearch\Epayments\Api\PaymentProductsInterface" method="getList"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/V1/epayments/session" method="POST">
+        <service class="Netresearch\Epayments\Api\SessionInterface" method="getSession"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+</routes>

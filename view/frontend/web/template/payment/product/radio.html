@@ -1,0 +1,16 @@
+<div class="choice field">
+    <input type="radio" class="radio"
+           data-bind="checkedValue: value, checked: checked, attr: { id: uid, disabled: disabled, name: inputName }, hasFocus: focused">
+
+    <label class="label" data-bind="checked: value, attr: { for: uid }">
+        <img class="label-image"
+             height="40"
+             width="60"
+             data-bind="attr: {src: logo}"/>
+        <span text="description"/>
+    </label>
+
+    <!-- ko if: notice -->
+    <div class="field-note" data-bind="attr: {id: noticeId}"><span data-bind="text: notice"></span></div>
+    <!-- /ko -->
+</div>
