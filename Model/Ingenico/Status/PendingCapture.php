@@ -6,24 +6,9 @@ use Ingenico\Connect\Sdk\Domain\Definitions\AbstractOrderStatus;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Netresearch\Epayments\Helper\Data;
-use Netresearch\Epayments\Model\Order\EmailManager;
 
 class PendingCapture implements HandlerInterface
 {
-    /**
-     * @var EmailManager
-     */
-    private $orderEMailManager;
-
-    /**
-     * PendingCapture constructor.
-     * @param EmailManager $orderEMailManager
-     */
-    public function __construct(EmailManager $orderEMailManager)
-    {
-        $this->orderEMailManager = $orderEMailManager;
-    }
-
     /**
      * @param OrderInterface|Order $order
      * @param AbstractOrderStatus|\Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment $ingenicoStatus
@@ -36,7 +21,5 @@ class PendingCapture implements HandlerInterface
 
         $payment->setIsTransactionClosed(false);
         $payment->registerAuthorizationNotification($amount);
-
-        $this->orderEMailManager->process($order, $ingenicoStatus->status);
     }
 }

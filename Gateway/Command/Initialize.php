@@ -62,8 +62,12 @@ class Initialize extends AbstractCommand implements CommandInterface
             }
 
             $stateObject = $commandSubject['stateObject'];
-            $stateObject->setState(Order::STATE_PENDING_PAYMENT);
-            $stateObject->setStatus(Order::STATE_PENDING_PAYMENT);
+            $stateObject->setState(
+                $order->getState() === Order::STATE_NEW ? Order::STATE_PENDING_PAYMENT : $order->getState()
+            );
+            $stateObject->setStatus(
+                $order->getStatus() === Order::STATE_NEW ? Order::STATE_PENDING_PAYMENT : $order->getStatus()
+            );
             $stateObject->setIsNotified(false);
         } catch (ResponseException $e) {
             $this->handleError($e);

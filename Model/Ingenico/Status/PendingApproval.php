@@ -7,25 +7,9 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Sales\Model\Order;
 use Netresearch\Epayments\Helper\Data;
-use Netresearch\Epayments\Model\Order\EmailManager;
 
 class PendingApproval implements HandlerInterface
 {
-
-    /**
-     * @var EmailManager
-     */
-    private $orderEMailManager;
-
-    /**
-     * PendingApproval constructor.
-     * @param EmailManager $orderEMailManager
-     */
-    public function __construct(EmailManager $orderEMailManager)
-    {
-        $this->orderEMailManager = $orderEMailManager;
-    }
-
     /**
      * @param OrderInterface $order
      * @param AbstractOrderStatus $ingenicoStatus
@@ -39,7 +23,5 @@ class PendingApproval implements HandlerInterface
 
         $payment->setIsTransactionClosed(false);
         $payment->registerAuthorizationNotification($amount);
-
-        $this->orderEMailManager->process($order, $ingenicoStatus->status);
     }
 }

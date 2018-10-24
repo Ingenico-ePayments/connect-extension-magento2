@@ -7,7 +7,6 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Netresearch\Epayments\Model\ConfigInterface;
 use Netresearch\Epayments\Model\Ingenico\StatusInterface;
-use Netresearch\Epayments\Model\Order\EmailManager;
 use Netresearch\Epayments\Model\StatusResponseManager;
 
 class Paid implements HandlerInterface
@@ -28,27 +27,20 @@ class Paid implements HandlerInterface
     private $statusResponseManager;
 
     /**
-     * @var EmailManager
-     */
-    private $orderEMailManager;
-
-    /**
      * Paid constructor.
+     *
      * @param CapturedFactory $capturedFactory
      * @param ConfigInterface $ePaymentsConfig
      * @param StatusResponseManager $statusResponseManager
-     * @param EmailManager $orderEMailManager
      */
     public function __construct(
         CapturedFactory $capturedFactory,
         ConfigInterface $ePaymentsConfig,
-        StatusResponseManager $statusResponseManager,
-        EmailManager $orderEMailManager
+        StatusResponseManager $statusResponseManager
     ) {
         $this->capturedFactory = $capturedFactory;
         $this->ePaymentsConfig = $ePaymentsConfig;
         $this->statusResponseManager = $statusResponseManager;
-        $this->orderEMailManager = $orderEMailManager;
     }
 
     /**
@@ -72,7 +64,5 @@ class Paid implements HandlerInterface
             $capturedHandler->resolveStatus($order, $ingenicoStatus);
         }
         $order->addStatusHistoryComment($this->ePaymentsConfig->getPaymentStatusInfo(StatusInterface::PAID));
-
-        $this->orderEMailManager->process($order, $ingenicoStatus->status);
     }
 }

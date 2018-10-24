@@ -89,7 +89,12 @@ class Service implements ServiceInterface
             $request = $this->getProductRequest($item);
 
             try {
-                $quote->addProduct($productList[$item->getProductId()], $request);
+                if (array_key_exists($item->getProductId(), $productList)) {
+                    $product = $productList[$item->getProductId()];
+                } else {
+                    $product = $item->getProduct();
+                }
+                $quote->addProduct($product, $request);
                 $productId = $item->getProductId();
             } catch (LocalizedException $e) {
                 $this->errors[] = $e->getMessage();

@@ -56,11 +56,6 @@ class Order implements OrderInterface
     private $dateTime;
 
     /**
-     * @var int
-     */
-    private $scopeId;
-
-    /**
      * @param ResolverInterface $resolver
      * @param SchedulerInterface $scheduler
      * @param HistoryManagerInterface $historyManager
@@ -95,14 +90,19 @@ class Order implements OrderInterface
      */
     public function process(\Magento\Sales\Model\Order $order)
     {
-        $this->scopeId = $order->getStoreId();
         $orderId = $order->getEntityId();
-        $paymentId = @unserialize($order->getAdditionalInformation())[Config::PAYMENT_ID_KEY];
-        $this->logger->info("--- orderId $orderId, paymentId $paymentId");
+        $paymentId = $this->readPaymentId($order);
+        if ($paymentId === '') {
+            $this->logger->info("--- Order $orderId skipped, no Ingenico Payment ID found.");
+
+            return;
+        }
+
+        $this->logger->info("--- Order $orderId with Ingenico Payment ID $paymentId");
 
         // skip order if it's not time to pull
         if (!$this->scheduler->timeForAttempt($order)) {
-            $this->logger->info("skipped, not a time yet");
+            $this->logger->info("Order $orderId skipped, not due yet");
 
             return;
         }
@@ -110,7 +110,7 @@ class Order implements OrderInterface
         try {
             // call ingenico
             /** @var \Ingenico\Connect\Sdk\Domain\Payment\PaymentResponse $response */
-            $response = $this->getIngenicoPayment($paymentId);
+            $response = $this->getIngenicoPayment($paymentId, $order->getStoreId());
 
             // update order status
             $this->logger->info("ingenico status is {$response->status}");
@@ -145,18 +145,37 @@ class Order implements OrderInterface
     }
 
     /**
-     * Api call to ingenico to get payment details
+     * Api call to Ingenico to get payment details
      *
-     * @param $ingenicoPaymentId
+     * @param string $ingenicoPaymentId
+     * @param string|int $scopeId
      * @return \Ingenico\Connect\Sdk\Domain\Payment\PaymentResponse
      */
-    private function getIngenicoPayment($ingenicoPaymentId)
+    private function getIngenicoPayment($ingenicoPaymentId, $scopeId)
     {
-        $response = $this->ingenicoClient->getIngenicoClient($this->scopeId)
-                                         ->merchant($this->config->getMerchantId($this->scopeId))
+        $response = $this->ingenicoClient->getIngenicoClient($scopeId)
+                                         ->merchant($this->config->getMerchantId($scopeId))
                                          ->payments()
                                          ->get($ingenicoPaymentId);
 
         return $response;
+    }
+
+    /**
+     * Extract AdditionalInformation JSON and try to read Ingenico Payment ID.
+     * Returns empty string on failure.
+     *
+     * @param \Magento\Sales\Model\Order $order
+     * @return string
+     */
+    private function readPaymentId(\Magento\Sales\Model\Order $order)
+    {
+        $paymentId = '';
+        $paymentData = json_decode($order->getAdditionalInformation(), true);
+        if (isset($paymentData[Config::PAYMENT_ID_KEY])) {
+            $paymentId = $paymentData[Config::PAYMENT_ID_KEY];
+        }
+
+        return $paymentId;
     }
 }

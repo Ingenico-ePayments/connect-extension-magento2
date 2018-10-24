@@ -14,6 +14,7 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment as OrderPayment;
 use Netresearch\Epayments\Model\Order\Creditmemo\Service;
+use Netresearch\Epayments\Model\Order\EmailManager;
 use Netresearch\Epayments\Model\StatusResponseManagerInterface;
 use Netresearch\Epayments\Model\Transaction\TransactionManager;
 
@@ -51,13 +52,20 @@ class Resolver implements ResolverInterface
     private $orderRepository;
 
     /**
+     * @var EmailManager
+     */
+    private $orderEmailManager;
+
+    /**
      * Resolver constructor.
+     *
      * @param PoolInterface $refundHandlerPool
      * @param PoolInterface $paymentHandlerPool
      * @param TransactionManager $transactionManager
      * @param StatusResponseManagerInterface $statusResponseManager
      * @param Service $creditMemoService
      * @param OrderRepositoryInterface $orderRepository
+     * @param EmailManager $orderEmailManager
      */
     public function __construct(
         PoolInterface $refundHandlerPool,
@@ -65,7 +73,8 @@ class Resolver implements ResolverInterface
         TransactionManager $transactionManager,
         StatusResponseManagerInterface $statusResponseManager,
         Service $creditMemoService,
-        OrderRepositoryInterface $orderRepository
+        OrderRepositoryInterface $orderRepository,
+        EmailManager $orderEmailManager
     ) {
         $this->refundHandlerPool = $refundHandlerPool;
         $this->paymentHandlerPool = $paymentHandlerPool;
@@ -73,6 +82,7 @@ class Resolver implements ResolverInterface
         $this->statusResponseManager = $statusResponseManager;
         $this->creditMemoService = $creditMemoService;
         $this->orderRepository = $orderRepository;
+        $this->orderEmailManager = $orderEmailManager;
     }
 
     /**
@@ -97,6 +107,8 @@ class Resolver implements ResolverInterface
 
         $statusHandler = $this->getStatusHandler($ingenicoStatus);
         $statusHandler->resolveStatus($order, $ingenicoStatus);
+
+        $this->orderEmailManager->process($order, $ingenicoStatus->status);
 
         $this->updatePayment($payment, $ingenicoStatus);
         if ($ingenicoStatus instanceof RefundResult) {

@@ -7,7 +7,6 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment;
 use Netresearch\Epayments\Helper\Data;
-use Netresearch\Epayments\Model\Order\EmailManager;
 use Netresearch\Epayments\Model\Order\EmailManagerFraud;
 
 class PendingFraudApproval implements HandlerInterface
@@ -16,22 +15,16 @@ class PendingFraudApproval implements HandlerInterface
      * @var EmailManagerFraud
      */
     private $fraudEmailManager;
-    /**
-     * @var EmailManager
-     */
-    private $orderEMailManager;
 
     /**
      * PendingFraudApproval constructor.
-     * @param EmailManager $emailManager
+     *
      * @param EmailManagerFraud $fraudEmailManager
      */
     public function __construct(
-        EmailManager $emailManager,
         EmailManagerFraud $fraudEmailManager
     ) {
         $this->fraudEmailManager = $fraudEmailManager;
-        $this->orderEMailManager = $emailManager;
     }
 
     /**
@@ -51,6 +44,5 @@ class PendingFraudApproval implements HandlerInterface
         $payment->registerAuthorizationNotification($amount);
 
         $this->fraudEmailManager->process($order);
-        $this->orderEMailManager->process($order, $ingenicoStatus->status);
     }
 }

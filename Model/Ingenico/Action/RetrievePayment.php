@@ -2,9 +2,13 @@
 
 namespace Netresearch\Epayments\Model\Ingenico\Action;
 
+use Ingenico\Connect\Sdk\Domain\Capture\Definitions\Capture;
+use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment as IngenicoPayment;
 use Ingenico\Connect\Sdk\Domain\Payment\PaymentResponse;
+use Ingenico\Connect\Sdk\Domain\Refund\Definitions\RefundResult;
 use Ingenico\Connect\Sdk\Domain\Refund\RefundResponse;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\TransactionInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
@@ -85,8 +89,7 @@ class RetrievePayment extends AbstractAction implements ActionInterface
         $ingenicoPaymentId = $payment->getAdditionalInformation(Config::PAYMENT_ID_KEY);
         if (!$ingenicoPaymentId) {
             try {
-                $ingenicoPaymentId = $this->getIdFromHostedCheckout($order);
-                $orderWasUpdated = true;
+                $orderWasUpdated = $this->updateHostedCheckoutStatus($order);
             } catch (\Exception $e) {
                 throw new LocalizedException(__('Order is not linked with Ingenico ePayments orders.'));
             }
@@ -121,7 +124,7 @@ class RetrievePayment extends AbstractAction implements ActionInterface
     /**
      * @param Payment $payment
      * @param TransactionInterface $transaction
-     * @return false|\Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment
+     * @return false|IngenicoPayment
      */
     private function getCurrentStatus($payment, $transaction)
     {
@@ -132,22 +135,22 @@ class RetrievePayment extends AbstractAction implements ActionInterface
 
     /**
      * @param Order $order
-     * @param $currentStatus
+     * @param IngenicoPayment|RefundResult|Capture$currentStatus
      * @return \Ingenico\Connect\Sdk\Domain\Capture\CaptureResponse|PaymentResponse|RefundResponse|null
      * @throws LocalizedException
      */
-    private function getUpdateStatus($order, $currentStatus)
+    private function getUpdateStatus(Order $order, $currentStatus)
     {
         $merchant = $this->ingenicoClient
             ->getIngenicoClient($order->getStoreId())
             ->merchant($this->ePaymentsConfig->getMerchantId($order->getStoreId()));
 
         $response = null;
-        if ($currentStatus instanceof \Ingenico\Connect\Sdk\Domain\Refund\Definitions\RefundResult) {
+        if ($currentStatus instanceof RefundResult) {
             $response = $merchant->refunds()->get($currentStatus->id);
-        } elseif ($currentStatus instanceof \Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment) {
+        } elseif ($currentStatus instanceof IngenicoPayment) {
             $response = $merchant->payments()->get($currentStatus->id);
-        } elseif ($currentStatus instanceof \Ingenico\Connect\Sdk\Domain\Capture\Definitions\Capture) {
+        } elseif ($currentStatus instanceof Capture) {
             $response = $merchant->captures()->get($currentStatus->id);
         } else {
             throw new LocalizedException(__('Can not pull update.'));
@@ -157,18 +160,18 @@ class RetrievePayment extends AbstractAction implements ActionInterface
     }
 
     /**
-     * Try to query the hosted checkout for the payment id
+     * Try to query the hosted checkout
      *
-     * @param Order $order
-     * @return string ingenicoPaymentId
+     * @param Order|OrderInterface $order
+     * @return bool
      * @throws \Exception
      */
-    private function getIdFromHostedCheckout($order)
+    private function updateHostedCheckoutStatus(Order $order)
     {
         $hostedCheckoutId = $order->getPayment()->getAdditionalInformation(Config::HOSTED_CHECKOUT_ID_KEY);
         $order = $this->getHostedCheckoutStatus->process($hostedCheckoutId);
         $ingenicoPaymentId = $order->getPayment()->getAdditionalInformation(Config::PAYMENT_ID_KEY);
 
-        return $ingenicoPaymentId;
+        return $ingenicoPaymentId !== null;
     }
 }

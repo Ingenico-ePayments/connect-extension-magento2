@@ -23,7 +23,7 @@ class RefundEventDataResolver implements EventDataResolverInterface
         $merchantOrderId = (int)$event->refund->refundOutput->references->merchantReference;
 
         if ($merchantOrderId <= 0) {
-            throw new \RuntimeException('Merchant order id value is missing in Event response.');
+            throw new \RuntimeException('Merchant order reference value is missing in Event response.');
         }
 
         return $merchantOrderId;

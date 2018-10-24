@@ -86,11 +86,13 @@ define([
         },
 
         initSelectData: function () {
-            this.options = {};
+            this.caption = this.field.displayHints.placeholderLabel;
+            this.options = [];
             for (let item of this.field.displayHints.formElement.valueMapping) {
-                this.caption = this.field.displayHints.placeholderLabel;
-                this.options.value = item.value;
-                this.options.label = item.displayName;
+                this.options.push({
+                    value: item.value,
+                    label: item.displayName
+                });
             }
         },
 

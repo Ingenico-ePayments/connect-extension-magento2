@@ -31,6 +31,7 @@ define(
             },
 
             currentBillingCountry: '',
+            currentBaseGrandTotal: 0,
 
             paymentProductGroups: productGroups.groups,
 
@@ -46,6 +47,7 @@ define(
             initialize: function () {
                 this._super();
                 this.currentBillingCountry = quote.billingAddress().countryId;
+                this.currentBaseGrandTotal = quote.totals()['base_grand_total'];
                 this.config.init(window.checkoutConfig.payment[this.getCode()]);
                 this.initLoader();
 
@@ -175,6 +177,14 @@ define(
                         productList.reload(this.messageContainer);
                     }
                 }.bind(this));
+
+                quote.totals.subscribe(function (totalsObject) {
+                    if (this.currentBaseGrandTotal !== totalsObject['base_grand_total']) {
+                        this.currentBaseGrandTotal = totalsObject['base_grand_total'];
+                        productList.reload(this.messageContainer);
+                    }
+                }.bind(this));
+
 
                 /**
                  * Refresh product list

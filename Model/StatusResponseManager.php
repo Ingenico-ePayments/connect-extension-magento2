@@ -113,6 +113,9 @@ class StatusResponseManager implements StatusResponseManagerInterface
                 $this->getVisibleInfo($orderStatus)
             );
         }
+
+        $payment->setAdditionalInformation(Config::PAYMENT_STATUS_KEY, $orderStatus->status);
+        $payment->setAdditionalInformation(Config::PAYMENT_STATUS_CODE_KEY, $orderStatus->statusOutput->statusCode);
     }
 
     /**

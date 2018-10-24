@@ -9,7 +9,7 @@ use Ingenico\Connect\Sdk\Domain\Payment\Definitions\ContactDetailsFactory;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\CustomerFactory;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\PersonalInformationFactory;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\PersonalNameFactory;
-
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Sales\Model\Order;
 
 /**
@@ -57,6 +57,11 @@ class CustomerBuilder
     private $addressFactory;
 
     /**
+     * @var TimezoneInterface
+     */
+    private $timezone;
+
+    /**
      * CustomerBuilder constructor.
      *
      * @param CustomerFactory $customerFactory
@@ -66,6 +71,7 @@ class CustomerBuilder
      * @param PersonalNameFactory $personalNameFactory
      * @param AddressPersonalFactory $addressPersonalFactory
      * @param AddressFactory $addressFactory
+     * @param TimezoneInterface $timezone
      */
     public function __construct(
         CustomerFactory $customerFactory,
@@ -74,7 +80,8 @@ class CustomerBuilder
         ContactDetailsFactory $contactDetailsFactory,
         PersonalNameFactory $personalNameFactory,
         AddressPersonalFactory $addressPersonalFactory,
-        AddressFactory $addressFactory
+        AddressFactory $addressFactory,
+        TimezoneInterface $timezone
     ) {
         $this->customerFactory = $customerFactory;
         $this->personalInformationFactory = $personalInformationFactory;
@@ -83,6 +90,7 @@ class CustomerBuilder
         $this->personalNameFactory = $personalNameFactory;
         $this->addressPersonalFactory = $addressPersonalFactory;
         $this->addressFactory = $addressFactory;
+        $this->timezone = $timezone;
     }
 
     /**
@@ -133,9 +141,26 @@ class CustomerBuilder
 
         $personalInformation->name = $personalName;
         $personalInformation->gender = $this->getCustomerGender($order);
-        $personalInformation->dateOfBirth = $order->getCustomerDob();
+        $personalInformation->dateOfBirth = $this->getDateOfBirth($order);
 
         return $personalInformation;
+    }
+
+    /**
+     * Extracts the date of birth in the API required format YYYYMMDD
+     *
+     * @param Order $order
+     * @return string
+     */
+    private function getDateOfBirth(Order $order)
+    {
+        $dateOfBirth = '';
+        if ($order->getCustomerDob()) {
+            $doBObject = $this->timezone->date($order->getCustomerDob());
+            $dateOfBirth = $doBObject->format('Ymd');
+        }
+
+        return $dateOfBirth;
     }
 
     /**
@@ -209,6 +234,7 @@ class CustomerBuilder
 
     /**
      * Extract binary gender as string representation
+     *
      * @param Order $order
      * @return string
      */

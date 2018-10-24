@@ -4,8 +4,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.4.4] -2018-10-05
 
-## [Unreleased] - 2018-06/2018-07
+### Fixed
+- Automatic Order Update does not retrieve payment ID correctly
+- Payment methods not reloading when removing coupon in checkout (EE)
+- Fatal error during order placement in Mage 2 EE
+- Webhooks not recognizing test requests and using wrong order reference
+- Order in status "pending payment" when it should be "processing"
+- Invoice number not present in invoice mail in direct capture mode
+- Payment update mails not respecting the order scope
+- Multiple payment update mails sent for the same payment status
+
+## [1.4.3] - 2018-09-12
+
+### Fixed
+- Inline card payments that result in a redirect will now be handled correctly
+
+### Changed
+- Extension copyright now lies with Ingenico eCommerce Solutions Bvba
+
+## [1.4.2] - 2018-08-27
+
+### Added
+- automatically send invoice email after it is marked as paid
+
+### Changed
+- extension is now licensed under MIT (see LICENSE.txt)
+
+### Fixed
+- fixed issue with refilling carts where product was not loaded properly
+- corrected formatting for customer date of birth
+
+## [1.4.1] - 2018-08-06
+
+### Fixed
+- restored compatibility with Magento 2.1
+
+## [1.4.0] - 2018-08-02
+
 ### Added
 - automatic configuration validation against API when saving changed account settings
 
@@ -24,6 +61,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - invoice cancellation not working properly
 - customer gender not transmitted as string
 - incompatibility with CheckoutAgreements core extension
+- issue with new order email being sent upon a received canceled status
 
 ### Security
 
@@ -73,7 +111,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Initial release 
 
-[Unreleased]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.3.1...develop
+[Unreleased]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.4.4...develop
+[1.4.4]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.4.3...1.4.4
+[1.4.3]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.4.2...1.4.3
+[1.4.2]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.4.1...1.4.2
+[1.4.1]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.4.0...1.4.1
+[1.4.0]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.3.1...1.4.0
 [1.3.1]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.3.0...1.3.1
 [1.3.0]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.2.0...1.3.0
 [1.2.0]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.1.0...1.2.0

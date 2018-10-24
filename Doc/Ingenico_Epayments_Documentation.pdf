@@ -98,10 +98,10 @@ endobj
 << /Border [ 0 0 0 ] /Contents () /Dest [ 96 0 R /XYZ 62.69291 554.3543 0 ] /Rect [ 527.0227 516.1043 532.5827 528.1043 ] /Subtype /Link /Type /Annot >>
 endobj
 31 0 obj
-<< /Border [ 0 0 0 ] /Contents () /Dest [ 96 0 R /XYZ 62.69291 258.1543 0 ] /Rect [ 102.6929 497.3543 326.1129 509.3543 ] /Subtype /Link /Type /Annot >>
+<< /Border [ 0 0 0 ] /Contents () /Dest [ 96 0 R /XYZ 62.69291 247.3543 0 ] /Rect [ 102.6929 497.3543 336.6729 509.3543 ] /Subtype /Link /Type /Annot >>
 endobj
 32 0 obj
-<< /Border [ 0 0 0 ] /Contents () /Dest [ 96 0 R /XYZ 62.69291 258.1543 0 ] /Rect [ 527.0227 498.1043 532.5827 510.1043 ] /Subtype /Link /Type /Annot >>
+<< /Border [ 0 0 0 ] /Contents () /Dest [ 96 0 R /XYZ 62.69291 247.3543 0 ] /Rect [ 527.0227 498.1043 532.5827 510.1043 ] /Subtype /Link /Type /Annot >>
 endobj
 33 0 obj
 << /Border [ 0 0 0 ] /Contents () /Dest [ 102 0 R /XYZ 62.69291 759.3543 0 ] /Rect [ 82.69291 479.3543 197.7529 491.3543 ] /Subtype /Link /Type /Annot >>
@@ -301,14 +301,14 @@ endobj
   /Trans <<  >> /Type /Page >>
 endobj
 95 0 obj
-<< /Border [ 0 0 0 ] /Contents () /Dest [ 102 0 R /XYZ 62.69291 762.3543 0 ] /Rect [ 184.6229 281.1543 277.4429 293.1543 ] /Subtype /Link /Type /Annot >>
+<< /Border [ 0 0 0 ] /Contents () /Dest [ 102 0 R /XYZ 62.69291 762.3543 0 ] /Rect [ 184.6229 270.3543 277.4429 282.3543 ] /Subtype /Link /Type /Annot >>
 endobj
 96 0 obj
 << /Annots [ 95 0 R ] /Contents 243 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 237 0 R /Resources << /Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ] /XObject << /FormXob.42d549c963f6d9c3260c9bec50c6f691 4 0 R >> >> /Rotate 0 
   /Trans <<  >> /Type /Page >>
 endobj
 97 0 obj
-<< /Border [ 0 0 0 ] /Contents () /Dest [ 102 0 R /XYZ 62.69291 762.3543 0 ] /Rect [ 184.6229 621.1543 277.4429 633.1543 ] /Subtype /Link /Type /Annot >>
+<< /Border [ 0 0 0 ] /Contents () /Dest [ 102 0 R /XYZ 62.69291 762.3543 0 ] /Rect [ 184.6229 654.3543 277.4429 666.3543 ] /Subtype /Link /Type /Annot >>
 endobj
 98 0 obj
 << /Annots [ 97 0 R ] /Contents 244 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 237 0 R /Resources << /Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ] /XObject << /FormXob.42d549c963f6d9c3260c9bec50c6f691 4 0 R >> >> /Rotate 0 
@@ -724,7 +724,7 @@ endobj
 << /Outlines 196 0 R /PageLabels 273 0 R /PageMode /UseNone /Pages 237 0 R /Type /Catalog >>
 endobj
 195 0 obj
-<< /Author () /CreationDate (D:20180629120054+00'00') /Creator (\(unspecified\)) /Keywords () /ModDate (D:20180629120054+00'00') /Producer (ReportLab PDF Library - www.reportlab.com) 
+<< /Author () /CreationDate (D:20181011110944+00'00') /Creator (\(unspecified\)) /Keywords () /ModDate (D:20181011110944+00'00') /Producer (ReportLab PDF Library - www.reportlab.com) 
   /Subject (\(unspecified\)) /Title (Ingenico ePayments \(Connect platform\) for Magento\256 2) /Trapped /False >>
 endobj
 196 0 obj
@@ -771,7 +771,7 @@ endobj
 << /Dest [ 96 0 R /XYZ 62.69291 554.3543 0 ] /Next 209 0 R /Parent 207 0 R /Title (\376\377\0003\000.\0002\000.\0001\000\240\000\240\000\240\000I\000n\000s\000t\000a\000l\000l\000a\000t\000i\000o\000n\000 \000f\000r\000o\000m\000 \000p\000a\000c\000k\000a\000g\000e\000 \000u\000s\000i\000n\000g\000 \000C\000o\000m\000p\000o\000s\000e\000r) >>
 endobj
 209 0 obj
-<< /Dest [ 96 0 R /XYZ 62.69291 258.1543 0 ] /Parent 207 0 R /Prev 208 0 R /Title (\376\377\0003\000.\0002\000.\0002\000\240\000\240\000\240\000I\000n\000s\000t\000a\000l\000l\000a\000t\000i\000o\000n\000 \000f\000r\000o\000m\000 \000r\000e\000p\000o\000s\000i\000t\000o\000r\000y\000 \000u\000s\000i\000n\000g\000 \000C\000o\000m\000p\000o\000s\000e\000r) >>
+<< /Dest [ 96 0 R /XYZ 62.69291 247.3543 0 ] /Parent 207 0 R /Prev 208 0 R /Title (\376\377\0003\000.\0002\000.\0002\000\240\000\240\000\240\000I\000n\000s\000t\000a\000l\000l\000a\000t\000i\000o\000n\000 \000f\000r\000o\000m\000 \000M\000a\000r\000k\000e\000t\000p\000l\000a\000c\000e\000 \000u\000s\000i\000n\000g\000 \000C\000o\000m\000p\000o\000s\000e\000r) >>
 endobj
 210 0 obj
 << /Count 10 /Dest [ 102 0 R /XYZ 62.69291 759.3543 0 ] /First 211 0 R /Last 220 0 R /Parent 205 0 R /Prev 207 0 R 
@@ -900,7 +900,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -922,7 +922,7 @@ Q
 endstream
 endobj
 239 0 obj
-<< /Length 10923 >>
+<< /Length 10924 >>
 stream
 1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
 q
@@ -1106,7 +1106,7 @@ Q
 q
 1 0 0 1 0 381 cm
 q
-BT 1 0 0 1 40 2 Tm 12 TL /F1 10 Tf .129412 .388235 .556863 rg (3.2.2   Installation from repository using Composer) Tj T* ET
+BT 1 0 0 1 40 2 Tm 12 TL /F1 10 Tf .129412 .388235 .556863 rg (3.2.2   Installation from Marketplace using Composer) Tj T* ET
 Q
 Q
 q
@@ -1428,7 +1428,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -1561,7 +1561,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -1793,7 +1793,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -1974,7 +1974,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -1996,7 +1996,7 @@ Q
 endstream
 endobj
 243 0 obj
-<< /Length 6796 >>
+<< /Length 6679 >>
 stream
 1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
 q
@@ -2129,34 +2129,35 @@ q
 1 0 0 1 62.69291 415.3543 cm
 Q
 q
-1 0 0 1 62.69291 358.1543 cm
-q
-q
-1 0 0 1 0 0 cm
-q
-1 0 0 1 6.6 6.6 cm
-q
-.662745 .662745 .662745 RG
-.5 w
-.945098 .945098 .945098 rg
-n -6 -6 468.6898 48 re B*
-Q
+1 0 0 1 62.69291 399.3543 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 28 Tm /F3 8 Tf 12 TL (composer config repositories.epayments artifact /path/to/folder/with/zip) Tj T* (composer require ingenico/module-epayments-m2) Tj T* (composer update) Tj T* ET
-Q
-Q
-Q
+BT 1 0 0 1 0 2 Tm /F2 10 Tf 12 TL (::) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 350.1543 cm
+1 0 0 1 62.69291 357.3543 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+BT 1 0 0 1 20 5 Tm  T* ET
+q
+1 0 0 1 40 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 26 Tm /F1 10 Tf 18 TL 6.956627 Tw (composer config repository.epayments artifact /path/to/folder/with/zip composer require) Tj T* 0 Tw (nrepayments/module-epayments-m2 composer update) Tj T* ET
+Q
 Q
 q
-1 0 0 1 62.69291 350.1543 cm
+Q
 Q
 q
-1 0 0 1 62.69291 332.1543 cm
+1 0 0 1 62.69291 357.3543 cm
+Q
+q
+1 0 0 1 62.69291 357.3543 cm
+Q
+q
+1 0 0 1 62.69291 339.3543 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -2177,10 +2178,33 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 332.1543 cm
+1 0 0 1 62.69291 339.3543 cm
 Q
 q
-1 0 0 1 62.69291 314.1543 cm
+1 0 0 1 62.69291 321.3543 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 8 Tm /F1 10 Tf 18 TL 10.5 0 Td (\177) Tj T* -10.5 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 3 cm
+q
+BT 1 0 0 1 0 2 Tm 12 TL /F2 10 Tf 0 0 0 rg (Important: ) Tj /F1 10 Tf (the path in the above command is absolute, i.e. starting at the server \(Linux\) root.) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 321.3543 cm
+Q
+q
+1 0 0 1 62.69291 303.3543 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -2201,10 +2225,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 314.1543 cm
+1 0 0 1 62.69291 303.3543 cm
 Q
 q
-1 0 0 1 62.69291 296.1543 cm
+1 0 0 1 62.69291 285.3543 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -2225,10 +2249,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 296.1543 cm
+1 0 0 1 62.69291 285.3543 cm
 Q
 q
-1 0 0 1 62.69291 278.1543 cm
+1 0 0 1 62.69291 267.3543 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -2248,81 +2272,26 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 278.1543 cm
+1 0 0 1 62.69291 267.3543 cm
 Q
 q
-1 0 0 1 62.69291 243.1543 cm
+1 0 0 1 62.69291 232.3543 cm
 q
-BT 1 0 0 1 0 2.5 Tm 15 TL /F2 12.5 Tf .388235 .388235 .388235 rg (3.2.2   Installation from repository using Composer) Tj T* ET
-Q
-Q
-q
-1 0 0 1 62.69291 197.1543 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 26 Tm /F1 10 Tf 18 TL .817209 Tw (You can get the module from the public repository and install it with Composer. The module files will be) Tj T* 0 Tw (downloaded from the public repository during the installation.) Tj T* ET
+BT 1 0 0 1 0 2.5 Tm 15 TL /F2 12.5 Tf .388235 .388235 .388235 rg (3.2.2   Installation from Marketplace using Composer) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 173.1543 cm
+1 0 0 1 62.69291 186.3543 cm
 q
 0 0 0 rg
-BT 1 0 0 1 0 8 Tm /F1 10 Tf 18 TL (Follow these steps:) Tj T* ET
+BT 1 0 0 1 0 26 Tm /F1 10 Tf 18 TL .90936 Tw (You can get the module from the Magento\256 Marketplace and install it with Composer. The module files) Tj T* 0 Tw (will be downloaded from the public repository during the installation.) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 173.1543 cm
-Q
+1 0 0 1 62.69291 144.3543 cm
 q
-1 0 0 1 62.69291 173.1543 cm
+BT 1 0 0 1 0 26 Tm 55.96395 Tw 18 TL /F1 10 Tf 0 0 0 rg (Follow the instructions on the ) Tj 1 0 0 rg (`Marketplace) Tj T* 0 Tw (documentation) Tj (<) Tj (http://docs.magento.com/marketplace/user_guide/quick-tour/install-extension.html) Tj (>) Tj (`_) Tj 0 0 0 rg (.) Tj T* ET
 Q
-q
-1 0 0 1 62.69291 155.1543 cm
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 6 -3 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 8 Tm /F1 10 Tf 18 TL 10.5 0 Td (\177) Tj T* -10.5 0 Td ET
-Q
-Q
-q
-1 0 0 1 23 3 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (On the command line, navigate into the root folder of your Magento\256 2 installation.) Tj T* ET
-Q
-Q
-q
-Q
-Q
-q
-1 0 0 1 62.69291 155.1543 cm
-Q
-q
-1 0 0 1 62.69291 137.1543 cm
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 6 -3 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 8 Tm /F1 10 Tf 18 TL 10.5 0 Td (\177) Tj T* -10.5 0 Td ET
-Q
-Q
-q
-1 0 0 1 23 3 cm
-q
-0 0 0 rg
-BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Execute these commands:) Tj T* ET
-Q
-Q
-q
-Q
-Q
-q
-1 0 0 1 62.69291 137.1543 cm
 Q
 q
 1 0 0 1 411.0236 779.5276 cm
@@ -2338,7 +2307,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -2360,38 +2329,23 @@ Q
 endstream
 endobj
 244 0 obj
-<< /Length 2612 >>
+<< /Length 2515 >>
 stream
 1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
 q
-1 0 0 1 62.69291 698.1543 cm
+1 0 0 1 62.69291 723.3543 cm
 q
-q
-1 0 0 1 0 0 cm
-q
-1 0 0 1 6.6 6.6 cm
-q
-.662745 .662745 .662745 RG
-.5 w
-.945098 .945098 .945098 rg
-n -6 -6 468.6898 60 re B*
-Q
-q
-0 0 0 rg
-BT 1 0 0 1 0 40 Tm /F3 8 Tf 12 TL (composer config repositories.epayments vcs \\) Tj T* (git@github.com:netresearch/ingenico-module-epayments-m2.git) Tj T* (composer require ingenico/module-epayments-m2) Tj T* (composer update) Tj T* ET
-Q
-Q
-Q
+BT 1 0 0 1 0 26 Tm 5.46686 Tw 18 TL /F1 10 Tf 0 0 0 rg (If you have access to the CLI of your installation, you can also use the steps described) Tj T* 0 Tw 1 0 0 rg (`here) Tj (<) Tj (https://devdocs.magento.com/guides/v2.2/comp-mgr/install-extensions.html) Tj (>) Tj (`_) Tj 0 0 0 rg (.) Tj T* ET
 Q
 Q
 q
-1 0 0 1 62.69291 690.1543 cm
+1 0 0 1 62.69291 723.3543 cm
 Q
 q
-1 0 0 1 62.69291 690.1543 cm
+1 0 0 1 62.69291 723.3543 cm
 Q
 q
-1 0 0 1 62.69291 672.1543 cm
+1 0 0 1 62.69291 705.3543 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -2412,10 +2366,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 672.1543 cm
+1 0 0 1 62.69291 705.3543 cm
 Q
 q
-1 0 0 1 62.69291 654.1543 cm
+1 0 0 1 62.69291 687.3543 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -2436,10 +2390,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 654.1543 cm
+1 0 0 1 62.69291 687.3543 cm
 Q
 q
-1 0 0 1 62.69291 636.1543 cm
+1 0 0 1 62.69291 669.3543 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -2460,10 +2414,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 636.1543 cm
+1 0 0 1 62.69291 669.3543 cm
 Q
 q
-1 0 0 1 62.69291 618.1543 cm
+1 0 0 1 62.69291 651.3543 cm
 0 0 0 rg
 BT /F1 10 Tf 12 TL ET
 q
@@ -2483,10 +2437,10 @@ q
 Q
 Q
 q
-1 0 0 1 62.69291 618.1543 cm
+1 0 0 1 62.69291 651.3543 cm
 Q
 q
-1 0 0 1 62.69291 618.1543 cm
+1 0 0 1 62.69291 651.3543 cm
 Q
 q
 1 0 0 1 411.0236 779.5276 cm
@@ -2502,7 +2456,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -2653,7 +2607,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -2757,7 +2711,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -2907,7 +2861,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -3020,7 +2974,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -3107,7 +3061,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -3162,7 +3116,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -3217,7 +3171,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -3279,7 +3233,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -3390,7 +3344,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -3495,7 +3449,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -3576,7 +3530,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -3651,7 +3605,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -3718,7 +3672,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -3811,7 +3765,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -3939,7 +3893,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -4190,7 +4144,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -4266,7 +4220,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -4486,7 +4440,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -4541,7 +4495,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -4652,7 +4606,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -4816,7 +4770,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -4996,7 +4950,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -5044,7 +4998,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -5237,7 +5191,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -5298,7 +5252,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -5370,7 +5324,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -5443,7 +5397,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -5561,7 +5515,7 @@ BT /F1 10 Tf 12 TL ET
 q
 1 0 0 1 6 9 cm
 q
-BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-06-29) Tj T* ET
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Last updated: 2018-10-11) Tj T* ET
 Q
 Q
 q
@@ -5908,110 +5862,110 @@ xref
 0001482237 00000 n
 0001482548 00000 n
 0001482913 00000 n
-0001483293 00000 n
-0001483592 00000 n
-0001483838 00000 n
-0001484098 00000 n
-0001484358 00000 n
-0001484623 00000 n
-0001484843 00000 n
-0001485173 00000 n
-0001485443 00000 n
-0001485783 00000 n
-0001486118 00000 n
-0001486469 00000 n
-0001486777 00000 n
-0001487045 00000 n
-0001487286 00000 n
-0001487588 00000 n
-0001487900 00000 n
-0001488131 00000 n
-0001488469 00000 n
-0001488750 00000 n
-0001488990 00000 n
-0001489240 00000 n
-0001489506 00000 n
-0001489846 00000 n
-0001490109 00000 n
-0001490400 00000 n
-0001490640 00000 n
-0001490881 00000 n
-0001491224 00000 n
-0001492299 00000 n
-0001503281 00000 n
-0001505774 00000 n
-0001509605 00000 n
-0001514144 00000 n
-0001520998 00000 n
-0001523668 00000 n
-0001527761 00000 n
-0001530032 00000 n
-0001533125 00000 n
-0001535917 00000 n
-0001538106 00000 n
-0001539350 00000 n
-0001540485 00000 n
-0001541842 00000 n
-0001544271 00000 n
-0001546321 00000 n
-0001548232 00000 n
-0001549889 00000 n
-0001551411 00000 n
-0001553756 00000 n
-0001557571 00000 n
-0001562959 00000 n
-0001564452 00000 n
-0001568825 00000 n
-0001569961 00000 n
-0001572689 00000 n
-0001575976 00000 n
-0001580984 00000 n
-0001582032 00000 n
-0001585723 00000 n
-0001587026 00000 n
-0001588653 00000 n
-0001590568 00000 n
-0001593229 00000 n
-0001593664 00000 n
-0001593702 00000 n
-0001593740 00000 n
-0001593778 00000 n
-0001593816 00000 n
-0001593854 00000 n
-0001593892 00000 n
-0001593930 00000 n
-0001593968 00000 n
-0001594006 00000 n
-0001594045 00000 n
-0001594084 00000 n
-0001594123 00000 n
-0001594162 00000 n
-0001594201 00000 n
-0001594240 00000 n
-0001594279 00000 n
-0001594318 00000 n
-0001594357 00000 n
-0001594396 00000 n
-0001594435 00000 n
-0001594474 00000 n
-0001594513 00000 n
-0001594552 00000 n
-0001594591 00000 n
-0001594630 00000 n
-0001594669 00000 n
-0001594708 00000 n
-0001594747 00000 n
-0001594786 00000 n
-0001594825 00000 n
-0001594864 00000 n
-0001594903 00000 n
-0001594942 00000 n
-0001594981 00000 n
+0001483298 00000 n
+0001483597 00000 n
+0001483843 00000 n
+0001484103 00000 n
+0001484363 00000 n
+0001484628 00000 n
+0001484848 00000 n
+0001485178 00000 n
+0001485448 00000 n
+0001485788 00000 n
+0001486123 00000 n
+0001486474 00000 n
+0001486782 00000 n
+0001487050 00000 n
+0001487291 00000 n
+0001487593 00000 n
+0001487905 00000 n
+0001488136 00000 n
+0001488474 00000 n
+0001488755 00000 n
+0001488995 00000 n
+0001489245 00000 n
+0001489511 00000 n
+0001489851 00000 n
+0001490114 00000 n
+0001490405 00000 n
+0001490645 00000 n
+0001490886 00000 n
+0001491229 00000 n
+0001492304 00000 n
+0001503287 00000 n
+0001505780 00000 n
+0001509611 00000 n
+0001514150 00000 n
+0001520887 00000 n
+0001523460 00000 n
+0001527553 00000 n
+0001529824 00000 n
+0001532917 00000 n
+0001535709 00000 n
+0001537898 00000 n
+0001539142 00000 n
+0001540277 00000 n
+0001541634 00000 n
+0001544063 00000 n
+0001546113 00000 n
+0001548024 00000 n
+0001549681 00000 n
+0001551203 00000 n
+0001553548 00000 n
+0001557363 00000 n
+0001562751 00000 n
+0001564244 00000 n
+0001568617 00000 n
+0001569753 00000 n
+0001572481 00000 n
+0001575768 00000 n
+0001580776 00000 n
+0001581824 00000 n
+0001585515 00000 n
+0001586818 00000 n
+0001588445 00000 n
+0001590360 00000 n
+0001593021 00000 n
+0001593456 00000 n
+0001593494 00000 n
+0001593532 00000 n
+0001593570 00000 n
+0001593608 00000 n
+0001593646 00000 n
+0001593684 00000 n
+0001593722 00000 n
+0001593760 00000 n
+0001593798 00000 n
+0001593837 00000 n
+0001593876 00000 n
+0001593915 00000 n
+0001593954 00000 n
+0001593993 00000 n
+0001594032 00000 n
+0001594071 00000 n
+0001594110 00000 n
+0001594149 00000 n
+0001594188 00000 n
+0001594227 00000 n
+0001594266 00000 n
+0001594305 00000 n
+0001594344 00000 n
+0001594383 00000 n
+0001594422 00000 n
+0001594461 00000 n
+0001594500 00000 n
+0001594539 00000 n
+0001594578 00000 n
+0001594617 00000 n
+0001594656 00000 n
+0001594695 00000 n
+0001594734 00000 n
+0001594773 00000 n
 trailer
 << /ID 
  % ReportLab generated PDF document -- digest (http://www.reportlab.com)
- [(\360\262?\250k\027^\013\375@\320i\016\035t\233) (\360\262?\250k\027^\013\375@\320i\016\035t\233)]
+ [(\023\016\341Z\022<\001\312X\270\232\312\276\267\373\222) (\023\016\341Z\022<\001\312X\270\232\312\276\267\373\222)]
  /Info 195 0 R /Root 194 0 R /Size 309 >>
 startxref
-1595020
+1594812
 %%EOF

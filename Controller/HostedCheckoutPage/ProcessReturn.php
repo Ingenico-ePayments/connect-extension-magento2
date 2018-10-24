@@ -7,6 +7,7 @@ use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Exception\NotFoundException;
+use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Sales\Model\Order;
 use Netresearch\Epayments\Model\Cart\ServiceInterface;
 use Netresearch\Epayments\Model\Config;
@@ -16,7 +17,7 @@ use Psr\Log\LoggerInterface;
 
 class ProcessReturn extends Action
 {
-    /** @var Session */
+    /** @var SessionManagerInterface|Session */
     private $checkoutSession;
 
     /** @var GetHostedCheckoutStatus */
@@ -33,8 +34,9 @@ class ProcessReturn extends Action
 
     /**
      * ProcessReturn constructor.
+     *
      * @param Context $context
-     * @param Session $checkoutSession
+     * @param SessionManagerInterface $checkoutSession
      * @param GetHostedCheckoutStatus $checkoutStatus
      * @param ConfigInterface $config
      * @param LoggerInterface $logger
@@ -42,7 +44,7 @@ class ProcessReturn extends Action
      */
     public function __construct(
         Context $context,
-        Session $checkoutSession,
+        SessionManagerInterface $checkoutSession,
         GetHostedCheckoutStatus $checkoutStatus,
         ConfigInterface $config,
         LoggerInterface $logger,
@@ -72,18 +74,14 @@ class ProcessReturn extends Action
             $transactionStatus = $order->getPayment()->getAdditionalInformation(Config::PAYMENT_STATUS_KEY);
             /** @var string $info */
             $info = $this->ePaymentsConfig->getPaymentStatusInfo(mb_strtolower($transactionStatus));
-            if ($info) {
-                $this->messageManager->addSuccessMessage(__('Payment status:') . " $info");
-            }
+            $this->messageManager->addSuccessMessage(__('Payment status:') . ' ' . ($info ?: 'Unknown status'));
 
             return $this->redirect('checkout/onepage/success');
         } catch (\Exception $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
             $this->logger->error($e->getMessage());
-            $order = $this->checkoutSession->getLastRealOrder();
-            if (isset($order)) {
-                $this->repopuplateCart($order);
-            }
+            $this->refillCart();
+
             return $this->redirect('checkout/cart');
         }
     }
@@ -112,13 +110,16 @@ class ProcessReturn extends Action
     {
         $hostedCheckoutId = $this->getRequest()->getParam('hostedCheckoutId', false);
 
-        if (!$hostedCheckoutId && $this->checkoutSession->getLastRealOrder()->getPayment() === null) {
-            throw new NotFoundException(__('Could not retrieve payment status.'));
-        } else {
+        if ($hostedCheckoutId === false && $this->checkoutSession->getLastRealOrder()->getPayment() !== null) {
             $hostedCheckoutId = $this->checkoutSession
                 ->getLastRealOrder()
                 ->getPayment()
                 ->getAdditionalInformation(Config::HOSTED_CHECKOUT_ID_KEY);
+        }
+
+        // $hostedCheckoutId can be false or null in error case
+        if (!$hostedCheckoutId) {
+            throw new NotFoundException(__('Could not retrieve payment status.'));
         }
 
         return $hostedCheckoutId;
@@ -135,6 +136,17 @@ class ProcessReturn extends Action
                 $this->messageManager->addErrorMessage($errorMessage, 'refill_cart');
                 $this->logger->error($errorMessage);
             }
+        }
+    }
+
+    /**
+     * Refill cart
+     */
+    private function refillCart()
+    {
+        $order = $this->checkoutSession->getLastRealOrder();
+        if (isset($order)) {
+            $this->repopuplateCart($order);
         }
     }
 }

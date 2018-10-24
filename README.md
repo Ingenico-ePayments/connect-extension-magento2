@@ -9,15 +9,11 @@ Compatibility
 Installation Instructions
 -------------------------
 
-##### Install module 
+##### Purchase via Marketplace
 
-Add repository to your `composer.json` by running the following command: 
+Find and purchase the product via Magento Marketplace
 
-    composer config repositories.ingenico vcs git@github.com:netresearch/ingenico-module-epayments-m2.git
-    
-Add required module:
-
-    composer require ingenico/module-epayments-m2
+Run `composer require nrepayments/module-epayments-m2` to install the extension.
 
 ##### Configure module 
 1. In magento root dir run command **php bin/magento setup:upgrade** 
@@ -59,9 +55,9 @@ Netresearch GmbH &amp; Co. KG -
 
 Licence
 -------
-[OSL - Open Software Licence 3.0](http://opensource.org/licenses/osl-3.0.php)
+[MIT](https://opensource.org/licenses/MIT)
 
 Copyright
 ---------
-(c) 2018 Netresearch GmbH & Co. KG
+(c) 2018 Ingenico eCommerce Solutions Bvba
 

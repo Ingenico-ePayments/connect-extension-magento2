@@ -15,6 +15,7 @@ use Netresearch\Epayments\Model\ConfigInterface;
 use Netresearch\Epayments\Model\Ingenico\Api\ClientInterface;
 use Netresearch\Epayments\Model\Ingenico\Status\ResolverInterface;
 use Netresearch\Epayments\Model\Ingenico\Token\TokenServiceInterface;
+use Netresearch\Epayments\Model\Order\OrderServiceInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -55,11 +56,14 @@ class GetHostedCheckoutStatus implements ActionInterface
     /** @var OrderRepository */
     private $orderRepository;
 
-    /** @var SearchCriteriaBuilderFactory */
-    private $criteriaBuilderFactory;
+    /**
+     * @var OrderServiceInterface
+     */
+    private $orderService;
 
     /**
      * GetHostedCheckoutStatus constructor.
+     *
      * @param LoggerInterface $logger
      * @param ClientInterface $client
      * @param ConfigInterface $ePaymentsConfig
@@ -68,7 +72,7 @@ class GetHostedCheckoutStatus implements ActionInterface
      * @param ResolverInterface $statusResolver
      * @param TokenServiceInterface $tokenService
      * @param OrderRepository $orderRepository
-     * @param SearchCriteriaBuilderFactory $criteriaBuilderFactory
+     * @param OrderServiceInterface $orderService
      */
     public function __construct(
         LoggerInterface $logger,
@@ -79,7 +83,7 @@ class GetHostedCheckoutStatus implements ActionInterface
         ResolverInterface $statusResolver,
         TokenServiceInterface $tokenService,
         OrderRepository $orderRepository,
-        SearchCriteriaBuilderFactory $criteriaBuilderFactory
+        OrderServiceInterface $orderService
     ) {
         $this->logger = $logger;
         $this->client = $client;
@@ -89,7 +93,7 @@ class GetHostedCheckoutStatus implements ActionInterface
         $this->statusResolver = $statusResolver;
         $this->tokenService = $tokenService;
         $this->orderRepository = $orderRepository;
-        $this->criteriaBuilderFactory = $criteriaBuilderFactory;
+        $this->orderService = $orderService;
     }
 
     /**
@@ -105,7 +109,7 @@ class GetHostedCheckoutStatus implements ActionInterface
 
         $this->validateResponse($statusResponse);
         $incrementId = $statusResponse->createdPaymentOutput->payment->paymentOutput->references->merchantReference;
-        $order = $this->getOrderByIncrementId($incrementId);
+        $order = $this->orderService->getByIncrementId($incrementId);
 
         $this->checkPaymentStatusCategory($statusResponse, $order);
 
@@ -245,7 +249,7 @@ class GetHostedCheckoutStatus implements ActionInterface
         OrderInterface $order
     ) {
         $createdPaymentOutput = $statusResponse->createdPaymentOutput;
-        if ($createdPaymentOutput->paymentStatusCategory == self::PAYMENT_STATUS_CATEGORY_REJECTED) {
+        if ($createdPaymentOutput->paymentStatusCategory === self::PAYMENT_STATUS_CATEGORY_REJECTED) {
             $status = $createdPaymentOutput->payment->status;
 
             $info = $this->ePaymentsConfig->getPaymentStatusInfo($status);
@@ -273,17 +277,5 @@ class GetHostedCheckoutStatus implements ActionInterface
             $msg = __('Your payment was rejected or a technical error occured during processing.');
             throw new LocalizedException(__($msg));
         }
-    }
-
-    /**
-     * @param $incrementId
-     * @return OrderInterface|null
-     */
-    private function getOrderByIncrementId($incrementId)
-    {
-        $criteriaBuilder = $this->criteriaBuilderFactory->create();
-        $criteriaBuilder->addFilter('increment_id', $incrementId);
-        $orderList = $this->orderRepository->getList($criteriaBuilder->create())->getItems();
-        return array_shift($orderList);
     }
 }

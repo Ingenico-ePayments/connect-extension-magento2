@@ -2,29 +2,46 @@
 
 namespace Netresearch\Epayments\Model\Ingenico;
 
+use Ingenico\Connect\Sdk\Domain\Webhooks\WebhooksEvent;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\OrderRepository;
 use Netresearch\Epayments\Model\Ingenico\Status\ResolverInterface;
 use Netresearch\Epayments\Model\Ingenico\Webhooks\EventDataResolverInterface;
 use Netresearch\Epayments\Model\Ingenico\Webhooks\HelperAdapter;
+use Psr\Log\LoggerInterface;
 
 class Webhooks
 {
-    /** @var HelperAdapter */
+    /**
+     * @var HelperAdapter
+     */
     private $webhooksHelperAdapter;
 
-    /** @var ResolverInterface */
+    /**
+     * @var ResolverInterface
+     */
     private $statusResolver;
 
-    /** @var \Magento\Framework\App\RequestInterface | \Magento\Framework\App\Request\Http */
+    /**
+     * @var \Magento\Framework\App\RequestInterface | \Magento\Framework\App\Request\Http
+     */
     private $request;
 
-    /** @var OrderRepository */
+    /**
+     * @var OrderRepository
+     */
     private $orderRepository;
 
-    /** @var SearchCriteriaBuilderFactory */
+    /**
+     * @var SearchCriteriaBuilderFactory
+     */
     private $criteriaBuilderFactory;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * Webhooks constructor.
@@ -34,19 +51,22 @@ class Webhooks
      * @param OrderRepository $orderRepository
      * @param SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory
      * @param \Magento\Framework\App\RequestInterface $request
+     * @param LoggerInterface $logger
      */
     public function __construct(
         HelperAdapter $helperAdapter,
         ResolverInterface $resolver,
         OrderRepository $orderRepository,
         SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
-        \Magento\Framework\App\RequestInterface $request
+        \Magento\Framework\App\RequestInterface $request,
+        LoggerInterface $logger
     ) {
         $this->webhooksHelperAdapter = $helperAdapter;
         $this->statusResolver = $resolver;
         $this->orderRepository = $orderRepository;
         $this->criteriaBuilderFactory = $searchCriteriaBuilderFactory;
         $this->request = $request;
+        $this->logger = $logger;
     }
 
     /**
@@ -72,18 +92,37 @@ class Webhooks
             ]
         );
 
+        if ($this->checkEndpointTest($event)) {
+            return $securitySignature;
+        }
+
         $eventResponse = $eventDataResolver->getResponse($event);
         $orderIncrementId = $eventDataResolver->getMerchantOrderReference($event);
         $order = $this->getOrderByIncrementId($orderIncrementId);
         try {
             $this->statusResolver->resolve($order, $eventResponse);
         } catch (\Exception $exception) {
-            // @TODO log exception
+            $this->logger->error(
+                "Could not resolve status of Order {$order->getIncrementId()}: {$exception->getMessage()}",
+                ['exception' => $exception]
+            );
         }
 
         $this->orderRepository->save($order);
 
         return $securitySignature;
+    }
+
+    /**
+     * Detects Ingenico Webhook test request.
+     * When a request is an endpoint test, it should not be processed.
+     *
+     * @param WebhooksEvent $event
+     * @return bool
+     */
+    private function checkEndpointTest(WebhooksEvent $event)
+    {
+        return strpos($event->id, 'TEST') === 0;
     }
 
     /**
@@ -99,6 +138,7 @@ class Webhooks
         if (count($orderList) !== 1) {
             throw new \RuntimeException('System can not load order mentioned in the Event.');
         }
+
         return array_shift($orderList);
     }
 }

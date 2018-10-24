@@ -7,7 +7,6 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Netresearch\Epayments\Model\ConfigInterface;
 use Netresearch\Epayments\Model\Ingenico\StatusInterface;
-use Netresearch\Epayments\Model\Order\EmailManager;
 
 class PendingPayment implements HandlerInterface
 {
@@ -16,17 +15,10 @@ class PendingPayment implements HandlerInterface
      */
     private $epaymentsConfig;
 
-    /**
-     * @var EmailManager
-     */
-    private $orderEMailManager;
-
     public function __construct(
-        EmailManager $emailManager,
         ConfigInterface $epaymentsConfig
     ) {
         $this->epaymentsConfig = $epaymentsConfig;
-        $this->orderEMailManager = $emailManager;
     }
 
     /**
@@ -42,11 +34,6 @@ class PendingPayment implements HandlerInterface
             $order,
             false,
             $this->epaymentsConfig->getPaymentStatusInfo(StatusInterface::PENDING_PAYMENT)
-        );
-
-        $this->orderEMailManager->process(
-            $order,
-            $ingenicoStatus->status
         );
     }
 }

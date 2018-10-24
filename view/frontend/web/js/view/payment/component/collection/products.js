@@ -1,8 +1,9 @@
 define([
+    'underscore',
     'Magento_Ui/js/form/components/group',
     'Netresearch_Epayments/js/model/payment/payment-data',
     'uiLayout',
-], function (Group, paymentData, layout) {
+], function (_, Group, paymentData, layout) {
     'use strict';
 
     let generateProductComponent = function (identifier, description, product, account) {
@@ -65,7 +66,10 @@ define([
                 layouts.push(generateProductComponent.call(this, identifier, description, product, account));
                 layouts.push(generateProductFields.call(this, identifier, product, account));
             }
-            layout(layouts);
+            _.defer(function(){
+                layout(layouts);
+            });
+
 
             return this;
         },

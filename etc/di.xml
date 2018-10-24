@@ -16,6 +16,7 @@
     <preference for="Netresearch\Epayments\Model\Order\Creditmemo\ServiceInterface" type="Netresearch\Epayments\Model\Order\Creditmemo\Service"/>
     <preference for="Netresearch\Epayments\Model\StatusResponseManagerInterface" type="Netresearch\Epayments\Model\StatusResponseManager"/>
     <preference for="Netresearch\Epayments\Model\Ingenico\Status\PoolInterface" type="Netresearch\Epayments\Model\Ingenico\Status\Pool"/>
+    <preference for="Netresearch\Epayments\Model\Order\OrderServiceInterface" type="Netresearch\Epayments\Model\Order\OrderService" />
 
     <!-- Payment method set up via Magento 2 Payment Gateway API -->
     <virtualType name="IngenicoFacade" type="Magento\Payment\Model\Method\Adapter">
@@ -228,5 +229,11 @@
 
     <type name="Netresearch\Epayments\Model\Ingenico\Status\CaptureRequested">
         <plugin name="CaptureRequestedPlugin" type="Netresearch\Epayments\Plugin\Model\Ingenico\Status\CaptureRequestedPlugin"/>
+    </type>
+
+    <type name="Netresearch\Epayments\Controller\HostedCheckoutPage\ProcessReturn">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+        </arguments>
     </type>
 </config>

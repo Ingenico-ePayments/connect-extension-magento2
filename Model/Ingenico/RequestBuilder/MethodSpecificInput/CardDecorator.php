@@ -64,7 +64,12 @@ class CardDecorator extends AbstractMethodDecorator
     {
         $input = $this->cardPaymentMethodSpecificInputFactory->create();
         $input->paymentProductId = $this->getProductId($order);
-        $input->returnUrl = $this->urlBuilder->getUrl(AbstractRequestBuilder::HOSTED_CHECKOUT_RETURN_URL);
+        /** Crude way to detect inline vs hosted checkout. */
+        if ($order->getPayment()->getAdditionalInformation(Config::CLIENT_PAYLOAD_KEY)) {
+            $input->returnUrl = $this->urlBuilder->getUrl(AbstractRequestBuilder::REDIRECT_PAYMENT_RETURN_URL);
+        } else {
+            $input->returnUrl = $this->urlBuilder->getUrl(AbstractRequestBuilder::HOSTED_CHECKOUT_RETURN_URL);
+        }
 
         // Retrieve capture mode from config
         $captureMode = $this->config->getCaptureMode($this->storeManager->getStore()->getId());

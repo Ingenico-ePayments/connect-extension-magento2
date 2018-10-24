@@ -2,6 +2,7 @@
 
 namespace Netresearch\Epayments\Model\Order;
 
+use Ingenico\Connect\Sdk\Domain\Definitions\KeyValuePair;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\Definitions\DisplayedDataFactory;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Sales\Api\Data\OrderInterface;
@@ -12,8 +13,8 @@ use Netresearch\Epayments\Model\Ingenico\StatusInterface;
 
 class EmailManager
 {
-    const PAYMENT_UPDATE_EVENT             = 'payment_update';
-    const EMAIL_TEMPLATE_ID                = 'payment_update';
+    const PAYMENT_UPDATE_EVENT = 'payment_update';
+    const EMAIL_TEMPLATE_ID = 'payment_update';
     const PAYMENT_OUTPUT_SHOW_INSTRUCTIONS = 'SHOW_INSTRUCTIONS';
 
     /**
@@ -40,7 +41,7 @@ class EmailManager
      * @var array
      */
     private $statusMapping = [
-        'action_needed'      => [
+        'action_needed' => [
             StatusInterface::PENDING_PAYMENT,
         ],
         'payment_successful' => [
@@ -48,13 +49,13 @@ class EmailManager
             StatusInterface::CAPTURED,
             StatusInterface::PAID,
         ],
-        'fraud_suspicion'    => [
+        'fraud_suspicion' => [
             StatusInterface::PENDING_FRAUD_APPROVAL,
         ],
         'delayed_settlement' => [
             StatusInterface::PENDING_APPROVAL,
         ],
-        'slow_3rd_party'     => [
+        'slow_3rd_party' => [
             StatusInterface::REDIRECTED,
         ],
     ];
@@ -85,32 +86,40 @@ class EmailManager
      */
     public function process(OrderInterface $order, $ingenicoPaymentStatus)
     {
-        if (!$this->ePaymentsConfig->getUpdateEmailEnabled($this->getMappedStatusValue($ingenicoPaymentStatus))) {
+        if (!$this->ePaymentsConfig->getUpdateEmailEnabled(
+            $this->getMappedStatusValue($ingenicoPaymentStatus),
+            $order->getStoreId()
+        )) {
             return;
         }
 
-        if (!$order->getPayment()->getAdditionalInformation(Config::PAYMENT_ID_KEY)
-            && $ingenicoPaymentStatus != StatusInterface::PENDING_PAYMENT
+        if ($ingenicoPaymentStatus !== StatusInterface::PENDING_PAYMENT
+            && !$order->getPayment()->getAdditionalInformation(Config::PAYMENT_ID_KEY)
         ) {
             return;
         }
 
-        $info = $this->ePaymentsConfig->getPaymentStatusInfo($ingenicoPaymentStatus);
+        $info = $this->ePaymentsConfig->getPaymentStatusInfo($ingenicoPaymentStatus, $order->getStoreId());
         $instructions = null;
-        if ($ingenicoPaymentStatus == StatusInterface::PENDING_PAYMENT) {
-            if ($displayedDataJson = $order->getPayment()->getAdditionalInformation(Config::PAYMENT_SHOW_DATA_KEY)) {
-                $dispayedData = $this->displayedDataFactory->create();
-                $dispayedData->fromJson($displayedDataJson);
-                $instructions = $this->formatInstructions($dispayedData->showData);
-            }
+        if ($ingenicoPaymentStatus === StatusInterface::PENDING_PAYMENT
+            && $displayedDataJson = $order->getPayment()->getAdditionalInformation(Config::PAYMENT_SHOW_DATA_KEY)) {
+            $dispayedData = $this->displayedDataFactory->create();
+            $dispayedData->fromJson($displayedDataJson);
+            $instructions = $this->formatInstructions($dispayedData->showData);
+        }
+
+        if ($ingenicoPaymentStatus === StatusInterface::PENDING_PAYMENT
+            && !$instructions
+        ) {
+            return;
         }
 
         $emailTemplateVariables = [
-            'order'          => $order,
+            'order' => $order,
             'payment_status' => $ingenicoPaymentStatus,
-            'comment'        => $info,
-            'billing'        => $order->getBillingAddress(),
-            'instructions'   => $instructions,
+            'comment' => $info,
+            'billing' => $order->getBillingAddress(),
+            'instructions' => $instructions,
         ];
 
         $this->manager->dispatch(self::PAYMENT_UPDATE_EVENT);
@@ -131,8 +140,9 @@ class EmailManager
      * @param string $ingenicoPaymentStatus
      * @return bool|string
      */
-    private function getMappedStatusValue($ingenicoPaymentStatus)
-    {
+    private function getMappedStatusValue(
+        $ingenicoPaymentStatus
+    ) {
         $value = false;
 
         foreach ($this->statusMapping as $key => $statuses) {
@@ -148,33 +158,35 @@ class EmailManager
     /**
      * Format instructions
      *
-     * @param array $instructionsArray
+     * @param KeyValuePair[] $instructionsArray
      * @return string
      */
-    private function formatInstructions(array $instructionsArray)
-    {
+    private function formatInstructions(
+        array $instructionsArray
+    ) {
         $instructions = '';
         $instructionsCurrency = '';
         $instructionsAmount = '';
+        /** @var KeyValuePair $pair */
         foreach ($instructionsArray as $pair) {
-            if ($pair->key == 'CURRENCYCODE') {
+            if ($pair->key === 'CURRENCYCODE') {
                 $instructionsCurrency = $pair->value;
                 continue;
             }
-            if ($pair->key == 'AMOUNT') {
+            if ($pair->key === 'AMOUNT') {
                 $instructionsAmount = $pair->value;
                 continue;
             }
 
             $pair->key = ucwords(strtolower($pair->key));
 
-            $instructions .= '<tr><td>' . $pair->key . '</td><td>' . $pair->value . '</td></tr>';
+            $instructions .= "<tr><td> {$pair->key} </td><td> {$pair->value} </td></tr>";
         }
 
-        if ($instructions && $instructionsAmount) {
+        if ($instructions !== '' && $instructionsAmount !== '') {
             $instructionsAmount = Data::reformatMagentoAmount($instructionsAmount);
-            $instructions .= '<tr><td>Amount</td><td>' . $instructionsCurrency . ' ' . $instructionsAmount .
-            '</td></tr>';
+            $amount = __('Amount')->render();
+            $instructions .= "<tr><td>{$amount}</td><td> {$instructionsCurrency} {$instructionsAmount} </td></tr>";
         }
 
         return $instructions;

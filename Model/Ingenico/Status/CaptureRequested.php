@@ -7,26 +7,9 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Netresearch\Epayments\Helper\Data;
-use Netresearch\Epayments\Model\Order\EmailManager;
 
 class CaptureRequested implements HandlerInterface
 {
-
-    /**
-     * @var EmailManager
-     */
-    private $orderEMailManager;
-
-    /**
-     * CaptureRequested constructor.
-     * @param EmailManager $emailManager
-     */
-    public function __construct(
-        EmailManager $emailManager
-    ) {
-        $this->orderEMailManager = $emailManager;
-    }
-
     /**
      * @param OrderInterface|Order $order
      * @param AbstractOrderStatus $ingenicoStatus
@@ -48,7 +31,5 @@ class CaptureRequested implements HandlerInterface
         $payment->setIsTransactionPending(true);
         $payment->setIsTransactionClosed(false);
         $payment->registerCaptureNotification(Data::reformatMagentoAmount($amount));
-
-        $this->orderEMailManager->process($order, $ingenicoStatus->status);
     }
 }

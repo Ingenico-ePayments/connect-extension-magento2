@@ -23,7 +23,7 @@ class PaymentEventDataResolver implements EventDataResolverInterface
         $merchantOrderId = (int)$event->payment->paymentOutput->references->merchantReference;
 
         if ($merchantOrderId <= 0) {
-            throw new \RuntimeException('Merchant order id value is missing in Event response.');
+            throw new \RuntimeException('Merchant order reference value is missing in Event response.');
         }
 
         return $merchantOrderId;
