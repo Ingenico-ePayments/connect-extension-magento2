@@ -46,23 +46,32 @@ define(
              */
             initialize: function () {
                 this._super();
-                this.currentBillingCountry = quote.billingAddress().countryId;
+                this.currentBillingCountry = quote.billingAddress() ? quote.billingAddress().countryId : '';
                 this.currentBaseGrandTotal = quote.totals()['base_grand_total'];
-                this.config.init(window.checkoutConfig.payment[this.getCode()]);
-                this.initLoader();
-
-                fieldValidator.register();
-                productList.isLoading.subscribe(this.toggleLoader.bind(this));
-                this.initProductList();
-
-                preloadComponents();
-
+                config.init(window.checkoutConfig.payment[this.getCode()]);
+                if (!config.useFullRedirect()) {
+                    this.initializeProductList();
+                }
+                
                 return this;
             },
 
+            /**
+             * Load and render payment product list.
+             *
+             * @private
+             */
+            initializeProductList: function () {
+                this.initLoader();
+                fieldValidator.register();
+                productList.isLoading.subscribe(this.toggleLoader.bind(this));
+                this.initProductList();
+                preloadComponents();
+            },
+
             getData: function () {
-                let id = 0;
-                let label = '';
+                let id, label;
+
                 if (paymentData.getCurrentPaymentProduct()) {
                     id = paymentData.getCurrentPaymentProduct().id;
                     label = paymentData.getCurrentPaymentProduct().displayHints.label;
@@ -72,7 +81,7 @@ define(
                     'additional_data': {
                         'ingenico_payment_product_id': id,
                         'ingenico_payment_product_label': label,
-                        'ingenico_payment_product_tokenize': (paymentData.tokenize().indexOf(id) !== -1),
+                        'ingenico_payment_product_tokenize': paymentData.tokenize().indexOf(id) !== -1,
                         'ingenico_payment_product_method': paymentData.getCurrentPaymentProduct().paymentMethod,
                         'ingenico_payment_payload': paymentData.getCurrentPayload(),
                     }
@@ -89,18 +98,19 @@ define(
             },
 
             placeOrder: function (data, event) {
+                let parentMethod = this._super.bind(this);
+
                 if (!this.validate()) {
                     return false;
                 }
 
-                let parentMethod = this._super.bind(this);
                 if (config.useInlinePayments()) {
                     this.createPayload().then(function () {
                         parentMethod(data, event);
                     }, function (error) {
                         console.error('Could not create payload.', error);
                         alert('Payment error: ' + error);
-                    })
+                    });
                 } else {
                     parentMethod(data, event);
                 }
@@ -117,9 +127,10 @@ define(
              */
             createPayload: function () {
                 let data = this.assemblePayloadData();
+
                 return createPayload(data).then(function (payload) {
                     paymentData.setCurrentPayload(payload);
-                })
+                });
             },
 
             /**
@@ -128,11 +139,13 @@ define(
              */
             assemblePayloadData: function () {
                 let data = {};
+
                 data['paymentProduct'] = paymentData.getCurrentPaymentProduct();
                 if (paymentData.getCurrentAccountOnFile()) {
-                    data['accountOnFile'] = paymentData.getCurrentAccountOnFile()
+                    data['accountOnFile'] = paymentData.getCurrentAccountOnFile();
                 }
                 data = Object.assign(paymentData.fieldData, data);
+
                 return data;
             },
 
@@ -159,7 +172,7 @@ define(
                  */
                 productList.basicPaymentProducts.subscribe(function () {
                     productGroups.reload();
-                }.bind(this));
+                });
 
                 /**
                  * Refresh product list when billing country changes.
@@ -172,6 +185,7 @@ define(
                         return;
                     }
                     let billingCountry = address.countryId;
+
                     if (billingCountry != this.currentBillingCountry) {
                         this.currentBillingCountry = billingCountry;
                         productList.reload(this.messageContainer);
@@ -208,14 +222,27 @@ define(
              */
             initChildren: function () {
                 this._super();
-                let groupsComponent = {
-                    displayArea: 'ingenico-product-groups',
-                    parent: this.name,
-                    dataScope: this.name,
-                    component: 'Netresearch_Epayments/js/view/payment/component/collection/groups',
-                    productGroups: productGroups.groups,
-                };
-                layout([groupsComponent]);
+                let components = [];
+                config.init(window.checkoutConfig.payment[this.getCode()]);
+                if (config.useFullRedirect()) {
+                    components.push({
+                        displayArea: 'ingenico-product-groups',
+                        parent: this.name,
+                        component: 'uiElement',
+                        template: 'Netresearch_Epayments/payment/redirect-notice',
+                        text: 'You can select your payment product in the next step.',
+                    });
+                } else {
+                    components.push({
+                        displayArea: 'ingenico-product-groups',
+                        parent: this.name,
+                        dataScope: this.name,
+                        component: 'Netresearch_Epayments/js/view/payment/component/collection/groups',
+                        productGroups: productGroups.groups,
+                    });
+                }
+
+                layout(components);
 
                 return this;
             },

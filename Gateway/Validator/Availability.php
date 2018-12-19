@@ -7,6 +7,11 @@ use Magento\Payment\Gateway\Validator\ResultInterface;
 use Magento\Payment\Gateway\Validator\ResultInterfaceFactory;
 use Netresearch\Epayments\Model\ConfigInterface;
 
+/**
+ * Class Availability
+ *
+ * @package Netresearch\Epayments\Gateway
+ */
 class Availability extends AbstractValidator
 {
     /**
@@ -14,6 +19,12 @@ class Availability extends AbstractValidator
      */
     private $config;
 
+    /**
+     * Availability constructor.
+     *
+     * @param ResultInterfaceFactory $resultFactory
+     * @param ConfigInterface $config
+     */
     public function __construct(
         ResultInterfaceFactory $resultFactory,
         ConfigInterface $config

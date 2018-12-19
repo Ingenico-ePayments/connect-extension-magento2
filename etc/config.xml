@@ -10,7 +10,7 @@
         <ingenico_epayments>
             <model>Netresearch\Epayments\Model\Payment\Ingenico</model>
             <general>
-                <version>1.4.4</version>
+                <version>1.5.0</version>
                 <payment_action>authorize</payment_action>
                 <sort_order>10</sort_order>
                 <can_initialize>1</can_initialize>
@@ -18,6 +18,7 @@
                 <can_accept_payment>1</can_accept_payment>
                 <can_deny_payment>1</can_deny_payment>
                 <can_use_internal>0</can_use_internal>
+                <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
             </general>

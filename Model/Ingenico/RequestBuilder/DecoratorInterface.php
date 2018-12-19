@@ -12,7 +12,7 @@ interface DecoratorInterface
     /**
      * @param CreateHostedCheckoutRequest|CreatePaymentRequest|DataObject $request
      * @param OrderInterface $order
-     * @return DataObject - updated Request
+     * @return CreateHostedCheckoutRequest|CreatePaymentRequest - updated Request
      */
     public function decorate(DataObject $request, OrderInterface $order);
 }

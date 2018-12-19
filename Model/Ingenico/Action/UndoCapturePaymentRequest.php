@@ -3,6 +3,7 @@
 namespace Netresearch\Epayments\Model\Ingenico\Action;
 
 use Ingenico\Connect\Sdk\Domain\Payment\PaymentResponse;
+use Ingenico\Connect\Sdk\ResponseException;
 use Magento\Sales\Model\Order;
 use Netresearch\Epayments\Model\Config;
 use Netresearch\Epayments\Model\Ingenico\StatusInterface;
@@ -18,6 +19,7 @@ class UndoCapturePaymentRequest extends AbstractAction implements ActionInterfac
      * Undo capture payment
      *
      * @param Order $order
+     * @throws ResponseException
      */
     public function process(Order $order)
     {

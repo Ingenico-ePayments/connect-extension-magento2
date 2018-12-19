@@ -7,11 +7,12 @@ use Ingenico\Connect\Sdk\Domain\Payment\Definitions\NonSepaDirectDebitPaymentMet
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\NonSepaDirectDebitPaymentMethodSpecificInputFactory;
 use Magento\Sales\Api\Data\OrderInterface;
 use Netresearch\Epayments\Model\Config;
+use Netresearch\Epayments\Model\Ingenico\RequestBuilder\DecoratorInterface;
 
 /**
  * Class DirectDebitDecorator
  */
-class DirectDebitDecorator extends AbstractMethodDecorator
+class DirectDebitDecorator implements DecoratorInterface
 {
     /**
      * @var NonSepaDirectDebitPaymentMethodSpecificInputFactory
@@ -41,9 +42,17 @@ class DirectDebitDecorator extends AbstractMethodDecorator
         $tokenize = $order->getPayment()->getAdditionalInformation(Config::PRODUCT_TOKENIZE_KEY);
         $input->tokenize = ($tokenize === '1');
 
-
         $request->directDebitPaymentMethodSpecificInput = $input;
 
         return $request;
+    }
+
+    /**
+     * @param OrderInterface $order
+     * @return string|null
+     */
+    private function getProductId(OrderInterface $order)
+    {
+        return $order->getPayment()->getAdditionalInformation(Config::PRODUCT_ID_KEY);
     }
 }

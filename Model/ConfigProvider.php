@@ -6,7 +6,7 @@ use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\Locale\Resolver;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Asset\Repository;
-use Magento\Framework\View\Element\Template;
+use Magento\Store\Model\StoreManagerInterface;
 
 class ConfigProvider implements ConfigProviderInterface
 {
@@ -41,23 +41,31 @@ class ConfigProvider implements ConfigProviderInterface
     private $assetRepo;
 
     /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    /**
      * ConfigProvider constructor.
      *
      * @param UrlInterface $urlBuilder
      * @param ConfigInterface $config
      * @param Resolver $resolver
      * @param Repository $assetRepo
+     * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         UrlInterface $urlBuilder,
         ConfigInterface $config,
         Resolver $resolver,
-        Repository $assetRepo
+        Repository $assetRepo,
+        StoreManagerInterface $storeManager
     ) {
         $this->urlBuilder = $urlBuilder;
         $this->config = $config;
         $this->resolver = $resolver;
         $this->assetRepo = $assetRepo;
+        $this->storeManager = $storeManager;
     }
 
     /**
@@ -65,14 +73,18 @@ class ConfigProvider implements ConfigProviderInterface
      */
     public function getConfig()
     {
+        $storeId = $this->storeManager->getStore()->getId();
+        $checkoutType = $this->config->getCheckoutType($storeId);
+        $paymentMethodGroupTitles = $this->config->getProductGroupTitles($storeId);
         return [
             'payment' => [
                 'ingenico' => [
                     'hostedCheckoutPageUrl' => $this->urlBuilder->getUrl('epayments/hostedCheckoutPage'),
                     'inlineSuccessUrl' => $this->urlBuilder->getUrl('epayments/inlinePayment'),
                     'locale' => $this->resolver->getLocale(),
-                    'paymentMethodGroupTitles' => $this->config->getProductGroupTitles(),
-                    'useInlinePayments' => $this->config->isInlinePaymentsEnabled(),
+                    'paymentMethodGroupTitles' => $paymentMethodGroupTitles,
+                    'useInlinePayments' => $checkoutType === Config::CONFIG_INGENICO_CHECKOUT_TYPE_INLINE,
+                    'useFullRedirect' => $checkoutType === Config::CONFIG_INGENICO_CHECKOUT_TYPE_REDIRECT,
                     'loaderImage' => $this->assetRepo->getUrlWithParams('images/loader-2.gif', []),
                 ],
             ],

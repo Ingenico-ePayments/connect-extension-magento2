@@ -11,6 +11,7 @@ use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Sales\Model\Order;
 use Netresearch\Epayments\Helper\Data as DataHelper;
 use Netresearch\Epayments\Model\ConfigInterface;
+use Netresearch\Epayments\Model\Ingenico\MerchantReference;
 
 /**
  * Class OrderBuilder
@@ -41,6 +42,7 @@ class OrderBuilder
      * @var OrderFactory
      */
     private $orderFactory;
+
     /**
      * @var AmountOfMoneyFactory
      */
@@ -62,6 +64,11 @@ class OrderBuilder
     private $orderTypeInformationFactory;
 
     /**
+     * @var MerchantReference
+     */
+    private $merchantReference;
+
+    /**
      * OrderBuilder constructor.
      *
      * @param ConfigInterface $ePaymentsConfig
@@ -73,6 +80,7 @@ class OrderBuilder
      * @param OrderReferencesFactory $orderReferencesFactory
      * @param AdditionalOrderInputFactory $additionalOrderInputFactory
      * @param OrderTypeInformationFactory $orderTypeInformationFactory
+     * @param MerchantReference $merchantReference
      */
     public function __construct(
         ConfigInterface $ePaymentsConfig,
@@ -83,7 +91,8 @@ class OrderBuilder
         AmountOfMoneyFactory $amountOfMoneyFactory,
         OrderReferencesFactory $orderReferencesFactory,
         AdditionalOrderInputFactory $additionalOrderInputFactory,
-        OrderTypeInformationFactory $orderTypeInformationFactory
+        OrderTypeInformationFactory $orderTypeInformationFactory,
+        MerchantReference $merchantReference
     ) {
         $this->ePaymentsConfig = $ePaymentsConfig;
         $this->customerBuilder = $customerBuilder;
@@ -94,6 +103,7 @@ class OrderBuilder
         $this->orderReferencesFactory = $orderReferencesFactory;
         $this->additionalOrderInputFactory = $additionalOrderInputFactory;
         $this->orderTypeInformationFactory = $orderTypeInformationFactory;
+        $this->merchantReference = $merchantReference;
     }
 
     /**
@@ -134,7 +144,7 @@ class OrderBuilder
     private function getReferences(Order $order)
     {
         $references = $this->orderReferencesFactory->create();
-        $references->merchantReference = $order->getIncrementId();
+        $references->merchantReference = $this->merchantReference->generateMerchantReference($order);
         $references->descriptor = $this->ePaymentsConfig->getDescriptor();
 
         return $references;

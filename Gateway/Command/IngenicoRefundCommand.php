@@ -3,12 +3,10 @@
 namespace Netresearch\Epayments\Gateway\Command;
 
 use Ingenico\Connect\Sdk\ResponseException;
-use Magento\Framework\Message\ManagerInterface;
 use Magento\Payment\Gateway\CommandInterface;
 use Netresearch\Epayments\Model\Ingenico\Action\Refund\CreateRefund;
-use Psr\Log\LoggerInterface;
 
-class IngenicoRefundCommand extends AbstractCommand implements CommandInterface
+class IngenicoRefundCommand implements CommandInterface
 {
     /**
      * @var CreateRefund
@@ -16,20 +14,20 @@ class IngenicoRefundCommand extends AbstractCommand implements CommandInterface
     private $createRefund;
 
     /**
+     * @var ApiErrorHandler
+     */
+    private $apiErrorHandler;
+
+    /**
      * IngenicoRefundCommand constructor.
      *
      * @param CreateRefund $createRefund
-     * @param ManagerInterface $manager
-     * @param LoggerInterface $logger
+     * @param ApiErrorHandler $apiErrorHandler
      */
-    public function __construct(
-        CreateRefund $createRefund,
-        ManagerInterface $manager,
-        LoggerInterface $logger
-    ) {
+    public function __construct(CreateRefund $createRefund, ApiErrorHandler $apiErrorHandler)
+    {
         $this->createRefund = $createRefund;
-
-        parent::__construct($manager, $logger);
+        $this->apiErrorHandler = $apiErrorHandler;
     }
 
     /**
@@ -46,7 +44,7 @@ class IngenicoRefundCommand extends AbstractCommand implements CommandInterface
                 $creditmemo->getBaseGrandTotal()
             );
         } catch (ResponseException $e) {
-            $this->handleError($e);
+            $this->apiErrorHandler->handleError($e);
         }
     }
 }

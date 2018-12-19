@@ -6,22 +6,18 @@ use Ingenico\Connect\Sdk\Domain\Hostedcheckout\CreateHostedCheckoutRequest;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\CreateHostedCheckoutRequestFactory;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\Definitions\HostedCheckoutSpecificInput;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\Definitions\HostedCheckoutSpecificInputFactory;
-use Ingenico\Connect\Sdk\Domain\Payment\CreatePaymentRequest;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Sales\Model\Order;
 use Netresearch\Epayments\Model\Config;
-use Netresearch\Epayments\Model\Ingenico\RequestBuilder\AbstractRequestBuilder;
-use Netresearch\Epayments\Model\Ingenico\RequestBuilder\Common\FraudFieldsBuilder;
-use Netresearch\Epayments\Model\Ingenico\RequestBuilder\Common\OrderBuilder;
-use Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\RequestDecoratorFactory as MethodDecoratorFactory;
-use Netresearch\Epayments\Model\Ingenico\RequestBuilder\ProductSpecificInput\RequestDecoratorFactory as ProductDecoratorFactory;
+use Netresearch\Epayments\Model\ConfigInterface;
+use Netresearch\Epayments\Model\Ingenico\RequestBuilder\Common\RequestBuilder as CommonRequestBuilder;
 use Netresearch\Epayments\Model\Ingenico\Token\TokenServiceInterface;
 
 /**
  * Class CreateHostedCheckoutRequestBuilder
  */
-class RequestBuilder extends AbstractRequestBuilder
+class RequestBuilder
 {
     /**
      * @var TokenServiceInterface
@@ -44,46 +40,57 @@ class RequestBuilder extends AbstractRequestBuilder
     private $hostedCheckoutSpecificInputFactory;
 
     /**
+     * @var CommonRequestBuilder
+     */
+    private $requestBuilder;
+
+    /**
+     * @var ConfigInterface
+     */
+    private $config;
+
+    /**
+     * @var CreateHostedCheckoutRequestFactory
+     */
+    private $createHostedCheckoutRequestFactory;
+
+    /**
      * RequestBuilder constructor.
-     * @param MethodDecoratorFactory $methodDecoratorFactory
-     * @param ProductDecoratorFactory $productDecoratorFactory
-     * @param OrderBuilder $orderBuilder
-     * @param FraudFieldsBuilder $fraudFieldsBuilder
+     *
      * @param TokenServiceInterface $tokenService
      * @param ResolverInterface $resolver
      * @param UrlInterface $urlBuilder
      * @param CreateHostedCheckoutRequestFactory $createHostedCheckoutRequestFactory
      * @param HostedCheckoutSpecificInputFactory $hostedCheckoutSpecificInputFactory
+     * @param ConfigInterface $config
+     * @param CommonRequestBuilder $requestBuilder
      */
     public function __construct(
-        MethodDecoratorFactory $methodDecoratorFactory,
-        ProductDecoratorFactory $productDecoratorFactory,
-        OrderBuilder $orderBuilder,
-        FraudFieldsBuilder $fraudFieldsBuilder,
         TokenServiceInterface $tokenService,
         ResolverInterface $resolver,
         UrlInterface $urlBuilder,
         CreateHostedCheckoutRequestFactory $createHostedCheckoutRequestFactory,
-        HostedCheckoutSpecificInputFactory $hostedCheckoutSpecificInputFactory
+        HostedCheckoutSpecificInputFactory $hostedCheckoutSpecificInputFactory,
+        ConfigInterface $config,
+        CommonRequestBuilder $requestBuilder
     ) {
-        parent::__construct($methodDecoratorFactory, $productDecoratorFactory, $orderBuilder, $fraudFieldsBuilder);
-
         $this->tokenService = $tokenService;
         $this->resolver = $resolver;
         $this->urlBuilder = $urlBuilder;
+        $this->createHostedCheckoutRequestFactory = $createHostedCheckoutRequestFactory;
         $this->hostedCheckoutSpecificInputFactory = $hostedCheckoutSpecificInputFactory;
-
-        $this->requestObject = $createHostedCheckoutRequestFactory->create();
+        $this->requestBuilder = $requestBuilder;
+        $this->config = $config;
     }
 
     /**
      * @param Order $order
-     * @return CreateHostedCheckoutRequest|CreatePaymentRequest
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @return CreateHostedCheckoutRequest
      */
     public function create(Order $order)
     {
-        $request = parent::create($order);
+        $request = $this->createHostedCheckoutRequestFactory->create();
+        $request = $this->requestBuilder->create($request, $order);
 
         $request->hostedCheckoutSpecificInput = $this->buildHostedCheckoutSpecificInput($order);
 
@@ -98,11 +105,14 @@ class RequestBuilder extends AbstractRequestBuilder
     {
         $specificInput = $this->hostedCheckoutSpecificInputFactory->create();
         $specificInput->locale = $this->resolver->getLocale();
-        $specificInput->returnUrl = $this->urlBuilder->getUrl(self::HOSTED_CHECKOUT_RETURN_URL);
+        $specificInput->returnUrl = $this->urlBuilder->getUrl(CommonRequestBuilder::HOSTED_CHECKOUT_RETURN_URL);
         $specificInput->showResultPage = false;
         $specificInput->tokens = $this->getTokens($order);
         $specificInput->validateShoppingCart = true;
         $specificInput->returnCancelState = true;
+        if ($variant = $this->config->getHostedCheckoutVariant($order->getStoreId())) {
+            $specificInput->variant = $variant;
+        }
 
         return $specificInput;
     }
@@ -122,6 +132,7 @@ class RequestBuilder extends AbstractRequestBuilder
         if (empty($tokens)) {
             return null;
         }
+
         return implode(',', $tokens);
     }
 }

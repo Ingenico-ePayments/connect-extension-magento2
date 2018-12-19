@@ -13,17 +13,6 @@ class CanReviewPayment extends AbstractValueHandler
      */
     protected function getResponseValue($paymentResponse)
     {
-        switch ($paymentResponse->status) {
-            case StatusInterface::PENDING_CAPTURE:
-                $result = true;
-                break;
-            case StatusInterface::AUTHORIZATION_REQUESTED:
-                $result = false;
-                break;
-            default:
-                $result = false;
-        }
-
-        return $result;
+        return $paymentResponse->status === StatusInterface::PENDING_FRAUD_APPROVAL;
     }
 }

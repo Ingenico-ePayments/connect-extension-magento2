@@ -5,13 +5,13 @@ namespace Netresearch\Epayments\Model\Ingenico\RequestBuilder\ProductSpecificInp
 use Ingenico\Connect\Sdk\DataObject;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\CreateHostedCheckoutRequest;
 use Ingenico\Connect\Sdk\Domain\Payment\CreatePaymentRequest;
-use Ingenico\Connect\Sdk\Domain\Payment\Definitions\NonSepaDirectDebitPaymentProduct705SpecificInput;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\NonSepaDirectDebitPaymentProduct705SpecificInputFactory;
 use Magento\Sales\Api\Data\OrderInterface;
 use Netresearch\Epayments\Model\Ingenico\RequestBuilder\DecoratorInterface;
 
 /**
  * Class Product705Decorator
+ *
  * @package Netresearch\Epayments\Model\Ingenico\RequestBuilder\ProductSpecificInput
  */
 class Product705Decorator implements DecoratorInterface
@@ -22,6 +22,7 @@ class Product705Decorator implements DecoratorInterface
 
     /**
      * Product705Decorator constructor.
+     *
      * @param NonSepaDirectDebitPaymentProduct705SpecificInputFactory $inputFactory
      */
     public function __construct(NonSepaDirectDebitPaymentProduct705SpecificInputFactory $inputFactory)
@@ -30,17 +31,16 @@ class Product705Decorator implements DecoratorInterface
     }
 
     /**
-     * @param DataObject $request
+     * @param CreateHostedCheckoutRequest|CreatePaymentRequest|DataObject $request
      * @param OrderInterface $order
      * @return DataObject|CreateHostedCheckoutRequest|CreatePaymentRequest
      */
     public function decorate(DataObject $request, OrderInterface $order)
     {
-        /** @var CreateHostedCheckoutRequest|CreatePaymentRequest $request */
-        /** @var NonSepaDirectDebitPaymentProduct705SpecificInput $input */
         $input = $this->inputFactory->create();
         $input->transactionType = 'first-payment';
         $request->directDebitPaymentMethodSpecificInput->paymentProduct705SpecificInput = $input;
+
         return $request;
     }
 }

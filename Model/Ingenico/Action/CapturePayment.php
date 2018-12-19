@@ -23,17 +23,8 @@ use Netresearch\Epayments\Helper\Data as DataHelper;
  */
 class CapturePayment extends AbstractAction implements ActionInterface
 {
-    /** @var ApprovePaymentRequest */
-    private $approvePaymentRequest;
-
     /** @var CapturePaymentRequest */
     private $capturePaymentRequest;
-
-    /** @var OrderApprovePayment */
-    private $orderApprovePayment;
-
-    /** @var  OrderReferencesApprovePayment */
-    private $orderReferencesApprovePayment;
 
     /**
      * CapturePayment constructor.
@@ -42,25 +33,16 @@ class CapturePayment extends AbstractAction implements ActionInterface
      * @param ClientInterface $ingenicoClient
      * @param TransactionManager $transactionManager
      * @param ConfigInterface $config
-     * @param ApprovePaymentRequest $approvePaymentRequest
      * @param CapturePaymentRequest $capturePaymentRequest
-     * @param OrderApprovePayment $orderApprovePayment
-     * @param OrderReferencesApprovePayment $orderReferencesApprovePayment
      */
     public function __construct(
         StatusResponseManager $statusResponseManager,
         ClientInterface $ingenicoClient,
         TransactionManager $transactionManager,
         ConfigInterface $config,
-        ApprovePaymentRequest $approvePaymentRequest,
-        CapturePaymentRequest $capturePaymentRequest,
-        OrderApprovePayment $orderApprovePayment,
-        OrderReferencesApprovePayment $orderReferencesApprovePayment
+        CapturePaymentRequest $capturePaymentRequest
     ) {
-        $this->approvePaymentRequest = $approvePaymentRequest;
         $this->capturePaymentRequest = $capturePaymentRequest;
-        $this->orderApprovePayment = $orderApprovePayment;
-        $this->orderReferencesApprovePayment = $orderReferencesApprovePayment;
 
         parent::__construct(
             $statusResponseManager,
@@ -93,6 +75,14 @@ class CapturePayment extends AbstractAction implements ActionInterface
         if ($response->status === StatusInterface::CAPTURE_REQUESTED) {
                 $payment->setIsTransactionPending(true); // set order status to 'Payment Review'
         }
+
+        $payment->setPreparedMessage(
+            sprintf(
+                'Successfully processed notification about status %s with statusCode %s.',
+                $response->status,
+                $response->statusOutput->statusCode
+            )
+        );
 
         $this->postProcess($payment, $response);
     }

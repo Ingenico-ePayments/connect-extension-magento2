@@ -4,8 +4,8 @@ namespace Netresearch\Epayments\Model\Ingenico\RequestBuilder\ProductSpecificInp
 
 use Ingenico\Connect\Sdk\DataObject;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\CreateHostedCheckoutRequest;
-use Ingenico\Connect\Sdk\Domain\Mandates\Definitions\CreateMandateBase;
-use Ingenico\Connect\Sdk\Domain\Mandates\Definitions\CreateMandateBaseFactory;
+use Ingenico\Connect\Sdk\Domain\Mandates\Definitions\CreateMandateWithReturnUrl;
+use Ingenico\Connect\Sdk\Domain\Mandates\Definitions\CreateMandateWithReturnUrlFactory;
 use Ingenico\Connect\Sdk\Domain\Mandates\Definitions\MandateAddress;
 use Ingenico\Connect\Sdk\Domain\Mandates\Definitions\MandateAddressFactory;
 use Ingenico\Connect\Sdk\Domain\Mandates\Definitions\MandateCustomer;
@@ -17,11 +17,20 @@ use Ingenico\Connect\Sdk\Domain\Mandates\Definitions\MandatePersonalNameFactory;
 use Ingenico\Connect\Sdk\Domain\Payment\CreatePaymentRequest;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\SepaDirectDebitPaymentProduct771SpecificInputBase;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\SepaDirectDebitPaymentProduct771SpecificInputBaseFactory;
+use Magento\Framework\UrlInterface;
 use Magento\Sales\Api\Data\OrderInterface;
+use Netresearch\Epayments\Model\Config;
+use Netresearch\Epayments\Model\Ingenico\RequestBuilder\Common\RequestBuilder;
 use Netresearch\Epayments\Model\Ingenico\RequestBuilder\DecoratorInterface;
 
 class Product771Decorator implements DecoratorInterface
 {
+    const SIGNATURE_TYPE_UNSIGNED = 'UNSIGNED';
+    const SIGNATURE_TYPE_SMS = 'SMS';
+
+    const RECURRENCE_TYPE_UNIQUE = 'UNIQUE';
+    const RECURRENCE_TYPE_RECURRING = 'RECURRING';
+
     /**
      * @var SepaDirectDebitPaymentProduct771SpecificInputBaseFactory
      */
@@ -42,8 +51,10 @@ class Product771Decorator implements DecoratorInterface
      */
     private $mandateAddressFactory;
 
-    /** @var CreateMandateBaseFactory */
-    private $createMandateBaseFactory;
+    /**
+     * @var CreateMandateWithReturnUrlFactory
+     */
+    private $createMandateFactory;
 
     /**
      * @var MandatePersonalNameFactory
@@ -51,57 +62,70 @@ class Product771Decorator implements DecoratorInterface
     private $mandatePersonalNameFactory;
 
     /**
+     * @var UrlInterface
+     */
+    private $urlBuilder;
+
+    /**
      * Product771Decorator constructor.
+     *
      * @param SepaDirectDebitPaymentProduct771SpecificInputBaseFactory $inputFactory
      * @param MandateCustomerFactory $mandateCustomerFactory
      * @param MandatePersonalInformationFactory $mandatePersonalInfoFactory
      * @param MandateAddressFactory $mandateAddressFactory
-     * @param CreateMandateBaseFactory $createMandateBaseFactory
+     * @param CreateMandateWithReturnUrlFactory $createMandateFactory
      * @param MandatePersonalNameFactory $mandatePersonalNameFactory
+     * @param UrlInterface $urlBuilder
      */
     public function __construct(
         SepaDirectDebitPaymentProduct771SpecificInputBaseFactory $inputFactory,
         MandateCustomerFactory $mandateCustomerFactory,
         MandatePersonalInformationFactory $mandatePersonalInfoFactory,
         MandateAddressFactory $mandateAddressFactory,
-        CreateMandateBaseFactory $createMandateBaseFactory,
-        MandatePersonalNameFactory $mandatePersonalNameFactory
+        CreateMandateWithReturnUrlFactory $createMandateFactory,
+        MandatePersonalNameFactory $mandatePersonalNameFactory,
+        UrlInterface $urlBuilder
     ) {
         $this->inputFactory = $inputFactory;
         $this->mandateCustomerFactory = $mandateCustomerFactory;
         $this->mandatePersonalInfoFactory = $mandatePersonalInfoFactory;
         $this->mandateAddressFactory = $mandateAddressFactory;
-        $this->createMandateBaseFactory = $createMandateBaseFactory;
+        $this->createMandateFactory = $createMandateFactory;
         $this->mandatePersonalNameFactory = $mandatePersonalNameFactory;
+        $this->urlBuilder = $urlBuilder;
     }
 
     /**
-     * @param DataObject $request
+     * @param DataObject|CreateHostedCheckoutRequest|CreatePaymentRequest $request
      * @param OrderInterface $order
-     * @return DataObject|CreateHostedCheckoutRequest|CreatePaymentRequest
+     * @return CreateHostedCheckoutRequest|CreatePaymentRequest
      */
     public function decorate(DataObject $request, OrderInterface $order)
     {
-        /** @var CreatePaymentRequest|CreateHostedCheckoutRequest $request */
         /** @var SepaDirectDebitPaymentProduct771SpecificInputBase $input */
         $input = $this->inputFactory->create();
         $input->mandate = $this->generateMandate($order);
         $request->sepaDirectDebitPaymentMethodSpecificInput->paymentProduct771SpecificInput = $input;
+
         return $request;
     }
 
     /**
      * @param OrderInterface $order
-     * @return CreateMandateBase
+     * @return CreateMandateWithReturnUrl
      */
     private function generateMandate(OrderInterface $order)
     {
-        /** @var CreateMandateBase $mandate */
-        $mandate = $this->createMandateBaseFactory->create();
+        $mandate = $this->createMandateFactory->create();
         $mandate->customer = $this->generateCustomer($order);
         $mandate->customerReference = $order->getCustomerId() ?: $order->getCustomerEmail();
-        $mandate->recurrenceType = 'UNIQUE';
-        $mandate->signatureType = 'UNSIGNED';
+        $mandate->recurrenceType = self::RECURRENCE_TYPE_UNIQUE;
+        $mandate->signatureType = self::SIGNATURE_TYPE_SMS;
+
+        if ($order->getPayment()->getAdditionalInformation(Config::CLIENT_PAYLOAD_KEY)) {
+            $mandate->returnUrl = $this->urlBuilder->getUrl(RequestBuilder::REDIRECT_PAYMENT_RETURN_URL);
+        }
+
         return $mandate;
     }
 
@@ -118,6 +142,7 @@ class Product771Decorator implements DecoratorInterface
         }
         $customer->mandateAddress = $this->generateAddress($order);
         $customer->personalInformation = $this->generatePersonalInfo($order);
+
         return $customer;
     }
 
@@ -131,8 +156,9 @@ class Product771Decorator implements DecoratorInterface
         $address = $this->mandateAddressFactory->create();
         $address->city = $order->getBillingAddress()->getCity();
         $address->countryCode = $order->getBillingAddress()->getCountryId();
-        $address->street = mb_substr(implode(" ", $order->getBillingAddress()->getStreet()), 0, 50);
+        $address->street = mb_substr(implode(' ', $order->getBillingAddress()->getStreet()), 0, 50);
         $address->zip = $order->getBillingAddress()->getPostcode();
+
         return $address;
     }
 
@@ -148,7 +174,8 @@ class Product771Decorator implements DecoratorInterface
         $name = $this->mandatePersonalNameFactory->create();
         $name->firstName = $order->getBillingAddress()->getFirstname();
         $name->surname = $order->getBillingAddress()->getLastname();
-        $personalInformation->title = $order->getBillingAddress()->getPrefix() ?: 'Mr.';
+        $personalInformation->title = $order->getBillingAddress()->getPrefix() ?: 'Mr';
+
         return $personalInformation;
     }
 }

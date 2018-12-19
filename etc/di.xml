@@ -16,7 +16,10 @@
     <preference for="Netresearch\Epayments\Model\Order\Creditmemo\ServiceInterface" type="Netresearch\Epayments\Model\Order\Creditmemo\Service"/>
     <preference for="Netresearch\Epayments\Model\StatusResponseManagerInterface" type="Netresearch\Epayments\Model\StatusResponseManager"/>
     <preference for="Netresearch\Epayments\Model\Ingenico\Status\PoolInterface" type="Netresearch\Epayments\Model\Ingenico\Status\Pool"/>
-    <preference for="Netresearch\Epayments\Model\Order\OrderServiceInterface" type="Netresearch\Epayments\Model\Order\OrderService" />
+    <preference for="Netresearch\Epayments\Model\Order\OrderServiceInterface" type="Netresearch\Epayments\Model\Order\OrderService"/>
+    <preference for="Netresearch\Epayments\Api\EventRepositoryInterface" type="Netresearch\Epayments\Model\Event\EventRepository"/>
+    <preference for="Netresearch\Epayments\Api\Data\EventInterface" type="Netresearch\Epayments\Model\Event\DataModel"/>
+    <preference for="Netresearch\Epayments\Api\Data\EventSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
 
     <!-- Payment method set up via Magento 2 Payment Gateway API -->
     <virtualType name="IngenicoFacade" type="Magento\Payment\Model\Method\Adapter">
@@ -41,6 +44,8 @@
                 <item name="can_capture_partial" xsi:type="string">Netresearch\Epayments\Gateway\CanCapturePartial</item>
                 <item name="can_void" xsi:type="string">Netresearch\Epayments\Gateway\CanVoid</item>
                 <item name="can_review_payment" xsi:type="string">Netresearch\Epayments\Gateway\CanReviewPayment</item>
+                <item name="can_initialize" xsi:type="string">Netresearch\Epayments\Gateway\CanInitialize</item>
+                <item name="payment_action" xsi:type="string">Netresearch\Epayments\Gateway\PaymentAction</item>
             </argument>
         </arguments>
     </virtualType>
@@ -80,34 +85,35 @@
                 <!--accept_payment is handled through ApprovePayment controller-->
                 <item name="deny_payment" xsi:type="string">Netresearch\Epayments\Gateway\Command\IngenicoDenyPaymentCommand</item>
                 <item name="initialize" xsi:type="string">Netresearch\Epayments\Gateway\Command\Initialize</item>
+                <item name="authorize" xsi:type="string">Netresearch\Epayments\Gateway\Command\IngenicoAuthorizeCommand</item>
             </argument>
         </arguments>
     </virtualType>
 
     <!-- Setup decorator mappings for payment methdos -->
-    <type name="Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\RequestDecoratorFactory">
+    <type name="Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodDecoratorPool">
         <arguments>
-            <argument name="decoratorMap" xsi:type="array">
-                <item name="card" xsi:type="string">Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\CardDecorator</item>
-                <item name="redirect" xsi:type="string">Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\RedirectDecorator</item>
-                <item name="bankTransfer" xsi:type="string">Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\BankTransferDecorator</item>
-                <item name="cash" xsi:type="string">Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\CashDecorator</item>
-                <item name="sepaDirectDebit" xsi:type="string">Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\SepaDirectDebitDecorator</item>
-                <item name="directDebit" xsi:type="string">Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\DirectDebitDecorator</item>
-                <item name="eInvoice" xsi:type="string">Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\EInvoiceDecorator</item>
-                <item name="invoice" xsi:type="string">Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\InvoiceDecorator</item>
+            <argument name="decoratorPool" xsi:type="array">
+                <item name="card" xsi:type="object">Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\CardDecorator\Proxy</item>
+                <item name="redirect" xsi:type="object">Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\RedirectDecorator\Proxy</item>
+                <item name="bankTransfer" xsi:type="object">Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\BankTransferDecorator\Proxy</item>
+                <item name="cash" xsi:type="object">Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\CashDecorator\Proxy</item>
+                <item name="sepaDirectDebit" xsi:type="object">Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\SepaDirectDebitDecorator\Proxy</item>
+                <item name="directDebit" xsi:type="object">Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\DirectDebitDecorator\Proxy</item>
+                <item name="eInvoice" xsi:type="object">Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\EInvoiceDecorator\Proxy</item>
+                <item name="invoice" xsi:type="object">Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\InvoiceDecorator\Proxy</item>
             </argument>
         </arguments>
     </type>
 
     <!-- Setup decorator mappings for payment products -->
-    <type name="Netresearch\Epayments\Model\Ingenico\RequestBuilder\ProductSpecificInput\RequestDecoratorFactory">
+    <type name="Netresearch\Epayments\Model\Ingenico\RequestBuilder\ProductDecoratorPool">
         <arguments>
-            <argument name="decoratorMap" xsi:type="array">
-                <item name="705" xsi:type="string">Netresearch\Epayments\Model\Ingenico\RequestBuilder\ProductSpecificInput\Product705Decorator</item>
-                <item name="730" xsi:type="string">Netresearch\Epayments\Model\Ingenico\RequestBuilder\ProductSpecificInput\Product730Decorator</item>
-                <item name="771" xsi:type="string">Netresearch\Epayments\Model\Ingenico\RequestBuilder\ProductSpecificInput\Product771Decorator</item>
-                <item name="9000" xsi:type="string">Netresearch\Epayments\Model\Ingenico\RequestBuilder\ProductSpecificInput\Product9000Decorator</item>
+            <argument name="decoratorPool" xsi:type="array">
+                <item name="705" xsi:type="object">Netresearch\Epayments\Model\Ingenico\RequestBuilder\ProductSpecificInput\Product705Decorator\Proxy</item>
+                <item name="730" xsi:type="object">Netresearch\Epayments\Model\Ingenico\RequestBuilder\ProductSpecificInput\Product730Decorator\Proxy</item>
+                <item name="771" xsi:type="object">Netresearch\Epayments\Model\Ingenico\RequestBuilder\ProductSpecificInput\Product771Decorator\Proxy</item>
+                <item name="9000" xsi:type="object">Netresearch\Epayments\Model\Ingenico\RequestBuilder\ProductSpecificInput\Product9000Decorator\Proxy</item>
             </argument>
         </arguments>
     </type>
@@ -121,6 +127,12 @@
         </arguments>
     </virtualType>
     <type name="Netresearch\Epayments\Model\Ingenico\Client\CommunicatorLogger">
+        <arguments>
+            <argument name="logger" xsi:type="object">ingenicoRequestLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="Netresearch\Epayments\Model\Ingenico\Webhooks">
         <arguments>
             <argument name="logger" xsi:type="object">ingenicoRequestLogger</argument>
         </arguments>
@@ -171,6 +183,7 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="ingenico_wximport" xsi:type="object">Netresearch\Epayments\Command\WxImport</item>
+                <item name="ingenico_events" xsi:type="object">Netresearch\Epayments\Command\ProcessEvents</item>
             </argument>
         </arguments>
     </type>
@@ -179,6 +192,12 @@
         <arguments>
             <argument name="storeManager" xsi:type="object">Magento\Store\Model\StoreManagerInterface\Proxy</argument>
             <argument name="processor" xsi:type="object">Netresearch\Epayments\Cron\FetchWxFiles\ProcessorInterface\Proxy</argument>
+            <argument name="appState" xsi:type="object">Magento\Framework\App\State\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Netresearch\Epayments\Command\ProcessEvents">
+        <arguments>
+            <argument name="processor" xsi:type="object">Netresearch\Epayments\Model\Event\Processor\Proxy</argument>
             <argument name="appState" xsi:type="object">Magento\Framework\App\State\Proxy</argument>
         </arguments>
     </type>

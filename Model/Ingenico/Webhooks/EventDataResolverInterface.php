@@ -14,7 +14,7 @@ interface EventDataResolverInterface
     /**
      * @param \Ingenico\Connect\Sdk\Domain\Webhooks\WebhooksEvent $event
      * @return int
-     * @throws \RuntimeException if event does not match certain resolver or merchant order id is missing
+     * @throws \InvalidArgumentException if event reference does not originate from this system
      */
     public function getMerchantOrderReference(\Ingenico\Connect\Sdk\Domain\Webhooks\WebhooksEvent $event);
 }

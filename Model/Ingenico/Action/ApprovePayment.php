@@ -2,9 +2,9 @@
 
 namespace Netresearch\Epayments\Model\Ingenico\Action;
 
-use Ingenico\Connect\Sdk\Domain\Payment\Definitions\OrderReferencesApprovePayment;
-use Ingenico\Connect\Sdk\Domain\Payment\Definitions\OrderApprovePayment;
 use Ingenico\Connect\Sdk\Domain\Payment\ApprovePaymentRequest;
+use Ingenico\Connect\Sdk\Domain\Payment\Definitions\OrderApprovePayment;
+use Ingenico\Connect\Sdk\Domain\Payment\Definitions\OrderReferencesApprovePayment;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment;
@@ -12,7 +12,8 @@ use Netresearch\Epayments\Helper\Data as DataHelper;
 use Netresearch\Epayments\Model\Config;
 use Netresearch\Epayments\Model\ConfigInterface;
 use Netresearch\Epayments\Model\Ingenico\Api\ClientInterface;
-use Netresearch\Epayments\Model\Ingenico\StatusInterface;
+use Netresearch\Epayments\Model\Ingenico\GlobalCollect\Status\OrderStatusHelper;
+use Netresearch\Epayments\Model\Ingenico\MerchantReference;
 use Netresearch\Epayments\Model\StatusResponseManager;
 use Netresearch\Epayments\Model\Transaction\TransactionManager;
 
@@ -21,17 +22,33 @@ use Netresearch\Epayments\Model\Transaction\TransactionManager;
  */
 class ApprovePayment extends AbstractAction implements ActionInterface
 {
-    /** @var ApprovePaymentRequest */
+    /**
+     * @var ApprovePaymentRequest
+     */
     private $approvePaymentRequest;
 
-    /** @var OrderApprovePayment */
+    /**
+     * @var OrderApprovePayment
+     */
     private $orderApprovePayment;
 
-    /** @var  OrderReferencesApprovePayment */
+    /**
+     * @var OrderReferencesApprovePayment
+     */
     private $orderReferencesApprovePayment;
 
     /**
-     * CapturePayment constructor.
+     * @var MerchantReference
+     */
+    private $merchantReference;
+
+    /**
+     * @var OrderStatusHelper
+     */
+    private $orderstatusHelper;
+
+    /**
+     * ApprovePayment constructor.
      *
      * @param StatusResponseManager $statusResponseManager
      * @param ClientInterface $ingenicoClient
@@ -40,6 +57,8 @@ class ApprovePayment extends AbstractAction implements ActionInterface
      * @param ApprovePaymentRequest $approvePaymentRequest
      * @param OrderApprovePayment $orderApprovePayment
      * @param OrderReferencesApprovePayment $orderReferencesApprovePayment
+     * @param MerchantReference $merchantReference
+     * @param OrderStatusHelper $orderStatusHelper
      */
     public function __construct(
         StatusResponseManager $statusResponseManager,
@@ -48,11 +67,15 @@ class ApprovePayment extends AbstractAction implements ActionInterface
         ConfigInterface $config,
         ApprovePaymentRequest $approvePaymentRequest,
         OrderApprovePayment $orderApprovePayment,
-        OrderReferencesApprovePayment $orderReferencesApprovePayment
+        OrderReferencesApprovePayment $orderReferencesApprovePayment,
+        MerchantReference $merchantReference,
+        OrderStatusHelper $orderStatusHelper
     ) {
         $this->approvePaymentRequest = $approvePaymentRequest;
         $this->orderApprovePayment = $orderApprovePayment;
         $this->orderReferencesApprovePayment = $orderReferencesApprovePayment;
+        $this->merchantReference = $merchantReference;
+        $this->orderstatusHelper = $orderStatusHelper;
 
         parent::__construct(
             $statusResponseManager,
@@ -63,8 +86,6 @@ class ApprovePayment extends AbstractAction implements ActionInterface
     }
 
     /**
-     * Approve payment with Ingenico
-     *
      * @param Order $order
      * @param $amount
      * @throws LocalizedException
@@ -80,10 +101,27 @@ class ApprovePayment extends AbstractAction implements ActionInterface
 
         $response = $this->approvePayment($ingenicoPaymentId, $payment, $amount);
 
-        if ($response->status === StatusInterface::CAPTURE_REQUESTED) {
-            $payment->setIsTransactionClosed(false); // set transaction 'is_closed' to 0
-            $payment->setIsTransactionPending(true); // set order status to 'Payment Review'
+        if (!$this->orderstatusHelper->shouldOrderSkipPaymentReview($response)) {
+            // move order into payment_review
+            // set transaction 'is_closed' to 0
+            $payment->setIsTransactionClosed(false);
+            // set order status to 'Payment Review'
+            $payment->setIsTransactionPending(true);
+        } else {
+            /** @var Order\Invoice $invoice */
+            foreach ($order->getInvoiceCollection() as $invoice) {
+                if ($invoice->getTransactionId() == $response->id) {
+                    $invoice->setState(Order\Invoice::STATE_OPEN);
+                }
+            }
         }
+        $payment->setPreparedMessage(
+            sprintf(
+                'Successfully processed notification about status %s with statusCode %s.',
+                $response->status,
+                $response->statusOutput->statusCode
+            )
+        );
 
         $this->postProcess($payment, $response);
     }
@@ -96,25 +134,20 @@ class ApprovePayment extends AbstractAction implements ActionInterface
      * @param $amount
      * @return \Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment
      */
-    private function approvePayment(
-        $ingenicoPaymentId,
-        Payment $payment,
-        $amount
-    ) {
-        $request = $this->approvePaymentRequest;
-        $approveOrderReferences = $this->orderReferencesApprovePayment;
-        $approveOrder = $this->orderApprovePayment;
+    private function approvePayment($ingenicoPaymentId, Payment $payment, $amount)
+    {
+        $this->orderReferencesApprovePayment->merchantReference = $this->merchantReference->generateMerchantReference(
+            $payment->getOrder()
+        );
 
-        $approveOrderReferences->merchantReference = $payment->getOrder()->getIncrementId();
+        $this->orderApprovePayment->references = $this->orderReferencesApprovePayment;
 
-        $approveOrder->references = $approveOrderReferences;
-
-        $request->order = $approveOrder;
-        $request->amount = DataHelper::formatIngenicoAmount($amount);
+        $this->approvePaymentRequest->order = $this->orderApprovePayment;
+        $this->approvePaymentRequest->amount = DataHelper::formatIngenicoAmount($amount);
 
         $response = $this->ingenicoClient->ingenicoPaymentApprove(
             $ingenicoPaymentId,
-            $request,
+            $this->approvePaymentRequest,
             $payment->getOrder()->getStoreId()
         );
 

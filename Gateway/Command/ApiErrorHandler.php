@@ -5,9 +5,10 @@ namespace Netresearch\Epayments\Gateway\Command;
 use Ingenico\Connect\Sdk\Domain\Errors\Definitions\APIError;
 use Ingenico\Connect\Sdk\ResponseException;
 use Magento\Framework\Message\ManagerInterface;
+use Magento\Payment\Gateway\Command\CommandException;
 use Psr\Log\LoggerInterface;
 
-class AbstractCommand
+class ApiErrorHandler
 {
     /**
      * @var ManagerInterface
@@ -34,9 +35,12 @@ class AbstractCommand
     }
 
     /**
+     * Log and process Ingenico API exceptions and convert them to CommandException for bubbling up.
+     *
      * @param ResponseException $e
+     * @throws CommandException
      */
-    protected function handleError(ResponseException $e)
+    public function handleError(ResponseException $e)
     {
         $errors = $e->getErrors();
         $message = array_reduce(
@@ -50,6 +54,7 @@ class AbstractCommand
                     $error->httpStatusCode,
                     $error->message
                 );
+
                 return $message;
             },
             ''
@@ -57,6 +62,6 @@ class AbstractCommand
         $this->messageManager->addErrorMessage($message);
         $this->logger->error($message);
 
-        throw $e;
+        throw new CommandException(__($e->getMessage()));
     }
 }

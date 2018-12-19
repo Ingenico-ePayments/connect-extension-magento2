@@ -11,6 +11,7 @@ use Netresearch\Epayments\Model\Ingenico\Action\AbstractAction;
 use Netresearch\Epayments\Model\Ingenico\Action\ActionInterface;
 use Netresearch\Epayments\Model\Ingenico\Api\ClientInterface;
 use Netresearch\Epayments\Model\Ingenico\CallContextBuilder;
+use Netresearch\Epayments\Model\Ingenico\MerchantReference;
 use Netresearch\Epayments\Model\Ingenico\RefundRequestBuilder;
 use Netresearch\Epayments\Model\Ingenico\Status\Refund\RefundHandlerInterface;
 use Netresearch\Epayments\Model\Ingenico\Status\ResolverInterface;
@@ -45,6 +46,11 @@ class CreateRefund extends AbstractAction implements ActionInterface
     private $callContextBuilder;
 
     /**
+     * @var MerchantReference
+     */
+    private $merchantReference;
+
+    /**
      * CreateRefund constructor.
      *
      * @param StatusResponseManager $statusResponseManager
@@ -55,6 +61,7 @@ class CreateRefund extends AbstractAction implements ActionInterface
      * @param ResolverInterface $statusResolver
      * @param RefundRequestBuilder $refundRequestBuilder
      * @param CallContextBuilder $callContextBuilder
+     * @param MerchantReference $merchantReference
      */
     public function __construct(
         StatusResponseManager $statusResponseManager,
@@ -64,12 +71,14 @@ class CreateRefund extends AbstractAction implements ActionInterface
         DateTime $dateTime,
         ResolverInterface $statusResolver,
         RefundRequestBuilder $refundRequestBuilder,
-        CallContextBuilder $callContextBuilder
+        CallContextBuilder $callContextBuilder,
+        MerchantReference $merchantReference
     ) {
         $this->dateTime = $dateTime;
         $this->statusResolver = $statusResolver;
         $this->refundRequestbuilder = $refundRequestBuilder;
         $this->callContextBuilder = $callContextBuilder;
+        $this->merchantReference = $merchantReference;
 
         parent::__construct($statusResponseManager, $ingenicoClient, $transactionManager, $ePaymentsConfig);
     }
@@ -95,9 +104,9 @@ class CreateRefund extends AbstractAction implements ActionInterface
         $this->refundRequestbuilder->setCustomerEmail($order->getCustomerEmail() ?: '');
         $this->refundRequestbuilder->setCustomerLastname($order->getCustomerLastname() ?: '');
         $this->refundRequestbuilder->setEmailMessageType(self::EMAIL_MESSAGE_TYPE);
-        $this->refundRequestbuilder->setMerchantReference($order->getIncrementId());
-        $request = $this->refundRequestbuilder->create();
+        $this->refundRequestbuilder->setMerchantReference($this->merchantReference->generateMerchantReference($order));
 
+        $request = $this->refundRequestbuilder->create();
         $callContext = $this->callContextBuilder->create();
 
         $response = $this->ingenicoClient->ingenicoRefund(
@@ -112,6 +121,14 @@ class CreateRefund extends AbstractAction implements ActionInterface
         $handler->applyCreditmemo($payment->getCreditmemo());
 
         $payment->setLastTransId($response->id);
+
+        $payment->setPreparedMessage(
+            sprintf(
+                'Successfully processed notification about status %s with statusCode %s.',
+                $response->status,
+                $response->statusOutput->statusCode
+            )
+        );
 
         $this->postProcess($payment, $response);
     }

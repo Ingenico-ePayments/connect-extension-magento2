@@ -2,13 +2,13 @@
 
 namespace Netresearch\Epayments\Plugin\Model\Ingenico\Status;
 
-use Ingenico\Connect\Sdk\Domain\Capture\Definitions\Capture;
 use Ingenico\Connect\Sdk\Domain\Definitions\AbstractOrderStatus;
-use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
 use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Invoice;
+use Netresearch\Epayments\Model\Ingenico\GlobalCollect\Status\OrderStatusHelper;
 use Netresearch\Epayments\Model\Ingenico\Status\CapturedFactory;
 use Netresearch\Epayments\Model\Ingenico\Status\CaptureRequested;
-use Netresearch\Epayments\Model\Ingenico\StatusInterface;
 
 class CaptureRequestedPlugin
 {
@@ -17,15 +17,21 @@ class CaptureRequestedPlugin
      */
     private $captureFactory;
 
-    private $codesToOverwrite = [800, 900, 975];
+    /**
+     * @var OrderStatusHelper
+     */
+    private $orderStatusHelper;
 
     /**
      * CaptureRequestedPlugin constructor.
+     *
      * @param CapturedFactory $captureFactory
+     * @param OrderStatusHelper $orderStatusHelper
      */
-    public function __construct(CapturedFactory $captureFactory)
+    public function __construct(CapturedFactory $captureFactory, OrderStatusHelper $orderStatusHelper)
     {
         $this->captureFactory = $captureFactory;
+        $this->orderStatusHelper = $orderStatusHelper;
     }
 
     /**
@@ -33,7 +39,7 @@ class CaptureRequestedPlugin
      *
      * @param CaptureRequested $subject
      * @param $proceed
-     * @param OrderInterface $order
+     * @param OrderInterface|Order $order
      * @param AbstractOrderStatus $ingenicoStatus
      * @throws \Magento\Framework\Exception\LocalizedException
      * @return void
@@ -44,41 +50,22 @@ class CaptureRequestedPlugin
         OrderInterface $order,
         AbstractOrderStatus $ingenicoStatus
     ) {
-        if ($this->shouldReplaceHandler($ingenicoStatus)) {
+        if ($this->orderStatusHelper->shouldOrderSkipPaymentReview($ingenicoStatus)
+            && $order->getCaptureRequestedOverwrite() === null
+        ) {
+            // set exit condition to prevent infinite loop
+            $order->setCaptureRequestedOverwrite(true);
             $capturedHandler = $this->captureFactory->create();
             $capturedHandler->resolveStatus($order, $ingenicoStatus);
+            /** @var Invoice $invoice */
+            foreach ($order->getInvoiceCollection() as $invoice) {
+                if ($invoice->getTransactionId() === $ingenicoStatus->id) {
+                    $invoice->setState(Invoice::STATE_OPEN);
+                    $order->addRelatedObject($invoice);
+                }
+            }
         } else {
             $proceed($order, $ingenicoStatus);
         }
-    }
-
-    /**
-     * @param AbstractOrderStatus $ingenicoStatus
-     * @return bool
-     */
-    private function shouldReplaceHandler(AbstractOrderStatus $ingenicoStatus)
-    {
-        return ($ingenicoStatus instanceof Payment || $ingenicoStatus instanceof Capture)
-               && $this->getMethod($ingenicoStatus) === 'card'
-               && $ingenicoStatus->status === StatusInterface::CAPTURE_REQUESTED
-               && in_array($ingenicoStatus->statusOutput->statusCode, $this->codesToOverwrite, true);
-    }
-
-    /**
-     * Extract method string from status object
-     *
-     * @param AbstractOrderStatus $ingenicoStatus
-     * @return string
-     */
-    private function getMethod(AbstractOrderStatus $ingenicoStatus)
-    {
-        $method = '';
-        if ($ingenicoStatus instanceof Payment) {
-            $method = $ingenicoStatus->paymentOutput->paymentMethod;
-        } elseif ($ingenicoStatus instanceof Capture) {
-            $method = $ingenicoStatus->captureOutput->paymentMethod;
-        }
-
-        return $method;
     }
 }

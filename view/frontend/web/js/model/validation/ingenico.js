@@ -1,7 +1,8 @@
 define([
     'Netresearch_Epayments/js/model/payment/payment-data',
+    'Netresearch_Epayments/js/model/payment/config',
     'uiRegistry'
-], function (paymentData, registry) {
+], function (paymentData, config, registry) {
     'use strict';
 
     return {
@@ -11,7 +12,12 @@ define([
          * @return {boolean}
          */
         validate: function () {
+            if (config.useFullRedirect()) {
+                return true;
+            }
+
             let product = paymentData.getCurrentPaymentProduct();
+
             if (!product) {
                 alert('Please select a payment product');
                 return false;
@@ -22,6 +28,7 @@ define([
                 'component = Netresearch_Epayments/js/view/payment/component/collection/fields,' +
                 'uid = ' + paymentData.getCurrentProductIdentifier()
             );
+
             for (let fieldComponent of activeFieldsCollection.elems()) {
                 if (fieldComponent.field) {
                     if (!fieldComponent.validate().valid) {
@@ -32,5 +39,5 @@ define([
 
             return fieldsValid;
         }
-    }
+    };
 });

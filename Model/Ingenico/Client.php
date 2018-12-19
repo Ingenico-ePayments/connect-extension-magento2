@@ -66,6 +66,7 @@ class Client implements ClientInterface
 
     /**
      * Client constructor.
+     *
      * @param ConfigInterface $ePaymentsConfig
      * @param ShoppingCartExtensionFactory $shoppingCartExtensionFactory
      * @param CommunicatorLoggerFactory $communicatorLoggerFactory
@@ -149,7 +150,7 @@ class Client implements ClientInterface
         $findParams->currencyCode = $currencyCode;
         $findParams->countryCode = $countryCode;
         $findParams->locale = $locale;
-        $findParams->hide = "fields";
+        $findParams->hide = 'fields';
 
         $this->initialize($scopeId);
 
@@ -175,7 +176,7 @@ class Client implements ClientInterface
         $getParams->currencyCode = $currencyCode;
         $getParams->countryCode = $countryCode;
         $getParams->locale = $locale;
-        $getParams->hide = "fields";
+        $getParams->hide = 'fields';
 
         /** @var PaymentProductResponse $paymentProduct */
         $paymentProduct = $this

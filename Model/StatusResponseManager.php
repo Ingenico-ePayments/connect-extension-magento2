@@ -14,6 +14,11 @@ use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\Order\Payment;
 use Netresearch\Epayments\Model\Transaction\TransactionManager;
 
+/**
+ * Class StatusResponseManager
+ *
+ * @package Netresearch\Epayments\Model
+ */
 class StatusResponseManager implements StatusResponseManagerInterface
 {
     /**
@@ -169,5 +174,16 @@ class StatusResponseManager implements StatusResponseManagerInterface
             $info = $info->id;
         }
         return $info;
+    }
+
+    /**
+     * Persists the transaction
+     *
+     * @param \Magento\Sales\Api\Data\TransactionInterface $transaction
+     * @return void
+     */
+    public function save(\Magento\Sales\Api\Data\TransactionInterface $transaction)
+    {
+        $this->transactionManager->updateTransaction($transaction);
     }
 }

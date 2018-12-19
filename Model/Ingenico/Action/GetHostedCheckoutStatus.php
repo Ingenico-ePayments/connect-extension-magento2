@@ -3,7 +3,6 @@
 namespace Netresearch\Epayments\Model\Ingenico\Action;
 
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\GetHostedCheckoutResponse;
-use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\App\Request\Http;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\OrderInterface;
@@ -13,9 +12,11 @@ use Magento\Sales\Model\OrderRepository;
 use Netresearch\Epayments\Model\Config;
 use Netresearch\Epayments\Model\ConfigInterface;
 use Netresearch\Epayments\Model\Ingenico\Api\ClientInterface;
+use Netresearch\Epayments\Model\Ingenico\MerchantReference;
 use Netresearch\Epayments\Model\Ingenico\Status\ResolverInterface;
 use Netresearch\Epayments\Model\Ingenico\Token\TokenServiceInterface;
 use Netresearch\Epayments\Model\Order\OrderServiceInterface;
+use Netresearch\Epayments\Model\StatusResponseManagerInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -32,34 +33,58 @@ class GetHostedCheckoutStatus implements ActionInterface
     const PAYMENT_STATUS_CATEGORY_REJECTED = 'REJECTED';
     const PAYMENT_OUTPUT_SHOW_INSTRUCTIONS = 'SHOW_INSTRUCTIONS';
 
-    /** @var LoggerInterface */
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
 
-    /** @var ClientInterface */
+    /**
+     * @var ClientInterface
+     */
     private $client;
 
-    /** @var ConfigInterface */
+    /**
+     * @var ConfigInterface
+     */
     private $ePaymentsConfig;
 
-    /** @var \Magento\Framework\App\Request\Http */
+    /**
+     * @var Http
+     */
     private $request;
 
-    /** @var OrderSender */
+    /**
+     * @var OrderSender
+     */
     private $orderSender;
 
-    /** @var ResolverInterface */
+    /**
+     * @var ResolverInterface
+     */
     private $statusResolver;
 
-    /** @var TokenServiceInterface */
+    /**
+     * @var TokenServiceInterface
+     */
     private $tokenService;
 
-    /** @var OrderRepository */
+    /**
+     * @var OrderRepository
+     */
     private $orderRepository;
 
     /**
      * @var OrderServiceInterface
      */
     private $orderService;
+
+    /**
+     * @var MerchantReference
+     */
+    private $merchantReference;
+
+    /** @var StatusResponseManagerInterface */
+    private $statusResponseManager;
 
     /**
      * GetHostedCheckoutStatus constructor.
@@ -73,6 +98,8 @@ class GetHostedCheckoutStatus implements ActionInterface
      * @param TokenServiceInterface $tokenService
      * @param OrderRepository $orderRepository
      * @param OrderServiceInterface $orderService
+     * @param MerchantReference $merchantReference
+     * @param StatusResponseManagerInterface $statusResponseManager
      */
     public function __construct(
         LoggerInterface $logger,
@@ -83,7 +110,9 @@ class GetHostedCheckoutStatus implements ActionInterface
         ResolverInterface $statusResolver,
         TokenServiceInterface $tokenService,
         OrderRepository $orderRepository,
-        OrderServiceInterface $orderService
+        OrderServiceInterface $orderService,
+        MerchantReference $merchantReference,
+        StatusResponseManagerInterface $statusResponseManager
     ) {
         $this->logger = $logger;
         $this->client = $client;
@@ -94,6 +123,8 @@ class GetHostedCheckoutStatus implements ActionInterface
         $this->tokenService = $tokenService;
         $this->orderRepository = $orderRepository;
         $this->orderService = $orderService;
+        $this->merchantReference = $merchantReference;
+        $this->statusResponseManager = $statusResponseManager;
     }
 
     /**
@@ -108,7 +139,9 @@ class GetHostedCheckoutStatus implements ActionInterface
         $statusResponse = $this->getStatusResponse($hostedCheckoutId);
 
         $this->validateResponse($statusResponse);
-        $incrementId = $statusResponse->createdPaymentOutput->payment->paymentOutput->references->merchantReference;
+        $incrementId = $this->merchantReference->extractOrderReference(
+            $statusResponse->createdPaymentOutput->payment->paymentOutput->references->merchantReference
+        );
         $order = $this->orderService->getByIncrementId($incrementId);
 
         $this->checkPaymentStatusCategory($statusResponse, $order);
@@ -126,34 +159,18 @@ class GetHostedCheckoutStatus implements ActionInterface
 
         $this->orderRepository->save($order);
 
-        return $order;
-    }
-
-    /**
-     * @param OrderInterface $order
-     * @param GetHostedCheckoutResponse $statusResponse
-     */
-    private function processTokens($order, $statusResponse)
-    {
-        $tokens = $statusResponse->createdPaymentOutput->tokens;
-        if ($tokens) {
-
-            /** @var int $customerId */
-            $customerId = $order->getCustomerId();
-            /** @var string $paymentProductId */
-            $paymentProductId = $order->getPayment()->getAdditionalInformation(Config::PRODUCT_ID_KEY);
-            if (($customerId < 1) || empty($paymentProductId)) {
-                $this->logger->error(
-                    "Empty value detected: customerId = $customerId, paymentProductId = $paymentProductId"
-                );
-            } else {
-                $this->tokenService->add(
-                    $customerId,
-                    $paymentProductId,
-                    $tokens
-                );
-            }
+        // Failsafe: If no transaction was created, but we know the payId reference, create a payment transaction
+        /** @var Order\Payment $payment */
+        $payment = $order->getPayment();
+        $payId = $statusResponse->createdPaymentOutput->payment->id;
+        if ($this->statusResponseManager->getTransactionBy($payId) === null) {
+            $this->statusResponseManager->set($payment, $payId, $statusResponse->createdPaymentOutput->payment);
+            /** @var Order\Payment\Transaction $transaction */
+            $transaction = $payment->addTransaction(Order\Payment\Transaction::TYPE_PAYMENT);
+            $this->statusResponseManager->save($transaction);
         }
+
+        return $order;
     }
 
     /**
@@ -174,66 +191,14 @@ class GetHostedCheckoutStatus implements ActionInterface
     }
 
     /**
-     * Process order
-     *
-     * @param OrderInterface $order
      * @param GetHostedCheckoutResponse $statusResponse
      * @throws LocalizedException
      */
-    private function processOrder(
-        OrderInterface $order,
-        GetHostedCheckoutResponse $statusResponse
-    ) {
-        $ingenicoPaymentId = $statusResponse->createdPaymentOutput->payment->id;
-        $ingenicoPaymentStatus = $statusResponse->createdPaymentOutput->payment->status;
-        $ingenicoPaymentStatusCode = $statusResponse->createdPaymentOutput->payment->statusOutput->statusCode;
-
-        /** @var Order\Payment $payment */
-        $payment = $order->getPayment();
-        if (isset($statusResponse->createdPaymentOutput->displayedData)
-            && $statusResponse->createdPaymentOutput->displayedData->displayedDataType
-               == self::PAYMENT_OUTPUT_SHOW_INSTRUCTIONS
-        ) {
-            $payment->setAdditionalInformation(
-                Config::PAYMENT_SHOW_DATA_KEY,
-                $statusResponse->createdPaymentOutput->displayedData->toJson()
-            );
-        }
-
-        $this->statusResolver->resolve($order, $statusResponse->createdPaymentOutput->payment);
-
-        $payment->setAdditionalInformation(Config::PAYMENT_ID_KEY, $ingenicoPaymentId);
-        $payment->setAdditionalInformation(Config::PAYMENT_STATUS_KEY, $ingenicoPaymentStatus);
-        $payment->setAdditionalInformation(Config::PAYMENT_STATUS_CODE_KEY, $ingenicoPaymentStatusCode);
-
-        $info = $this->ePaymentsConfig->getPaymentStatusInfo($ingenicoPaymentStatus);
-        if ($info) {
-            $order->addStatusHistoryComment(
-                sprintf(
-                    "%s (payment status: '%s', payment status code: '%s')",
-                    $info,
-                    $ingenicoPaymentStatus,
-                    $ingenicoPaymentStatusCode
-                )
-            );
-        }
-    }
-
-    /**
-     * Check return mac
-     *
-     * @param OrderInterface $order
-     * @throws LocalizedException
-     */
-    private function checkReturnmac(OrderInterface $order)
+    private function validateResponse(GetHostedCheckoutResponse $statusResponse)
     {
-        $ingenicoReturnmac = $this->request->get('RETURNMAC');
-        if ($ingenicoReturnmac === null) {
-            return;
-        }
-        $orderReturnmac = $order->getPayment()->getAdditionalInformation('ingenico_returnmac');
-        if ($ingenicoReturnmac != $orderReturnmac) {
-            throw new LocalizedException(__('RETURNMAC doesn\'t match.'));
+        if (!$statusResponse->createdPaymentOutput) {
+            $msg = __('Your payment was rejected or a technical error occured during processing.');
+            throw new LocalizedException(__($msg));
         }
     }
 
@@ -268,14 +233,81 @@ class GetHostedCheckoutStatus implements ActionInterface
     }
 
     /**
+     * Check return mac
+     *
+     * @param OrderInterface $order
+     * @throws LocalizedException
+     */
+    private function checkReturnmac(OrderInterface $order)
+    {
+        $ingenicoReturnmac = $this->request->get('RETURNMAC');
+        if ($ingenicoReturnmac === null) {
+            return;
+        }
+        $orderReturnmac = $order->getPayment()->getAdditionalInformation('ingenico_returnmac');
+        if ($ingenicoReturnmac != $orderReturnmac) {
+            throw new LocalizedException(__('RETURNMAC doesn\'t match.'));
+        }
+    }
+
+    /**
+     * Process order
+     *
+     * @param OrderInterface $order
      * @param GetHostedCheckoutResponse $statusResponse
      * @throws LocalizedException
      */
-    private function validateResponse(GetHostedCheckoutResponse $statusResponse)
+    private function processOrder(
+        OrderInterface $order,
+        GetHostedCheckoutResponse $statusResponse
+    ) {
+        $ingenicoPaymentId = $statusResponse->createdPaymentOutput->payment->id;
+        $ingenicoPaymentStatus = $statusResponse->createdPaymentOutput->payment->status;
+        $ingenicoPaymentStatusCode = $statusResponse->createdPaymentOutput->payment->statusOutput->statusCode;
+
+        /** @var Order\Payment $payment */
+        $payment = $order->getPayment();
+        if (isset($statusResponse->createdPaymentOutput->displayedData)
+            && $statusResponse->createdPaymentOutput->displayedData->displayedDataType
+               == self::PAYMENT_OUTPUT_SHOW_INSTRUCTIONS
+        ) {
+            $payment->setAdditionalInformation(
+                Config::PAYMENT_SHOW_DATA_KEY,
+                $statusResponse->createdPaymentOutput->displayedData->toJson()
+            );
+        }
+
+        $this->statusResolver->resolve($order, $statusResponse->createdPaymentOutput->payment);
+
+        $payment->setAdditionalInformation(Config::PAYMENT_ID_KEY, $ingenicoPaymentId);
+        $payment->setAdditionalInformation(Config::PAYMENT_STATUS_KEY, $ingenicoPaymentStatus);
+        $payment->setAdditionalInformation(Config::PAYMENT_STATUS_CODE_KEY, $ingenicoPaymentStatusCode);
+    }
+
+    /**
+     * @param OrderInterface $order
+     * @param GetHostedCheckoutResponse $statusResponse
+     */
+    private function processTokens($order, $statusResponse)
     {
-        if (!$statusResponse->createdPaymentOutput) {
-            $msg = __('Your payment was rejected or a technical error occured during processing.');
-            throw new LocalizedException(__($msg));
+        $tokens = $statusResponse->createdPaymentOutput->tokens;
+        if ($tokens) {
+
+            /** @var int $customerId */
+            $customerId = $order->getCustomerId();
+            /** @var string $paymentProductId */
+            $paymentProductId = $order->getPayment()->getAdditionalInformation(Config::PRODUCT_ID_KEY);
+            if (($customerId < 1) || empty($paymentProductId)) {
+                $this->logger->error(
+                    "Empty value detected: customerId = $customerId, paymentProductId = $paymentProductId"
+                );
+            } else {
+                $this->tokenService->add(
+                    $customerId,
+                    $paymentProductId,
+                    $tokens
+                );
+            }
         }
     }
 }

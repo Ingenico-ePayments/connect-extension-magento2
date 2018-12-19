@@ -4,7 +4,6 @@ namespace Netresearch\Epayments\Model;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Store\Model\ScopeInterface;
 
@@ -12,7 +11,12 @@ class Config implements ConfigInterface
 {
     const CONFIG_INGENICO_VERSION = 'ingenico_epayments/general/version';
     const CONFIG_INGENICO_ACTIVE = 'ingenico_epayments/general/active';
-    const CONFIG_INGENICO_INLINE_PAYMENTS = 'ingenico_epayments/checkout/inline_payments';
+
+    const CONFIG_INGENICO_CHECKOUT_TYPE_HOSTED_CHECKOUT = '0';
+    const CONFIG_INGENICO_CHECKOUT_TYPE_INLINE = '1';
+    const CONFIG_INGENICO_CHECKOUT_TYPE_REDIRECT = '2';
+    const CONFIG_INGENICO_CHECKOUT_TYPE = 'ingenico_epayments/checkout/inline_payments';
+
     const CONFIG_INGENICO_API_ENDPOINT = 'ingenico_epayments/settings/api_endpoint';
     const CONFIG_INGENICO_API_ENDPOINT_SECONDARY = 'ingenico_epayments/settings/api_endpoint_secondary';
     const CONFIG_INGENICO_WEBHOOKS_KEY_ID = 'ingenico_epayments/webhook/webhooks_key_id';
@@ -37,6 +41,7 @@ class Config implements ConfigInterface
     const CONFIG_INGENICO_SFTP_USERNAME = 'ingenico_epayments/sftp_settings/username';
     const CONFIG_INGENICO_SFTP_PASSWORD = 'ingenico_epayments/sftp_settings/password';
     const CONFIG_INGENICO_SFTP_REMOTE_PATH = 'ingenico_epayments/sftp_settings/remote_path';
+    const CONFIG_INGENICO_SYSTEM_PREFIX = 'ingenico_epayments/settings/system_prefix';
 
     const CONFIG_INGENICO_METHODS_TOKEN = 'ingenico_epayments/payment_method_groups/TOKEN';
     const CONFIG_INGENICO_METHODS_BANKTRANSFER = 'ingenico_epayments/payment_method_groups/BANKTRANSFER';
@@ -50,6 +55,7 @@ class Config implements ConfigInterface
     const CONFIG_INGENICO_CAPTURES_MODE = 'ingenico_epayments/captures/capture_mode';
     const CONFIG_INGENICO_CAPTURES_MODE_DIRECT = 'direct';
     const CONFIG_INGENICO_CAPTURES_MODE_AUTHORIZE = 'authorize';
+    const CONFIG_INGENICO_HOSTED_CHECKOUT_VARIANT = 'ingenico_epayments/checkout/hosted_checkout_variant';
 
     /** AdditionalInformation keys */
     const PAYMENT_ID_KEY = 'ingenico_payment_id';
@@ -70,9 +76,6 @@ class Config implements ConfigInterface
     /** @var ScopeConfigInterface */
     private $scopeConfig;
 
-    /** @var ProductMetadataInterface */
-    private $productMetadata;
-
     /** @var DirectoryList */
     private $directoryList;
 
@@ -81,18 +84,15 @@ class Config implements ConfigInterface
 
     /**
      * @param ScopeConfigInterface $scopeConfig
-     * @param ProductMetadataInterface $productMetadata
      * @param DirectoryList $directoryList
      * @param EncryptorInterface $encryptor
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
-        ProductMetadataInterface $productMetadata,
         DirectoryList $directoryList,
         EncryptorInterface $encryptor
     ) {
         $this->scopeConfig = $scopeConfig;
-        $this->productMetadata = $productMetadata;
         $this->directoryList = $directoryList;
         $this->encryptor = $encryptor;
     }
@@ -166,11 +166,11 @@ class Config implements ConfigInterface
 
     /**
      * @param int|null $storeId
-     * @return bool
+     * @return string
      */
-    public function isInlinePaymentsEnabled($storeId = null)
+    public function getCheckoutType($storeId = null)
     {
-        return $this->getValue(self::CONFIG_INGENICO_INLINE_PAYMENTS, $storeId);
+        return $this->getValue(self::CONFIG_INGENICO_CHECKOUT_TYPE, $storeId);
     }
 
     /**
@@ -251,6 +251,14 @@ class Config implements ConfigInterface
     public function getHostedCheckoutSubDomain($storeId = null)
     {
         return $this->getValue(self::CONFIG_INGENICO_HOSTED_CHECKOUT_SUBDOMAIN, $storeId);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getHostedCheckoutVariant($storeId = null)
+    {
+        return $this->getValue(self::CONFIG_INGENICO_HOSTED_CHECKOUT_VARIANT, $storeId);
     }
 
     /**
@@ -378,5 +386,13 @@ class Config implements ConfigInterface
     public function getSftpRemotePath($storeId = null)
     {
         return $this->getValue(self::CONFIG_INGENICO_SFTP_REMOTE_PATH, $storeId);
+    }
+
+    /***
+     * @inheritdoc
+     */
+    public function getReferencePrefix()
+    {
+        return (string) $this->getValue(self::CONFIG_INGENICO_SYSTEM_PREFIX);
     }
 }

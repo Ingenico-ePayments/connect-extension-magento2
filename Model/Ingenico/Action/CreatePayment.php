@@ -162,19 +162,6 @@ class CreatePayment implements ActionInterface
         $payment->setAdditionalInformation(Config::PAYMENT_STATUS_KEY, $paymentStatus);
         $payment->setAdditionalInformation(Config::PAYMENT_STATUS_CODE_KEY, $paymentStatusCode);
 
-        $info = $this->config->getPaymentStatusInfo($paymentStatus);
-        /** Add payment history comment */
-        if ($info) {
-            $order->addStatusHistoryComment(
-                sprintf(
-                    "%s (payment status: '%s', payment status code: '%s')",
-                    $info,
-                    $paymentStatus,
-                    $paymentStatusCode
-                )
-            );
-        }
-
         $order->addRelatedObject($payment);
         $this->orderRepository->save($order);
 

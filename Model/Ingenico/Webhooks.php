@@ -3,9 +3,11 @@
 namespace Netresearch\Epayments\Model\Ingenico;
 
 use Ingenico\Connect\Sdk\Domain\Webhooks\WebhooksEvent;
-use Magento\Framework\Api\SearchCriteriaBuilderFactory;
-use Magento\Sales\Api\Data\OrderInterface;
-use Magento\Sales\Model\OrderRepository;
+use Magento\Framework\App\RequestInterface;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Netresearch\Epayments\Api\Data\EventInterface;
+use Netresearch\Epayments\Api\Data\EventInterfaceFactory;
+use Netresearch\Epayments\Api\EventRepositoryInterface;
 use Netresearch\Epayments\Model\Ingenico\Status\ResolverInterface;
 use Netresearch\Epayments\Model\Ingenico\Webhooks\EventDataResolverInterface;
 use Netresearch\Epayments\Model\Ingenico\Webhooks\HelperAdapter;
@@ -19,24 +21,19 @@ class Webhooks
     private $webhooksHelperAdapter;
 
     /**
-     * @var ResolverInterface
-     */
-    private $statusResolver;
-
-    /**
-     * @var \Magento\Framework\App\RequestInterface | \Magento\Framework\App\Request\Http
+     * @var RequestInterface | \Magento\Framework\App\Request\Http
      */
     private $request;
 
     /**
-     * @var OrderRepository
+     * @var EventRepositoryInterface
      */
-    private $orderRepository;
+    private $eventRepository;
 
     /**
-     * @var SearchCriteriaBuilderFactory
+     * @var EventInterfaceFactory
      */
-    private $criteriaBuilderFactory;
+    private $eventFactory;
 
     /**
      * @var LoggerInterface
@@ -46,44 +43,39 @@ class Webhooks
     /**
      * Webhooks constructor.
      *
-     * @param HelperAdapter $helperAdapter
-     * @param ResolverInterface $resolver
-     * @param OrderRepository $orderRepository
-     * @param SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory
-     * @param \Magento\Framework\App\RequestInterface $request
+     * @param HelperAdapter $webhooksHelperAdapter
+     * @param ResolverInterface $statusResolver
+     * @param \Magento\Framework\App\Request\Http|RequestInterface $request
+     * @param EventRepositoryInterface $eventRepository
+     * @param EventInterfaceFactory $eventFactory
      * @param LoggerInterface $logger
      */
     public function __construct(
-        HelperAdapter $helperAdapter,
-        ResolverInterface $resolver,
-        OrderRepository $orderRepository,
-        SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
-        \Magento\Framework\App\RequestInterface $request,
+        HelperAdapter $webhooksHelperAdapter,
+        RequestInterface $request,
+        EventRepositoryInterface $eventRepository,
+        EventInterfaceFactory $eventFactory,
         LoggerInterface $logger
     ) {
-        $this->webhooksHelperAdapter = $helperAdapter;
-        $this->statusResolver = $resolver;
-        $this->orderRepository = $orderRepository;
-        $this->criteriaBuilderFactory = $searchCriteriaBuilderFactory;
+        $this->webhooksHelperAdapter = $webhooksHelperAdapter;
         $this->request = $request;
+        $this->eventRepository = $eventRepository;
+        $this->eventFactory = $eventFactory;
         $this->logger = $logger;
     }
 
     /**
-     * Update order status
-     *
      * @param EventDataResolverInterface $eventDataResolver
      * @return string
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
-    public function handle(
-        EventDataResolverInterface $eventDataResolver
-    ) {
+    public function handle(EventDataResolverInterface $eventDataResolver)
+    {
         /** @var string $securitySignature */
         $securitySignature = $this->request->getHeader('X-GCS-Signature');
         /** @var string $securityKey */
         $securityKey = $this->request->getHeader('X-GCS-KeyId');
 
-        /** @var \Ingenico\Connect\Sdk\Domain\Webhooks\WebhooksEvent $event */
         $event = $this->webhooksHelperAdapter->unmarshal(
             $this->request->getContent(),
             [
@@ -96,19 +88,33 @@ class Webhooks
             return $securitySignature;
         }
 
-        $eventResponse = $eventDataResolver->getResponse($event);
-        $orderIncrementId = $eventDataResolver->getMerchantOrderReference($event);
-        $order = $this->getOrderByIncrementId($orderIncrementId);
-        try {
-            $this->statusResolver->resolve($order, $eventResponse);
-        } catch (\Exception $exception) {
-            $this->logger->error(
-                "Could not resolve status of Order {$order->getIncrementId()}: {$exception->getMessage()}",
-                ['exception' => $exception]
-            );
-        }
+        $this->logger->debug(
+            "Received incoming webhook event with id {$event->id}:\n
+            {$event->toJson()}"
+        );
 
-        $this->orderRepository->save($order);
+        try {
+            $orderIncrementId = $eventDataResolver->getMerchantOrderReference($event);
+            $eventModel = $this->eventFactory->create(
+                [
+                    'data' => [
+                        EventInterface::EVENT_ID => $event->id,
+                        EventInterface::ORDER_INCREMENT_ID => $orderIncrementId,
+                        EventInterface::PAYLOAD => $event->toJson(),
+                        EventInterface::CREATED_TIMESTAMP => $event->created
+                    ],
+                ]
+            );
+            $this->eventRepository->save($eventModel);
+        } catch (\InvalidArgumentException $exception) {
+            $this->logger->debug("Error with matching event {$event->id}: {$exception->getMessage()}");
+
+            return $exception->getMessage();
+        } catch (CouldNotSaveException $exception) {
+            $this->logger->debug("Could not save event {$event->id} in processing queue: {$exception->getMessage()}");
+
+            throw $exception;
+        }
 
         return $securitySignature;
     }
@@ -123,22 +129,5 @@ class Webhooks
     private function checkEndpointTest(WebhooksEvent $event)
     {
         return strpos($event->id, 'TEST') === 0;
-    }
-
-    /**
-     * @param int $orderIncrementId
-     * @return OrderInterface
-     */
-    private function getOrderByIncrementId($orderIncrementId)
-    {
-        $criteriaBuilder = $this->criteriaBuilderFactory->create();
-        $criteriaBuilder->addFilter('increment_id', $orderIncrementId);
-        $orderList = $this->orderRepository->getList($criteriaBuilder->create())->getItems();
-
-        if (count($orderList) !== 1) {
-            throw new \RuntimeException('System can not load order mentioned in the Event.');
-        }
-
-        return array_shift($orderList);
     }
 }

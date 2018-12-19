@@ -5,11 +5,13 @@ namespace Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInpu
 use Ingenico\Connect\Sdk\DataObject;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\EInvoicePaymentMethodSpecificInputFactory;
 use Magento\Sales\Api\Data\OrderInterface;
+use Netresearch\Epayments\Model\Config;
+use Netresearch\Epayments\Model\Ingenico\RequestBuilder\DecoratorInterface;
 
 /**
  * Class EInvoiceDecorator
  */
-class EInvoiceDecorator extends AbstractMethodDecorator
+class EInvoiceDecorator implements DecoratorInterface
 {
     /**
      * @var EInvoicePaymentMethodSpecificInputFactory
@@ -33,7 +35,7 @@ class EInvoiceDecorator extends AbstractMethodDecorator
     public function decorate(DataObject $request, OrderInterface $order)
     {
         $input = $this->eInvoiceTransferPaymentMethodSpecificInputFactory->create();
-        $input->paymentProductId = $this->getProductId($order);
+        $input->paymentProductId = $order->getPayment()->getAdditionalInformation(Config::PRODUCT_ID_KEY);
 
         $request->eInvoicePaymentMethodSpecificInput = $input;
 

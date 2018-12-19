@@ -5,11 +5,13 @@ namespace Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInpu
 use Ingenico\Connect\Sdk\DataObject;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\CashPaymentMethodSpecificInputFactory;
 use Magento\Sales\Api\Data\OrderInterface;
+use Netresearch\Epayments\Model\Config;
+use Netresearch\Epayments\Model\Ingenico\RequestBuilder\DecoratorInterface;
 
 /**
  * Class CashDecorator
  */
-class CashDecorator extends AbstractMethodDecorator
+class CashDecorator implements DecoratorInterface
 {
     /**
      * @var CashPaymentMethodSpecificInputFactory
@@ -33,8 +35,7 @@ class CashDecorator extends AbstractMethodDecorator
     public function decorate(DataObject $request, OrderInterface $order)
     {
         $input = $this->cashTransferPaymentMethodSpecificInputFactory->create();
-        $input->paymentProductId = $this->getProductId($order);
-
+        $input->paymentProductId = $order->getPayment()->getAdditionalInformation(Config::PRODUCT_ID_KEY);
         $request->cashPaymentMethodSpecificInput = $input;
 
         return $request;

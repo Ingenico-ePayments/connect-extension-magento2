@@ -23,6 +23,7 @@ class ShoppingCartBuilder
 
     /**
      * ShoppingCartBuilder constructor.
+     *
      * @param ShoppingCartFactory $shoppingCartFactory
      * @param LineItemsBuilder $lineItemsBuilder
      */

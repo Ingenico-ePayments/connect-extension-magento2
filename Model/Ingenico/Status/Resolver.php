@@ -1,10 +1,13 @@
 <?php
+
 namespace Netresearch\Epayments\Model\Ingenico\Status;
 
 use Ingenico\Connect\Sdk\Domain\Capture\CaptureResponse;
 use Ingenico\Connect\Sdk\Domain\Definitions\AbstractOrderStatus;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
+use Ingenico\Connect\Sdk\Domain\Payment\PaymentResponse;
 use Ingenico\Connect\Sdk\Domain\Refund\Definitions\RefundResult;
+use Ingenico\Connect\Sdk\Domain\Refund\RefundResponse;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NotFoundException;
 use Magento\Framework\Exception\PaymentException;
@@ -20,6 +23,7 @@ use Netresearch\Epayments\Model\Transaction\TransactionManager;
 
 /**
  * Class Resolver
+ *
  * @package Netresearch\Epayments\Model
  */
 class Resolver implements ResolverInterface
@@ -28,6 +32,7 @@ class Resolver implements ResolverInterface
      * @var PoolInterface
      */
     private $refundHandlerPool;
+
     /**
      * @var PoolInterface
      */
@@ -89,7 +94,7 @@ class Resolver implements ResolverInterface
      * Pulls the responsible StatusInterface implementation for the status and lets them handle the order transition
      *
      * @param OrderInterface|Order $order
-     * @param AbstractOrderStatus $ingenicoStatus
+     * @param PaymentResponse|RefundResponse|AbstractOrderStatus $ingenicoStatus
      * @throws NotFoundException
      * @throws PaymentException
      * @throws LocalizedException
@@ -103,10 +108,26 @@ class Resolver implements ResolverInterface
                 __('No payment object on order #%id', ['id' => $order->getIncrementId()])
             );
         }
-        $this->preparePayment($payment, $ingenicoStatus);
 
+        $existingStatus = $this->statusResponseManager->get($payment, $ingenicoStatus->id);
+        $newStatusChangeDateTime = $ingenicoStatus->statusOutput->statusCodeChangeDateTime;
+
+        if ($existingStatus
+            && $existingStatus->statusOutput->statusCodeChangeDateTime >= $newStatusChangeDateTime) {
+            // the already existing status information is newer or equal to the status that should be applied
+            return;
+        }
+
+        $this->preparePayment($payment, $ingenicoStatus);
         $statusHandler = $this->getStatusHandler($ingenicoStatus);
         $statusHandler->resolveStatus($order, $ingenicoStatus);
+        $order->addCommentToStatusHistory(
+            sprintf(
+                'Successfully processed notification about status %s with statusCode %s',
+                $ingenicoStatus->status,
+                $ingenicoStatus->statusOutput->statusCode
+            )
+        );
 
         $this->orderEmailManager->process($order, $ingenicoStatus->status);
 
@@ -114,33 +135,6 @@ class Resolver implements ResolverInterface
         if ($ingenicoStatus instanceof RefundResult) {
             $this->persistCreditMemoUpdate($order);
         }
-    }
-
-    /**
-     * @param AbstractOrderStatus $ingenicoStatus
-     * @return HandlerInterface
-     * @throws \Magento\Framework\Exception\NotFoundException
-     */
-    private function getStatusHandler(AbstractOrderStatus $ingenicoStatus)
-    {
-        $handler = false;
-        if ($ingenicoStatus instanceof Payment || $ingenicoStatus instanceof CaptureResponse) {
-            $handler = $this->paymentHandlerPool->get($ingenicoStatus->status);
-        } elseif ($ingenicoStatus instanceof RefundResult) {
-            $handler = $this->refundHandlerPool->get($ingenicoStatus->status);
-        }
-        if (!$handler) {
-            throw new NotFoundException(
-                __(
-                    'Could not find status resolver for response %class and status %status',
-                    [
-                        'class' => get_class($ingenicoStatus),
-                        'status' => $ingenicoStatus->status,
-                    ]
-                )
-            );
-        }
-        return $handler;
     }
 
     /**
@@ -169,6 +163,34 @@ class Resolver implements ResolverInterface
             $ingenicoStatus->id,
             $ingenicoStatus
         );
+    }
+
+    /**
+     * @param AbstractOrderStatus $ingenicoStatus
+     * @return HandlerInterface
+     * @throws \Magento\Framework\Exception\NotFoundException
+     */
+    private function getStatusHandler(AbstractOrderStatus $ingenicoStatus)
+    {
+        $handler = false;
+        if ($ingenicoStatus instanceof Payment || $ingenicoStatus instanceof CaptureResponse) {
+            $handler = $this->paymentHandlerPool->get($ingenicoStatus->status);
+        } elseif ($ingenicoStatus instanceof RefundResult) {
+            $handler = $this->refundHandlerPool->get($ingenicoStatus->status);
+        }
+        if (!$handler) {
+            throw new NotFoundException(
+                __(
+                    'Could not find status resolver for response %class and status %status',
+                    [
+                        'class' => get_class($ingenicoStatus),
+                        'status' => $ingenicoStatus->status,
+                    ]
+                )
+            );
+        }
+
+        return $handler;
     }
 
     /**

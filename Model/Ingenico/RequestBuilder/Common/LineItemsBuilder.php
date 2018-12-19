@@ -2,8 +2,8 @@
 
 namespace Netresearch\Epayments\Model\Ingenico\RequestBuilder\Common;
 
-use Ingenico\Connect\Sdk\Domain\Payment\Definitions\LineItem;
 use Ingenico\Connect\Sdk\Domain\Definitions\AmountOfMoneyFactory;
+use Ingenico\Connect\Sdk\Domain\Payment\Definitions\LineItem;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\LineItemFactory;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\LineItemInvoiceDataFactory;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\OrderLineDetailsFactory;
@@ -19,14 +19,17 @@ class LineItemsBuilder
      * @var LineItemFactory
      */
     private $lineItemFactory;
+
     /**
      * @var AmountOfMoneyFactory
      */
     private $amountOfMoneyFactory;
+
     /**
      * @var LineItemInvoiceDataFactory
      */
     private $lineItemInvoiceDataFactory;
+
     /**
      * @var OrderLineDetailsFactory
      */
@@ -63,6 +66,11 @@ class LineItemsBuilder
         $orderItems = $order->getAllVisibleItems();
 
         foreach ($orderItems as $item) {
+            if ($item->getParentItem()) {
+                /** Only add base items. */
+                continue;
+            }
+
             $lineItem = $this->lineItemFactory->create();
 
             $itemAmountOfMoney = $this->amountOfMoneyFactory->create();
@@ -112,37 +120,6 @@ class LineItemsBuilder
      * @param Order $order
      * @return LineItem
      */
-    private function getDiscountsItem(Order $order)
-    {
-        $formatAmountDisc = DataHelper::formatIngenicoAmount($order->getBaseDiscountAmount());
-        $discountAmount = $this->amountOfMoneyFactory->create();
-        $discountAmount->amount = $formatAmountDisc;
-        $discountAmount->currencyCode = $order->getBaseCurrencyCode();
-
-        $discountDetails = $this->orderLineDetailsFactory->create();
-        $discountDetails->productName = 'Discount';
-        $discountDetails->quantity = 1;
-        $discountDetails->lineAmountTotal = $formatAmountDisc;
-        $discountDetails->productPrice = $formatAmountDisc;
-        $discountDetails->taxAmount = DataHelper::formatIngenicoAmount(-$order->getBaseDiscountTaxCompensationAmount());
-        $discountInvoice = $this->lineItemInvoiceDataFactory->create();
-        $description = $order->getDiscountDescription() ?: 'Discount';
-        $discountInvoice->description = $description;
-        $discountInvoice->nrOfItems = 1;
-        $discountInvoice->pricePerItem = $formatAmountDisc;
-
-        $discountItem = $this->lineItemFactory->create();
-        $discountItem->amountOfMoney = $discountAmount;
-        $discountItem->orderLineDetails = $discountDetails;
-        $discountItem->invoiceData = $discountInvoice;
-
-        return $discountItem;
-    }
-
-    /**
-     * @param Order $order
-     * @return LineItem
-     */
     private function getShippingItem(Order $order)
     {
         $formatAmountShip = DataHelper::formatIngenicoAmount($order->getBaseShippingInclTax());
@@ -168,5 +145,36 @@ class LineItemsBuilder
         $shippingItem->invoiceData = $shippingInvoice;
 
         return $shippingItem;
+    }
+
+    /**
+     * @param Order $order
+     * @return LineItem
+     */
+    private function getDiscountsItem(Order $order)
+    {
+        $formatAmountDisc = DataHelper::formatIngenicoAmount($order->getBaseDiscountAmount());
+        $discountAmount = $this->amountOfMoneyFactory->create();
+        $discountAmount->amount = $formatAmountDisc;
+        $discountAmount->currencyCode = $order->getBaseCurrencyCode();
+
+        $discountDetails = $this->orderLineDetailsFactory->create();
+        $discountDetails->productName = 'Discount';
+        $discountDetails->quantity = 1;
+        $discountDetails->lineAmountTotal = $formatAmountDisc;
+        $discountDetails->productPrice = $formatAmountDisc;
+        $discountDetails->taxAmount = DataHelper::formatIngenicoAmount(-$order->getBaseDiscountTaxCompensationAmount());
+        $discountInvoice = $this->lineItemInvoiceDataFactory->create();
+        $description = $order->getDiscountDescription() ?: 'Discount';
+        $discountInvoice->description = $description;
+        $discountInvoice->nrOfItems = 1;
+        $discountInvoice->pricePerItem = $formatAmountDisc;
+
+        $discountItem = $this->lineItemFactory->create();
+        $discountItem->amountOfMoney = $discountAmount;
+        $discountItem->orderLineDetails = $discountDetails;
+        $discountItem->invoiceData = $discountInvoice;
+
+        return $discountItem;
     }
 }

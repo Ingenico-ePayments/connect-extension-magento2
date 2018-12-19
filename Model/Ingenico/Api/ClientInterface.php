@@ -12,14 +12,15 @@ use Ingenico\Connect\Sdk\Domain\Payment\CapturePaymentRequest;
 use Ingenico\Connect\Sdk\Domain\Payment\CreatePaymentRequest;
 use Ingenico\Connect\Sdk\Domain\Payment\CreatePaymentResponse;
 use Ingenico\Connect\Sdk\Domain\Payment\PaymentResponse;
+use Ingenico\Connect\Sdk\Domain\Product\PaymentProductResponse;
 use Ingenico\Connect\Sdk\Domain\Product\PaymentProducts;
 use Ingenico\Connect\Sdk\Domain\Refund\ApproveRefundRequest;
 use Ingenico\Connect\Sdk\Domain\Refund\RefundRequest;
 use Ingenico\Connect\Sdk\Domain\Refund\RefundResponse;
 use Ingenico\Connect\Sdk\Domain\Sessions\SessionRequest;
 use Ingenico\Connect\Sdk\Domain\Sessions\SessionResponse;
+use Ingenico\Connect\Sdk\ResponseException;
 use Magento\Framework\Exception\LocalizedException;
-use Netresearch\Epayments\Model\Ingenico\RequestInterface;
 
 interface ClientInterface
 {
@@ -43,6 +44,7 @@ interface ClientInterface
      * @param string $locale
      * @param int $scopeId
      * @return PaymentProducts
+     * @throws ResponseException
      */
     public function getAvailablePaymentProducts($amount, $currencyCode, $countryCode, $locale, $scopeId);
 
@@ -57,6 +59,7 @@ interface ClientInterface
      * @param $scopeId
      * @return PaymentProductResponse
      * @throws LocalizedException
+     * @throws ResponseException
      */
     public function getIngenicoPaymentProduct(
         $paymentProductId,
@@ -73,16 +76,15 @@ interface ClientInterface
      * @param CreateHostedCheckoutRequest $paymentProductRequest
      * @param int|null $scopeId
      * @return CreateHostedCheckoutResponse
+     * @throws ResponseException
      */
-    public function createHostedCheckout(
-        CreateHostedCheckoutRequest $paymentProductRequest,
-        $scopeId = null
-    );
+    public function createHostedCheckout(CreateHostedCheckoutRequest $paymentProductRequest, $scopeId = null);
 
     /**
      * @param CreatePaymentRequest $request
      * @param int|null $scopeId
      * @return CreatePaymentResponse
+     * @throws ResponseException
      */
     public function createPayment(CreatePaymentRequest $request, $scopeId = null);
 
@@ -92,6 +94,7 @@ interface ClientInterface
      * @param string $refundId
      * @param int $scopeId
      * @return RefundResponse
+     * @throws ResponseException
      */
     public function ingenicoPaymentRefund($refundId, $scopeId = null);
 
@@ -101,6 +104,7 @@ interface ClientInterface
      * @param string $ingenicoPaymentId
      * @param int $scopeId
      * @return CancelPaymentResponse
+     * @throws ResponseException
      */
     public function ingenicoPaymentCancel($ingenicoPaymentId, $scopeId = null);
 
@@ -110,6 +114,7 @@ interface ClientInterface
      * @param string $ingenicoPaymentId
      * @param int $scopeId
      * @return PaymentResponse
+     * @throws ResponseException
      */
     public function ingenicoPaymentAccept($ingenicoPaymentId, $scopeId = null);
 
@@ -120,6 +125,7 @@ interface ClientInterface
      * @param ApproveRefundRequest $request
      * @param int $scopeId
      * @return null
+     * @throws ResponseException
      */
     public function ingenicoRefundAccept($refundId, ApproveRefundRequest $request, $scopeId = null);
 
@@ -128,6 +134,7 @@ interface ClientInterface
      *
      * @param string $refundId
      * @param int $scopeId
+     * @throws ResponseException
      */
     public function ingenicoRefundCancel($refundId, $scopeId = null);
 
@@ -137,6 +144,7 @@ interface ClientInterface
      * @param string $ingenicoPaymentId
      * @param int $scopeId
      * @return CancelApprovalPaymentResponse
+     * @throws ResponseException
      */
     public function ingenicoCancelApproval($ingenicoPaymentId, $scopeId = null);
 
@@ -146,6 +154,7 @@ interface ClientInterface
      * @param string $ingenicoPaymentId
      * @param int $scopeId
      * @return PaymentResponse
+     * @throws ResponseException
      */
     public function ingenicoPayment($ingenicoPaymentId, $scopeId = null);
 
@@ -157,6 +166,7 @@ interface ClientInterface
      * @param CallContext $callContext
      * @param int $scopeId
      * @return RefundResponse
+     * @throws ResponseException
      */
     public function ingenicoRefund($ingenicoPaymentId, RefundRequest $request, $callContext, $scopeId = null);
 
@@ -165,6 +175,7 @@ interface ClientInterface
      * @param CapturePaymentRequest $request
      * @param int|null $scopeId
      * @return \Ingenico\Connect\Sdk\Domain\Capture\CaptureResponse
+     * @throws ResponseException
      */
     public function ingenicoPaymentCapture($ingenicoPaymentId, CapturePaymentRequest $request, $scopeId = null);
 
@@ -173,6 +184,7 @@ interface ClientInterface
      * @param ApprovePaymentRequest $request
      * @param int|null $scopeId
      * @return \Ingenico\Connect\Sdk\Domain\Payment\PaymentApprovalResponse
+     * @throws ResponseException
      */
     public function ingenicoPaymentApprove($ingenicoPaymentId, ApprovePaymentRequest $request, $scopeId = null);
 
@@ -180,6 +192,7 @@ interface ClientInterface
      * @param SessionRequest $request
      * @param int|null $scopeId
      * @return SessionResponse
+     * @throws ResponseException
      */
     public function ingenicoCreateSession(SessionRequest $request, $scopeId = null);
 
@@ -187,6 +200,7 @@ interface ClientInterface
      * @param int|null $scopeId
      * @param string[] $data
      * @return \Ingenico\Connect\Sdk\Domain\Services\TestConnection
+     * @throws ResponseException
      */
     public function ingenicoTestAccount($scopeId, $data = []);
 }

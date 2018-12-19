@@ -5,6 +5,9 @@
         <job name="cancel_stale" instance="Netresearch\Epayments\Cron\CancelStaleOrders" method="execute">
             <schedule>0 5 * * *</schedule>
         </job>
+        <job name="process_webhook_events" instance="Netresearch\Epayments\Cron\ProcessEvents" method="execute">
+            <schedule>*/5 * * * *</schedule>
+        </job>
     </group>
     <group id="webhook_workaround">
         <job name="process_pending_order" instance="Netresearch\Epayments\Cron\ProcessPendingOrder" method="execute">

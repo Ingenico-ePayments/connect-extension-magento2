@@ -5,10 +5,16 @@ namespace Netresearch\Epayments\Model\Ingenico\Status;
 use Ingenico\Connect\Sdk\Domain\Definitions\AbstractOrderStatus;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Model\Order;
 use Netresearch\Epayments\Helper\Data as DataHelper;
 use Netresearch\Epayments\Model\Ingenico\StatusInterface;
 use Netresearch\Epayments\Model\StatusResponseManagerInterface;
 
+/**
+ * Class Captured
+ *
+ * @package Netresearch\Epayments\Model
+ */
 class Captured implements HandlerInterface
 {
     /**
@@ -66,9 +72,15 @@ class Captured implements HandlerInterface
             throw new LocalizedException(__('Unknown order status.'));
         }
 
+        if ($order->getState() === Order::STATE_PAYMENT_REVIEW && $order->getStatus() === Order::STATUS_FRAUD) {
+            $payment->setIsTransactionApproved(true);
+            $payment->update(false);
+        }
         $payment->setNotificationResult(true);
         $payment->setIsTransactionClosed(true);
         $payment->setIsTransactionPending(false);
+        $order->setState(Order::STATE_PROCESSING);
+        $order->setStatus($order->getConfig()->getStateDefaultStatus(Order::STATE_PROCESSING));
         $payment->registerCaptureNotification(DataHelper::reformatMagentoAmount($amount));
     }
 }

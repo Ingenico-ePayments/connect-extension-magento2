@@ -8,6 +8,11 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\Order\Payment;
 
+/**
+ * Interface StatusResponseManagerInterface
+ *
+ * @package Netresearch\Epayments\Model
+ */
 interface StatusResponseManagerInterface
 {
     const TRANSACTION_INFO_KEY = 'gc_response_object';
@@ -44,8 +49,17 @@ interface StatusResponseManagerInterface
 
     /**
      * Normalize values to be displayed in transaction info tab
+     *
      * @param mixed $info
      * @return mixed
      */
     public function formatInfo($info);
+
+    /**
+     * Persists the transaction
+     *
+     * @param \Magento\Sales\Api\Data\TransactionInterface $transaction
+     * @return void
+     */
+    public function save(\Magento\Sales\Api\Data\TransactionInterface $transaction);
 }

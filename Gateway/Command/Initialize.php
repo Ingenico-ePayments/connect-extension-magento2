@@ -3,15 +3,11 @@
 namespace Netresearch\Epayments\Gateway\Command;
 
 use Ingenico\Connect\Sdk\ResponseException;
-use Magento\Framework\Message\ManagerInterface;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Sales\Model\Order;
-use Netresearch\Epayments\Model\Config;
 use Netresearch\Epayments\Model\Ingenico\Action\CreateHostedCheckout;
-use Netresearch\Epayments\Model\Ingenico\Action\CreatePayment;
-use Psr\Log\LoggerInterface;
 
-class Initialize extends AbstractCommand implements CommandInterface
+class Initialize implements CommandInterface
 {
     /**
      * @var CreateHostedCheckout
@@ -19,32 +15,31 @@ class Initialize extends AbstractCommand implements CommandInterface
     private $hostedCheckout;
 
     /**
-     * @var CreatePayment
+     * @var ApiErrorHandler
      */
-    private $createPayment;
+    private $apiErrorHandler;
 
     /**
      * Initialize constructor.
      *
-     * @param ManagerInterface $manager
-     * @param LoggerInterface $logger
      * @param CreateHostedCheckout $hostedCheckout
-     * @param CreatePayment $createPayment
+     * @param ApiErrorHandler $apiErrorHandler
      */
-    public function __construct(
-        ManagerInterface $manager,
-        LoggerInterface $logger,
-        CreateHostedCheckout $hostedCheckout,
-        CreatePayment $createPayment
-    ) {
+    public function __construct(CreateHostedCheckout $hostedCheckout, ApiErrorHandler $apiErrorHandler)
+    {
         $this->hostedCheckout = $hostedCheckout;
-        $this->createPayment = $createPayment;
-
-        parent::__construct($manager, $logger);
+        $this->apiErrorHandler = $apiErrorHandler;
     }
 
     /**
-     * {@inheritdoc}
+     * Trigger the initialization of the Hosted Checkout (only used for redirect payments)
+     *
+     * @see \Netresearch\Epayments\Gateway\CanInitialize;
+     *
+     * @param mixed[] $commandSubject
+     * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Payment\Gateway\Command\CommandException
      */
     public function execute(array $commandSubject)
     {
@@ -53,24 +48,14 @@ class Initialize extends AbstractCommand implements CommandInterface
         $order = $payment->getOrder();
 
         try {
-            if ($payment->getAdditionalInformation(Config::CLIENT_PAYLOAD_KEY)) {
-                $this->createPayment->create($order);
-                /** Delete the payload after we are done with it. */
-                $payment->setAdditionalInformation(Config::CLIENT_PAYLOAD_KEY, null);
-            } else {
-                $this->hostedCheckout->create($order);
-            }
+            $this->hostedCheckout->create($order);
 
             $stateObject = $commandSubject['stateObject'];
-            $stateObject->setState(
-                $order->getState() === Order::STATE_NEW ? Order::STATE_PENDING_PAYMENT : $order->getState()
-            );
-            $stateObject->setStatus(
-                $order->getStatus() === Order::STATE_NEW ? Order::STATE_PENDING_PAYMENT : $order->getStatus()
-            );
+            $stateObject->setState(Order::STATE_PENDING_PAYMENT);
+            $stateObject->setStatus(Order::STATE_PENDING_PAYMENT);
             $stateObject->setIsNotified(false);
         } catch (ResponseException $e) {
-            $this->handleError($e);
+            $this->apiErrorHandler->handleError($e);
         }
     }
 }

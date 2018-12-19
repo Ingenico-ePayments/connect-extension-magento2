@@ -10,5 +10,5 @@ class RequestLogger extends Base
     protected $fileName = '/var/log/ingenico_epayments.log';
 
     /** @var int */
-    protected $loggerType = \Monolog\Logger::INFO;
+    protected $loggerType = \Monolog\Logger::DEBUG;
 }

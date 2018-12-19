@@ -63,9 +63,9 @@ interface ConfigInterface
 
     /**
      * @param int|null $storeId
-     * @return bool
+     * @return string
      */
-    public function isInlinePaymentsEnabled($storeId = null);
+    public function getCheckoutType($storeId = null);
 
     /**
      * @param null|int $storeId
@@ -144,6 +144,14 @@ interface ConfigInterface
      * @return string
      */
     public function getHostedCheckoutSubDomain($storeId = null);
+
+    /**
+     * Return Hosted Checkout Variant
+     *
+     * @param null|int $storeId
+     * @return string
+     */
+    public function getHostedCheckoutVariant($storeId = null);
 
     /**
      * Returns period after which pending orders will be canceled
@@ -254,4 +262,9 @@ interface ConfigInterface
      * @return string
      */
     public function getSftpRemotePath($storeId = null);
+
+    /**
+     * @return string
+     */
+    public function getReferencePrefix();
 }

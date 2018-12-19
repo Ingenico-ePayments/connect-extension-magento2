@@ -136,7 +136,7 @@ class RetrievePayment extends AbstractAction implements ActionInterface
     /**
      * @param Order $order
      * @param IngenicoPayment|RefundResult|Capture$currentStatus
-     * @return \Ingenico\Connect\Sdk\Domain\Capture\CaptureResponse|PaymentResponse|RefundResponse|null
+     * @return \Ingenico\Connect\Sdk\Domain\Capture\CaptureResponse|PaymentResponse|RefundResponse
      * @throws LocalizedException
      */
     private function getUpdateStatus(Order $order, $currentStatus)
@@ -145,7 +145,6 @@ class RetrievePayment extends AbstractAction implements ActionInterface
             ->getIngenicoClient($order->getStoreId())
             ->merchant($this->ePaymentsConfig->getMerchantId($order->getStoreId()));
 
-        $response = null;
         if ($currentStatus instanceof RefundResult) {
             $response = $merchant->refunds()->get($currentStatus->id);
         } elseif ($currentStatus instanceof IngenicoPayment) {

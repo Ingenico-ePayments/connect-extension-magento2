@@ -56,11 +56,19 @@ define([],
         };
 
         /**
-         * Whether to use inline fields for payments.
+         * Whether to use inline fields for payments, or the Hosted Checkout.
          * @return {boolean}
          */
         let useInlinePayments = function () {
             return Boolean(Number(config.useInlinePayments));
+        };
+
+        /**
+         * Whether to show any payment products or just Hosted Checkout only.
+         * @return {boolean}
+         */
+        let useFullRedirect = function () {
+            return Boolean(Number(config.useFullRedirect));
         };
 
         return {
@@ -70,6 +78,7 @@ define([],
             getLocale: getLocale,
             getGroupTitles: getGroupTitles,
             useInlinePayments: useInlinePayments,
+            useFullRedirect: useFullRedirect,
             getLoaderImage: getLoaderImage,
         };
     }

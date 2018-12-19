@@ -147,6 +147,24 @@ class CustomerBuilder
     }
 
     /**
+     * Extract binary gender as string representation
+     *
+     * @param Order $order
+     * @return string
+     */
+    private function getCustomerGender(Order $order)
+    {
+        switch ($order->getCustomerGender()) {
+            case self::GENDER_MALE:
+                return 'male';
+            case self::GENDER_FEMALE:
+                return 'female';
+            default:
+                return 'unknown';
+        }
+    }
+
+    /**
      * Extracts the date of birth in the API required format YYYYMMDD
      *
      * @param Order $order
@@ -161,24 +179,6 @@ class CustomerBuilder
         }
 
         return $dateOfBirth;
-    }
-
-    /**
-     * @param Order $order
-     * @param Order\Address $billing
-     * @return \Ingenico\Connect\Sdk\Domain\Payment\Definitions\ContactDetails
-     */
-    private function getContactDetails(
-        Order $order,
-        Order\Address $billing
-    ) {
-        $contactDetails = $this->contactDetailsFactory->create();
-        $contactDetails->emailAddress = $order->getCustomerEmail();
-        $contactDetails->emailMessageType = self::EMAIL_MESSAGE_TYPE;
-        $contactDetails->phoneNumber = $billing->getTelephone();
-        $contactDetails->faxNumber = $billing->getFax();
-
-        return $contactDetails;
     }
 
     /**
@@ -200,6 +200,24 @@ class CustomerBuilder
         $billingAddress->countryCode = $billing->getCountryId();
 
         return $billingAddress;
+    }
+
+    /**
+     * @param Order $order
+     * @param Order\Address $billing
+     * @return \Ingenico\Connect\Sdk\Domain\Payment\Definitions\ContactDetails
+     */
+    private function getContactDetails(
+        Order $order,
+        Order\Address $billing
+    ) {
+        $contactDetails = $this->contactDetailsFactory->create();
+        $contactDetails->emailAddress = $order->getCustomerEmail();
+        $contactDetails->emailMessageType = self::EMAIL_MESSAGE_TYPE;
+        $contactDetails->phoneNumber = $billing->getTelephone();
+        $contactDetails->faxNumber = $billing->getFax();
+
+        return $contactDetails;
     }
 
     /**
@@ -230,23 +248,5 @@ class CustomerBuilder
         $shippingAddress->countryCode = $shipping->getCountryId();
 
         return $shippingAddress;
-    }
-
-    /**
-     * Extract binary gender as string representation
-     *
-     * @param Order $order
-     * @return string
-     */
-    private function getCustomerGender(Order $order)
-    {
-        switch ($order->getCustomerGender()) {
-            case self::GENDER_MALE:
-                return 'male';
-            case self::GENDER_FEMALE:
-                return 'female';
-            default:
-                return 'unknown';
-        }
     }
 }

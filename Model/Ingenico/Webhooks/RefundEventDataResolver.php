@@ -2,8 +2,25 @@
 
 namespace Netresearch\Epayments\Model\Ingenico\Webhooks;
 
+use Netresearch\Epayments\Model\Ingenico\MerchantReference;
+
 class RefundEventDataResolver implements EventDataResolverInterface
 {
+    /**
+     * @var MerchantReference
+     */
+    private $merchantReference;
+
+    /**
+     * RefundEventDataResolver constructor.
+     *
+     * @param MerchantReference $merchantReference
+     */
+    public function __construct(MerchantReference $merchantReference)
+    {
+        $this->merchantReference = $merchantReference;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -12,21 +29,6 @@ class RefundEventDataResolver implements EventDataResolverInterface
         $this->assertCorrectEvent($event);
 
         return $event->refund;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getMerchantOrderReference(\Ingenico\Connect\Sdk\Domain\Webhooks\WebhooksEvent $event)
-    {
-        $this->assertCorrectEvent($event);
-        $merchantOrderId = (int)$event->refund->refundOutput->references->merchantReference;
-
-        if ($merchantOrderId <= 0) {
-            throw new \RuntimeException('Merchant order reference value is missing in Event response.');
-        }
-
-        return $merchantOrderId;
     }
 
     /**
@@ -42,5 +44,18 @@ class RefundEventDataResolver implements EventDataResolverInterface
         ) {
             throw new \RuntimeException('Event does not match resolver.');
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMerchantOrderReference(\Ingenico\Connect\Sdk\Domain\Webhooks\WebhooksEvent $event)
+    {
+        $this->assertCorrectEvent($event);
+        $merchantOrderId = $this->merchantReference->extractOrderReference(
+            $event->refund->refundOutput->references->merchantReference
+        );
+
+        return $merchantOrderId;
     }
 }

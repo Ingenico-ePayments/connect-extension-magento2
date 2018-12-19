@@ -4,18 +4,30 @@ namespace Netresearch\Epayments\Controller\Webhooks;
 
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Webapi\Exception;
 use Netresearch\Epayments\Model\Ingenico\Webhooks;
 use Netresearch\Epayments\Model\Ingenico\Webhooks\PaymentEventDataResolver;
 
+/**
+ * Class Payment
+ *
+ * @package Netresearch\Epayments\Controller\Webhooks
+ */
 class Payment extends AbstractWebhook
 {
-    /** @var PaymentEventDataResolver */
+    /**
+     * @var PaymentEventDataResolver
+     */
     private $paymentEventDataResolver;
 
-    /** @var Webhooks */
+    /**
+     * @var Webhooks
+     */
     private $webhooks;
 
     /**
+     * Payment constructor.
+     *
      * @param Context $context
      * @param PaymentEventDataResolver $paymentEventDataResolver
      * @param Webhooks $webhooks
@@ -32,19 +44,28 @@ class Payment extends AbstractWebhook
 
     /**
      * Handles payment.* events
+     *
+     * @return false|\Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
      */
     public function execute()
     {
         if ($response = $this->checkVerification()) {
             return $response;
         }
-        /** @var string $result */
-        $result = $this->webhooks->handle($this->paymentEventDataResolver);
 
-        // build response
         $response = $this->resultFactory->create(ResultFactory::TYPE_RAW);
         $response->setHeader('Content-type', 'text/plain');
-        $response->setContents($result);
+
+        try {
+            /** @var string $result */
+            $result = $this->webhooks->handle($this->paymentEventDataResolver);
+            $response->setContents($result);
+        } catch (\RuntimeException $exception) {
+            // on invalid signature or version mismatch the event could not be unwrapped
+            $response->setHttpResponseCode(Exception::HTTP_INTERNAL_ERROR);
+        } catch (\Exception $exception) {
+            $response->setContents($exception->getMessage());
+        }
 
         return $response;
     }

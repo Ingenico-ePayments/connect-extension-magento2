@@ -8,12 +8,18 @@ use Magento\Sales\Api\TransactionRepositoryInterface;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\Payment\Transaction;
 
+/**
+ * Class TransactionManager
+ *
+ * @package Netresearch\Epayments\Model\Transaction
+ */
 class TransactionManager
 {
     /**
      * @var SearchCriteriaBuilder
      */
     private $searchCriteriaBuilder;
+
     /**
      * @var TransactionRepositoryInterface
      */
@@ -69,6 +75,11 @@ class TransactionManager
         return $transactionList->getItems();
     }
 
+    /**
+     * Persists the transaction
+     *
+     * @param $transaction
+     */
     public function updateTransaction($transaction)
     {
         $this->transactionRepository->save($transaction);

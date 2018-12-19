@@ -4,17 +4,17 @@ namespace Netresearch\Epayments\Gateway\Command;
 
 use Ingenico\Connect\Sdk\ResponseException;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Message\ManagerInterface;
+use Magento\Payment\Gateway\Command\CommandException;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Sales\Model\Order\Payment;
 use Netresearch\Epayments\Model\Config;
 use Netresearch\Epayments\Model\Ingenico\Action\ApprovePayment;
 use Netresearch\Epayments\Model\Ingenico\Action\CapturePayment;
+use Netresearch\Epayments\Model\Ingenico\Action\CreatePayment;
 use Netresearch\Epayments\Model\Ingenico\StatusInterface;
 use Netresearch\Epayments\Model\StatusResponseManager;
-use Psr\Log\LoggerInterface;
 
-class IngenicoCaptureCommand extends AbstractCommand implements CommandInterface
+class IngenicoCaptureCommand implements CommandInterface
 {
     /**
      * @var CapturePayment
@@ -32,37 +32,60 @@ class IngenicoCaptureCommand extends AbstractCommand implements CommandInterface
     private $statusResponseManager;
 
     /**
+     * @var CreatePayment
+     */
+    private $createPayment;
+
+    /**
+     * @var ApiErrorHandler
+     */
+    private $apiErrorHandler;
+
+    /**
      * IngenicoCaptureCommand constructor.
      *
-     * @param ManagerInterface $manager
-     * @param LoggerInterface $logger
      * @param CapturePayment $capturePayment
      * @param ApprovePayment $approvePayment
      * @param StatusResponseManager $statusResponseManager
+     * @param CreatePayment $createPayment
+     * @param ApiErrorHandler $apiErrorHandler
      */
     public function __construct(
-        ManagerInterface $manager,
-        LoggerInterface $logger,
         CapturePayment $capturePayment,
         ApprovePayment $approvePayment,
-        StatusResponseManager $statusResponseManager
+        StatusResponseManager $statusResponseManager,
+        CreatePayment $createPayment,
+        ApiErrorHandler $apiErrorHandler
     ) {
         $this->capturePayment = $capturePayment;
         $this->approvePayment = $approvePayment;
         $this->statusResponseManager = $statusResponseManager;
-
-        parent::__construct($manager, $logger);
+        $this->createPayment = $createPayment;
+        $this->apiErrorHandler = $apiErrorHandler;
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed[] $commandSubject
+     * @return void
+     * @throws CommandException
+     * @throws LocalizedException
      */
     public function execute(array $commandSubject)
     {
         /** @var Payment $payment */
         $payment = $commandSubject['payment']->getPayment();
         $amount = $commandSubject['amount'];
+        $order = $payment->getOrder();
 
+        if ($order->getEntityId() === null) {
+            // new order, capture process
+            $this->createPayment->create($order);
+            $payment->setAdditionalInformation(Config::CLIENT_PAYLOAD_KEY, null);
+
+            return;
+        }
+
+        // Admin capture process
         $paymentId = $payment->getAdditionalInformation(Config::PAYMENT_ID_KEY);
         $status = $this->statusResponseManager->get($payment, $paymentId);
 
@@ -72,12 +95,12 @@ class IngenicoCaptureCommand extends AbstractCommand implements CommandInterface
             } elseif ($status->status == StatusInterface::PENDING_APPROVAL) {
                 $this->approvePayment->process($payment->getOrder(), $amount);
             } elseif ($status->status == StatusInterface::CAPTURE_REQUESTED) {
-                throw new LocalizedException(__('Payment is already captured'));
+                throw new CommandException(__('Payment is already captured'));
             } else {
-                throw new LocalizedException(__('Unknown or invalid payment status'));
+                throw new CommandException(__('Unknown or invalid payment status'));
             }
         } catch (ResponseException $e) {
-            $this->handleError($e);
+            $this->apiErrorHandler->handleError($e);
         }
     }
 }

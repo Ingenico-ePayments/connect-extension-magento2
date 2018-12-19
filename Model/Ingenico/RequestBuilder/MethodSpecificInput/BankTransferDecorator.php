@@ -5,11 +5,13 @@ namespace Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInpu
 use Ingenico\Connect\Sdk\DataObject;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\BankTransferPaymentMethodSpecificInputFactory;
 use Magento\Sales\Api\Data\OrderInterface;
+use Netresearch\Epayments\Model\Config;
+use Netresearch\Epayments\Model\Ingenico\RequestBuilder\DecoratorInterface;
 
 /**
  * Class ankTransferDecorator
  */
-class BankTransferDecorator extends AbstractMethodDecorator
+class BankTransferDecorator implements DecoratorInterface
 {
     /**
      * @var BankTransferPaymentMethodSpecificInputFactory
@@ -33,7 +35,7 @@ class BankTransferDecorator extends AbstractMethodDecorator
     public function decorate(DataObject $request, OrderInterface $order)
     {
         $input = $this->bankTransferPaymentMethodSpecificInputFactory->create();
-        $input->paymentProductId = $this->getProductId($order);
+        $input->paymentProductId = $order->getPayment()->getAdditionalInformation(Config::PRODUCT_ID_KEY);
 
         $request->bankTransferPaymentMethodSpecificInput = $input;
 

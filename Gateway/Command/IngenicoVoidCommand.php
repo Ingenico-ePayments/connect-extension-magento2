@@ -2,38 +2,53 @@
 
 namespace Netresearch\Epayments\Gateway\Command;
 
-use Magento\Framework\Message\ManagerInterface;
+use Ingenico\Connect\Sdk\ResponseException;
 use Magento\Payment\Gateway\CommandInterface;
+use Magento\Sales\Model\Order\Payment;
 use Netresearch\Epayments\Model\Ingenico\Action\UndoCapturePaymentRequest;
-use Psr\Log\LoggerInterface;
 
-class IngenicoVoidCommand extends AbstractCommand implements CommandInterface
+/**
+ * Class IngenicoVoidCommand
+ *
+ * @package Netresearch\Epayments\Gateway
+ */
+class IngenicoVoidCommand implements CommandInterface
 {
-    /** @var UndoCapturePaymentRequest */
+    /**
+     * @var UndoCapturePaymentRequest
+     */
     private $undoCapturePaymentRequest;
+
+    /**
+     * @var ApiErrorHandler
+     */
+    private $apiErrorHandler;
 
     /**
      * IngenicoVoidCommand constructor.
      *
-     * @param ManagerInterface $manager
-     * @param LoggerInterface $logger
      * @param UndoCapturePaymentRequest $undoCapturePaymentRequest
+     * @param ApiErrorHandler $apiErrorHandler
      */
-    public function __construct(
-        ManagerInterface $manager,
-        LoggerInterface $logger,
-        UndoCapturePaymentRequest $undoCapturePaymentRequest
-    ) {
+    public function __construct(UndoCapturePaymentRequest $undoCapturePaymentRequest, ApiErrorHandler $apiErrorHandler)
+    {
         $this->undoCapturePaymentRequest = $undoCapturePaymentRequest;
-
-        parent::__construct($manager, $logger);
+        $this->apiErrorHandler = $apiErrorHandler;
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed[] $commandSubject
+     * @return void
+     * @throws \Magento\Payment\Gateway\Command\CommandException
      */
     public function execute(array $commandSubject)
     {
-        $this->undoCapturePaymentRequest->process($commandSubject['payment']->getPayment()->getOrder());
+        /** @var Payment $payment */
+        $payment = $commandSubject['payment']->getPayment();
+        try {
+            $this->undoCapturePaymentRequest->process($payment->getOrder());
+        } catch (ResponseException $e) {
+            $this->apiErrorHandler->handleError($e);
+        }
     }
 }

@@ -8,14 +8,14 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Netresearch\Epayments\Model\ConfigInterface;
 use Netresearch\Epayments\Model\Ingenico\Api\ClientInterface;
-use Netresearch\Epayments\Model\StatusResponseManager;
-use Netresearch\Epayments\Model\Transaction\TransactionManager;
+use Netresearch\Epayments\Model\Ingenico\MerchantReference;
 use Netresearch\Epayments\Model\Ingenico\Status\ResolverInterface;
 use Netresearch\Epayments\Model\Order\OrderServiceInterface;
+use Netresearch\Epayments\Model\StatusResponseManager;
+use Netresearch\Epayments\Model\Transaction\TransactionManager;
 
 class GetInlinePaymentStatus extends AbstractAction implements ActionInterface
 {
-
     /**
      * @var ResolverInterface
      */
@@ -32,6 +32,11 @@ class GetInlinePaymentStatus extends AbstractAction implements ActionInterface
     private $orderService;
 
     /**
+     * @var MerchantReference
+     */
+    private $merchantReference;
+
+    /**
      * GetInlinePaymentStatus constructor.
      *
      * @param StatusResponseManager $statusResponseManager
@@ -41,6 +46,7 @@ class GetInlinePaymentStatus extends AbstractAction implements ActionInterface
      * @param ResolverInterface $resolver
      * @param OrderServiceInterface $orderService
      * @param OrderRepositoryInterface $orderRepository
+     * @param MerchantReference $merchantReference
      */
     public function __construct(
         StatusResponseManager $statusResponseManager,
@@ -49,11 +55,13 @@ class GetInlinePaymentStatus extends AbstractAction implements ActionInterface
         ConfigInterface $config,
         ResolverInterface $resolver,
         OrderServiceInterface $orderService,
-        OrderRepositoryInterface $orderRepository
+        OrderRepositoryInterface $orderRepository,
+        MerchantReference $merchantReference
     ) {
         $this->statusResolver = $resolver;
         $this->orderService = $orderService;
         $this->orderRepository = $orderRepository;
+        $this->merchantReference = $merchantReference;
         parent::__construct($statusResponseManager, $ingenicoClient, $transactionManager, $config);
     }
 
@@ -74,7 +82,9 @@ class GetInlinePaymentStatus extends AbstractAction implements ActionInterface
 
         $this->validateResponse($response);
 
-        $incrementId = $response->paymentOutput->references->merchantReference;
+        $incrementId = $this->merchantReference->extractOrderReference(
+            $response->paymentOutput->references->merchantReference
+        );
         /**
          * @var Order $order
          */

@@ -32,6 +32,7 @@ abstract class AbstractValueHandler implements \Magento\Payment\Gateway\Config\V
     public function handle(array $subject, $storeId = null)
     {
         $result = false;
+        /** @var \Magento\Sales\Model\Order\Payment $payment */
         $payment = $subject['payment']->getPayment();
         $paymentId = $payment->getAdditionalInformation(Config::PAYMENT_ID_KEY);
 

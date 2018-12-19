@@ -4,7 +4,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [1.4.4] -2018-10-05
+## [1.5.0] - 2018-12-14
+
+### Added
+- config option to specify hosted checkout variant
+- ability for a full redirect with payment product selection on hosted checkout
+- ability for a custom prefix as system identifier for merchantReference used to identify orders
+- specific logging for incoming webhook events
+- minimal implementation for SEPA direct debit support
+- support for asynchronous processing of webhook events
+- support for Magento 2.3
+
+### Changed
+- webhook endpoints now always return a 200 code, if the event payload could be unwrapped
+- ensure every order has a transaction with the reference to Ingenico's payId if a response was received
+- Invoice for CAPTURE_REQUESTED status on CC is now in Pending state rather then Paid
+- streamline Ingenico status processing notifications in the order history
+
+### Fixed
+- order status inconsistencies with credit card
+- order payment accept action not available on fraud status
+- order not progressing from payment review order state to processing
+
+## [1.4.5] - 2018-11-02
+
+### Fixed
+- Orders in suspected fraud state could not be accepted/denied
+
+## [1.4.4] - 2018-10-05
 
 ### Fixed
 - Automatic Order Update does not retrieve payment ID correctly
@@ -111,7 +138,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Initial release 
 
-[Unreleased]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.4.4...develop
+[Unreleased]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.5.0...develop
+[1.5.0]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.4.4...1.5.0
 [1.4.4]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.4.3...1.4.4
 [1.4.3]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.4.2...1.4.3
 [1.4.2]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.4.1...1.4.2

@@ -5,6 +5,7 @@ namespace Netresearch\Epayments\Gateway;
 use Magento\Framework\Registry;
 use Magento\Payment\Gateway\Config\ValueHandlerInterface;
 use Magento\Sales\Model\Order\Creditmemo;
+use Magento\Sales\Model\Order\Payment;
 use Netresearch\Epayments\Model\Config;
 use Netresearch\Epayments\Model\Ingenico\StatusInterface;
 use Netresearch\Epayments\Model\StatusResponseManager;
@@ -46,6 +47,7 @@ class CanRefund implements ValueHandlerInterface
     {
         $result = false;
 
+        /** @var Payment $payment */
         $payment = $subject['payment']->getPayment();
         $paymentId = $payment->getAdditionalInformation(Config::PAYMENT_ID_KEY);
 

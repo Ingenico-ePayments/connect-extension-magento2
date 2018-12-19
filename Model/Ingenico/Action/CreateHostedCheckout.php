@@ -4,11 +4,13 @@ namespace Netresearch\Epayments\Model\Ingenico\Action;
 
 use Ingenico\Connect\Sdk\Domain\Errors\ErrorResponse;
 use Ingenico\Connect\Sdk\Domain\Product\PaymentProductResponse;
+use Ingenico\Connect\Sdk\ResponseException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\Order;
 use Netresearch\Epayments\Helper\Data as DataHelper;
+use Netresearch\Epayments\Model\Config;
 use Netresearch\Epayments\Model\ConfigInterface;
 use Netresearch\Epayments\Model\Ingenico\Api\ClientInterface;
 use Netresearch\Epayments\Model\Ingenico\RequestBuilder\CreateHostedCheckout\RequestBuilder;
@@ -65,31 +67,42 @@ class CreateHostedCheckout extends AbstractAction implements ActionInterface
         $currencyCode = $order->getBaseCurrencyCode();
         $countryCode = $order->getBillingAddress()->getCountryId();
         $locale = $this->resolver->getLocale();
-        $checkoutSubdomain = $this->ePaymentsConfig->getHostedCheckoutSubdomain($scopeId);
+        $checkoutSubdomain = $this->ePaymentsConfig->getHostedCheckoutSubDomain($scopeId);
+        $shouldHavePaymentProduct = $this->ePaymentsConfig->getCheckoutType($scopeId) !== Config::CONFIG_INGENICO_CHECKOUT_TYPE_REDIRECT;
 
         /** @var InfoInterface $payment */
         $payment = $order->getPayment();
 
-        $paymentProductId = $payment->getAdditionalInformation('ingenico_payment_product_id');
-
-        /** @var PaymentProductResponse $ingenicoPaymentProduct */
-        $ingenicoPaymentProduct = $this->ingenicoClient->getIngenicoPaymentProduct(
-            $paymentProductId,
-            $amount,
-            $currencyCode,
-            $countryCode,
-            $locale,
-            $scopeId
-        );
-
-        if ($ingenicoPaymentProduct instanceof ErrorResponse) {
-            throw new LocalizedException(__('Payment failed: %1', $ingenicoPaymentProduct->errorId));
+        if ($shouldHavePaymentProduct) {
+            $paymentProductId = $payment->getAdditionalInformation(Config::PRODUCT_ID_KEY);
+            try {
+                /** @var PaymentProductResponse $ingenicoPaymentProduct */
+                $ingenicoPaymentProduct = $this->ingenicoClient->getIngenicoPaymentProduct(
+                    $paymentProductId,
+                    $amount,
+                    $currencyCode,
+                    $countryCode,
+                    $locale,
+                    $scopeId
+                );
+                if ($ingenicoPaymentProduct instanceof ErrorResponse) {
+                    throw new LocalizedException(__('Payment failed: %1', $ingenicoPaymentProduct->errorId));
+                }
+            } catch (ResponseException $exception) {
+                throw new LocalizedException(
+                    __(
+                        'Payment failed for payment product with id %1: %2',
+                        $paymentProductId,
+                        $exception->getMessage()
+                    )
+                );
+            }
         }
 
-        $request = $request = $this->requestBuilder->create($order);
+        $request = $this->requestBuilder->create($order);
 
         $payment->setAdditionalInformation(
-            'ingenico_idempotence_key',
+            Config::IDEMPOTENCE_KEY,
             uniqid(
                 preg_replace(
                     '#\s+#',
@@ -103,8 +116,8 @@ class CreateHostedCheckout extends AbstractAction implements ActionInterface
         $response = $this->ingenicoClient->createHostedCheckout($request, $scopeId);
         $ingenicoRedirectUrl = $checkoutSubdomain . $response->partialRedirectUrl;
 
-        $payment->setAdditionalInformation('ingenico_redirect_url', $ingenicoRedirectUrl);
-        $payment->setAdditionalInformation('ingenico_hosted_checkout_id', $response->hostedCheckoutId);
-        $payment->setAdditionalInformation('ingenico_returnmac', $response->RETURNMAC);
+        $payment->setAdditionalInformation(Config::REDIRECT_URL_KEY, $ingenicoRedirectUrl);
+        $payment->setAdditionalInformation(Config::HOSTED_CHECKOUT_ID_KEY, $response->hostedCheckoutId);
+        $payment->setAdditionalInformation(Config::RETURNMAC_KEY, $response->RETURNMAC);
     }
 }

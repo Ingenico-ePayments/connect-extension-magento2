@@ -2,6 +2,8 @@
 
 namespace Netresearch\Epayments\Model\Ingenico\Action;
 
+use Ingenico\Connect\Sdk\ResponseException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Netresearch\Epayments\Model\Config;
@@ -59,9 +61,8 @@ class CancelPayment extends AbstractAction implements ActionInterface
      * Cancel payment
      *
      * @param Order $order
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NotFoundException
-     * @throws \Magento\Framework\Exception\PaymentException
+     * @throws LocalizedException
+     * @throws ResponseException
      */
     public function process(Order $order)
     {
@@ -75,7 +76,6 @@ class CancelPayment extends AbstractAction implements ActionInterface
         $response = $this->ingenicoClient->ingenicoPaymentCancel($ingenicoPaymentId);
 
         // update order status to cancel
-        // @TODO(nr): Maybe can be removed
         $this->statusResolver->resolve($order, $response->payment);
 
         $transaction = $this->transactionManager->retrieveTransaction($transactionId);
