@@ -90,12 +90,12 @@ interface EventInterface
      * @param string $timestamp
      * @return \Netresearch\Epayments\Api\Data\EventInterface
      */
-    public function setCreatedTimeStamp($timestamp);
+    public function setCreatedAt($timestamp);
 
     /**
      * Event creation timestamp from the platform
      *
      * @return string
      */
-    public function getCreatedTimeStamp();
+    public function getCreatedAt();
 }

@@ -4,16 +4,25 @@ Payment extension for processing the Magento order workflow via the Ingenico ePa
 
 Compatibility
 -------------
-- Magento >= 2.1.6
+- Magento >= 2.1.6, >= 2.2.6, >= 2.3.0
 
 Installation Instructions
 -------------------------
 
-##### Purchase via Marketplace
+##### Install module 
 
-Find and purchase the product via Magento Marketplace
+Copy (do not unzip) the package into a folder that is accessible by Composer.
 
-Run `composer require nrepayments/module-epayments-m2` to install the extension.
+Add repository to your `composer.json` by running the following command: 
+
+    composer config repositories.epayments artifact /path/to/folder/with/zip
+
+**Important:** the path in the above command is absolute, i.e. starting at the server (Linux) root.
+    
+Add required module:
+
+    composer require nrepayments/module-epayments-m2
+    composer update
 
 ##### Configure module 
 1. In magento root dir run command **php bin/magento setup:upgrade** 
@@ -50,8 +59,7 @@ https://www.ingenico.com/epayments/support
 
 Developer
 ---------
-Netresearch GmbH &amp; Co. KG - 
-[http://www.netresearch.de](http://www.netresearch.de)
+Netresearch DTT GmbH - [https://www.netresearch.de](https://www.netresearch.de)
 
 Licence
 -------
@@ -59,5 +67,5 @@ Licence
 
 Copyright
 ---------
-(c) 2018 Ingenico eCommerce Solutions Bvba
+(c) 2019 Ingenico eCommerce Solutions Bvba
 

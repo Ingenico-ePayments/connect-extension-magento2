@@ -8,6 +8,7 @@ namespace Netresearch\Epayments\Model\Event;
 use Ingenico\Connect\Sdk\Domain\Webhooks\WebhooksEvent;
 use Ingenico\Connect\Sdk\Domain\Webhooks\WebhooksEventFactory;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
+use Magento\Framework\Api\SortOrderBuilder;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
@@ -43,6 +44,11 @@ class Processor
     private $statusResolver;
 
     /**
+     * @var SortOrderBuilder
+     */
+    private $sortOrderBuilder;
+
+    /**
      * Processor constructor.
      *
      * @param WebhooksEventFactory $webhookEventFactory
@@ -50,19 +56,22 @@ class Processor
      * @param OrderRepositoryInterface $orderRepository
      * @param SearchCriteriaBuilderFactory $criteriaBuilderFactory
      * @param ResolverInterface $statusResolver
+     * @param SortOrderBuilder $sortOrderBuilder
      */
     public function __construct(
         WebhooksEventFactory $webhookEventFactory,
         EventRepositoryInterface $eventRepository,
         OrderRepositoryInterface $orderRepository,
         SearchCriteriaBuilderFactory $criteriaBuilderFactory,
-        ResolverInterface $statusResolver
+        ResolverInterface $statusResolver,
+        SortOrderBuilder $sortOrderBuilder
     ) {
         $this->webhookEventFactory = $webhookEventFactory;
         $this->eventRepository = $eventRepository;
         $this->orderRepository = $orderRepository;
         $this->criteriaBuilderFactory = $criteriaBuilderFactory;
         $this->statusResolver = $statusResolver;
+        $this->sortOrderBuilder = $sortOrderBuilder;
     }
 
     /**
@@ -81,6 +90,11 @@ class Processor
             'in'
         );
         $criteriaBuilder->setPageSize($limit);
+        $criteriaBuilder->addSortOrder(
+            $this->sortOrderBuilder->setField(EventInterface::CREATED_TIMESTAMP)
+                                   ->setAscendingDirection()
+                                   ->create()
+        );
         $events = $this->eventRepository->getList($criteriaBuilder->create())->getItems();
 
         $orderIncrementIds = array_reduce(
@@ -122,6 +136,7 @@ class Processor
         $this->eventRepository->save($event);
         try {
             $this->statusResolver->resolve($order, $this->extractStatusObject($webhookEvent));
+            $order->setDataChanges(true);
             $this->orderRepository->save($order);
             $event->setStatus(EventInterface::STATUS_SUCCESS);
             $this->eventRepository->save($event);

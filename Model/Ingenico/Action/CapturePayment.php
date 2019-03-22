@@ -3,27 +3,25 @@
 namespace Netresearch\Epayments\Model\Ingenico\Action;
 
 use Ingenico\Connect\Sdk\Domain\Payment\CapturePaymentRequest;
-use Ingenico\Connect\Sdk\Domain\Payment\Definitions\OrderReferencesApprovePayment;
-use Ingenico\Connect\Sdk\Domain\Payment\Definitions\OrderApprovePayment;
-use Ingenico\Connect\Sdk\Domain\Payment\ApprovePaymentRequest;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Sales\Helper\Data;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment;
+use Netresearch\Epayments\Helper\Data as DataHelper;
 use Netresearch\Epayments\Model\Config;
 use Netresearch\Epayments\Model\ConfigInterface;
 use Netresearch\Epayments\Model\Ingenico\Api\ClientInterface;
 use Netresearch\Epayments\Model\Ingenico\StatusInterface;
 use Netresearch\Epayments\Model\StatusResponseManager;
 use Netresearch\Epayments\Model\Transaction\TransactionManager;
-use Netresearch\Epayments\Helper\Data as DataHelper;
 
 /**
  * @link https://developer.globalcollect.com/documentation/api/server/#__merchantId__payments__paymentId__approve_post
  */
 class CapturePayment extends AbstractAction implements ActionInterface
 {
-    /** @var CapturePaymentRequest */
+    /**
+     * @var CapturePaymentRequest
+     */
     private $capturePaymentRequest;
 
     /**
@@ -73,7 +71,7 @@ class CapturePayment extends AbstractAction implements ActionInterface
         $response = $this->capturePayment($ingenicoPaymentId, $payment, $amount);
 
         if ($response->status === StatusInterface::CAPTURE_REQUESTED) {
-                $payment->setIsTransactionPending(true); // set order status to 'Payment Review'
+            $payment->setIsTransactionPending(true); // set order status to 'Payment Review'
         }
 
         $payment->setPreparedMessage(

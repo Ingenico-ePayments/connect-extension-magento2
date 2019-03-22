@@ -14,7 +14,7 @@ class Redirected implements HandlerInterface
      */
     public function resolveStatus(OrderInterface $order, AbstractOrderStatus $ingenicoStatus)
     {
-        $order->addStatusHistoryComment(
+        $order->addCommentToStatusHistory(
             __('Redirected customer to finish payment process. Status: %status', ['status' => $ingenicoStatus->status])
         );
     }

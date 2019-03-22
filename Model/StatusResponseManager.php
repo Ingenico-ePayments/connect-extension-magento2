@@ -108,6 +108,7 @@ class StatusResponseManager implements StatusResponseManagerInterface
                 $this->getVisibleInfo($orderStatus)
             );
             $this->transactionManager->updateTransaction($transaction);
+            $payment->getOrder()->addRelatedObject($transaction);
         } else {
             // If transaction does not (yet) exist
             $payment->setTransactionAdditionalInfo(self::TRANSACTION_CLASS_KEY, $objectClassName);

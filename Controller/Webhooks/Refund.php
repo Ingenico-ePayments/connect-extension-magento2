@@ -12,8 +12,10 @@ use Netresearch\Epayments\Model\Ingenico\Webhooks\RefundEventDataResolver;
  * Class Refund
  *
  * @package Netresearch\Epayments\Controller\Webhooks
+ * @deprecated Only one webhook endpoint is offically needed
+ * @see \Netresearch\Epayments\Controller\Webhooks\Payment::execute
  */
-class Refund extends AbstractWebhook
+class Refund extends Webhook
 {
     /**
      * @var RefundEventDataResolver

@@ -4,7 +4,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [1.5.0] - 2018-12-14
+## 1.5.2 - 2019-03-21
+
+### Fixed
+
+- fraud status handling in direct capture doesn't behave properly
+- webhook events sometimes don't update payment transactions correctly
+- webhook controllers not accessible for POST requests in Magento 2.3
+
+### Added
+
+- transactions updates are now more robust when there previously was an error when returning from a Hosted Checkout
+- new module dependency netresearch/module-compatibility-m2 to manage controller CSRF backwards compatibility
+
+## 1.5.1 - 2019-02-27
+
+### Changed
+
+- updated documentation to be more specific in certain terms
+
+### Fixed
+
+- webhook event processing out of chronological order
+
+## 1.5.0 - 2018-12-14
 
 ### Added
 - config option to specify hosted checkout variant
@@ -26,12 +49,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - order payment accept action not available on fraud status
 - order not progressing from payment review order state to processing
 
-## [1.4.5] - 2018-11-02
+## 1.4.5 - 2018-11-02
 
 ### Fixed
 - Orders in suspected fraud state could not be accepted/denied
 
-## [1.4.4] - 2018-10-05
+## 1.4.4 - 2018-10-05
 
 ### Fixed
 - Automatic Order Update does not retrieve payment ID correctly
@@ -43,7 +66,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Payment update mails not respecting the order scope
 - Multiple payment update mails sent for the same payment status
 
-## [1.4.3] - 2018-09-12
+## 1.4.3 - 2018-09-12
 
 ### Fixed
 - Inline card payments that result in a redirect will now be handled correctly
@@ -51,7 +74,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Extension copyright now lies with Ingenico eCommerce Solutions Bvba
 
-## [1.4.2] - 2018-08-27
+## 1.4.2 - 2018-08-27
 
 ### Added
 - automatically send invoice email after it is marked as paid
@@ -63,12 +86,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - fixed issue with refilling carts where product was not loaded properly
 - corrected formatting for customer date of birth
 
-## [1.4.1] - 2018-08-06
+## 1.4.1 - 2018-08-06
 
 ### Fixed
 - restored compatibility with Magento 2.1
 
-## [1.4.0] - 2018-08-02
+## 1.4.0 - 2018-08-02
 
 ### Added
 - automatic configuration validation against API when saving changed account settings
@@ -92,13 +115,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Security
 
-## [1.3.1] - 2018-06-05
+## 1.3.1 - 2018-06-05
 ### Changed
 - adjusted order item transmission to be compatible with more tax calculation settings
 
-## [1.3.0] - 2018-05-30
+## 1.3.0 - 2018-05-30
 ### Added
-- added compatibility with [OneStepCheckout](http://onestepcheckout.com) extension
+- added compatibility with OneStepCheckout](http://onestepcheckout.com) extension
 ### Changed
 - changed handling of returning customers from HostedCheckout page to no longer rely on the checkout session
 - replaced usages of deprecated Cart interface
@@ -107,12 +130,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ###Fixed
 - fixed an issue which occured if the module code was already present during Magento installation
 
-## [1.2.0] - 2018-04-20
+## 1.2.0 - 2018-04-20
 ### Added
 - Inline payment workflow to allow direct payment creation without redirects for supporting payment products
 - WX file polling automatically retrieves the daily transaction report file in xml format and parses the updates into Magentos orders
 
-## [1.1.0] - 2018-03-21
+## 1.1.0 - 2018-03-21
 ### Changed
 - updated order item transmission to allow better display on HostedCheckout page for shipping and discount amounts
 - integrate Ingenicos Javascript SDK to fetch the available payment products through the client
@@ -122,7 +145,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - fixed wrong redirection for customers returning from HostedCheckout
 
-## [1.0.1] - 2018-02-22
+## 1.0.1 - 2018-02-22
 ### Added
 - handling for AUTHORIZATION_REQUESTED API status
 - PHP 7.1 compatibility by removal of preserved keywords
@@ -137,16 +160,3 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## 1.0.0 - 2018-01-16
 ### Added
 - Initial release 
-
-[Unreleased]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.5.0...develop
-[1.5.0]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.4.4...1.5.0
-[1.4.4]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.4.3...1.4.4
-[1.4.3]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.4.2...1.4.3
-[1.4.2]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.4.1...1.4.2
-[1.4.1]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.4.0...1.4.1
-[1.4.0]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.3.1...1.4.0
-[1.3.1]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.3.0...1.3.1
-[1.3.0]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.2.0...1.3.0
-[1.2.0]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.1.0...1.2.0
-[1.1.0]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.0.1...1.1.0
-[1.0.1]: https://git.netresearch.de/ingenico/connect/module-epayments-m2/compare/1.0.0...1.0.1

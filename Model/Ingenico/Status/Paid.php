@@ -63,6 +63,6 @@ class Paid implements HandlerInterface
             $capturedHandler = $this->capturedFactory->create();
             $capturedHandler->resolveStatus($order, $ingenicoStatus);
         }
-        $order->addStatusHistoryComment($this->ePaymentsConfig->getPaymentStatusInfo(StatusInterface::PAID));
+        $order->addCommentToStatusHistory($this->ePaymentsConfig->getPaymentStatusInfo(StatusInterface::PAID));
     }
 }

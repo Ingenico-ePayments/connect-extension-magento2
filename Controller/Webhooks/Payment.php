@@ -13,7 +13,7 @@ use Netresearch\Epayments\Model\Ingenico\Webhooks\PaymentEventDataResolver;
  *
  * @package Netresearch\Epayments\Controller\Webhooks
  */
-class Payment extends AbstractWebhook
+class Payment extends Webhook
 {
     /**
      * @var PaymentEventDataResolver

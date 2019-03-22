@@ -85,9 +85,10 @@ class RetrievePayment extends AbstractAction implements ActionInterface
         if (ConfigProvider::CODE !== $payment->getMethod()) {
             throw new LocalizedException(__('This order was not placed via Ingenico ePayments'));
         }
+        $orderTransactions = $this->transactionManager->retrieveTransactions($payment);
 
         $ingenicoPaymentId = $payment->getAdditionalInformation(Config::PAYMENT_ID_KEY);
-        if (!$ingenicoPaymentId) {
+        if (!$ingenicoPaymentId && empty($orderTransactions)) {
             try {
                 $orderWasUpdated = $this->updateHostedCheckoutStatus($order);
             } catch (\Exception $e) {
@@ -95,7 +96,6 @@ class RetrievePayment extends AbstractAction implements ActionInterface
             }
         }
 
-        $orderTransactions = $this->transactionManager->retrieveTransactions($payment);
         foreach ($orderTransactions as $transaction) {
             $currentStatus = $this->getCurrentStatus($payment, $transaction);
             $updateStatus = $this->getUpdateStatus($order, $currentStatus);
@@ -135,7 +135,7 @@ class RetrievePayment extends AbstractAction implements ActionInterface
 
     /**
      * @param Order $order
-     * @param IngenicoPayment|RefundResult|Capture$currentStatus
+     * @param IngenicoPayment|RefundResult|Capture $currentStatus
      * @return \Ingenico\Connect\Sdk\Domain\Capture\CaptureResponse|PaymentResponse|RefundResponse
      * @throws LocalizedException
      */

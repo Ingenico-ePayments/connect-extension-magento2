@@ -87,7 +87,7 @@ class DataModel extends \Magento\Framework\Api\AbstractSimpleObject implements E
      * @param string $timestamp
      * @return EventInterface
      */
-    public function setCreatedTimeStamp($timestamp)
+    public function setCreatedAt($timestamp)
     {
         return $this->setData(self::CREATED_TIMESTAMP, $timestamp);
     }
@@ -95,7 +95,7 @@ class DataModel extends \Magento\Framework\Api\AbstractSimpleObject implements E
     /**
      * @return string
      */
-    public function getCreatedTimeStamp()
+    public function getCreatedAt()
     {
         return $this->_get(self::CREATED_TIMESTAMP);
     }

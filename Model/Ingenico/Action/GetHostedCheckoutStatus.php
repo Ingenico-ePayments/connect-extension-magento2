@@ -226,7 +226,7 @@ class GetHostedCheckoutStatus implements ActionInterface
             }
 
             $order->registerCancellation();
-            $order->addStatusHistoryComment("<b>Payment error, status</b><br />{$status} : $msg");
+            $order->addCommentToStatusHistory("<b>Payment error, status</b><br />{$status} : $msg");
             $this->orderRepository->save($order);
             throw new LocalizedException(__($msg));
         }

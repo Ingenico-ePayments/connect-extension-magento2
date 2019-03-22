@@ -316,7 +316,7 @@ class Config implements ConfigInterface
      */
     public function getIntegrator()
     {
-        return 'Netresearch GmbH & Co. KG';
+        return 'Netresearch DTT GmbH';
     }
 
     /**
