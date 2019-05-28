@@ -4,16 +4,18 @@ namespace Netresearch\Epayments\Controller\Adminhtml\OrderProcess;
 
 use Ingenico\Connect\Sdk\Domain\Errors\Definitions\APIError;
 use Ingenico\Connect\Sdk\ResponseException;
-use Magento\Framework\App\Action\Action;
+use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Sales\Api\CreditmemoRepositoryInterface;
-use Magento\Framework\App\Action\Context;
 use Magento\Sales\Model\Order\Creditmemo;
 use Netresearch\Epayments\Model\Ingenico\Action\Refund\ApproveRefund as ApproveRefundAction;
 use Psr\Log\LoggerInterface;
 
 class ApproveRefund extends Action
 {
+    const ADMIN_RESOURCE = 'Magento_Sales::sales_creditmemo';
+
     /** @var CreditmemoRepositoryInterface */
     private $creditmemoRepository;
 
@@ -70,6 +72,7 @@ class ApproveRefund extends Action
                         $error->httpStatusCode,
                         $error->message
                     );
+
                     return $message;
                 },
                 ''

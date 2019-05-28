@@ -22,7 +22,7 @@ class OrderStatusHelper
     /**
      * @var int[]
      */
-    private $statusesForSkipping = [800, 900, 975];
+    private $statusesForSkipping = [800, 900, 935, 975];
 
     /**
      * @var array string[]

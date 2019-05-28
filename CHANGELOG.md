@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.6.0 - 2019-05-24
+
+### Fixed
+
+- Order "total paid" not 0 in CAPTURE_REQUESTED
+- Discrepancies in invoice state
+- Log file available from outside if secret keys in url are turned off
+
+### Added
+
+- support for status code 935
+
+### Removed
+
+- Magento 2.1 support
+
 ## 1.5.2 - 2019-03-21
 
 ### Fixed

@@ -250,6 +250,9 @@
         <plugin name="CaptureRequestedPlugin" type="Netresearch\Epayments\Plugin\Model\Ingenico\Status\CaptureRequestedPlugin"/>
     </type>
 
+    <type name="Magento\Sales\Model\Order\Payment\Operations\CaptureOperation">
+        <plugin name="EnforcePendingInvoicePlugin" type="Netresearch\Epayments\Plugin\Sales\Operation\EnforcePendingInvoice"/>
+    </type>
     <type name="Netresearch\Epayments\Controller\HostedCheckoutPage\ProcessReturn">
         <arguments>
             <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>

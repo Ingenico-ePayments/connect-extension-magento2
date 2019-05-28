@@ -2,16 +2,23 @@
 
 namespace Netresearch\Epayments\Controller\Adminhtml\DownloadLogFile;
 
+use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
 use Magento\Backend\App\Response\Http\FileFactory;
-use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Filesystem\Driver\File;
 use Netresearch\Epayments\Model\ConfigInterface;
-use Magento\Framework\App\Action\Context;
 
 class Index extends Action
 {
+    /**
+     * Authorization level of a basic admin session
+     *
+     * @see _isAllowed()
+     */
+    const ADMIN_RESOURCE = 'Netresearch_Epayments::download_logfile';
+
     /** @var ConfigInterface */
     private $config;
 
@@ -49,6 +56,8 @@ class Index extends Action
      * Initiates logging file download process
      *
      * @return ResponseInterface
+     * @throws \LogicException
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     public function execute()
     {
@@ -62,7 +71,7 @@ class Index extends Action
             $fileInfo['basename'],
             [
                 'value' => $fileInfo['basename'],
-                'type'  => 'filename',
+                'type' => 'filename',
             ],
             DirectoryList::LOG
         );

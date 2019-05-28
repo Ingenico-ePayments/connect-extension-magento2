@@ -2,15 +2,17 @@
 
 namespace Netresearch\Epayments\Controller\Adminhtml\OrderProcess;
 
-use Magento\Framework\App\Action\Action;
+use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Sales\Api\CreditmemoRepositoryInterface;
-use Magento\Framework\App\Action\Context;
 use Magento\Sales\Model\Order\Creditmemo;
 use Psr\Log\LoggerInterface;
 
 class CancelRefund extends Action
 {
+    const ADMIN_RESOURCE = 'Magento_Sales::sales_creditmemo';
+
     /** @var CreditmemoRepositoryInterface */
     private $creditmemoRepository;
 

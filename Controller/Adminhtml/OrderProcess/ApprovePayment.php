@@ -2,8 +2,8 @@
 
 namespace Netresearch\Epayments\Controller\Adminhtml\OrderProcess;
 
-use Magento\Framework\App\Action\Action;
-use Magento\Framework\App\Action\Context;
+use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\ResultInterface;
@@ -14,6 +14,8 @@ use Psr\Log\LoggerInterface;
 
 class ApprovePayment extends Action
 {
+    const ADMIN_RESOURCE = 'Magento_Sales::review_payment';
+
     /**
      * @var OrderRepositoryInterface
      */

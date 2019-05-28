@@ -63,6 +63,25 @@ class Paid implements HandlerInterface
             $capturedHandler = $this->capturedFactory->create();
             $capturedHandler->resolveStatus($order, $ingenicoStatus);
         }
+
+        foreach ($order->getInvoiceCollection() as $invoice) {
+            /**
+             * Check if an invoice with the same transaction id exists
+             */
+            if ($invoice->getTransactionId() === $ingenicoStatus->id
+                && $invoice->getState() !== Order\Invoice::STATE_PAID
+            ) {
+
+                /**
+                 * Let the payment update the invoice state and the order totals by performing an arbitrary update
+                 * operation
+                 */
+                $payment->setTransactionId($ingenicoStatus->id);
+                $payment->setIsTransactionApproved(true);
+                $payment->update(false);
+            }
+        }
+
         $order->addCommentToStatusHistory($this->ePaymentsConfig->getPaymentStatusInfo(StatusInterface::PAID));
     }
 }

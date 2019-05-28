@@ -2,9 +2,9 @@
 
 namespace Netresearch\Epayments\Controller\Adminhtml\OrderProcess;
 
-use Magento\Framework\App\Action\Action;
+use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
-use Magento\Framework\App\Action\Context;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Netresearch\Epayments\Model\Ingenico\Action\RetrievePayment;
@@ -12,6 +12,8 @@ use Psr\Log\LoggerInterface;
 
 class RefreshOrderStatus extends Action
 {
+    const ADMIN_RESOURCE = 'Magento_Sales::sales_invoice';
+
     /** @var OrderRepositoryInterface */
     private $orderRepository;
 

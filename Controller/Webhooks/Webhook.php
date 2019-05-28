@@ -67,7 +67,9 @@ abstract class Webhook extends Action
         $securitySignature = $this->getRequest()->getHeader('X-GCS-Signature');
         /** @var string $securityKey */
         $securityKey = $this->getRequest()->getHeader('X-GCS-KeyId');
+        /** @var string $verificationString */
+        $verificationString = $this->getRequest()->getHeader('X-GCS-Webhooks-Endpoint-Verification');
 
-        return $securitySignature && $securityKey;
+        return ($securitySignature && $securityKey) || $verificationString;
     }
 }
