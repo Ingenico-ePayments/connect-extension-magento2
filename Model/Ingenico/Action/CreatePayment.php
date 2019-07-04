@@ -6,6 +6,7 @@ use Ingenico\Connect\Sdk\Domain\Payment\CreatePaymentResponse;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Payment;
 use Netresearch\Epayments\Model\Config;
 use Netresearch\Epayments\Model\ConfigInterface;
 use Netresearch\Epayments\Model\Ingenico\Api\ClientInterface;
@@ -48,11 +49,6 @@ class CreatePayment implements ActionInterface
     private $tokenService;
 
     /**
-     * @var ConfigInterface
-     */
-    private $config;
-
-    /**
      * @var OrderRepositoryInterface
      */
     private $orderRepository;
@@ -86,7 +82,6 @@ class CreatePayment implements ActionInterface
         ResolverInterface $resolver,
         MerchantAction $merchantAction,
         TokenServiceInterface $tokenService,
-        ConfigInterface $config,
         OrderRepositoryInterface $orderRepository,
         Order\Email\Sender\OrderSender $orderSender,
         LoggerInterface $logger
@@ -96,7 +91,6 @@ class CreatePayment implements ActionInterface
         $this->statusResolver = $resolver;
         $this->merchantAction = $merchantAction;
         $this->tokenService = $tokenService;
-        $this->config = $config;
         $this->orderRepository = $orderRepository;
         $this->orderSender = $orderSender;
         $this->logger = $logger;
@@ -157,6 +151,7 @@ class CreatePayment implements ActionInterface
         $paymentStatus = $statusResponse->payment->status;
         $paymentStatusCode = $statusResponse->payment->statusOutput->statusCode;
 
+        /** @var Payment $payment */
         $payment = $order->getPayment();
         $payment->setAdditionalInformation(Config::PAYMENT_ID_KEY, $paymentId);
         $payment->setAdditionalInformation(Config::PAYMENT_STATUS_KEY, $paymentStatus);

@@ -17,5 +17,10 @@ class Redirected implements HandlerInterface
         $order->addCommentToStatusHistory(
             __('Redirected customer to finish payment process. Status: %status', ['status' => $ingenicoStatus->status])
         );
+        /**
+         * For inline payments with redirect actions a transaction is created. If the transaction is not kept open,
+         * a later online capture is impossible
+         */
+        $order->getPayment()->setIsTransactionClosed(false);
     }
 }

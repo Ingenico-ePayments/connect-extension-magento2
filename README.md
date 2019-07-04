@@ -4,7 +4,7 @@ Payment extension for processing the Magento order workflow via the Ingenico ePa
 
 Compatibility
 -------------
-- Magento >= 2.1.6, >= 2.2.6, >= 2.3.0
+- Magento >= 2.2.6, >= 2.3.0
 
 Installation Instructions
 -------------------------

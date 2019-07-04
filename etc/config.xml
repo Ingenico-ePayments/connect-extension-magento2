@@ -10,7 +10,7 @@
         <ingenico_epayments>
             <model>Netresearch\Epayments\Model\Payment\Ingenico</model>
             <general>
-                <version>1.6.0</version>
+                <version>1.6.1</version>
                 <payment_action>authorize</payment_action>
                 <sort_order>10</sort_order>
                 <can_initialize>1</can_initialize>
