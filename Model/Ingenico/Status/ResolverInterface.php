@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\Status;
+namespace Ingenico\Connect\Model\Ingenico\Status;
 
 use Ingenico\Connect\Sdk\Domain\Definitions\AbstractOrderStatus;
 use Magento\Framework\Exception\LocalizedException;
@@ -11,7 +11,7 @@ use Magento\Sales\Model\Order;
 
 /**
  * Class Resolver
- * @package Netresearch\Epayments\Model
+ * @package Ingenico\Connect\Model
  */
 interface ResolverInterface
 {

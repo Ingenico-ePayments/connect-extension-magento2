@@ -3,12 +3,12 @@
  * See LICENSE.md for license details.
  */
 
-namespace Netresearch\Epayments\Gateway;
+namespace Ingenico\Connect\Gateway;
 
 use Magento\Payment\Gateway\Config\ValueHandlerInterface;
 use Magento\Sales\Model\Order\Payment;
-use Netresearch\Epayments\Model\Config;
-use Netresearch\Epayments\Model\ConfigInterface;
+use Ingenico\Connect\Model\Config;
+use Ingenico\Connect\Model\ConfigInterface;
 
 class CanInitialize implements ValueHandlerInterface
 {

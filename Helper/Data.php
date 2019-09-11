@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Helper;
+namespace Ingenico\Connect\Helper;
 
 abstract class Data
 {
@@ -12,7 +12,7 @@ abstract class Data
      */
     public static function formatIngenicoAmount($amount)
     {
-        return (int)number_format($amount * 100, 0, '.', '');
+        return (int) number_format($amount * 100, 0, '.', '');
     }
 
     /**

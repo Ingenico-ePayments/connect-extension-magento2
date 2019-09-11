@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model;
+namespace Ingenico\Connect\Model;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\Locale\Resolver;

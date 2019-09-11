@@ -1,17 +1,17 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\Status;
+namespace Ingenico\Connect\Model\Ingenico\Status;
 
 /**
  * Class AuthorizationRequested
  *
- * @package Netresearch\Epayments\Model\Ingenico\Status
+ * @package Ingenico\Connect\Model\Ingenico\Status
  */
 class AuthorizationRequested extends PendingFraudApproval
 {
     /**
      * The only difference between the AUTHORIZATION_REQUESTED and the PENDING_FRAUD_APPROVAL status currently is
      * that AUTHORIZATION_REQUESTED can not be reviewed. This difference is handled in
-     * Netresearch\Epayments\Gateway\CanReviewPayment
+     * Ingenico\Connect\Gateway\CanReviewPayment
      */
 }

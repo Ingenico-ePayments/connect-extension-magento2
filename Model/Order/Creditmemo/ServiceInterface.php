@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Order\Creditmemo;
+namespace Ingenico\Connect\Model\Order\Creditmemo;
 
 use Magento\Framework\Exception\NotFoundException;
 use Magento\Sales\Api\Data\CreditmemoInterface;

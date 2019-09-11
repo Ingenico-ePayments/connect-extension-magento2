@@ -1,6 +1,6 @@
 define([
-    'Netresearch_Epayments/js/model/payment/payment-data',
-    'Netresearch_Epayments/js/model/payment/config',
+    'Ingenico_Connect/js/model/payment/payment-data',
+    'Ingenico_Connect/js/model/payment/config',
     'uiRegistry'
 ], function (paymentData, config, registry) {
     'use strict';
@@ -25,7 +25,7 @@ define([
 
             let fieldsValid = true;
             let activeFieldsCollection = registry.get(
-                'component = Netresearch_Epayments/js/view/payment/component/collection/fields,' +
+                'component = Ingenico_Connect/js/view/payment/component/collection/fields,' +
                 'uid = ' + paymentData.getCurrentProductIdentifier()
             );
 

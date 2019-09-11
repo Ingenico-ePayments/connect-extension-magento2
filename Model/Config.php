@@ -1,15 +1,16 @@
 <?php
 
-namespace Netresearch\Epayments\Model;
+namespace Ingenico\Connect\Model;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Encryption\EncryptorInterface;
+use Magento\Framework\Module\ModuleListInterface;
 use Magento\Store\Model\ScopeInterface;
 
 class Config implements ConfigInterface
 {
-    const CONFIG_INGENICO_VERSION = 'ingenico_epayments/general/version';
+    const MODULE_NAME = 'Ingenico_Connect';
     const CONFIG_INGENICO_ACTIVE = 'ingenico_epayments/general/active';
 
     const CONFIG_INGENICO_CHECKOUT_TYPE_HOSTED_CHECKOUT = '0';
@@ -67,34 +68,43 @@ class Config implements ConfigInterface
     const PRODUCT_PAYMENT_METHOD_KEY = 'ingenico_payment_product_method';
     const PRODUCT_TOKENIZE_KEY = 'ingenico_payment_product_tokenize';
     const CLIENT_PAYLOAD_KEY = 'ingenico_payment_payload';
+    const CLIENT_PAYLOAD_IS_PAYMENT_ACCOUNT_ON_FILE = 'ingenico_payment_is_payment_account_on_file';
     const TRANSACTION_RESULTS_KEY = 'ingenico_transaction_results';
     const REDIRECT_URL_KEY = 'ingenico_redirect_url';
     const HOSTED_CHECKOUT_ID_KEY = 'ingenico_hosted_checkout_id';
     const RETURNMAC_KEY = 'ingenico_returnmac';
     const IDEMPOTENCE_KEY = 'ingenico_idempotence_key';
 
-    /** @var ScopeConfigInterface */
+    /**
+     * @var ScopeConfigInterface
+     */
     private $scopeConfig;
 
-    /** @var DirectoryList */
+    /**
+     * @var DirectoryList
+     */
     private $directoryList;
 
-    /** @var EncryptorInterface */
+    /**
+     * @var EncryptorInterface
+     */
     private $encryptor;
 
     /**
-     * @param ScopeConfigInterface $scopeConfig
-     * @param DirectoryList $directoryList
-     * @param EncryptorInterface $encryptor
+     * @var ModuleListInterface
      */
+    private $moduleList;
+
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         DirectoryList $directoryList,
-        EncryptorInterface $encryptor
+        EncryptorInterface $encryptor,
+        ModuleListInterface $moduleList
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->directoryList = $directoryList;
         $this->encryptor = $encryptor;
+        $this->moduleList = $moduleList;
     }
 
     /**
@@ -112,7 +122,11 @@ class Config implements ConfigInterface
      */
     public function getVersion($storeId = null)
     {
-        return $this->getValue(self::CONFIG_INGENICO_VERSION, $storeId);
+        if ($moduleData = $this->moduleList->getOne(self::MODULE_NAME)) {
+            return $moduleData['setup_version'] ?? __('Unknown');
+        }
+
+        return __('Unknown');
     }
 
     /**
@@ -283,8 +297,8 @@ class Config implements ConfigInterface
     public function getLogAllRequestsFile($storeId = null)
     {
         return $this->directoryList->getPath(DirectoryList::LOG)
-               . DIRECTORY_SEPARATOR
-               . $this->getValue(self::CONFIG_INGENICO_LOG_ALL_REQUESTS_FILE, $storeId);
+            . DIRECTORY_SEPARATOR
+            . $this->getValue(self::CONFIG_INGENICO_LOG_ALL_REQUESTS_FILE, $storeId);
     }
 
     /**
@@ -316,7 +330,7 @@ class Config implements ConfigInterface
      */
     public function getIntegrator()
     {
-        return 'Netresearch DTT GmbH';
+        return 'Ingenico DTT GmbH';
     }
 
     /**

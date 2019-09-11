@@ -1,9 +1,9 @@
 <?php
 
-namespace Netresearch\Epayments\Gateway;
+namespace Ingenico\Connect\Gateway;
 
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
-use Netresearch\Epayments\Model\Ingenico\StatusInterface;
+use Ingenico\Connect\Model\Ingenico\StatusInterface;
 
 class CanCapturePartial extends AbstractValueHandler
 {

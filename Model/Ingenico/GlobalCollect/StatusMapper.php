@@ -1,9 +1,9 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\GlobalCollect;
+namespace Ingenico\Connect\Model\Ingenico\GlobalCollect;
 
 use Magento\Framework\Exception\InputException;
-use Netresearch\Epayments\Model\Ingenico\StatusInterface;
+use Ingenico\Connect\Model\Ingenico\StatusInterface;
 
 class StatusMapper
 {

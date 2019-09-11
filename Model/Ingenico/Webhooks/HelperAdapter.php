@@ -1,8 +1,8 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\Webhooks;
+namespace Ingenico\Connect\Model\Ingenico\Webhooks;
 
-use Netresearch\Epayments\Model\Config;
+use Ingenico\Connect\Model\Config;
 
 class HelperAdapter
 {

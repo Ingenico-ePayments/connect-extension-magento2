@@ -5,7 +5,7 @@ define([
 
     return Abstract.extend({
         defaults: {
-            elementTmpl: 'Netresearch_Epayments/payment/product/radio',
+            elementTmpl: 'Ingenico_Connect/payment/product/radio',
             input_type: 'radio',
             logo: '',
             checked: '',

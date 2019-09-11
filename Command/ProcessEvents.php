@@ -1,11 +1,11 @@
 <?php
 
-namespace Netresearch\Epayments\Command;
+namespace Ingenico\Connect\Command;
 
 use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
 use Magento\Framework\Exception\LocalizedException;
-use Netresearch\Epayments\Model\Event\Processor;
+use Ingenico\Connect\Model\Event\Processor;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

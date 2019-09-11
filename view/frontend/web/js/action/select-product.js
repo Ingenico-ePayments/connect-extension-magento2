@@ -1,12 +1,12 @@
 define([
-    'Netresearch_Epayments/js/model/payment/payment-data',
-    'Netresearch_Epayments/js/action/get-payment-product',
-    'Netresearch_Epayments/js/model/payment/config',
+    'Ingenico_Connect/js/model/payment/payment-data',
+    'Ingenico_Connect/js/action/get-payment-product',
+    'Ingenico_Connect/js/model/payment/config',
     'uiRegistry',
 ], function (paymentData, fetchProduct, config, registry) {
     'use strict';
 
-    let fieldsComponentName = 'Netresearch_Epayments/js/view/payment/component/collection/fields';
+    let fieldsComponentName = 'Ingenico_Connect/js/view/payment/component/collection/fields';
 
     let activeFieldsCollection = {};
 

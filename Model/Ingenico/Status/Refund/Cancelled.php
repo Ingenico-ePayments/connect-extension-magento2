@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\Status\Refund;
+namespace Ingenico\Connect\Model\Ingenico\Status\Refund;
 
 use Ingenico\Connect\Sdk\Domain\Definitions\AbstractOrderStatus;
 use Magento\Framework\Exception\LocalizedException;
@@ -10,8 +10,8 @@ use Magento\Sales\Api\InvoiceRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Creditmemo;
-use Netresearch\Epayments\Model\Order\Creditmemo\Service;
-use Netresearch\Epayments\Model\Transaction\TransactionManager;
+use Ingenico\Connect\Model\Order\Creditmemo\Service;
+use Ingenico\Connect\Model\Transaction\TransactionManager;
 
 class Cancelled implements RefundHandlerInterface
 {

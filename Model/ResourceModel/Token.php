@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\ResourceModel;
+namespace Ingenico\Connect\Model\ResourceModel;
 
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 

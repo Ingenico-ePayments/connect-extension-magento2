@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Order\Creditmemo;
+namespace Ingenico\Connect\Model\Order\Creditmemo;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\NotFoundException;

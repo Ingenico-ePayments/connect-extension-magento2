@@ -1,13 +1,11 @@
 <?php
 
-namespace Netresearch\Epayments\Api\Data;
+namespace Ingenico\Connect\Api\Data;
 
 /**
  * Ingenico Webhooks Event Interface
  *
- * @package Netresearch\Epayments\Api\Data
- * @author Paul Siedler <paul.siedler@netresearch.de>
- * @link http://www.netresearch.de/
+ * @package Ingenico\Connect\Api\Data
  */
 interface EventInterface
 {
@@ -35,7 +33,7 @@ interface EventInterface
      * Set event_id
      *
      * @param string $eventId
-     * @return \Netresearch\Epayments\Api\Data\EventInterface
+     * @return \Ingenico\Connect\Api\Data\EventInterface
      */
     public function setEventId($eventId);
 
@@ -50,7 +48,7 @@ interface EventInterface
      * Set order increment id
      *
      * @param string $orderIncrementId
-     * @return \Netresearch\Epayments\Api\Data\EventInterface
+     * @return \Ingenico\Connect\Api\Data\EventInterface
      */
     public function setOrderIncrementId($orderIncrementId);
 
@@ -65,7 +63,7 @@ interface EventInterface
      * Set payload
      *
      * @param string $payload
-     * @return \Netresearch\Epayments\Api\Data\EventInterface
+     * @return \Ingenico\Connect\Api\Data\EventInterface
      */
     public function setPayload($payload);
 
@@ -80,7 +78,7 @@ interface EventInterface
      * Set status
      *
      * @param int $status
-     * @return \Netresearch\Epayments\Api\Data\EventInterface
+     * @return \Ingenico\Connect\Api\Data\EventInterface
      */
     public function setStatus($status);
 
@@ -88,7 +86,7 @@ interface EventInterface
      * Set creation timestamp
      *
      * @param string $timestamp
-     * @return \Netresearch\Epayments\Api\Data\EventInterface
+     * @return \Ingenico\Connect\Api\Data\EventInterface
      */
     public function setCreatedAt($timestamp);
 

@@ -13,7 +13,7 @@ define(
         rendererList.push(
             {
                 type: 'ingenico',
-                component: 'Netresearch_Epayments/js/view/payment/method-renderer/ingenico'
+                component: 'Ingenico_Connect/js/view/payment/method-renderer/ingenico'
             }
         );
 

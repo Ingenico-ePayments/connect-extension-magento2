@@ -4,14 +4,14 @@
  */
 declare(strict_types=1);
 
-namespace Netresearch\Epayments\Plugin\Sales\Operation;
+namespace Ingenico\Connect\Plugin\Sales\Operation;
 
 use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Sales\Model\Order\Invoice;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\Payment\Operations\CaptureOperation;
-use Netresearch\Epayments\Model\Config;
-use Netresearch\Epayments\Model\Ingenico\StatusInterface;
+use Ingenico\Connect\Model\Config;
+use Ingenico\Connect\Model\Ingenico\StatusInterface;
 
 class EnforcePendingInvoice
 {
@@ -38,7 +38,7 @@ class EnforcePendingInvoice
              * Prevent pay operation on invoice later in the process, since the invoice is actually not yet paid on
              * Ingenico side.
              * This will also prevent update of *_amount_paid order totals, which needs to be taken care of in a status
-             * handler later, see Netresearch\Epayments\Model\Ingenico\Status\Paid::resolveStatus
+             * handler later, see Ingenico\Connect\Model\Ingenico\Status\Paid::resolveStatus
              */
             $invoice->setIsPaid(false);
             // Set invoice to pending

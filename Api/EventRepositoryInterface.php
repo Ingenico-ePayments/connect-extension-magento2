@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Api;
+namespace Ingenico\Connect\Api;
 
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
@@ -9,9 +9,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 /**
  * Interface EventRepositoryInterface
  *
- * @package Netresearch\Epayments\Api
- * @author Paul Siedler <paul.siedler@netresearch.de>
- * @link http://www.netresearch.de/
+ * @package Ingenico\Connect\Api
  */
 interface EventRepositoryInterface
 {
@@ -19,17 +17,17 @@ interface EventRepositoryInterface
     /**
      * Save Event
      *
-     * @param \Netresearch\Epayments\Api\Data\EventInterface $event
-     * @return \Netresearch\Epayments\Api\Data\EventInterface
+     * @param \Ingenico\Connect\Api\Data\EventInterface $event
+     * @return \Ingenico\Connect\Api\Data\EventInterface
      * @throws CouldNotSaveException
      */
-    public function save(\Netresearch\Epayments\Api\Data\EventInterface $event);
+    public function save(\Ingenico\Connect\Api\Data\EventInterface $event);
 
     /**
      * Retrieve Event
      *
      * @param string $eventId
-     * @return \Netresearch\Epayments\Api\Data\EventInterface
+     * @return \Ingenico\Connect\Api\Data\EventInterface
      * @throws NoSuchEntityException
      */
     public function getByEventId($eventId);
@@ -38,7 +36,7 @@ interface EventRepositoryInterface
      * Retrieve Event
      *
      * @param string $orderIncrementId
-     * @return \Netresearch\Epayments\Api\Data\EventSearchResultsInterface
+     * @return \Ingenico\Connect\Api\Data\EventSearchResultsInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getListByOrderIncrementId($orderIncrementId);
@@ -47,7 +45,7 @@ interface EventRepositoryInterface
      * Retrieve Event matching the specified criteria.
      *
      * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
-     * @return \Netresearch\Epayments\Api\Data\EventSearchResultsInterface
+     * @return \Ingenico\Connect\Api\Data\EventSearchResultsInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria);
@@ -55,11 +53,11 @@ interface EventRepositoryInterface
     /**
      * Delete Event
      *
-     * @param \Netresearch\Epayments\Api\Data\EventInterface $event
+     * @param \Ingenico\Connect\Api\Data\EventInterface $event
      * @return bool true on success
      * @throws CouldNotDeleteException
      */
-    public function delete(\Netresearch\Epayments\Api\Data\EventInterface $event);
+    public function delete(\Ingenico\Connect\Api\Data\EventInterface $event);
 
     /**
      * Delete Event by ID

@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Cron\FetchWxFiles;
+namespace Ingenico\Connect\Cron\FetchWxFiles;
 
 use Magento\Framework\Logger\Handler\Base;
 

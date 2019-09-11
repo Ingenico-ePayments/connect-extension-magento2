@@ -1,13 +1,11 @@
 <?php
 
-namespace Netresearch\Epayments\Model\ResourceModel\Event;
+namespace Ingenico\Connect\Model\ResourceModel\Event;
 
 /**
  * Class Collection
  *
- * @package Netresearch\Epayments\Model\ResourceModel\Event
- * @author Paul Siedler <paul.siedler@netresearch.de>
- * @link http://www.netresearch.de/
+ * @package Ingenico\Connect\Model\ResourceModel\Event
  */
 class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
 {
@@ -20,8 +18,8 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
     protected function _construct()
     {
         $this->_init(
-            \Netresearch\Epayments\Model\Event::class,
-            \Netresearch\Epayments\Model\ResourceModel\Event::class
+            \Ingenico\Connect\Model\Event::class,
+            \Ingenico\Connect\Model\ResourceModel\Event::class
         );
     }
 }

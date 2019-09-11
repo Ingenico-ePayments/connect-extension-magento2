@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="Ingenico Connect">
+    <description>PHP CodeSniffer ruleset for development for Ingenico Connect</description>
+
+    <exclude-pattern>*\.js</exclude-pattern>
+
+    <!-- Arguments -->
+    <arg value="sp"/>
+    <arg name="colors"/>
+
+    <!-- PSR2 standard -->
+    <rule ref="PSR2">
+        <!-- Exclude some Magento specifics: -->
+        <!-- Allow parameters like $_something -->
+        <exclude name="PSR2.Classes.PropertyDeclaration.Underscore"/>
+        <!-- Allow methods like _construct() -->
+        <exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>
+        <!-- Allow extends and implement to start on a new line: -->
+        <exclude name="PSR2.Classes.ClassDeclaration.ExtendsLine"/>
+        <exclude name="PSR2.Classes.ClassDeclaration.ImplementsLine"/>
+    </rule>
+
+    <!-- Rules -->
+    <rule ref="Generic.Arrays.ArrayIndent"/>
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+    <!--rule ref="Generic.PHP.ForbiddenFunctions">
+        <properties>
+            <property name="forbiddenFunctions" type="array" value="empty=>null,isset=>null,is_null=>null"/>
+        </properties>
+    </rule-->
+    <rule ref="Generic.PHP.Syntax"/>
+    <rule ref="Generic.Classes.DuplicateClassName"/>
+    <rule ref="MySource.PHP.GetRequestData"/>
+    <!--<rule ref="Generic.Commenting.Fixme"/>-->
+    <!--<rule ref="Generic.Commenting.Todo"/>-->
+    <rule ref="Generic.CodeAnalysis.EmptyStatement"/>
+    <rule ref="Generic.CodeAnalysis.EmptyStatement.DetectedCatch">
+        <exclude-pattern>ThreeDSecure/*Decorator\.php</exclude-pattern>
+        <exclude-pattern>DecoratorPool\.php</exclude-pattern>
+        <exclude-pattern>RequestBuilder\/Common\/*\.php</exclude-pattern>
+        <exclude-pattern>MethodSpecificInput\/*\.php</exclude-pattern>
+    </rule>
+    <rule ref="Generic.CodeAnalysis.ForLoopShouldBeWhileLoop"/>
+    <rule ref="Generic.CodeAnalysis.ForLoopWithTestFunctionCall"/>
+    <rule ref="Generic.CodeAnalysis.JumbledIncrementer"/>
+    <rule ref="Generic.CodeAnalysis.UnconditionalIfStatement"/>
+    <rule ref="Generic.CodeAnalysis.UnnecessaryFinalModifier"/>
+    <rule ref="Generic.CodeAnalysis.UselessOverridingMethod"/>
+    <rule ref="Generic.Formatting.SpaceAfterCast">
+        <properties>
+            <property name="spacing" value="1"/>
+        </properties>
+    </rule>
+    <rule ref="Generic.Metrics.CyclomaticComplexity">
+        <properties>
+            <property name="complexity" value="10"/>
+            <property name="absoluteComplexity" value="20"/>
+        </properties>
+    </rule>
+    <rule ref="PSR12.Operators.OperatorSpacing"/>
+    <rule ref="Generic.Formatting.MultipleStatementAlignment">
+        <properties>
+            <property name="maxPadding" value="1" />
+        </properties>
+    </rule>
+</ruleset>

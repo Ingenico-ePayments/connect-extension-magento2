@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\RequestBuilder\CreateHostedCheckout;
+namespace Ingenico\Connect\Model\Ingenico\RequestBuilder\CreateHostedCheckout;
 
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\CreateHostedCheckoutRequest;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\CreateHostedCheckoutRequestFactory;
@@ -9,10 +9,10 @@ use Ingenico\Connect\Sdk\Domain\Hostedcheckout\Definitions\HostedCheckoutSpecifi
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Sales\Model\Order;
-use Netresearch\Epayments\Model\Config;
-use Netresearch\Epayments\Model\ConfigInterface;
-use Netresearch\Epayments\Model\Ingenico\RequestBuilder\Common\RequestBuilder as CommonRequestBuilder;
-use Netresearch\Epayments\Model\Ingenico\Token\TokenServiceInterface;
+use Ingenico\Connect\Model\Config;
+use Ingenico\Connect\Model\ConfigInterface;
+use Ingenico\Connect\Model\Ingenico\RequestBuilder\Common\RequestBuilder as CommonRequestBuilder;
+use Ingenico\Connect\Model\Ingenico\Token\TokenServiceInterface;
 
 /**
  * Class CreateHostedCheckoutRequestBuilder
@@ -123,16 +123,15 @@ class RequestBuilder
      */
     private function getTokens(Order $order)
     {
-        $customerId = $order->getCustomerId();
-        $tokenizationRequested = ($order->getPayment()->getAdditionalInformation(Config::PRODUCT_TOKENIZE_KEY) === '1');
-        if (!$customerId || !$tokenizationRequested) {
-            return null;
-        }
-        $tokens = $this->tokenService->find($customerId);
-        if (empty($tokens)) {
+        if ($order->getCustomerIsGuest() || !$order->getCustomerId()) {
             return null;
         }
 
-        return implode(',', $tokens);
+        $tokens = implode(',', $this->tokenService->find(
+            $order->getCustomerId(),
+            $order->getPayment()->getAdditionalInformation(Config::PRODUCT_ID_KEY)
+        ));
+
+        return $tokens === '' ? null : $tokens;
     }
 }

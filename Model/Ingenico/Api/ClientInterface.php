@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\Api;
+namespace Ingenico\Connect\Model\Ingenico\Api;
 
 use Ingenico\Connect\Sdk\CallContext;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\CreateHostedCheckoutRequest;

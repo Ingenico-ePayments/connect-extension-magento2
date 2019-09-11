@@ -1,17 +1,17 @@
 <?php
 
-namespace Netresearch\Epayments\Setup;
+namespace Ingenico\Connect\Setup;
 
+use Ingenico\Connect\Api\Data\EventInterface;
 use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Framework\Setup\UpgradeSchemaInterface;
-use Netresearch\Epayments\Api\Data\EventInterface;
 
 /**
  * Class UpgradeSchema
  *
- * @package Netresearch\Epayments\Setup
+ * @package Ingenico\Connect\Setup
  */
 class UpgradeSchema implements UpgradeSchemaInterface
 {
@@ -33,7 +33,9 @@ class UpgradeSchema implements UpgradeSchemaInterface
         if (version_compare($context->getVersion(), '1.5.1') < 0) {
             $this->updateWebhookEventTable($setup);
         }
-
+        if (version_compare($context->getVersion(), '2.0.0') < 0) {
+            $this->updateAclRolesResourceId($setup);
+        }
         $setup->endSetup();
     }
 
@@ -90,58 +92,58 @@ class UpgradeSchema implements UpgradeSchemaInterface
         $tableName = $setup->getTable('epayments_webhook_event');
         if ($setup->getConnection()->isTableExists($tableName) === false) {
             $table = $setup->getConnection()
-                           ->newTable($tableName)
-                           ->addColumn(
-                               EventInterface::ID,
-                               Table::TYPE_INTEGER,
-                               null,
-                               [
-                                   'identity' => true,
-                                   'unsigned' => true,
-                                   'nullable' => false,
-                                   'primary' => true,
-                               ],
-                               'Id'
-                           )
-                           ->addColumn(
-                               EventInterface::EVENT_ID,
-                               Table::TYPE_TEXT,
-                               100,
-                               [
-                                   'nullable' => false,
-                               ],
-                               'Webhook event id'
-                           )
-                           ->addColumn(
-                               EventInterface::ORDER_INCREMENT_ID,
-                               Table::TYPE_TEXT,
-                               50,
-                               [
-                                   'nullable' => false,
-                               ],
-                               'merchant reference / order increment id'
-                           )
-                           ->addColumn(
-                               EventInterface::PAYLOAD,
-                               Table::TYPE_TEXT,
-                               null,
-                               [],
-                               'Original event data payload'
-                           )
-                           ->addColumn(
-                               EventInterface::STATUS,
-                               Table::TYPE_INTEGER,
-                               1,
-                               [
-                                   'unsigned' => true,
-                                   'default' => 0,
-                               ],
-                               'Processing status of the webhook event'
-                           )
-                           ->addIndex(
-                               $setup->getIdxName($tableName, ['event_id', 'order_increment_id']),
-                               ['event_id', 'order_increment_id']
-                           );
+                ->newTable($tableName)
+                ->addColumn(
+                    EventInterface::ID,
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'unsigned' => true,
+                        'nullable' => false,
+                        'primary' => true,
+                    ],
+                    'Id'
+                )
+                ->addColumn(
+                    EventInterface::EVENT_ID,
+                    Table::TYPE_TEXT,
+                    100,
+                    [
+                        'nullable' => false,
+                    ],
+                    'Webhook event id'
+                )
+                ->addColumn(
+                    EventInterface::ORDER_INCREMENT_ID,
+                    Table::TYPE_TEXT,
+                    50,
+                    [
+                        'nullable' => false,
+                    ],
+                    'merchant reference / order increment id'
+                )
+                ->addColumn(
+                    EventInterface::PAYLOAD,
+                    Table::TYPE_TEXT,
+                    null,
+                    [],
+                    'Original event data payload'
+                )
+                ->addColumn(
+                    EventInterface::STATUS,
+                    Table::TYPE_INTEGER,
+                    1,
+                    [
+                        'unsigned' => true,
+                        'default' => 0,
+                    ],
+                    'Processing status of the webhook event'
+                )
+                ->addIndex(
+                    $setup->getIdxName($tableName, ['event_id', 'order_increment_id']),
+                    ['event_id', 'order_increment_id']
+                );
             $setup->getConnection()->createTable($table);
         }
     }
@@ -157,6 +159,23 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     'TYPE' => Table::TYPE_TIMESTAMP,
                     'COMMENT' => 'Creation date of event on platform',
                 ]
+            );
+        }
+    }
+
+    private function updateAclRolesResourceId(SchemaSetupInterface $setup)
+    {
+        $tableName = $setup->getTable('authorization_rule');
+        if ($setup->getConnection()->isTableExists($tableName)) {
+            $setup->getConnection()->update(
+                $tableName,
+                ['resource_id' => 'Ingenico_Connect::epayments_config'],
+                'resource_id = "Netresearch_Epayments::epayments_config"'
+            );
+            $setup->getConnection()->update(
+                $tableName,
+                ['resource_id' => 'Ingenico_Connect::download_logfile'],
+                'resource_id = "Netresearch_Epayments::download_logfile"'
             );
         }
     }

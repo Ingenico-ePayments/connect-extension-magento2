@@ -1,19 +1,19 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\Action\Refund;
+namespace Ingenico\Connect\Model\Ingenico\Action\Refund;
 
 use Ingenico\Connect\Sdk\Domain\Refund\RefundResponse;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order\Creditmemo;
-use Netresearch\Epayments\Model\ConfigInterface;
-use Netresearch\Epayments\Model\Ingenico\Action\AbstractAction;
-use Netresearch\Epayments\Model\Ingenico\Action\ActionInterface;
-use Netresearch\Epayments\Model\Ingenico\Action\RetrievePayment;
-use Netresearch\Epayments\Model\Ingenico\Api\ClientInterface;
-use Netresearch\Epayments\Model\Ingenico\Status\ResolverInterface;
-use Netresearch\Epayments\Model\Ingenico\StatusInterface;
-use Netresearch\Epayments\Model\StatusResponseManager;
-use Netresearch\Epayments\Model\Transaction\TransactionManager;
+use Ingenico\Connect\Model\ConfigInterface;
+use Ingenico\Connect\Model\Ingenico\Action\AbstractAction;
+use Ingenico\Connect\Model\Ingenico\Action\ActionInterface;
+use Ingenico\Connect\Model\Ingenico\Action\RetrievePayment;
+use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
+use Ingenico\Connect\Model\Ingenico\Status\ResolverInterface;
+use Ingenico\Connect\Model\Ingenico\StatusInterface;
+use Ingenico\Connect\Model\StatusResponseManager;
+use Ingenico\Connect\Model\Transaction\TransactionManager;
 
 /**
  * @link https://developer.globalcollect.com/documentation/api/server/#__merchantId__payments__paymentId__cancel_post

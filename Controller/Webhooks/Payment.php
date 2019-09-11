@@ -1,17 +1,17 @@
 <?php
 
-namespace Netresearch\Epayments\Controller\Webhooks;
+namespace Ingenico\Connect\Controller\Webhooks;
 
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Webapi\Exception;
-use Netresearch\Epayments\Model\Ingenico\Webhooks;
-use Netresearch\Epayments\Model\Ingenico\Webhooks\PaymentEventDataResolver;
+use Ingenico\Connect\Model\Ingenico\Webhooks;
+use Ingenico\Connect\Model\Ingenico\Webhooks\PaymentEventDataResolver;
 
 /**
  * Class Payment
  *
- * @package Netresearch\Epayments\Controller\Webhooks
+ * @package Ingenico\Connect\Controller\Webhooks
  */
 class Payment extends Webhook
 {

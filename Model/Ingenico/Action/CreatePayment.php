@@ -1,18 +1,18 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\Action;
+namespace Ingenico\Connect\Model\Ingenico\Action;
 
 use Ingenico\Connect\Sdk\Domain\Payment\CreatePaymentResponse;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment;
-use Netresearch\Epayments\Model\Config;
-use Netresearch\Epayments\Model\ConfigInterface;
-use Netresearch\Epayments\Model\Ingenico\Api\ClientInterface;
-use Netresearch\Epayments\Model\Ingenico\RequestBuilder\CreatePayment\RequestBuilder;
-use Netresearch\Epayments\Model\Ingenico\Status\ResolverInterface;
-use Netresearch\Epayments\Model\Ingenico\Token\TokenServiceInterface;
+use Ingenico\Connect\Model\Config;
+use Ingenico\Connect\Model\ConfigInterface;
+use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
+use Ingenico\Connect\Model\Ingenico\RequestBuilder\CreatePayment\RequestBuilder;
+use Ingenico\Connect\Model\Ingenico\Status\ResolverInterface;
+use Ingenico\Connect\Model\Ingenico\Token\TokenServiceInterface;
 use Psr\Log\LoggerInterface;
 
 /**

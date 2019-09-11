@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\CreateSession;
+namespace Ingenico\Connect\Model\Ingenico\CreateSession;
 
 use Ingenico\Connect\Sdk\Domain\Sessions\SessionRequest;
 use Magento\Framework\ObjectManagerInterface;

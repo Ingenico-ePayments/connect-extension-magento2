@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico;
+namespace Ingenico\Connect\Model\Ingenico;
 
 use Ingenico\Connect\Sdk\DefaultConnectionFactory;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\CreateHostedCheckoutRequest;
@@ -18,12 +18,12 @@ use Ingenico\Connect\Sdk\Merchant\Products\GetProductParamsFactory;
 use Magento\Framework\App\Request\Http;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Store\Model\StoreManagerInterface;
-use Netresearch\Epayments\Model\ConfigInterface;
-use Netresearch\Epayments\Model\Ingenico\Api\ClientInterface;
-use Netresearch\Epayments\Model\Ingenico\Client\CommunicatorConfigurationFactory;
-use Netresearch\Epayments\Model\Ingenico\Client\CommunicatorFactory;
-use Netresearch\Epayments\Model\Ingenico\Client\CommunicatorLoggerFactory;
-use Netresearch\Epayments\Model\Ingenico\Client\ShoppingCartExtensionFactory;
+use Ingenico\Connect\Model\ConfigInterface;
+use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
+use Ingenico\Connect\Model\Ingenico\Client\CommunicatorConfigurationFactory;
+use Ingenico\Connect\Model\Ingenico\Client\CommunicatorFactory;
+use Ingenico\Connect\Model\Ingenico\Client\CommunicatorLoggerFactory;
+use Ingenico\Connect\Model\Ingenico\Client\ShoppingCartExtensionFactory;
 
 class Client implements ClientInterface
 {

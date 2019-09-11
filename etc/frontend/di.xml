@@ -3,7 +3,7 @@
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
             <argument name="configProviders" xsi:type="array">
-                <item name="ingenico_config_provider" xsi:type="object">Netresearch\Epayments\Model\ConfigProvider</item>
+                <item name="ingenico_config_provider" xsi:type="object">Ingenico\Connect\Model\ConfigProvider</item>
             </argument>
         </arguments>
     </type>
@@ -17,12 +17,12 @@
     <type name="Magento\Customer\CustomerData\SectionPoolInterface">
         <arguments>
             <argument name="sectionSourceMap" xsi:type="array">
-                <item name="connect_session" xsi:type="string">Netresearch\Epayments\CustomerData\ConnectSession</item>
+                <item name="connect_session" xsi:type="string">Ingenico\Connect\CustomerData\ConnectSession</item>
             </argument>
         </arguments>
     </type>
 
-    <type name="Netresearch\Epayments\CustomerData\ConnectSession">
+    <type name="Ingenico\Connect\CustomerData\ConnectSession">
         <arguments>
             <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
         </arguments>

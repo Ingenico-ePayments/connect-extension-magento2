@@ -1,11 +1,11 @@
 <?php
 
-namespace Netresearch\Epayments\Plugin\Block\Adminhtml\Order\Creditmemo;
+namespace Ingenico\Connect\Plugin\Block\Adminhtml\Order\Creditmemo;
 
 use Magento\Framework\UrlInterface;
-use Netresearch\Epayments\Model\ConfigProvider;
-use Netresearch\Epayments\Model\Ingenico\StatusInterface;
-use Netresearch\Epayments\Model\StatusResponseManager;
+use Ingenico\Connect\Model\ConfigProvider;
+use Ingenico\Connect\Model\Ingenico\StatusInterface;
+use Ingenico\Connect\Model\StatusResponseManager;
 
 class View
 {

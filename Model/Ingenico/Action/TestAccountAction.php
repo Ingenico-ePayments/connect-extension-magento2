@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\Action;
+namespace Ingenico\Connect\Model\Ingenico\Action;
 
 class TestAccountAction extends AbstractAction implements ActionInterface
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\ResourceModel\Token;
+namespace Ingenico\Connect\Model\ResourceModel\Token;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
@@ -9,8 +9,8 @@ class Collection extends AbstractCollection
     protected function _construct()
     {
         $this->_init(
-            \Netresearch\Epayments\Model\Ingenico\Token\Token::class,
-            \Netresearch\Epayments\Model\ResourceModel\Token::class
+            \Ingenico\Connect\Model\Ingenico\Token\Token::class,
+            \Ingenico\Connect\Model\ResourceModel\Token::class
         );
     }
 

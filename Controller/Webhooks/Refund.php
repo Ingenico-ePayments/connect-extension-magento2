@@ -1,19 +1,19 @@
 <?php
 
-namespace Netresearch\Epayments\Controller\Webhooks;
+namespace Ingenico\Connect\Controller\Webhooks;
 
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Webapi\Exception;
-use Netresearch\Epayments\Model\Ingenico\Webhooks;
-use Netresearch\Epayments\Model\Ingenico\Webhooks\RefundEventDataResolver;
+use Ingenico\Connect\Model\Ingenico\Webhooks;
+use Ingenico\Connect\Model\Ingenico\Webhooks\RefundEventDataResolver;
 
 /**
  * Class Refund
  *
- * @package Netresearch\Epayments\Controller\Webhooks
+ * @package Ingenico\Connect\Controller\Webhooks
  * @deprecated Only one webhook endpoint is offically needed
- * @see \Netresearch\Epayments\Controller\Webhooks\Payment::execute
+ * @see \Ingenico\Connect\Controller\Webhooks\Payment::execute
  */
 class Refund extends Webhook
 {

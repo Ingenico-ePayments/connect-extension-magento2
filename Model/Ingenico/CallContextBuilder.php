@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico;
+namespace Ingenico\Connect\Model\Ingenico;
 
 use Ingenico\Connect\Sdk\CallContext;
 

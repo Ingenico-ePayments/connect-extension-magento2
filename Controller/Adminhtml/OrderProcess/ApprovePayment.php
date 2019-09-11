@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Controller\Adminhtml\OrderProcess;
+namespace Ingenico\Connect\Controller\Adminhtml\OrderProcess;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
@@ -9,7 +9,7 @@ use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
-use Netresearch\Epayments\Model\Ingenico\Action\ApproveChallengedPayment;
+use Ingenico\Connect\Model\Ingenico\Action\ApproveChallengedPayment;
 use Psr\Log\LoggerInterface;
 
 class ApprovePayment extends Action

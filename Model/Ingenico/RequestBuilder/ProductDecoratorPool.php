@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\RequestBuilder;
+namespace Ingenico\Connect\Model\Ingenico\RequestBuilder;
 
 use Ingenico\Connect\Sdk\DataObject;
 use Magento\Framework\Exception\LocalizedException;

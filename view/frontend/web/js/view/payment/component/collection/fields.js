@@ -2,9 +2,9 @@ define([
     'jquery',
     'uiCollection',
     'uiLayout',
-    'Netresearch_Epayments/js/action/get-payment-product',
-    'Netresearch_Epayments/js/model/payment/config',
-    'Netresearch_Epayments/js/model/payment/payment-data',
+    'Ingenico_Connect/js/action/get-payment-product',
+    'Ingenico_Connect/js/model/payment/config',
+    'Ingenico_Connect/js/model/payment/payment-data',
     'mage/translate'
 ], function ($, Collection, layout, fetchProduct, config, paymentData, $t) {
     'use strict';
@@ -61,7 +61,7 @@ define([
         getProductFieldLayout: function(field) {
             return {
                 parent: this.name,
-                component: 'Netresearch_Epayments/js/view/payment/component/field',
+                component: 'Ingenico_Connect/js/view/payment/component/field',
                 field: field,
                 account: this.account,
             }
@@ -71,7 +71,7 @@ define([
             return {
                 parent: this.name,
                 component: 'Magento_Ui/js/form/element/single-checkbox',
-                elementTmpl: 'Netresearch_Epayments/payment/product/field/token-checkbox',
+                elementTmpl: 'Ingenico_Connect/payment/product/field/token-checkbox',
                 checkedValue: this.product.id,
                 value: paymentData.tokenize,
                 dataScope: this.name + '-tokenize',
@@ -83,7 +83,7 @@ define([
             return {
                 parent: this.name,
                 component: 'Magento_Ui/js/lib/core/element/element',
-                template: 'Netresearch_Epayments/payment/product/field/info',
+                template: 'Ingenico_Connect/payment/product/field/info',
                 text: $t('You will be redirected to enter your payment details.'),
             }
         },

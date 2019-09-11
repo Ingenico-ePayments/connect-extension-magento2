@@ -1,17 +1,15 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Event;
+namespace Ingenico\Connect\Model\Event;
 
-use Netresearch\Epayments\Api\Data\EventInterface;
+use Ingenico\Connect\Api\Data\EventInterface;
 
 /**
  * Class DataModel
  *
  * public data representation of a database event
  *
- * @package Netresearch\Epayments\Model\Event
- * @author Paul Siedler <paul.siedler@netresearch.de>
- * @link http://www.netresearch.de/
+ * @package Ingenico\Connect\Model\Event
  */
 class DataModel extends \Magento\Framework\Api\AbstractSimpleObject implements EventInterface
 {
@@ -20,7 +18,7 @@ class DataModel extends \Magento\Framework\Api\AbstractSimpleObject implements E
      */
     public function getEventId()
     {
-        return (string)$this->_get(self::EVENT_ID);
+        return (string) $this->_get(self::EVENT_ID);
     }
 
     /**
@@ -37,7 +35,7 @@ class DataModel extends \Magento\Framework\Api\AbstractSimpleObject implements E
      */
     public function getOrderIncrementId()
     {
-        return (string)$this->_get(self::ORDER_INCREMENT_ID);
+        return (string) $this->_get(self::ORDER_INCREMENT_ID);
     }
 
     /**
@@ -71,7 +69,7 @@ class DataModel extends \Magento\Framework\Api\AbstractSimpleObject implements E
      */
     public function getStatus()
     {
-        return (int)$this->_get(self::STATUS);
+        return (int) $this->_get(self::STATUS);
     }
 
     /**

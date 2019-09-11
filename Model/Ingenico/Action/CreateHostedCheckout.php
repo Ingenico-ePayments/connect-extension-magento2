@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\Action;
+namespace Ingenico\Connect\Model\Ingenico\Action;
 
 use Ingenico\Connect\Sdk\Domain\Errors\ErrorResponse;
 use Ingenico\Connect\Sdk\Domain\Product\PaymentProductResponse;
@@ -9,13 +9,13 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\Order;
-use Netresearch\Epayments\Helper\Data as DataHelper;
-use Netresearch\Epayments\Model\Config;
-use Netresearch\Epayments\Model\ConfigInterface;
-use Netresearch\Epayments\Model\Ingenico\Api\ClientInterface;
-use Netresearch\Epayments\Model\Ingenico\RequestBuilder\CreateHostedCheckout\RequestBuilder;
-use Netresearch\Epayments\Model\StatusResponseManager;
-use Netresearch\Epayments\Model\Transaction\TransactionManager;
+use Ingenico\Connect\Helper\Data as DataHelper;
+use Ingenico\Connect\Model\Config;
+use Ingenico\Connect\Model\ConfigInterface;
+use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
+use Ingenico\Connect\Model\Ingenico\RequestBuilder\CreateHostedCheckout\RequestBuilder;
+use Ingenico\Connect\Model\StatusResponseManager;
+use Ingenico\Connect\Model\Transaction\TransactionManager;
 
 /**
  * @link https://developer.globalcollect.com/documentation/api/server/#hostedcheckouts
@@ -68,7 +68,8 @@ class CreateHostedCheckout extends AbstractAction implements ActionInterface
         $countryCode = $order->getBillingAddress()->getCountryId();
         $locale = $this->resolver->getLocale();
         $checkoutSubdomain = $this->ePaymentsConfig->getHostedCheckoutSubDomain($scopeId);
-        $shouldHavePaymentProduct = $this->ePaymentsConfig->getCheckoutType($scopeId) !== Config::CONFIG_INGENICO_CHECKOUT_TYPE_REDIRECT;
+        $shouldHavePaymentProduct = $this->ePaymentsConfig
+                ->getCheckoutType($scopeId) !== Config::CONFIG_INGENICO_CHECKOUT_TYPE_REDIRECT;
 
         /** @var InfoInterface $payment */
         $payment = $order->getPayment();

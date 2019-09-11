@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\Token;
+namespace Ingenico\Connect\Model\Ingenico\Token;
 
 use Magento\Framework\Model\AbstractModel;
 
@@ -8,7 +8,7 @@ class Token extends AbstractModel
 {
     public function _construct()
     {
-        $this->_init('Netresearch\Epayments\Model\ResourceModel\Token');
+        $this->_init('Ingenico\Connect\Model\ResourceModel\Token');
     }
 
     /**

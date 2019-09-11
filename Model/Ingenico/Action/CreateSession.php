@@ -1,11 +1,11 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\Action;
+namespace Ingenico\Connect\Model\Ingenico\Action;
 
-use Netresearch\Epayments\Model\ConfigInterface;
-use Netresearch\Epayments\Model\Ingenico\Api\ClientInterface;
-use Netresearch\Epayments\Model\Ingenico\CreateSession\SessionRequestFactory;
-use Netresearch\Epayments\Model\Ingenico\Token\TokenServiceInterface;
+use Ingenico\Connect\Model\ConfigInterface;
+use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
+use Ingenico\Connect\Model\Ingenico\CreateSession\SessionRequestFactory;
+use Ingenico\Connect\Model\Ingenico\Token\TokenServiceInterface;
 
 /**
  * @link https://epayments-api.developer-ingenico.com/s2sapi/v1/en_US/php/sessions/create.html

@@ -3,19 +3,17 @@
  * See LICENSE.md for license details.
  */
 
-namespace Netresearch\Epayments\Model\Ingenico\GlobalCollect\Status;
+namespace Ingenico\Connect\Model\Ingenico\GlobalCollect\Status;
 
 use Ingenico\Connect\Sdk\Domain\Capture\Definitions\Capture;
 use Ingenico\Connect\Sdk\Domain\Definitions\AbstractOrderStatus;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
-use Netresearch\Epayments\Model\Ingenico\StatusInterface;
+use Ingenico\Connect\Model\Ingenico\StatusInterface;
 
 /**
  * Class OrderStatusHelper
  *
- * @package Netresearch\Epayments\Model\Ingenico\GlobalCollect\Status
- * @author Paul Siedler <paul.siedler@netresearch.de>
- * @link http://www.netresearch.de/
+ * @package Ingenico\Connect\Model\Ingenico\GlobalCollect\Status
  */
 class OrderStatusHelper
 {

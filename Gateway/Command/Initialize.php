@@ -1,11 +1,11 @@
 <?php
 
-namespace Netresearch\Epayments\Gateway\Command;
+namespace Ingenico\Connect\Gateway\Command;
 
 use Ingenico\Connect\Sdk\ResponseException;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Sales\Model\Order;
-use Netresearch\Epayments\Model\Ingenico\Action\CreateHostedCheckout;
+use Ingenico\Connect\Model\Ingenico\Action\CreateHostedCheckout;
 
 class Initialize implements CommandInterface
 {
@@ -34,7 +34,7 @@ class Initialize implements CommandInterface
     /**
      * Trigger the initialization of the Hosted Checkout (only used for redirect payments)
      *
-     * @see \Netresearch\Epayments\Gateway\CanInitialize;
+     * @see \Ingenico\Connect\Gateway\CanInitialize;
      *
      * @param mixed[] $commandSubject
      * @return void

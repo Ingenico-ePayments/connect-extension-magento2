@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model;
+namespace Ingenico\Connect\Model;
 
 use Magento\Framework\Logger\Handler\Base;
 

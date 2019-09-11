@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\Action;
+namespace Ingenico\Connect\Model\Ingenico\Action;
 
 use Ingenico\Connect\Sdk\Domain\Payment\ApprovePaymentRequest;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\OrderApprovePayment;
@@ -8,14 +8,14 @@ use Ingenico\Connect\Sdk\Domain\Payment\Definitions\OrderReferencesApprovePaymen
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment;
-use Netresearch\Epayments\Helper\Data as DataHelper;
-use Netresearch\Epayments\Model\Config;
-use Netresearch\Epayments\Model\ConfigInterface;
-use Netresearch\Epayments\Model\Ingenico\Api\ClientInterface;
-use Netresearch\Epayments\Model\Ingenico\GlobalCollect\Status\OrderStatusHelper;
-use Netresearch\Epayments\Model\Ingenico\MerchantReference;
-use Netresearch\Epayments\Model\StatusResponseManager;
-use Netresearch\Epayments\Model\Transaction\TransactionManager;
+use Ingenico\Connect\Helper\Data as DataHelper;
+use Ingenico\Connect\Model\Config;
+use Ingenico\Connect\Model\ConfigInterface;
+use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
+use Ingenico\Connect\Model\Ingenico\GlobalCollect\Status\OrderStatusHelper;
+use Ingenico\Connect\Model\Ingenico\MerchantReference;
+use Ingenico\Connect\Model\StatusResponseManager;
+use Ingenico\Connect\Model\Transaction\TransactionManager;
 
 /**
  * @link https://developer.globalcollect.com/documentation/api/server/#__merchantId__payments__paymentId__approve_post

@@ -1,5 +1,5 @@
 define([
-    'Netresearch_Epayments/js/model/client'
+    'Ingenico_Connect/js/model/client'
 ], function (client) {
     'use strict';
     /**
@@ -18,6 +18,7 @@ define([
         }
         if (data['accountOnFile']) {
             request.setAccountOnFile(data['accountOnFile']);
+            window.checkoutConfig.isPaymentAccountOnFile = true;
             delete data['accountOnFile'];
         }
         /**

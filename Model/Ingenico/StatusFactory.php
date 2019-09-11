@@ -1,13 +1,13 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico;
+namespace Ingenico\Connect\Model\Ingenico;
 
 use Ingenico\Connect\Sdk\Domain\Capture\CaptureResponse;
 use Ingenico\Connect\Sdk\Domain\Definitions\AbstractOrderStatus;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
 use Ingenico\Connect\Sdk\Domain\Refund\Definitions\RefundResult;
 use Magento\Framework\ObjectManagerInterface;
-use Netresearch\Epayments\Model\Ingenico\Status\Refund\RefundHandlerInterface;
+use Ingenico\Connect\Model\Ingenico\Status\Refund\RefundHandlerInterface;
 
 class StatusFactory
 {
@@ -72,7 +72,7 @@ class StatusFactory
         $classPath = $this->resolveClassPath($ingenicoOrderStatus);
 
         return $this->objectManager->create(
-            "Netresearch\Epayments\Model\Ingenico\Status\\$classPath",
+            "Ingenico\Connect\Model\Ingenico\Status\\$classPath",
             [
                 'gcOrderStatus' => $ingenicoOrderStatus,
             ]

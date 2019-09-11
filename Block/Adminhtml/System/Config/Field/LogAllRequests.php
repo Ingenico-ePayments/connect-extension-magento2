@@ -1,12 +1,12 @@
 <?php
 
-namespace Netresearch\Epayments\Block\Adminhtml\System\Config\Field;
+namespace Ingenico\Connect\Block\Adminhtml\System\Config\Field;
 
 use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Framework\Filesystem\Driver\File;
-use Netresearch\Epayments\Model\ConfigInterface;
+use Ingenico\Connect\Model\ConfigInterface;
 
 class LogAllRequests extends Field
 {

@@ -1,13 +1,13 @@
 <?php
 
-namespace Netresearch\Epayments\Model\OrderUpdate;
+namespace Ingenico\Connect\Model\OrderUpdate;
 
 use Magento\Sales\Model\Order as MagentoOrder;
 
 class HistoryManager implements HistoryManagerInterface
 {
     const TYPE_API = 'api';
-    const TYPE_WR  = 'wr';
+    const TYPE_WR = 'wr';
 
     /**
      * {@inheritdoc}

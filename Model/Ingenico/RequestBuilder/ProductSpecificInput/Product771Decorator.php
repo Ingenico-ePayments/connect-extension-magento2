@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\RequestBuilder\ProductSpecificInput;
+namespace Ingenico\Connect\Model\Ingenico\RequestBuilder\ProductSpecificInput;
 
 use Ingenico\Connect\Sdk\DataObject;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\CreateHostedCheckoutRequest;
@@ -19,9 +19,9 @@ use Ingenico\Connect\Sdk\Domain\Payment\Definitions\SepaDirectDebitPaymentProduc
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\SepaDirectDebitPaymentProduct771SpecificInputBaseFactory;
 use Magento\Framework\UrlInterface;
 use Magento\Sales\Api\Data\OrderInterface;
-use Netresearch\Epayments\Model\Config;
-use Netresearch\Epayments\Model\Ingenico\RequestBuilder\Common\RequestBuilder;
-use Netresearch\Epayments\Model\Ingenico\RequestBuilder\DecoratorInterface;
+use Ingenico\Connect\Model\Config;
+use Ingenico\Connect\Model\Ingenico\RequestBuilder\Common\RequestBuilder;
+use Ingenico\Connect\Model\Ingenico\RequestBuilder\DecoratorInterface;
 
 class Product771Decorator implements DecoratorInterface
 {

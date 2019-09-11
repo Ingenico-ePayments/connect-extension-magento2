@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\OrderUpdate;
+namespace Ingenico\Connect\Model\OrderUpdate;
 
 use Magento\Framework\Logger\Monolog;
 use Magento\Store\Model\StoreManagerInterface;
@@ -13,7 +13,7 @@ class Processor implements ProcessorInterface
     /** @var Monolog */
     private $logger;
 
-    /** @var \Netresearch\Epayments\Model\ResourceModel\IngenicoPendingOrder\CollectionFactory */
+    /** @var \Ingenico\Connect\Model\ResourceModel\IngenicoPendingOrder\CollectionFactory */
     private $collectionFactory;
 
     /** @var StoreManagerInterface */
@@ -24,13 +24,13 @@ class Processor implements ProcessorInterface
      *
      * @param OrderInterface $order
      * @param Monolog $logger
-     * @param \Netresearch\Epayments\Model\ResourceModel\IngenicoPendingOrder\CollectionFactory $collectionFactory
+     * @param \Ingenico\Connect\Model\ResourceModel\IngenicoPendingOrder\CollectionFactory $collectionFactory
      * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         OrderInterface $order,
         Monolog $logger,
-        \Netresearch\Epayments\Model\ResourceModel\IngenicoPendingOrder\CollectionFactory $collectionFactory,
+        \Ingenico\Connect\Model\ResourceModel\IngenicoPendingOrder\CollectionFactory $collectionFactory,
         StoreManagerInterface $storeManager
     ) {
         $this->order = $order;

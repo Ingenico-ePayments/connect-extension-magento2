@@ -1,8 +1,8 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Adminhtml\System\Config\Source;
+namespace Ingenico\Connect\Model\Adminhtml\System\Config\Source;
 
-use Netresearch\Epayments\Model\Config;
+use Ingenico\Connect\Model\Config;
 
 class CaptureMode
 {

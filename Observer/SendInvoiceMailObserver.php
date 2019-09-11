@@ -1,13 +1,13 @@
 <?php
 
-namespace Netresearch\Epayments\Observer;
+namespace Ingenico\Connect\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Sales\Model\Order\Invoice;
-use Netresearch\Epayments\Model\ConfigProvider;
+use Ingenico\Connect\Model\ConfigProvider;
 
 class SendInvoiceMailObserver implements ObserverInterface
 {

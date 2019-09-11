@@ -1,15 +1,15 @@
 <?php
 
-namespace Netresearch\Epayments\Cron;
+namespace Ingenico\Connect\Cron;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Logger\Monolog;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Store\Model\StoreManagerInterface;
-use Netresearch\Epayments\Model\ConfigInterface;
-use Netresearch\Epayments\Model\ResourceModel\IngenicoStaleOrder\CollectionFactory;
-use Netresearch\Epayments\Model\ResourceModel\IngenicoStaleOrder\Collection;
+use Ingenico\Connect\Model\ConfigInterface;
+use Ingenico\Connect\Model\ResourceModel\IngenicoStaleOrder\CollectionFactory;
+use Ingenico\Connect\Model\ResourceModel\IngenicoStaleOrder\Collection;
 
 class CancelStaleOrders
 {
@@ -90,17 +90,17 @@ class CancelStaleOrders
      */
     private function cancelOrder(Order $order)
     {
-        $this->logger->info('Cancelling order '.$order->getIncrementId());
+        $this->logger->info('Cancelling order ' . $order->getIncrementId());
 
         /**
          * Online invalidation of the payment through the payment object
          */
         try {
             $order->getPayment()->cancel();
-            $this->logger->info('Cancelled order on platform: '.$order->getIncrementId());
+            $this->logger->info('Cancelled order on platform: ' . $order->getIncrementId());
         } catch (\Ingenico\Connect\Sdk\ResponseException $exception) {
             $this->logger->err(
-                'Could not cancel order on platform due to error: '.$exception->getMessage()
+                'Could not cancel order on platform due to error: ' . $exception->getMessage()
             );
         }
 
@@ -109,10 +109,10 @@ class CancelStaleOrders
          */
         try {
             $order->registerCancellation('Automatic order cancellation');
-            $this->logger->info('Cancelled Magento order: '.$order->getIncrementId());
+            $this->logger->info('Cancelled Magento order: ' . $order->getIncrementId());
         } catch (LocalizedException $exception) {
             $this->logger->err(
-                'Could not cancel order automatically: '.$exception->getMessage()
+                'Could not cancel order automatically: ' . $exception->getMessage()
             );
         }
     }

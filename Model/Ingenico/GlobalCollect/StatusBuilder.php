@@ -1,10 +1,10 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\GlobalCollect;
+namespace Ingenico\Connect\Model\Ingenico\GlobalCollect;
 
 use Ingenico\Connect\Sdk\Domain\Definitions\AbstractOrderStatus;
 use Magento\Framework\Exception\IntegrationException;
-use Netresearch\Epayments\Model\Ingenico\GlobalCollect\Wx\DataRecord;
+use Ingenico\Connect\Model\Ingenico\GlobalCollect\Wx\DataRecord;
 
 class StatusBuilder
 {
@@ -32,7 +32,8 @@ class StatusBuilder
      */
     public function create(DataRecord $dataRecord)
     {
-        // some statuses are used for multiple use cases (refund vs capture), we therefore have to check some other things too
+        // some statuses are used for multiple use cases (refund vs capture),
+        // we therefore have to check some other things too
         $possibleStatuses = StatusMapper::getConnectStatus(
             $dataRecord->getPaymentData()->getPaymentStatus(),
             $dataRecord->getPaymentData()->getPaymentGroupId()

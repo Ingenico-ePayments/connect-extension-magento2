@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\Token;
+namespace Ingenico\Connect\Model\Ingenico\Token;
 
 interface TokenServiceInterface
 {

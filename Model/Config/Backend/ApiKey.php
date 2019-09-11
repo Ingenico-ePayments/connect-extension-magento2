@@ -1,5 +1,5 @@
 <?php
-namespace Netresearch\Epayments\Model\Config\Backend;
+namespace Ingenico\Connect\Model\Config\Backend;
 
 use Magento\Framework\App\Cache\TypeListInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;

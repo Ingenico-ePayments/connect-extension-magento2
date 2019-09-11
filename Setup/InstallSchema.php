@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Setup;
+namespace Ingenico\Connect\Setup;
 
 use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;

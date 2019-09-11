@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\Status;
+namespace Ingenico\Connect\Model\Ingenico\Status;
 
 use Ingenico\Connect\Sdk\Domain\Capture\CaptureResponse;
 use Ingenico\Connect\Sdk\Domain\Definitions\AbstractOrderStatus;
@@ -16,15 +16,15 @@ use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment as OrderPayment;
-use Netresearch\Epayments\Model\Order\Creditmemo\Service;
-use Netresearch\Epayments\Model\Order\EmailManager;
-use Netresearch\Epayments\Model\StatusResponseManagerInterface;
-use Netresearch\Epayments\Model\Transaction\TransactionManager;
+use Ingenico\Connect\Model\Order\Creditmemo\Service;
+use Ingenico\Connect\Model\Order\EmailManager;
+use Ingenico\Connect\Model\StatusResponseManagerInterface;
+use Ingenico\Connect\Model\Transaction\TransactionManager;
 
 /**
  * Class Resolver
  *
- * @package Netresearch\Epayments\Model
+ * @package Ingenico\Connect\Model
  */
 class Resolver implements ResolverInterface
 {

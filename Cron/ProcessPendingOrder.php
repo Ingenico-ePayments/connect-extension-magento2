@@ -1,9 +1,9 @@
 <?php
 
-namespace Netresearch\Epayments\Cron;
+namespace Ingenico\Connect\Cron;
 
 use Magento\Store\Model\StoreManagerInterface;
-use Netresearch\Epayments\Model\OrderUpdate\ProcessorInterface;
+use Ingenico\Connect\Model\OrderUpdate\ProcessorInterface;
 
 class ProcessPendingOrder
 {

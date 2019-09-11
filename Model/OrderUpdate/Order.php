@@ -1,14 +1,14 @@
 <?php
 
-namespace Netresearch\Epayments\Model\OrderUpdate;
+namespace Ingenico\Connect\Model\OrderUpdate;
 
 use Magento\Framework\Logger\Monolog;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Sales\Model\OrderRepository;
-use Netresearch\Epayments\Model\Config;
-use Netresearch\Epayments\Model\ConfigInterface;
-use Netresearch\Epayments\Model\Ingenico\Api\ClientInterface;
-use Netresearch\Epayments\Model\Ingenico\Status\ResolverInterface;
+use Ingenico\Connect\Model\Config;
+use Ingenico\Connect\Model\ConfigInterface;
+use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
+use Ingenico\Connect\Model\Ingenico\Status\ResolverInterface;
 
 class Order implements OrderInterface
 {

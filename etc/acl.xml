@@ -6,8 +6,8 @@
                 <resource id="Magento_Backend::stores">
                     <resource id="Magento_Backend::stores_settings">
                         <resource id="Magento_Config::config">
-                            <resource id="Netresearch_Epayments::epayments_config" title="Ingenico ePayments configuration">
-                                <resource id="Netresearch_Epayments::download_logfile" title="Download API communication log"/>
+                            <resource id="Ingenico_Connect::epayments_config" title="Ingenico ePayments configuration">
+                                <resource id="Ingenico_Connect::download_logfile" title="Download API communication log"/>
                             </resource>
                         </resource>
                     </resource>

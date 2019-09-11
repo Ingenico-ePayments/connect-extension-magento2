@@ -1,11 +1,11 @@
 <?php
 
-namespace Netresearch\Epayments\Observer;
+namespace Ingenico\Connect\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Payment\Observer\AbstractDataAssignObserver;
 use Magento\Quote\Api\Data\PaymentInterface;
-use Netresearch\Epayments\Model\Config;
+use Ingenico\Connect\Model\Config;
 
 class DataAssignObserver extends AbstractDataAssignObserver
 {

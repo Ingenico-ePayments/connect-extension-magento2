@@ -3,18 +3,16 @@
  * See LICENSE.md for license details.
  */
 
-namespace Netresearch\Epayments\Cron;
+namespace Ingenico\Connect\Cron;
 
-use Netresearch\Epayments\Model\Event\Processor;
+use Ingenico\Connect\Model\Event\Processor;
 
 /**
  * Class ProcessEvents
  *
  * Cron entry point to process events from the queue
  *
- * @package Netresearch\Epayments\Cron
- * @author Paul Siedler <paul.siedler@netresearch.de>
- * @link http://www.netresearch.de/
+ * @package Ingenico\Connect\Cron
  */
 class ProcessEvents
 {

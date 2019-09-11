@@ -1,12 +1,12 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\Status;
+namespace Ingenico\Connect\Model\Ingenico\Status;
 
 use Ingenico\Connect\Sdk\Domain\Definitions\AbstractOrderStatus;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
-use Netresearch\Epayments\Model\ConfigInterface;
-use Netresearch\Epayments\Model\Ingenico\StatusInterface;
+use Ingenico\Connect\Model\ConfigInterface;
+use Ingenico\Connect\Model\Ingenico\StatusInterface;
 
 class PendingPayment implements HandlerInterface
 {

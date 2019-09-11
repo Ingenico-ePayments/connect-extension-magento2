@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Gateway\Command;
+namespace Ingenico\Connect\Gateway\Command;
 
 class IngenicoDenyPaymentCommand extends IngenicoCancelCommand
 {

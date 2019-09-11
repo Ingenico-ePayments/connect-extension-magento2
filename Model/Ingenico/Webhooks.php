@@ -1,16 +1,16 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico;
+namespace Ingenico\Connect\Model\Ingenico;
 
 use Ingenico\Connect\Sdk\Domain\Webhooks\WebhooksEvent;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
-use Netresearch\Epayments\Api\Data\EventInterface;
-use Netresearch\Epayments\Api\Data\EventInterfaceFactory;
-use Netresearch\Epayments\Api\EventRepositoryInterface;
-use Netresearch\Epayments\Model\Ingenico\Status\ResolverInterface;
-use Netresearch\Epayments\Model\Ingenico\Webhooks\EventDataResolverInterface;
-use Netresearch\Epayments\Model\Ingenico\Webhooks\HelperAdapter;
+use Ingenico\Connect\Api\Data\EventInterface;
+use Ingenico\Connect\Api\Data\EventInterfaceFactory;
+use Ingenico\Connect\Api\EventRepositoryInterface;
+use Ingenico\Connect\Model\Ingenico\Status\ResolverInterface;
+use Ingenico\Connect\Model\Ingenico\Webhooks\EventDataResolverInterface;
+use Ingenico\Connect\Model\Ingenico\Webhooks\HelperAdapter;
 use Psr\Log\LoggerInterface;
 
 class Webhooks

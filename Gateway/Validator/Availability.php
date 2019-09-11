@@ -1,16 +1,16 @@
 <?php
 
-namespace Netresearch\Epayments\Gateway\Validator;
+namespace Ingenico\Connect\Gateway\Validator;
 
 use Magento\Payment\Gateway\Validator\AbstractValidator;
 use Magento\Payment\Gateway\Validator\ResultInterface;
 use Magento\Payment\Gateway\Validator\ResultInterfaceFactory;
-use Netresearch\Epayments\Model\ConfigInterface;
+use Ingenico\Connect\Model\ConfigInterface;
 
 /**
  * Class Availability
  *
- * @package Netresearch\Epayments\Gateway
+ * @package Ingenico\Connect\Gateway
  */
 class Availability extends AbstractValidator
 {

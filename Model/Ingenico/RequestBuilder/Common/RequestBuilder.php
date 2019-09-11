@@ -1,15 +1,15 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\RequestBuilder\Common;
+namespace Ingenico\Connect\Model\Ingenico\RequestBuilder\Common;
 
 use Ingenico\Connect\Sdk\DataObject;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\CreateHostedCheckoutRequest;
 use Ingenico\Connect\Sdk\Domain\Payment\CreatePaymentRequest;
 use Magento\Sales\Model\Order;
-use Netresearch\Epayments\Model\Config;
-use Netresearch\Epayments\Model\ConfigInterface;
-use Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodDecoratorPool;
-use Netresearch\Epayments\Model\Ingenico\RequestBuilder\ProductDecoratorPool;
+use Ingenico\Connect\Model\Config;
+use Ingenico\Connect\Model\ConfigInterface;
+use Ingenico\Connect\Model\Ingenico\RequestBuilder\MethodDecoratorPool;
+use Ingenico\Connect\Model\Ingenico\RequestBuilder\ProductDecoratorPool;
 
 /**
  * Builder for Ingenico requests like CreateHostedCheckoutRequest and CreatePaymentRequest.
@@ -48,26 +48,24 @@ class RequestBuilder
     private $fraudFieldsBuilder;
 
     /**
-     * RequestBuilder constructor.
-     *
-     * @param MethodDecoratorPool $methodDecoratorPool
-     * @param ProductDecoratorPool $productDecoratorPool
-     * @param ConfigInterface $config
-     * @param OrderBuilder $orderBuilder
-     * @param FraudFieldsBuilder $fraudFieldsBuilder
+     * @var MerchantBuilder
      */
+    private $merchantBuilder;
+
     public function __construct(
         MethodDecoratorPool $methodDecoratorPool,
         ProductDecoratorPool $productDecoratorPool,
         ConfigInterface $config,
         OrderBuilder $orderBuilder,
-        FraudFieldsBuilder $fraudFieldsBuilder
+        FraudFieldsBuilder $fraudFieldsBuilder,
+        MerchantBuilder $merchantBuilder
     ) {
         $this->methodDecoratorPool = $methodDecoratorPool;
         $this->productDecoratorPool = $productDecoratorPool;
         $this->config = $config;
         $this->orderBuilder = $orderBuilder;
         $this->fraudFieldsBuilder = $fraudFieldsBuilder;
+        $this->merchantBuilder = $merchantBuilder;
     }
 
     /**
@@ -79,6 +77,7 @@ class RequestBuilder
     {
         $ingenicoRequest->fraudFields = $this->fraudFieldsBuilder->create();
         $ingenicoRequest->order = $this->orderBuilder->create($order);
+        $ingenicoRequest->merchant = $this->merchantBuilder->create($order);
 
         if ($this->config->getCheckoutType($order->getStoreId()) === Config::CONFIG_INGENICO_CHECKOUT_TYPE_REDIRECT) {
             /**
@@ -98,6 +97,7 @@ class RequestBuilder
 
                 $productDecorator = $this->productDecoratorPool->get($paymentMethodId);
                 $ingenicoRequest = $productDecorator->decorate($ingenicoRequest, $order);
+                // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
             } catch (\Exception $exception) {
                 // might occur if no decorator is available
             }

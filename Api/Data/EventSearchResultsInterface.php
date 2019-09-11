@@ -1,13 +1,11 @@
 <?php
 
-namespace Netresearch\Epayments\Api\Data;
+namespace Ingenico\Connect\Api\Data;
 
 /**
  * Interface EventSearchResultsInterface
  *
- * @package Netresearch\Epayments\Api\Data
- * @author Paul Siedler <paul.siedler@netresearch.de>
- * @link http://www.netresearch.de/
+ * @package Ingenico\Connect\Api\Data
  */
 interface EventSearchResultsInterface extends \Magento\Framework\Api\SearchResultsInterface
 {
@@ -15,14 +13,14 @@ interface EventSearchResultsInterface extends \Magento\Framework\Api\SearchResul
     /**
      * Get Event list.
      *
-     * @return \Netresearch\Epayments\Api\Data\EventInterface[]
+     * @return \Ingenico\Connect\Api\Data\EventInterface[]
      */
     public function getItems();
 
     /**
      * Set event_id list.
      *
-     * @param \Netresearch\Epayments\Api\Data\EventInterface[] $items
+     * @param \Ingenico\Connect\Api\Data\EventInterface[] $items
      * @return $this
      */
     public function setItems(array $items);

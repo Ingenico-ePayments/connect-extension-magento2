@@ -1,8 +1,7 @@
 {
-  "name": "nrepayments/module-epayments-m2",
-  "description": "Magento2 Extension for connecting to the Ingenico Connect platform",
+  "name": "ingenico-epayments/connect-extension-magento2",
+  "description": "Magento2 Extension for connecting to the Ingenico ePayments Connect platform",
   "require": {
-    "php": "7.0.2|7.0.4|~7.0.6|^7.1.0|^7.2.0",
     "magento/module-backend": "^100.2.6 || ^101.0.0",
     "magento/module-catalog": "^102.0.6 || ^102.0.0 || ^103.0.0",
     "magento/module-checkout": "^100.2.6",
@@ -19,49 +18,35 @@
     "netresearch/config-fields-m2": "^1.0.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "^6.2"
+    "phpunit/phpunit": "^6.2",
+    "squizlabs/php_codesniffer": "3.*"
+  },
+  "conflict": {
+    "nrepayments/module-epayments-m2": "*",
+    "ingenico/module-epayments-m2": "*"
   },
   "type": "magento2-module",
-  "version": "1.6.1",
   "autoload": {
     "files": [
       "registration.php"
     ],
     "psr-4": {
-      "Netresearch\\Epayments\\": ""
+      "Ingenico\\Connect\\": ""
     }
   },
   "replace": {
+    "nrepayments/module-epayments-m2": ">=1.6.1",
     "ingenico/module-epayments-m2": ">=1.5.0"
   },
   "support": {
-    "email": "https://www.ingenico.com/epayments/support",
-    "docs": "https://marketplace.magento.com/nrepayments-module-epayments-m2.html",
-    "wiki": "http://ingenico.support.netresearch.de/"
+    "wiki": "https://www.ingenico.com/epayments/support",
+    "docs": "https://marketplace.magento.com/ingenico-module-connect-m2.html"
   },
   "authors": [
     {
-      "name": "Paul Siedler",
-      "email": "paul.siedler@netreseach.de",
-      "homepage": "http://www.netresearch.de",
-      "role": "Developer"
-    },
-    {
-      "name": "Max Melzer",
-      "email": "max.melzer@netreseach.de",
-      "homepage": "https://www.netresearch.de",
-      "role": "Developer"
-    },
-    {
-      "name": "Ruslan Voitenko",
-      "email": "ruslan.voitenko@trilix.co",
-      "homepage": "http://www.trilix.co",
-      "role": "Developer"
-    },
-    {
-      "name": "Oleksandr Makhno",
-      "email": "oleksandr.makhno@trilix.co",
-      "homepage": "http://www.trilix.co",
+      "name": "Ingenico ePayments",
+      "email": "connect@ingenico.com",
+      "homepage": "https://epayments.developer-ingenico.com/",
       "role": "Developer"
     }
   ]

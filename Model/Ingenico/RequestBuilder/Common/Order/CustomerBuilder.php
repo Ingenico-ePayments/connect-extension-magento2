@@ -1,7 +1,9 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\RequestBuilder\Common;
+namespace Ingenico\Connect\Model\Ingenico\RequestBuilder\Common\Order;
 
+use Ingenico\Connect\Model\Ingenico\RequestBuilder\Common\Order\Customer\AccountBuilder;
+use Ingenico\Connect\Model\Ingenico\RequestBuilder\Common\Order\Customer\DeviceBuilder;
 use Ingenico\Connect\Sdk\Domain\Definitions\AddressFactory;
 use Ingenico\Connect\Sdk\Domain\Definitions\CompanyInformationFactory;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\AddressPersonalFactory;
@@ -10,6 +12,7 @@ use Ingenico\Connect\Sdk\Domain\Payment\Definitions\CustomerFactory;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\PersonalInformationFactory;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\PersonalNameFactory;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 
 /**
@@ -20,6 +23,8 @@ class CustomerBuilder
     const EMAIL_MESSAGE_TYPE = 'html';
     const GENDER_MALE = 0;
     const GENDER_FEMALE = 1;
+    const ACCOUNT_TYPE_NONE = 'none';
+    const ACCOUNT_TYPE_EXISTING = 'existing';
 
     /**
      * @var CustomerFactory
@@ -62,17 +67,15 @@ class CustomerBuilder
     private $timezone;
 
     /**
-     * CustomerBuilder constructor.
-     *
-     * @param CustomerFactory $customerFactory
-     * @param PersonalInformationFactory $personalInformationFactory
-     * @param CompanyInformationFactory $companyInformationFactory
-     * @param ContactDetailsFactory $contactDetailsFactory
-     * @param PersonalNameFactory $personalNameFactory
-     * @param AddressPersonalFactory $addressPersonalFactory
-     * @param AddressFactory $addressFactory
-     * @param TimezoneInterface $timezone
+     * @var AccountBuilder
      */
+    private $accountBuilder;
+
+    /**
+     * @var DeviceBuilder
+     */
+    private $deviceBuilder;
+
     public function __construct(
         CustomerFactory $customerFactory,
         PersonalInformationFactory $personalInformationFactory,
@@ -81,6 +84,8 @@ class CustomerBuilder
         PersonalNameFactory $personalNameFactory,
         AddressPersonalFactory $addressPersonalFactory,
         AddressFactory $addressFactory,
+        AccountBuilder $accountBuilder,
+        DeviceBuilder $deviceBuilder,
         TimezoneInterface $timezone
     ) {
         $this->customerFactory = $customerFactory;
@@ -90,14 +95,16 @@ class CustomerBuilder
         $this->personalNameFactory = $personalNameFactory;
         $this->addressPersonalFactory = $addressPersonalFactory;
         $this->addressFactory = $addressFactory;
+        $this->accountBuilder = $accountBuilder;
+        $this->deviceBuilder = $deviceBuilder;
         $this->timezone = $timezone;
     }
 
     /**
-     * @param Order $order
+     * @param OrderInterface $order
      * @return \Ingenico\Connect\Sdk\Domain\Payment\Definitions\Customer
      */
-    public function create(Order $order)
+    public function create(OrderInterface $order)
     {
         $ingenicoCustomer = $this->customerFactory->create();
 
@@ -119,8 +126,12 @@ class CustomerBuilder
 
         $shipping = $order->getShippingAddress();
         if (!empty($shipping)) {
-            $ingenicoCustomer->shippingAddress = $this->getAddressPersonal($shipping, $billing);
+            $ingenicoCustomer->shippingAddress = $this->getAddressPersonal($shipping);
         }
+
+        $ingenicoCustomer->account = $this->accountBuilder->create($order);
+        $ingenicoCustomer->device = $this->deviceBuilder->create();
+        $ingenicoCustomer->accountType = $this->getAccountType($order);
 
         return $ingenicoCustomer;
     }
@@ -129,7 +140,7 @@ class CustomerBuilder
      * @param Order $order
      * @return \Ingenico\Connect\Sdk\Domain\Payment\Definitions\PersonalInformation
      */
-    private function getPersonalInformation(Order $order)
+    private function getPersonalInformation(OrderInterface $order)
     {
         $personalInformation = $this->personalInformationFactory->create();
 
@@ -149,10 +160,10 @@ class CustomerBuilder
     /**
      * Extract binary gender as string representation
      *
-     * @param Order $order
+     * @param OrderInterface $order
      * @return string
      */
-    private function getCustomerGender(Order $order)
+    private function getCustomerGender(OrderInterface $order)
     {
         switch ($order->getCustomerGender()) {
             case self::GENDER_MALE:
@@ -167,10 +178,10 @@ class CustomerBuilder
     /**
      * Extracts the date of birth in the API required format YYYYMMDD
      *
-     * @param Order $order
+     * @param OrderInterface $order
      * @return string
      */
-    private function getDateOfBirth(Order $order)
+    private function getDateOfBirth(OrderInterface $order)
     {
         $dateOfBirth = '';
         if ($order->getCustomerDob()) {
@@ -226,8 +237,7 @@ class CustomerBuilder
      * @return \Ingenico\Connect\Sdk\Domain\Payment\Definitions\AddressPersonal
      */
     private function getAddressPersonal(
-        Order\Address $shipping,
-        Order\Address $billing
+        Order\Address $shipping
     ) {
         $shippingName = $this->personalNameFactory->create();
         $shippingName->title = $shipping->getPrefix();
@@ -237,7 +247,7 @@ class CustomerBuilder
         $shippingAddress = $this->addressPersonalFactory->create();
         $shippingAddress->name = $shippingName;
         /** @var array $streetArray */
-        $streetArray = $billing->getStreet();
+        $streetArray = $shipping->getStreet();
         $shippingAddress->street = array_shift($streetArray);
         if (!empty($streetArray)) {
             $shippingAddress->additionalInfo = implode(', ', $streetArray);
@@ -248,5 +258,10 @@ class CustomerBuilder
         $shippingAddress->countryCode = $shipping->getCountryId();
 
         return $shippingAddress;
+    }
+
+    private function getAccountType(Order $order): string
+    {
+        return $order->getCustomerIsGuest() ? self::ACCOUNT_TYPE_NONE : self::ACCOUNT_TYPE_EXISTING;
     }
 }

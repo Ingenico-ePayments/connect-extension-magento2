@@ -1,15 +1,15 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput;
+namespace Ingenico\Connect\Model\Ingenico\RequestBuilder\MethodSpecificInput;
 
 use Ingenico\Connect\Sdk\DataObject;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\RedirectPaymentMethodSpecificInputFactory;
 use Magento\Framework\UrlInterface;
 use Magento\Sales\Api\Data\OrderInterface;
-use Netresearch\Epayments\Model\Config;
-use Netresearch\Epayments\Model\ConfigInterface;
-use Netresearch\Epayments\Model\Ingenico\RequestBuilder\Common\RequestBuilder;
-use Netresearch\Epayments\Model\Ingenico\RequestBuilder\DecoratorInterface;
+use Ingenico\Connect\Model\Config;
+use Ingenico\Connect\Model\ConfigInterface;
+use Ingenico\Connect\Model\Ingenico\RequestBuilder\Common\RequestBuilder;
+use Ingenico\Connect\Model\Ingenico\RequestBuilder\DecoratorInterface;
 
 /**
  * Class RedirectDecorator

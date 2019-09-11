@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Controller\HostedCheckoutPage;
+namespace Ingenico\Connect\Controller\HostedCheckoutPage;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
@@ -9,10 +9,10 @@ use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Exception\NotFoundException;
 use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Sales\Model\Order;
-use Netresearch\Epayments\Model\Cart\ServiceInterface;
-use Netresearch\Epayments\Model\Config;
-use Netresearch\Epayments\Model\ConfigInterface;
-use Netresearch\Epayments\Model\Ingenico\Action\GetHostedCheckoutStatus;
+use Ingenico\Connect\Model\Cart\ServiceInterface;
+use Ingenico\Connect\Model\Config;
+use Ingenico\Connect\Model\ConfigInterface;
+use Ingenico\Connect\Model\Ingenico\Action\GetHostedCheckoutStatus;
 use Psr\Log\LoggerInterface;
 
 class ProcessReturn extends Action

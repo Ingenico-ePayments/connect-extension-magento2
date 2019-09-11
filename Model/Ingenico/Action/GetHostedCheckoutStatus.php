@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\Action;
+namespace Ingenico\Connect\Model\Ingenico\Action;
 
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\GetHostedCheckoutResponse;
 use Magento\Framework\App\Request\Http;
@@ -9,14 +9,14 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\OrderRepository;
-use Netresearch\Epayments\Model\Config;
-use Netresearch\Epayments\Model\ConfigInterface;
-use Netresearch\Epayments\Model\Ingenico\Api\ClientInterface;
-use Netresearch\Epayments\Model\Ingenico\MerchantReference;
-use Netresearch\Epayments\Model\Ingenico\Status\ResolverInterface;
-use Netresearch\Epayments\Model\Ingenico\Token\TokenServiceInterface;
-use Netresearch\Epayments\Model\Order\OrderServiceInterface;
-use Netresearch\Epayments\Model\StatusResponseManagerInterface;
+use Ingenico\Connect\Model\Config;
+use Ingenico\Connect\Model\ConfigInterface;
+use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
+use Ingenico\Connect\Model\Ingenico\MerchantReference;
+use Ingenico\Connect\Model\Ingenico\Status\ResolverInterface;
+use Ingenico\Connect\Model\Ingenico\Token\TokenServiceInterface;
+use Ingenico\Connect\Model\Order\OrderServiceInterface;
+use Ingenico\Connect\Model\StatusResponseManagerInterface;
 use Psr\Log\LoggerInterface;
 
 /**

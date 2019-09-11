@@ -4,12 +4,12 @@
         <section id="ingenico_epayments" translate="label" type="text" sortOrder="500" showInDefault="1" showInWebsite="1" showInStore="1" >
             <label>Ingenico ePayments</label>
             <tab>sales</tab>
-            <resource>Netresearch_Epayments::epayments_config</resource>
+            <resource>Ingenico_Connect::epayments_config</resource>
             <group id="general" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>General</label>
                 <field id="version" translate="label" type="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Version</label>
-                    <frontend_model>Netresearch\Epayments\Block\Adminhtml\System\Config\Field\Version</frontend_model>
+                    <frontend_model>Ingenico\Connect\Block\Adminhtml\System\Config\Field\Version</frontend_model>
                 </field>
                 <field id="active" translate="label" type="Netresearch\ConfigFields\Model\Type\Toggle" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Enabled</label>
@@ -27,7 +27,7 @@
                     <validate>required-entry</validate>
                     <tooltip>You will receive this information from Ingenico.</tooltip>
                     <comment><![CDATA[Available endpoints are listed in the <a target="_blank" href="https://epayments-api.developer-ingenico.com/s2sapi/v1/en_US/php/endpoints.html">API Docs</a>.]]></comment>
-                    <backend_model>Netresearch\Epayments\Model\Adminhtml\System\Config\Validator\ApiEndPoint</backend_model>
+                    <backend_model>Ingenico\Connect\Model\Adminhtml\System\Config\Validator\ApiEndPoint</backend_model>
                 </field>
                 <field id="api_endpoint_secondary" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>API Endpoint (Secondary)</label>
@@ -37,7 +37,7 @@
                 <field id="api_key" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>API Key ID</label>
                     <tooltip>You will receive this information from Ingenico.</tooltip>
-                    <backend_model>Netresearch\Epayments\Model\Config\Backend\ApiKey</backend_model>
+                    <backend_model>Ingenico\Connect\Model\Config\Backend\ApiKey</backend_model>
                 </field>
                 <field id="api_secret" translate="label" type="obscure" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>API Secret</label>
@@ -63,7 +63,7 @@
                 </field>
                 <field id="log_all_requests" translate="label" type="Netresearch\ConfigFields\Model\Type\Toggle" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Log All Requests</label>
-                    <frontend_model>\Netresearch\Epayments\Block\Adminhtml\System\Config\Field\LogAllRequests</frontend_model>
+                    <frontend_model>\Ingenico\Connect\Block\Adminhtml\System\Config\Field\LogAllRequests</frontend_model>
                     <tooltip>Select if you want to log the communication between Ingenico and your shop.</tooltip>
                 </field>
             </group>
@@ -79,7 +79,7 @@
                     <comment>
                         Using inline payments requires your Magento store to be PCI compliant on level SAQ-A EP.
                     </comment>
-                    <source_model>Netresearch\Epayments\Model\Config\Source\CheckoutType</source_model>
+                    <source_model>Ingenico\Connect\Model\Config\Source\CheckoutType</source_model>
                 </field>
                 <field id="hosted_checkout_variant" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Hosted Checkout Variant</label>
@@ -99,7 +99,7 @@
                     <label>Capture mode</label>
                     <tooltip>Select the capture operation mode. Default is 'Delayed Settlement'.</tooltip>
                     <comment>If the current payment product does not support 'Delayed settlement', a direct capture will be performed.</comment>
-                    <source_model>\Netresearch\Epayments\Model\Adminhtml\System\Config\Source\CaptureMode</source_model>
+                    <source_model>\Ingenico\Connect\Model\Adminhtml\System\Config\Source\CaptureMode</source_model>
                 </field>
             </group>
 
@@ -108,7 +108,7 @@
                 <field id="webhooks_key_id" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Webhooks Key ID (set 1)</label>
                     <tooltip>You will receive this information from Ingenico.</tooltip>
-                    <backend_model>Netresearch\Epayments\Model\Config\Backend\ApiKey</backend_model>
+                    <backend_model>Ingenico\Connect\Model\Config\Backend\ApiKey</backend_model>
                 </field>
                 <field id="webhooks_secret_key" translate="label" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Webhooks Secret Key (set 1)</label>
@@ -119,7 +119,7 @@
                     <label>Webhooks Key ID (set 2)</label>
                     <comment><![CDATA[Fallback if primary key (set 1) fails.]]></comment>
                     <tooltip>You will receive this information from Ingenico.</tooltip>
-                    <backend_model>Netresearch\Epayments\Model\Config\Backend\ApiKey</backend_model>
+                    <backend_model>Ingenico\Connect\Model\Config\Backend\ApiKey</backend_model>
                 </field>
                 <field id="webhooks_secret_key2" translate="label" type="obscure" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Webhooks Secret Key (set 2)</label>
@@ -148,8 +148,6 @@
             <group id="payment_statuses" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Payment statuses</label>
                 <comment><![CDATA[This is list of <strong>payment statuses</strong> and their <strong>definition</strong>.<br />
-                    Source for <strong>default definitions</strong>: <a href="https://developer.globalcollect.com/documentation/api/server/#__merchantId__payments__paymentId__get"
-                    target="_blank" style="color:#ea7601">API Documentation: <strong>Get payment</strong></a><br />
                     You can specify custom definitions texts for the statuses.]]></comment>
                 <field id="account_verified" translate="label" type="textarea" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>ACCOUNT_VERIFIED</label>

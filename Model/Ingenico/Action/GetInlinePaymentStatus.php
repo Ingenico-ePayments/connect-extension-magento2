@@ -1,18 +1,18 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\Action;
+namespace Ingenico\Connect\Model\Ingenico\Action;
 
 use Ingenico\Connect\Sdk\Domain\Payment\PaymentResponse;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
-use Netresearch\Epayments\Model\ConfigInterface;
-use Netresearch\Epayments\Model\Ingenico\Api\ClientInterface;
-use Netresearch\Epayments\Model\Ingenico\MerchantReference;
-use Netresearch\Epayments\Model\Ingenico\Status\ResolverInterface;
-use Netresearch\Epayments\Model\Order\OrderServiceInterface;
-use Netresearch\Epayments\Model\StatusResponseManager;
-use Netresearch\Epayments\Model\Transaction\TransactionManager;
+use Ingenico\Connect\Model\ConfigInterface;
+use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
+use Ingenico\Connect\Model\Ingenico\MerchantReference;
+use Ingenico\Connect\Model\Ingenico\Status\ResolverInterface;
+use Ingenico\Connect\Model\Order\OrderServiceInterface;
+use Ingenico\Connect\Model\StatusResponseManager;
+use Ingenico\Connect\Model\Transaction\TransactionManager;
 
 class GetInlinePaymentStatus extends AbstractAction implements ActionInterface
 {

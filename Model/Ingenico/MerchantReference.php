@@ -3,15 +3,15 @@
  * See LICENSE.txt for license details.
  */
 
-namespace Netresearch\Epayments\Model\Ingenico;
+namespace Ingenico\Connect\Model\Ingenico;
 
 use Magento\Sales\Api\Data\OrderInterface;
-use Netresearch\Epayments\Model\ConfigInterface;
+use Ingenico\Connect\Model\ConfigInterface;
 
 /**
  * Class MerchantReference
  *
- * @package Netresearch\Epayments\Model\Ingenico
+ * @package Ingenico\Connect\Model\Ingenico
  */
 class MerchantReference
 {

@@ -1,14 +1,14 @@
 <?php
 
-namespace Netresearch\Epayments\Plugin\Model\Ingenico\Status;
+namespace Ingenico\Connect\Plugin\Model\Ingenico\Status;
 
 use Ingenico\Connect\Sdk\Domain\Definitions\AbstractOrderStatus;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Invoice;
-use Netresearch\Epayments\Model\Ingenico\GlobalCollect\Status\OrderStatusHelper;
-use Netresearch\Epayments\Model\Ingenico\Status\CapturedFactory;
-use Netresearch\Epayments\Model\Ingenico\Status\CaptureRequested;
+use Ingenico\Connect\Model\Ingenico\GlobalCollect\Status\OrderStatusHelper;
+use Ingenico\Connect\Model\Ingenico\Status\CapturedFactory;
+use Ingenico\Connect\Model\Ingenico\Status\CaptureRequested;
 
 class CaptureRequestedPlugin
 {

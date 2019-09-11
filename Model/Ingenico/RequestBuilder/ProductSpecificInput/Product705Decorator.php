@@ -1,18 +1,18 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\RequestBuilder\ProductSpecificInput;
+namespace Ingenico\Connect\Model\Ingenico\RequestBuilder\ProductSpecificInput;
 
 use Ingenico\Connect\Sdk\DataObject;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\CreateHostedCheckoutRequest;
 use Ingenico\Connect\Sdk\Domain\Payment\CreatePaymentRequest;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\NonSepaDirectDebitPaymentProduct705SpecificInputFactory;
 use Magento\Sales\Api\Data\OrderInterface;
-use Netresearch\Epayments\Model\Ingenico\RequestBuilder\DecoratorInterface;
+use Ingenico\Connect\Model\Ingenico\RequestBuilder\DecoratorInterface;
 
 /**
  * Class Product705Decorator
  *
- * @package Netresearch\Epayments\Model\Ingenico\RequestBuilder\ProductSpecificInput
+ * @package Ingenico\Connect\Model\Ingenico\RequestBuilder\ProductSpecificInput
  */
 class Product705Decorator implements DecoratorInterface
 {

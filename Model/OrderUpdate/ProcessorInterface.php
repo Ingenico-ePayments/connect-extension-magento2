@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\OrderUpdate;
+namespace Ingenico\Connect\Model\OrderUpdate;
 
 interface ProcessorInterface
 {

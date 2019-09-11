@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Cron\FetchWxFiles;
+namespace Ingenico\Connect\Cron\FetchWxFiles;
 
 interface ProcessorInterface
 {

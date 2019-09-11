@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Adminhtml\System\Config\Validator;
+namespace Ingenico\Connect\Model\Adminhtml\System\Config\Validator;
 
 use Magento\Framework\App\Cache\TypeListInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -10,12 +10,13 @@ use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
-use Netresearch\Epayments\Model\Config;
-use Netresearch\Epayments\Model\Ingenico\Action\TestAccountAction;
+use Ingenico\Connect\Model\Config;
+use Ingenico\Connect\Model\Ingenico\Action\TestAccountAction;
 
 class ApiEndPoint extends Value
 {
-    private static $errorMessage = 'Could not establish connection to Ingenico Connect platform. Please check your account settings.';
+    private static $errorMessage =
+        'Could not establish connection to Ingenico Connect platform. Please check your account settings.';
     private static $successMessage = 'Connection to the Ingenico Connect platform could successfully be established.';
 
     private $keys = [
@@ -113,7 +114,7 @@ class ApiEndPoint extends Value
      */
     public function isNotPasswordInputChanged($data)
     {
-        return (bool)preg_match('/^\*+$/', $data);
+        return (bool) preg_match('/^\*+$/', $data);
     }
 
     /**

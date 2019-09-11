@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Controller\Adminhtml\DownloadLogFile;
+namespace Ingenico\Connect\Controller\Adminhtml\DownloadLogFile;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
@@ -8,7 +8,7 @@ use Magento\Backend\App\Response\Http\FileFactory;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Filesystem\Driver\File;
-use Netresearch\Epayments\Model\ConfigInterface;
+use Ingenico\Connect\Model\ConfigInterface;
 
 class Index extends Action
 {
@@ -17,7 +17,7 @@ class Index extends Action
      *
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Netresearch_Epayments::download_logfile';
+    const ADMIN_RESOURCE = 'Ingenico_Connect::download_logfile';
 
     /** @var ConfigInterface */
     private $config;

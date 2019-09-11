@@ -1,12 +1,12 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\Status;
+namespace Ingenico\Connect\Model\Ingenico\Status;
 
 use Ingenico\Connect\Sdk\Domain\Definitions\AbstractOrderStatus;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
-use Netresearch\Epayments\Helper\Data;
+use Ingenico\Connect\Helper\Data;
 
 class CaptureRequested implements HandlerInterface
 {

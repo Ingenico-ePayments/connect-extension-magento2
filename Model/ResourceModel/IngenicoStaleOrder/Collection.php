@@ -1,11 +1,11 @@
 <?php
 
-namespace Netresearch\Epayments\Model\ResourceModel\IngenicoStaleOrder;
+namespace Ingenico\Connect\Model\ResourceModel\IngenicoStaleOrder;
 
 use Magento\Framework\Intl\DateTimeFactory;
 use Magento\Framework\Stdlib\DateTime;
 use Magento\Sales\Model\Order;
-use Netresearch\Epayments\Model\ConfigProvider;
+use Ingenico\Connect\Model\ConfigProvider;
 
 class Collection extends \Magento\Sales\Model\ResourceModel\Order\Collection
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\GlobalCollect\Wx;
+namespace Ingenico\Connect\Model\Ingenico\GlobalCollect\Wx;
 
 class DataRecord
 {

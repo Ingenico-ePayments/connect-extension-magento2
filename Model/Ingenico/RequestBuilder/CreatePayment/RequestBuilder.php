@@ -1,12 +1,12 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\RequestBuilder\CreatePayment;
+namespace Ingenico\Connect\Model\Ingenico\RequestBuilder\CreatePayment;
 
 use Ingenico\Connect\Sdk\Domain\Payment\CreatePaymentRequest;
 use Ingenico\Connect\Sdk\Domain\Payment\CreatePaymentRequestFactory;
 use Magento\Sales\Model\Order;
-use Netresearch\Epayments\Model\Config;
-use Netresearch\Epayments\Model\Ingenico\RequestBuilder\Common\RequestBuilder as CommonRequestBuilder;
+use Ingenico\Connect\Model\Config;
+use Ingenico\Connect\Model\Ingenico\RequestBuilder\Common\RequestBuilder as CommonRequestBuilder;
 
 /**
  * Class CreatePaymentRequestBuilder

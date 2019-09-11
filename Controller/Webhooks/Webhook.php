@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Controller\Webhooks;
+namespace Ingenico\Connect\Controller\Webhooks;
 
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\Raw;
@@ -10,9 +10,6 @@ use Netresearch\Compatibility\Controller\CsrfAware\Action;
 
 /**
  * Abstract webhook class encapsulating general request validation functionality for webhooks
- *
- * @author Paul Siedler <paul.siedler@netresearch.de>
- * @link http://www.netresearch.de/
  */
 abstract class Webhook extends Action
 {
@@ -39,7 +36,7 @@ abstract class Webhook extends Action
      * Explicitly set the response code to 500 to allow the Connect platform to retry the webhook request, with possibly
      * correct headers next time
      *
-     * @see \Netresearch\Epayments\Controller\Webhooks\Webhook::proxyValidateForCsrf
+     * @see \Ingenico\Connect\Controller\Webhooks\Webhook::proxyValidateForCsrf
      * @param RequestInterface $request
      * @return Raw|ResultInterface
      */

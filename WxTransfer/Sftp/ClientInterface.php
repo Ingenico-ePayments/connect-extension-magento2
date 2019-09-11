@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\WxTransfer\Sftp;
+namespace Ingenico\Connect\WxTransfer\Sftp;
 
 interface ClientInterface
 {

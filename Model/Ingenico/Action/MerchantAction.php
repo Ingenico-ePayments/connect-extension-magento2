@@ -1,11 +1,11 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\Action;
+namespace Ingenico\Connect\Model\Ingenico\Action;
 
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\Definitions\DisplayedDataFactory;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Sales\Model\Order;
-use Netresearch\Epayments\Model\Config;
+use Ingenico\Connect\Model\Config;
 
 class MerchantAction implements ActionInterface
 {

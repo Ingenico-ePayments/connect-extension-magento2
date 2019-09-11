@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Cart;
+namespace Ingenico\Connect\Model\Cart;
 
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Sales\Api\Data\OrderInterface;

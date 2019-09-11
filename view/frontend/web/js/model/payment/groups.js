@@ -2,9 +2,9 @@
 /*global define*/
 
 define([
-    'Netresearch_Epayments/js/model/payment/products',
-    'Netresearch_Epayments/js/action/get-payment-product',
-    'Netresearch_Epayments/js/model/payment/config',
+    'Ingenico_Connect/js/model/payment/products',
+    'Ingenico_Connect/js/action/get-payment-product',
+    'Ingenico_Connect/js/model/payment/config',
     'ko'
 ], function (productList, fetchProduct, config, ko) {
     'use strict';

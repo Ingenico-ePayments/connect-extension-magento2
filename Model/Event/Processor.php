@@ -3,7 +3,7 @@
  * See LICENSE.md for license details.
  */
 
-namespace Netresearch\Epayments\Model\Event;
+namespace Ingenico\Connect\Model\Event;
 
 use Ingenico\Connect\Sdk\Domain\Webhooks\WebhooksEvent;
 use Ingenico\Connect\Sdk\Domain\Webhooks\WebhooksEventFactory;
@@ -12,9 +12,9 @@ use Magento\Framework\Api\SortOrderBuilder;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
-use Netresearch\Epayments\Api\Data\EventInterface;
-use Netresearch\Epayments\Api\EventRepositoryInterface;
-use Netresearch\Epayments\Model\Ingenico\Status\ResolverInterface;
+use Ingenico\Connect\Api\Data\EventInterface;
+use Ingenico\Connect\Api\EventRepositoryInterface;
+use Ingenico\Connect\Model\Ingenico\Status\ResolverInterface;
 
 class Processor
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Event;
+namespace Ingenico\Connect\Model\Event;
 
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
@@ -11,22 +11,20 @@ use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Reflection\DataObjectProcessor;
-use Netresearch\Epayments\Api\Data\EventInterface;
-use Netresearch\Epayments\Api\Data\EventSearchResultsInterface;
-use Netresearch\Epayments\Api\Data\EventSearchResultsInterfaceFactory;
-use Netresearch\Epayments\Api\EventRepositoryInterface;
-use Netresearch\Epayments\Model\Event;
-use Netresearch\Epayments\Model\EventFactory;
-use Netresearch\Epayments\Model\ResourceModel\Event as ResourceEvent;
-use Netresearch\Epayments\Model\ResourceModel\Event\CollectionFactory as EventCollectionFactory;
-use Netresearch\Epayments\Model\ResourceModel\Event\Collection;
+use Ingenico\Connect\Api\Data\EventInterface;
+use Ingenico\Connect\Api\Data\EventSearchResultsInterface;
+use Ingenico\Connect\Api\Data\EventSearchResultsInterfaceFactory;
+use Ingenico\Connect\Api\EventRepositoryInterface;
+use Ingenico\Connect\Model\Event;
+use Ingenico\Connect\Model\EventFactory;
+use Ingenico\Connect\Model\ResourceModel\Event as ResourceEvent;
+use Ingenico\Connect\Model\ResourceModel\Event\CollectionFactory as EventCollectionFactory;
+use Ingenico\Connect\Model\ResourceModel\Event\Collection;
 
 /**
  * Class EventRepository
  *
- * @package Netresearch\Epayments\Model\Event
- * @author Paul Siedler <paul.siedler@netresearch.de>
- * @link http://www.netresearch.de/
+ * @package Ingenico\Connect\Model\Event
  */
 class EventRepository implements EventRepositoryInterface
 {
@@ -143,7 +141,7 @@ class EventRepository implements EventRepositoryInterface
         }
 
         /** @var SortOrder $sortOrder */
-        foreach ((array)$searchCriteria->getSortOrders() as $sortOrder) {
+        foreach ((array) $searchCriteria->getSortOrders() as $sortOrder) {
             $field = $sortOrder->getField();
             $collection->addOrder(
                 $field,

@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\WxTransfer\Sftp;
+namespace Ingenico\Connect\WxTransfer\Sftp;
 
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Exception\InputException;
@@ -11,7 +11,7 @@ use Magento\Framework\Filesystem\Io\SftpFactory;
 
 /**
  * Class Client
- * @package Netresearch\Epayments\WxTransfer\Sftp
+ * @package Ingenico\Connect\WxTransfer\Sftp
  */
 class Client implements ClientInterface
 {

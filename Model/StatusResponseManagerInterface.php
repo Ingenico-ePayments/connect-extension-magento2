@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model;
+namespace Ingenico\Connect\Model;
 
 use Ingenico\Connect\Sdk\Domain\Definitions\AbstractOrderStatus;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment as IngenicoPayment;
@@ -11,7 +11,7 @@ use Magento\Sales\Model\Order\Payment;
 /**
  * Interface StatusResponseManagerInterface
  *
- * @package Netresearch\Epayments\Model
+ * @package Ingenico\Connect\Model
  */
 interface StatusResponseManagerInterface
 {

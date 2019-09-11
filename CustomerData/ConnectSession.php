@@ -1,14 +1,14 @@
 <?php
 
-namespace Netresearch\Epayments\CustomerData;
+namespace Ingenico\Connect\CustomerData;
 
 use Magento\Checkout\Model\Session;
 use Magento\Customer\CustomerData\SectionSourceInterface;
-use Netresearch\Epayments\Model\Ingenico\Action\CreateSession;
+use Ingenico\Connect\Model\Ingenico\Action\CreateSession;
 
 /**
  * Class ConnectSession
- * @package Netresearch\Epayments\CustomerData
+ * @package Ingenico\Connect\CustomerData
  */
 class ConnectSession implements SectionSourceInterface
 {

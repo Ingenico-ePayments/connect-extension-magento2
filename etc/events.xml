@@ -1,11 +1,11 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
     <event name="payment_method_assign_data_ingenico">
-        <observer name="ingenico_data_assign" instance="Netresearch\Epayments\Observer\DataAssignObserver"/>
+        <observer name="ingenico_data_assign" instance="Ingenico\Connect\Observer\DataAssignObserver"/>
     </event>
     <event name="sales_order_payment_cancel_invoice">
-        <observer name="undo_capture_payment" instance="Netresearch\Epayments\Observer\UndoCapturePaymentObserver"/>
+        <observer name="undo_capture_payment" instance="Ingenico\Connect\Observer\UndoCapturePaymentObserver"/>
     </event>
     <event name="sales_order_invoice_pay">
-        <observer name="send_invoice_email" instance="Netresearch\Epayments\Observer\SendInvoiceMailObserver"/>
+        <observer name="send_invoice_email" instance="Ingenico\Connect\Observer\SendInvoiceMailObserver"/>
     </event>
 </config>

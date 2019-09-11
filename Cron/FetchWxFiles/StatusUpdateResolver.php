@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Cron\FetchWxFiles;
+namespace Ingenico\Connect\Cron\FetchWxFiles;
 
 use Ingenico\Connect\Sdk\Domain\Definitions\AbstractOrderStatus;
 use Ingenico\Connect\Sdk\Domain\Payment\PaymentResponse;
@@ -8,8 +8,8 @@ use Ingenico\Connect\Sdk\Domain\Refund\Definitions\RefundResult;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\Logger\Monolog;
 use Magento\Sales\Api\OrderRepositoryInterface;
-use Netresearch\Epayments\Model\Ingenico\Status\ResolverInterface;
-use Netresearch\Epayments\Model\StatusResponseManager;
+use Ingenico\Connect\Model\Ingenico\Status\ResolverInterface;
+use Ingenico\Connect\Model\StatusResponseManager;
 
 class StatusUpdateResolver implements StatusUpdateResolverInterface
 {

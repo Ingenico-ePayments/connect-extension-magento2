@@ -1,18 +1,18 @@
 <?php
 
-namespace Netresearch\Epayments\Block;
+namespace Ingenico\Connect\Block;
 
-use Netresearch\Epayments\Model\Config;
+use Ingenico\Connect\Model\Config;
 
 class Info extends \Magento\Payment\Block\Info
 {
     /**
-     * Init Netresearch epayment info block
+     * Init Ingenico epayment info block
      */
     public function _construct()
     {
         parent::_construct();
-        $this->setTemplate('Netresearch_Epayments::info/info.phtml');
+        $this->setTemplate('Ingenico_Connect::info/info.phtml');
     }
 
     /**
@@ -27,7 +27,7 @@ class Info extends \Magento\Payment\Block\Info
             return;
         }
         $label = $data[Config::PRODUCT_LABEL_KEY];
-        return  '- '.$label;
+        return  '- ' . $label;
     }
 
     /**

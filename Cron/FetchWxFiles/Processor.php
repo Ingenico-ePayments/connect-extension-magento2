@@ -1,13 +1,13 @@
 <?php
 
-namespace Netresearch\Epayments\Cron\FetchWxFiles;
+namespace Ingenico\Connect\Cron\FetchWxFiles;
 
 use Ingenico\Connect\Sdk\Domain\Definitions\AbstractOrderStatus;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Logger\Monolog;
-use Netresearch\Epayments\Model\Ingenico\GlobalCollect\StatusBuilder;
-use Netresearch\Epayments\Model\Ingenico\GlobalCollect\Wx\DataRecord;
-use Netresearch\Epayments\WxTransfer\ClientInterface;
+use Ingenico\Connect\Model\Ingenico\GlobalCollect\StatusBuilder;
+use Ingenico\Connect\Model\Ingenico\GlobalCollect\Wx\DataRecord;
+use Ingenico\Connect\WxTransfer\ClientInterface;
 
 class Processor implements ProcessorInterface
 {

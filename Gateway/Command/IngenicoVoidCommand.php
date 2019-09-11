@@ -1,16 +1,16 @@
 <?php
 
-namespace Netresearch\Epayments\Gateway\Command;
+namespace Ingenico\Connect\Gateway\Command;
 
 use Ingenico\Connect\Sdk\ResponseException;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Sales\Model\Order\Payment;
-use Netresearch\Epayments\Model\Ingenico\Action\UndoCapturePaymentRequest;
+use Ingenico\Connect\Model\Ingenico\Action\UndoCapturePaymentRequest;
 
 /**
  * Class IngenicoVoidCommand
  *
- * @package Netresearch\Epayments\Gateway
+ * @package Ingenico\Connect\Gateway
  */
 class IngenicoVoidCommand implements CommandInterface
 {

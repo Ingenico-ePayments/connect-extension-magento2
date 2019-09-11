@@ -40,7 +40,7 @@ define([
         initFieldData: function () {
             this.template = 'ui/form/field';
             this.elementTmpl = this.getTemplateForType(this.field.displayHints.formElement.type);
-            this.tooltipTpl = 'Netresearch_Epayments/payment/product/field/tooltip-image';
+            this.tooltipTpl = 'Ingenico_Connect/payment/product/field/tooltip-image';
             this.label = this.field.displayHints.label;
 
             /** Add validation rules. */
@@ -105,7 +105,7 @@ define([
 
         getTemplateForType: function (type) {
             let templates = {
-                text: 'Netresearch_Epayments/payment/product/field/input',
+                text: 'Ingenico_Connect/payment/product/field/input',
                 checkbox: 'ui/form/element/single-checkbox',
                 list: 'ui/form/element/select',
             };

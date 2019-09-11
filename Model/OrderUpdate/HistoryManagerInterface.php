@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\OrderUpdate;
+namespace Ingenico\Connect\Model\OrderUpdate;
 
 use Magento\Sales\Model\Order as MagentoOrder;
 

@@ -1,22 +1,22 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\Action\Refund;
+namespace Ingenico\Connect\Model\Ingenico\Action\Refund;
 
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Sales\Model\Order;
-use Netresearch\Epayments\Helper\Data as DataHelper;
-use Netresearch\Epayments\Model\Config;
-use Netresearch\Epayments\Model\ConfigInterface;
-use Netresearch\Epayments\Model\Ingenico\Action\AbstractAction;
-use Netresearch\Epayments\Model\Ingenico\Action\ActionInterface;
-use Netresearch\Epayments\Model\Ingenico\Api\ClientInterface;
-use Netresearch\Epayments\Model\Ingenico\CallContextBuilder;
-use Netresearch\Epayments\Model\Ingenico\MerchantReference;
-use Netresearch\Epayments\Model\Ingenico\RefundRequestBuilder;
-use Netresearch\Epayments\Model\Ingenico\Status\Refund\RefundHandlerInterface;
-use Netresearch\Epayments\Model\Ingenico\Status\ResolverInterface;
-use Netresearch\Epayments\Model\StatusResponseManager;
-use Netresearch\Epayments\Model\Transaction\TransactionManager;
+use Ingenico\Connect\Helper\Data as DataHelper;
+use Ingenico\Connect\Model\Config;
+use Ingenico\Connect\Model\ConfigInterface;
+use Ingenico\Connect\Model\Ingenico\Action\AbstractAction;
+use Ingenico\Connect\Model\Ingenico\Action\ActionInterface;
+use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
+use Ingenico\Connect\Model\Ingenico\CallContextBuilder;
+use Ingenico\Connect\Model\Ingenico\MerchantReference;
+use Ingenico\Connect\Model\Ingenico\RefundRequestBuilder;
+use Ingenico\Connect\Model\Ingenico\Status\Refund\RefundHandlerInterface;
+use Ingenico\Connect\Model\Ingenico\Status\ResolverInterface;
+use Ingenico\Connect\Model\StatusResponseManager;
+use Ingenico\Connect\Model\Transaction\TransactionManager;
 
 /**
  * @link https://developer.globalcollect.com/documentation/api/server/#__merchantId__payments__paymentId__refund_post

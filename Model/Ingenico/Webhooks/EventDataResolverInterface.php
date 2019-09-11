@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\Webhooks;
+namespace Ingenico\Connect\Model\Ingenico\Webhooks;
 
 interface EventDataResolverInterface
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Controller\Adminhtml\OrderProcess;
+namespace Ingenico\Connect\Controller\Adminhtml\OrderProcess;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
@@ -16,7 +16,7 @@ class CancelRefund extends Action
     /** @var CreditmemoRepositoryInterface */
     private $creditmemoRepository;
 
-    /** @var \Netresearch\Epayments\Model\Ingenico\Action\Refund\CancelRefund */
+    /** @var \Ingenico\Connect\Model\Ingenico\Action\Refund\CancelRefund */
     private $refundCancel;
 
     /** @var LoggerInterface */
@@ -25,13 +25,13 @@ class CancelRefund extends Action
     /**
      * @param Context $context
      * @param CreditmemoRepositoryInterface $creditmemoRepository
-     * @param \Netresearch\Epayments\Model\Ingenico\Action\Refund\CancelRefund $refundCancel
+     * @param \Ingenico\Connect\Model\Ingenico\Action\Refund\CancelRefund $refundCancel
      * @param LoggerInterface $logger
      */
     public function __construct(
         Context $context,
         CreditmemoRepositoryInterface $creditmemoRepository,
-        \Netresearch\Epayments\Model\Ingenico\Action\Refund\CancelRefund $refundCancel,
+        \Ingenico\Connect\Model\Ingenico\Action\Refund\CancelRefund $refundCancel,
         LoggerInterface $logger
     ) {
         parent::__construct($context);

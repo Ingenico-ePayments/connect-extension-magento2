@@ -1,12 +1,12 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\Status;
+namespace Ingenico\Connect\Model\Ingenico\Status;
 
 use Magento\Framework\Exception\NotFoundException;
 
 /**
  * Class Pool
- * @package Netresearch\Epayments\Model
+ * @package Ingenico\Connect\Model
  */
 interface PoolInterface
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Controller\Adminhtml\OrderProcess;
+namespace Ingenico\Connect\Controller\Adminhtml\OrderProcess;
 
 use Ingenico\Connect\Sdk\Domain\Errors\Definitions\APIError;
 use Ingenico\Connect\Sdk\ResponseException;
@@ -9,7 +9,7 @@ use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Sales\Api\CreditmemoRepositoryInterface;
 use Magento\Sales\Model\Order\Creditmemo;
-use Netresearch\Epayments\Model\Ingenico\Action\Refund\ApproveRefund as ApproveRefundAction;
+use Ingenico\Connect\Model\Ingenico\Action\Refund\ApproveRefund as ApproveRefundAction;
 use Psr\Log\LoggerInterface;
 
 class ApproveRefund extends Action

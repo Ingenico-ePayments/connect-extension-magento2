@@ -1,22 +1,22 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\Token;
+namespace Ingenico\Connect\Model\Ingenico\Token;
 
 class TokenService implements TokenServiceInterface
 {
     /** @var TokenFactory */
     private $tokenFactory;
 
-    /** @var \Netresearch\Epayments\Model\ResourceModel\Token */
+    /** @var \Ingenico\Connect\Model\ResourceModel\Token */
     private $tokenResource;
 
     /**
      * @param TokenFactory $tokenFactory
-     * @param \Netresearch\Epayments\Model\ResourceModel\Token $tokenResource
+     * @param \Ingenico\Connect\Model\ResourceModel\Token $tokenResource
      */
     public function __construct(
         TokenFactory $tokenFactory,
-        \Netresearch\Epayments\Model\ResourceModel\Token $tokenResource
+        \Ingenico\Connect\Model\ResourceModel\Token $tokenResource
     ) {
         $this->tokenFactory = $tokenFactory;
         $this->tokenResource = $tokenResource;
@@ -27,10 +27,10 @@ class TokenService implements TokenServiceInterface
      */
     public function add($customerId, $paymentProductId, $token)
     {
-        /** @var \Netresearch\Epayments\Model\Ingenico\Token\Token[] $tokenModel */
+        /** @var \Ingenico\Connect\Model\Ingenico\Token\Token[] $tokenModel */
         $tokenValues = $this->find($customerId, $paymentProductId);
         if (!in_array($token, $tokenValues)) {
-            /** @var \Netresearch\Epayments\Model\Ingenico\Token\Token $tokenModel */
+            /** @var \Ingenico\Connect\Model\Ingenico\Token\Token $tokenModel */
             $tokenModel = $this->tokenFactory->create();
             $tokenModel->setCustomerId($customerId);
             $tokenModel->setPaymentProductId($paymentProductId);
@@ -66,7 +66,7 @@ class TokenService implements TokenServiceInterface
     {
         if ($customerId && !empty($tokens)) {
             $tokenModel = $this->tokenFactory->create();
-            /** @var \Netresearch\Epayments\Model\ResourceModel\Token\Collection $tokenCollection */
+            /** @var \Ingenico\Connect\Model\ResourceModel\Token\Collection $tokenCollection */
             $tokenCollection = $tokenModel->getCollection();
             $tokenCollection->setCustomerId($customerId)
                             ->addFieldToFilter(

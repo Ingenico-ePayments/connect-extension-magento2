@@ -1,10 +1,10 @@
 <?php
 
-namespace Netresearch\Epayments\Gateway;
+namespace Ingenico\Connect\Gateway;
 
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
-use Netresearch\Epayments\Model\Config;
-use Netresearch\Epayments\Model\StatusResponseManager;
+use Ingenico\Connect\Model\Config;
+use Ingenico\Connect\Model\StatusResponseManager;
 
 abstract class AbstractValueHandler implements \Magento\Payment\Gateway\Config\ValueHandlerInterface
 {

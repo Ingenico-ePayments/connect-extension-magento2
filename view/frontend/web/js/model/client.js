@@ -2,7 +2,7 @@
 /*global define*/
 
 define([
-    'Netresearch_Epayments/js/action/get-session',
+    'Ingenico_Connect/js/action/get-session',
     'connect-sdk'
 ], function (getSessionAction, sdk) {
     'use strict';

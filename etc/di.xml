@@ -1,32 +1,32 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="Netresearch\Epayments\Model\ConfigInterface" type="Netresearch\Epayments\Model\Config"/>
-    <preference for="Netresearch\Epayments\Model\Ingenico\Token\TokenServiceInterface" type="Netresearch\Epayments\Model\Ingenico\Token\TokenService"/>
-    <preference for="Netresearch\Epayments\Model\Ingenico\Api\ClientInterface" type="Netresearch\Epayments\Model\Ingenico\Client"/>
-    <preference for="Netresearch\Epayments\Model\OrderUpdate\ProcessorInterface" type="Netresearch\Epayments\Model\OrderUpdate\Processor"/>
-    <preference for="Netresearch\Epayments\Model\OrderUpdate\OrderInterface" type="Netresearch\Epayments\Model\OrderUpdate\Order"/>
-    <preference for="Netresearch\Epayments\Model\OrderUpdate\SchedulerInterface" type="Netresearch\Epayments\Model\OrderUpdate\Scheduler"/>
-    <preference for="Netresearch\Epayments\Model\OrderUpdate\HistoryManagerInterface" type="Netresearch\Epayments\Model\OrderUpdate\HistoryManager"/>
-    <preference for="Netresearch\Epayments\Cron\FetchWxFiles\ProcessorInterface" type="Netresearch\Epayments\Cron\FetchWxFiles\Processor"/>
-    <preference for="Netresearch\Epayments\Cron\FetchWxFiles\StatusUpdateResolverInterface" type="\Netresearch\Epayments\Cron\FetchWxFiles\StatusUpdateResolver"/>
-    <preference for="Netresearch\Epayments\WxTransfer\Sftp\ClientInterface" type="Netresearch\Epayments\WxTransfer\Sftp\Client"/>
-    <preference for="Netresearch\Epayments\WxTransfer\ClientInterface" type="Netresearch\Epayments\WxTransfer\Client"/>
-    <preference for="Netresearch\Epayments\Model\Cart\ServiceInterface" type="Netresearch\Epayments\Model\Cart\Service"/>
-    <preference for="Netresearch\Epayments\Model\Ingenico\Status\ResolverInterface" type="Netresearch\Epayments\Model\Ingenico\Status\Resolver"/>
-    <preference for="Netresearch\Epayments\Model\Order\Creditmemo\ServiceInterface" type="Netresearch\Epayments\Model\Order\Creditmemo\Service"/>
-    <preference for="Netresearch\Epayments\Model\StatusResponseManagerInterface" type="Netresearch\Epayments\Model\StatusResponseManager"/>
-    <preference for="Netresearch\Epayments\Model\Ingenico\Status\PoolInterface" type="Netresearch\Epayments\Model\Ingenico\Status\Pool"/>
-    <preference for="Netresearch\Epayments\Model\Order\OrderServiceInterface" type="Netresearch\Epayments\Model\Order\OrderService"/>
-    <preference for="Netresearch\Epayments\Api\EventRepositoryInterface" type="Netresearch\Epayments\Model\Event\EventRepository"/>
-    <preference for="Netresearch\Epayments\Api\Data\EventInterface" type="Netresearch\Epayments\Model\Event\DataModel"/>
-    <preference for="Netresearch\Epayments\Api\Data\EventSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+    <preference for="Ingenico\Connect\Model\ConfigInterface" type="Ingenico\Connect\Model\Config"/>
+    <preference for="Ingenico\Connect\Model\Ingenico\Token\TokenServiceInterface" type="Ingenico\Connect\Model\Ingenico\Token\TokenService"/>
+    <preference for="Ingenico\Connect\Model\Ingenico\Api\ClientInterface" type="Ingenico\Connect\Model\Ingenico\Client"/>
+    <preference for="Ingenico\Connect\Model\OrderUpdate\ProcessorInterface" type="Ingenico\Connect\Model\OrderUpdate\Processor"/>
+    <preference for="Ingenico\Connect\Model\OrderUpdate\OrderInterface" type="Ingenico\Connect\Model\OrderUpdate\Order"/>
+    <preference for="Ingenico\Connect\Model\OrderUpdate\SchedulerInterface" type="Ingenico\Connect\Model\OrderUpdate\Scheduler"/>
+    <preference for="Ingenico\Connect\Model\OrderUpdate\HistoryManagerInterface" type="Ingenico\Connect\Model\OrderUpdate\HistoryManager"/>
+    <preference for="Ingenico\Connect\Cron\FetchWxFiles\ProcessorInterface" type="Ingenico\Connect\Cron\FetchWxFiles\Processor"/>
+    <preference for="Ingenico\Connect\Cron\FetchWxFiles\StatusUpdateResolverInterface" type="\Ingenico\Connect\Cron\FetchWxFiles\StatusUpdateResolver"/>
+    <preference for="Ingenico\Connect\WxTransfer\Sftp\ClientInterface" type="Ingenico\Connect\WxTransfer\Sftp\Client"/>
+    <preference for="Ingenico\Connect\WxTransfer\ClientInterface" type="Ingenico\Connect\WxTransfer\Client"/>
+    <preference for="Ingenico\Connect\Model\Cart\ServiceInterface" type="Ingenico\Connect\Model\Cart\Service"/>
+    <preference for="Ingenico\Connect\Model\Ingenico\Status\ResolverInterface" type="Ingenico\Connect\Model\Ingenico\Status\Resolver"/>
+    <preference for="Ingenico\Connect\Model\Order\Creditmemo\ServiceInterface" type="Ingenico\Connect\Model\Order\Creditmemo\Service"/>
+    <preference for="Ingenico\Connect\Model\StatusResponseManagerInterface" type="Ingenico\Connect\Model\StatusResponseManager"/>
+    <preference for="Ingenico\Connect\Model\Ingenico\Status\PoolInterface" type="Ingenico\Connect\Model\Ingenico\Status\Pool"/>
+    <preference for="Ingenico\Connect\Model\Order\OrderServiceInterface" type="Ingenico\Connect\Model\Order\OrderService"/>
+    <preference for="Ingenico\Connect\Api\EventRepositoryInterface" type="Ingenico\Connect\Model\Event\EventRepository"/>
+    <preference for="Ingenico\Connect\Api\Data\EventInterface" type="Ingenico\Connect\Model\Event\DataModel"/>
+    <preference for="Ingenico\Connect\Api\Data\EventSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
 
     <!-- Payment method set up via Magento 2 Payment Gateway API -->
     <virtualType name="IngenicoFacade" type="Magento\Payment\Model\Method\Adapter">
         <arguments>
-            <argument name="code" xsi:type="const">Netresearch\Epayments\Model\ConfigProvider::CODE</argument>
+            <argument name="code" xsi:type="const">Ingenico\Connect\Model\ConfigProvider::CODE</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
-            <argument name="infoBlockType" xsi:type="string">Netresearch\Epayments\Block\Info</argument>
+            <argument name="infoBlockType" xsi:type="string">Ingenico\Connect\Block\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">IngenicoValueHandlerPool</argument>
             <argument name="commandPool" xsi:type="object">IngenicoCommandPool</argument>
             <argument name="validatorPool" xsi:type="object">IngenicoValidatorPool</argument>
@@ -38,14 +38,14 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">IngenicoConfigValueHandler</item>
-                <item name="order_place_redirect_url" xsi:type="string">Netresearch\Epayments\Gateway\IsRedirect</item>
-                <item name="can_capture" xsi:type="string">Netresearch\Epayments\Gateway\CanCapture</item>
-                <item name="can_refund" xsi:type="string">Netresearch\Epayments\Gateway\CanRefund</item>
-                <item name="can_capture_partial" xsi:type="string">Netresearch\Epayments\Gateway\CanCapturePartial</item>
-                <item name="can_void" xsi:type="string">Netresearch\Epayments\Gateway\CanVoid</item>
-                <item name="can_review_payment" xsi:type="string">Netresearch\Epayments\Gateway\CanReviewPayment</item>
-                <item name="can_initialize" xsi:type="string">Netresearch\Epayments\Gateway\CanInitialize</item>
-                <item name="payment_action" xsi:type="string">Netresearch\Epayments\Gateway\PaymentAction</item>
+                <item name="order_place_redirect_url" xsi:type="string">Ingenico\Connect\Gateway\IsRedirect</item>
+                <item name="can_capture" xsi:type="string">Ingenico\Connect\Gateway\CanCapture</item>
+                <item name="can_refund" xsi:type="string">Ingenico\Connect\Gateway\CanRefund</item>
+                <item name="can_capture_partial" xsi:type="string">Ingenico\Connect\Gateway\CanCapturePartial</item>
+                <item name="can_void" xsi:type="string">Ingenico\Connect\Gateway\CanVoid</item>
+                <item name="can_review_payment" xsi:type="string">Ingenico\Connect\Gateway\CanReviewPayment</item>
+                <item name="can_initialize" xsi:type="string">Ingenico\Connect\Gateway\CanInitialize</item>
+                <item name="payment_action" xsi:type="string">Ingenico\Connect\Gateway\PaymentAction</item>
             </argument>
         </arguments>
     </virtualType>
@@ -53,7 +53,7 @@
     <!-- Payment config handler set up -->
     <virtualType name="IngenicoConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">Netresearch\Epayments\Gateway\Config\Config</argument>
+            <argument name="configInterface" xsi:type="object">Ingenico\Connect\Gateway\Config\Config</argument>
         </arguments>
     </virtualType>
 
@@ -61,16 +61,16 @@
     <virtualType name="IngenicoValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
-                <item name="availability" xsi:type="string">Netresearch\Epayments\Gateway\Validator\Availability</item>
+                <item name="availability" xsi:type="string">Ingenico\Connect\Gateway\Validator\Availability</item>
             </argument>
         </arguments>
     </virtualType>
 
     <!-- Payment config set up -->
-    <virtualType name="Netresearch\Epayments\Gateway\Config\Config" type="Magento\Payment\Gateway\Config\Config">
+    <virtualType name="Ingenico\Connect\Gateway\Config\Config" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">Netresearch\Epayments\Model\ConfigProvider::CODE</argument>
-            <argument name="pathPattern" xsi:type="const">Netresearch\Epayments\Model\ConfigProvider::PATH_PATTERN</argument>
+            <argument name="methodCode" xsi:type="const">Ingenico\Connect\Model\ConfigProvider::CODE</argument>
+            <argument name="pathPattern" xsi:type="const">Ingenico\Connect\Model\ConfigProvider::PATH_PATTERN</argument>
         </arguments>
     </virtualType>
 
@@ -78,42 +78,42 @@
     <virtualType name="IngenicoCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="capture" xsi:type="string">Netresearch\Epayments\Gateway\Command\IngenicoCaptureCommand</item>
-                <item name="void" xsi:type="string">Netresearch\Epayments\Gateway\Command\IngenicoCancelCommand</item>
-                <item name="cancel" xsi:type="string">Netresearch\Epayments\Gateway\Command\IngenicoCancelCommand</item>
-                <item name="refund" xsi:type="string">Netresearch\Epayments\Gateway\Command\IngenicoRefundCommand</item>
+                <item name="capture" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoCaptureCommand</item>
+                <item name="void" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoCancelCommand</item>
+                <item name="cancel" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoCancelCommand</item>
+                <item name="refund" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoRefundCommand</item>
                 <!--accept_payment is handled through ApprovePayment controller-->
-                <item name="deny_payment" xsi:type="string">Netresearch\Epayments\Gateway\Command\IngenicoDenyPaymentCommand</item>
-                <item name="initialize" xsi:type="string">Netresearch\Epayments\Gateway\Command\Initialize</item>
-                <item name="authorize" xsi:type="string">Netresearch\Epayments\Gateway\Command\IngenicoAuthorizeCommand</item>
+                <item name="deny_payment" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoDenyPaymentCommand</item>
+                <item name="initialize" xsi:type="string">Ingenico\Connect\Gateway\Command\Initialize</item>
+                <item name="authorize" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoAuthorizeCommand</item>
             </argument>
         </arguments>
     </virtualType>
 
     <!-- Setup decorator mappings for payment methdos -->
-    <type name="Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodDecoratorPool">
+    <type name="Ingenico\Connect\Model\Ingenico\RequestBuilder\MethodDecoratorPool">
         <arguments>
             <argument name="decoratorPool" xsi:type="array">
-                <item name="card" xsi:type="object">Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\CardDecorator\Proxy</item>
-                <item name="redirect" xsi:type="object">Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\RedirectDecorator\Proxy</item>
-                <item name="bankTransfer" xsi:type="object">Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\BankTransferDecorator\Proxy</item>
-                <item name="cash" xsi:type="object">Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\CashDecorator\Proxy</item>
-                <item name="sepaDirectDebit" xsi:type="object">Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\SepaDirectDebitDecorator\Proxy</item>
-                <item name="directDebit" xsi:type="object">Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\DirectDebitDecorator\Proxy</item>
-                <item name="eInvoice" xsi:type="object">Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\EInvoiceDecorator\Proxy</item>
-                <item name="invoice" xsi:type="object">Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput\InvoiceDecorator\Proxy</item>
+                <item name="card" xsi:type="object">Ingenico\Connect\Model\Ingenico\RequestBuilder\MethodSpecificInput\CardDecorator\Proxy</item>
+                <item name="redirect" xsi:type="object">Ingenico\Connect\Model\Ingenico\RequestBuilder\MethodSpecificInput\RedirectDecorator\Proxy</item>
+                <item name="bankTransfer" xsi:type="object">Ingenico\Connect\Model\Ingenico\RequestBuilder\MethodSpecificInput\BankTransferDecorator\Proxy</item>
+                <item name="cash" xsi:type="object">Ingenico\Connect\Model\Ingenico\RequestBuilder\MethodSpecificInput\CashDecorator\Proxy</item>
+                <item name="sepaDirectDebit" xsi:type="object">Ingenico\Connect\Model\Ingenico\RequestBuilder\MethodSpecificInput\SepaDirectDebitDecorator\Proxy</item>
+                <item name="directDebit" xsi:type="object">Ingenico\Connect\Model\Ingenico\RequestBuilder\MethodSpecificInput\DirectDebitDecorator\Proxy</item>
+                <item name="eInvoice" xsi:type="object">Ingenico\Connect\Model\Ingenico\RequestBuilder\MethodSpecificInput\EInvoiceDecorator\Proxy</item>
+                <item name="invoice" xsi:type="object">Ingenico\Connect\Model\Ingenico\RequestBuilder\MethodSpecificInput\InvoiceDecorator\Proxy</item>
             </argument>
         </arguments>
     </type>
 
     <!-- Setup decorator mappings for payment products -->
-    <type name="Netresearch\Epayments\Model\Ingenico\RequestBuilder\ProductDecoratorPool">
+    <type name="Ingenico\Connect\Model\Ingenico\RequestBuilder\ProductDecoratorPool">
         <arguments>
             <argument name="decoratorPool" xsi:type="array">
-                <item name="705" xsi:type="object">Netresearch\Epayments\Model\Ingenico\RequestBuilder\ProductSpecificInput\Product705Decorator\Proxy</item>
-                <item name="730" xsi:type="object">Netresearch\Epayments\Model\Ingenico\RequestBuilder\ProductSpecificInput\Product730Decorator\Proxy</item>
-                <item name="771" xsi:type="object">Netresearch\Epayments\Model\Ingenico\RequestBuilder\ProductSpecificInput\Product771Decorator\Proxy</item>
-                <item name="9000" xsi:type="object">Netresearch\Epayments\Model\Ingenico\RequestBuilder\ProductSpecificInput\Product9000Decorator\Proxy</item>
+                <item name="705" xsi:type="object">Ingenico\Connect\Model\Ingenico\RequestBuilder\ProductSpecificInput\Product705Decorator\Proxy</item>
+                <item name="730" xsi:type="object">Ingenico\Connect\Model\Ingenico\RequestBuilder\ProductSpecificInput\Product730Decorator\Proxy</item>
+                <item name="771" xsi:type="object">Ingenico\Connect\Model\Ingenico\RequestBuilder\ProductSpecificInput\Product771Decorator\Proxy</item>
+                <item name="9000" xsi:type="object">Ingenico\Connect\Model\Ingenico\RequestBuilder\ProductSpecificInput\Product9000Decorator\Proxy</item>
             </argument>
         </arguments>
     </type>
@@ -122,17 +122,17 @@
     <virtualType name="ingenicoRequestLogger" type="Magento\Framework\Logger\Monolog">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="system" xsi:type="object">Netresearch\Epayments\Model\RequestLogger</item>
+                <item name="system" xsi:type="object">Ingenico\Connect\Model\RequestLogger</item>
             </argument>
         </arguments>
     </virtualType>
-    <type name="Netresearch\Epayments\Model\Ingenico\Client\CommunicatorLogger">
+    <type name="Ingenico\Connect\Model\Ingenico\Client\CommunicatorLogger">
         <arguments>
             <argument name="logger" xsi:type="object">ingenicoRequestLogger</argument>
         </arguments>
     </type>
 
-    <type name="Netresearch\Epayments\Model\Ingenico\Webhooks">
+    <type name="Ingenico\Connect\Model\Ingenico\Webhooks">
         <arguments>
             <argument name="logger" xsi:type="object">ingenicoRequestLogger</argument>
         </arguments>
@@ -142,21 +142,21 @@
     <virtualType name="realTimeLogger" type="Magento\Framework\Logger\Monolog">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="system" xsi:type="object">Netresearch\Epayments\Model\OrderUpdate\Logger</item>
+                <item name="system" xsi:type="object">Ingenico\Connect\Model\OrderUpdate\Logger</item>
             </argument>
         </arguments>
     </virtualType>
-    <type name="Netresearch\Epayments\Model\OrderUpdate\Order">
+    <type name="Ingenico\Connect\Model\OrderUpdate\Order">
         <arguments>
             <argument name="logger" xsi:type="object">realTimeLogger</argument>
         </arguments>
     </type>
-    <type name="Netresearch\Epayments\Model\OrderUpdate\Processor">
+    <type name="Ingenico\Connect\Model\OrderUpdate\Processor">
         <arguments>
             <argument name="logger" xsi:type="object">realTimeLogger</argument>
         </arguments>
     </type>
-    <type name="Netresearch\Epayments\Model\OrderUpdate\Scheduler">
+    <type name="Ingenico\Connect\Model\OrderUpdate\Scheduler">
         <arguments>
             <argument name="logger" xsi:type="object">realTimeLogger</argument>
         </arguments>
@@ -164,16 +164,16 @@
     <virtualType name="wxLogger" type="Magento\Framework\Logger\Monolog">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="system" xsi:type="object">Netresearch\Epayments\Cron\FetchWxFiles\Logger</item>
+                <item name="system" xsi:type="object">Ingenico\Connect\Cron\FetchWxFiles\Logger</item>
             </argument>
         </arguments>
     </virtualType>
-    <type name="Netresearch\Epayments\Cron\FetchWxFiles\Processor">
+    <type name="Ingenico\Connect\Cron\FetchWxFiles\Processor">
         <arguments>
             <argument name="logger" xsi:type="object">wxLogger</argument>
         </arguments>
     </type>
-    <type name="Netresearch\Epayments\Cron\FetchWxFiles\StatusUpdateResolver">
+    <type name="Ingenico\Connect\Cron\FetchWxFiles\StatusUpdateResolver">
         <arguments>
             <argument name="logger" xsi:type="object">wxLogger</argument>
         </arguments>
@@ -182,78 +182,78 @@
     <type name="Magento\Framework\Console\CommandList">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="ingenico_wximport" xsi:type="object">Netresearch\Epayments\Command\WxImport</item>
-                <item name="ingenico_events" xsi:type="object">Netresearch\Epayments\Command\ProcessEvents</item>
+                <item name="ingenico_wximport" xsi:type="object">Ingenico\Connect\Command\WxImport</item>
+                <item name="ingenico_events" xsi:type="object">Ingenico\Connect\Command\ProcessEvents</item>
             </argument>
         </arguments>
     </type>
 
-    <type name="Netresearch\Epayments\Command\WxImport">
+    <type name="Ingenico\Connect\Command\WxImport">
         <arguments>
             <argument name="storeManager" xsi:type="object">Magento\Store\Model\StoreManagerInterface\Proxy</argument>
-            <argument name="processor" xsi:type="object">Netresearch\Epayments\Cron\FetchWxFiles\ProcessorInterface\Proxy</argument>
+            <argument name="processor" xsi:type="object">Ingenico\Connect\Cron\FetchWxFiles\ProcessorInterface\Proxy</argument>
             <argument name="appState" xsi:type="object">Magento\Framework\App\State\Proxy</argument>
         </arguments>
     </type>
-    <type name="Netresearch\Epayments\Command\ProcessEvents">
+    <type name="Ingenico\Connect\Command\ProcessEvents">
         <arguments>
-            <argument name="processor" xsi:type="object">Netresearch\Epayments\Model\Event\Processor\Proxy</argument>
+            <argument name="processor" xsi:type="object">Ingenico\Connect\Model\Event\Processor\Proxy</argument>
             <argument name="appState" xsi:type="object">Magento\Framework\App\State\Proxy</argument>
         </arguments>
     </type>
 
-    <virtualType name="Netresearch\Epayments\Model\Ingenico\Status\Virtual\PaymentStatusPool" type="Netresearch\Epayments\Model\Ingenico\Status\Pool">
+    <virtualType name="Ingenico\Connect\Model\Ingenico\Status\Virtual\PaymentStatusPool" type="Ingenico\Connect\Model\Ingenico\Status\Pool">
         <arguments>
             <argument name="statusHandlers" xsi:type="array">
-                <item name="REDIRECTED" xsi:type="string">Netresearch\Epayments\Model\Ingenico\Status\Redirected</item>
-                <item name="PENDING_PAYMENT" xsi:type="string">Netresearch\Epayments\Model\Ingenico\Status\PendingPayment</item>
-                <item name="ACCOUNT_VERIFIED" xsi:type="string">Netresearch\Epayments\Model\Ingenico\Status\NullStatus</item>
-                <item name="PENDING_FRAUD_APPROVAL" xsi:type="string">Netresearch\Epayments\Model\Ingenico\Status\PendingFraudApproval</item>
-                <item name="AUTHORIZATION_REQUESTED" xsi:type="string">Netresearch\Epayments\Model\Ingenico\Status\AuthorizationRequested</item>
-                <item name="PENDING_APPROVAL" xsi:type="string">Netresearch\Epayments\Model\Ingenico\Status\PendingApproval</item>
-                <item name="PENDING_CAPTURE" xsi:type="string">Netresearch\Epayments\Model\Ingenico\Status\PendingCapture</item>
-                <item name="CAPTURE_REQUESTED" xsi:type="string">Netresearch\Epayments\Model\Ingenico\Status\CaptureRequested</item>
-                <item name="CAPTURED" xsi:type="string">Netresearch\Epayments\Model\Ingenico\Status\Captured</item>
-                <item name="PAID" xsi:type="string">Netresearch\Epayments\Model\Ingenico\Status\Paid</item>
-                <item name="REVERSED" xsi:type="string">Netresearch\Epayments\Model\Ingenico\Status\RejectedCapture</item>
-                <item name="CHARGEBACKED" xsi:type="string">Netresearch\Epayments\Model\Ingenico\Status\RejectedCapture</item>
-                <item name="REJECTED" xsi:type="string">Netresearch\Epayments\Model\Ingenico\Status\Rejected</item>
-                <item name="REJECTED_CAPTURE" xsi:type="string">Netresearch\Epayments\Model\Ingenico\Status\RejectedCapture</item>
-                <item name="CANCELLED" xsi:type="string">Netresearch\Epayments\Model\Ingenico\Status\Cancelled</item>
+                <item name="REDIRECTED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Redirected</item>
+                <item name="PENDING_PAYMENT" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\PendingPayment</item>
+                <item name="ACCOUNT_VERIFIED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\NullStatus</item>
+                <item name="PENDING_FRAUD_APPROVAL" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\PendingFraudApproval</item>
+                <item name="AUTHORIZATION_REQUESTED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\AuthorizationRequested</item>
+                <item name="PENDING_APPROVAL" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\PendingApproval</item>
+                <item name="PENDING_CAPTURE" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\PendingCapture</item>
+                <item name="CAPTURE_REQUESTED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\CaptureRequested</item>
+                <item name="CAPTURED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Captured</item>
+                <item name="PAID" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Paid</item>
+                <item name="REVERSED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\RejectedCapture</item>
+                <item name="CHARGEBACKED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\RejectedCapture</item>
+                <item name="REJECTED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Rejected</item>
+                <item name="REJECTED_CAPTURE" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\RejectedCapture</item>
+                <item name="CANCELLED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Cancelled</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="Netresearch\Epayments\Model\Ingenico\Status\Virtual\RefundStatusPool" type="Netresearch\Epayments\Model\Ingenico\Status\Pool">
+    <virtualType name="Ingenico\Connect\Model\Ingenico\Status\Virtual\RefundStatusPool" type="Ingenico\Connect\Model\Ingenico\Status\Pool">
         <arguments>
             <argument name="statusHandlers" xsi:type="array">
-                <item name="CREATED" xsi:type="string">Netresearch\Epayments\Model\Ingenico\Status\Refund\NullStatus</item>
-                <item name="PENDING_APPROVAL" xsi:type="string">Netresearch\Epayments\Model\Ingenico\Status\Refund\PendingApproval</item>
-                <item name="REJECTED" xsi:type="string">Netresearch\Epayments\Model\Ingenico\Status\Refund\NullStatus</item>
-                <item name="REFUND_REQUESTED" xsi:type="string">Netresearch\Epayments\Model\Ingenico\Status\Refund\RefundRequested</item>
-                <item name="CAPTURED" xsi:type="string">Netresearch\Epayments\Model\Ingenico\Status\Refund\Refunded</item>
-                <item name="REFUNDED" xsi:type="string">Netresearch\Epayments\Model\Ingenico\Status\Refund\Refunded</item>
-                <item name="CANCELLED" xsi:type="string">Netresearch\Epayments\Model\Ingenico\Status\Refund\Cancelled</item>
+                <item name="CREATED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Refund\NullStatus</item>
+                <item name="PENDING_APPROVAL" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Refund\PendingApproval</item>
+                <item name="REJECTED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Refund\NullStatus</item>
+                <item name="REFUND_REQUESTED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Refund\RefundRequested</item>
+                <item name="CAPTURED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Refund\Refunded</item>
+                <item name="REFUNDED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Refund\Refunded</item>
+                <item name="CANCELLED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Refund\Cancelled</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <type name="Netresearch\Epayments\Model\Ingenico\Status\Resolver">
+    <type name="Ingenico\Connect\Model\Ingenico\Status\Resolver">
         <arguments>
-            <argument name="refundHandlerPool" xsi:type="object">Netresearch\Epayments\Model\Ingenico\Status\Virtual\RefundStatusPool</argument>
-            <argument name="paymentHandlerPool" xsi:type="object">Netresearch\Epayments\Model\Ingenico\Status\Virtual\PaymentStatusPool</argument>
-            <argument name="creditMemoService" xsi:type="object">Netresearch\Epayments\Model\Order\Creditmemo\Service\Proxy</argument>
+            <argument name="refundHandlerPool" xsi:type="object">Ingenico\Connect\Model\Ingenico\Status\Virtual\RefundStatusPool</argument>
+            <argument name="paymentHandlerPool" xsi:type="object">Ingenico\Connect\Model\Ingenico\Status\Virtual\PaymentStatusPool</argument>
+            <argument name="creditMemoService" xsi:type="object">Ingenico\Connect\Model\Order\Creditmemo\Service\Proxy</argument>
         </arguments>
     </type>
 
-    <type name="Netresearch\Epayments\Model\Ingenico\Status\CaptureRequested">
-        <plugin name="CaptureRequestedPlugin" type="Netresearch\Epayments\Plugin\Model\Ingenico\Status\CaptureRequestedPlugin"/>
+    <type name="Ingenico\Connect\Model\Ingenico\Status\CaptureRequested">
+        <plugin name="CaptureRequestedPlugin" type="Ingenico\Connect\Plugin\Model\Ingenico\Status\CaptureRequestedPlugin"/>
     </type>
 
     <type name="Magento\Sales\Model\Order\Payment\Operations\CaptureOperation">
-        <plugin name="EnforcePendingInvoicePlugin" type="Netresearch\Epayments\Plugin\Sales\Operation\EnforcePendingInvoice"/>
+        <plugin name="EnforcePendingInvoicePlugin" type="Ingenico\Connect\Plugin\Sales\Operation\EnforcePendingInvoice"/>
     </type>
-    <type name="Netresearch\Epayments\Controller\HostedCheckoutPage\ProcessReturn">
+    <type name="Ingenico\Connect\Controller\HostedCheckoutPage\ProcessReturn">
         <arguments>
             <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
         </arguments>

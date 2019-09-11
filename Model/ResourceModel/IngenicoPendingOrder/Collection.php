@@ -1,9 +1,9 @@
 <?php
 
-namespace Netresearch\Epayments\Model\ResourceModel\IngenicoPendingOrder;
+namespace Ingenico\Connect\Model\ResourceModel\IngenicoPendingOrder;
 
 use Magento\Sales\Model\Order;
-use Netresearch\Epayments\Model\ConfigProvider;
+use Ingenico\Connect\Model\ConfigProvider;
 
 class Collection extends \Magento\Sales\Model\ResourceModel\Order\Collection
 {
@@ -31,7 +31,7 @@ class Collection extends \Magento\Sales\Model\ResourceModel\Order\Collection
     public function addWrFileUpdateOrdersFilter($scopeId)
     {
         $this->buildFilter($scopeId);
-        $this->addFieldToFilter("order_update_wr_status", \Netresearch\Epayments\Model\OrderUpdate\Order::STATUS_WAIT);
+        $this->addFieldToFilter("order_update_wr_status", \Ingenico\Connect\Model\OrderUpdate\Order::STATUS_WAIT);
 
         return $this;
     }

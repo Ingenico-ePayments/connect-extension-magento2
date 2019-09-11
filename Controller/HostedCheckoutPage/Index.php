@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Controller\HostedCheckoutPage;
+namespace Ingenico\Connect\Controller\HostedCheckoutPage;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
@@ -8,7 +8,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\Order;
-use Netresearch\Epayments\Model\Config;
+use Ingenico\Connect\Model\Config;
 
 class Index extends Action
 {

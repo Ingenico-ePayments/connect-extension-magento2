@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Netresearch\Epayments\Model\Order;
+namespace Ingenico\Connect\Model\Order;
 
 use Magento\Framework\App\Area;
 use Magento\Framework\Mail\Template\TransportBuilder;

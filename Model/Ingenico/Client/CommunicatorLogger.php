@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\Client;
+namespace Ingenico\Connect\Model\Ingenico\Client;
 
 use Psr\Log\LoggerInterface;
 

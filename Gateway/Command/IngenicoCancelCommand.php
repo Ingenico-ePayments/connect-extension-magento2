@@ -1,10 +1,10 @@
 <?php
 
-namespace Netresearch\Epayments\Gateway\Command;
+namespace Ingenico\Connect\Gateway\Command;
 
 use Ingenico\Connect\Sdk\ResponseException;
 use Magento\Payment\Gateway\CommandInterface;
-use Netresearch\Epayments\Model\Ingenico\Action\CancelPayment;
+use Ingenico\Connect\Model\Ingenico\Action\CancelPayment;
 
 class IngenicoCancelCommand implements CommandInterface
 {

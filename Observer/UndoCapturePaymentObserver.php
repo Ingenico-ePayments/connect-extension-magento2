@@ -1,17 +1,17 @@
 <?php
 
-namespace Netresearch\Epayments\Observer;
+namespace Ingenico\Connect\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Netresearch\Epayments\Model\ConfigProvider;
-use Netresearch\Epayments\Model\Ingenico\Action\RetrievePayment;
-use Netresearch\Epayments\Model\Ingenico\Action\UndoCapturePaymentRequest;
+use Ingenico\Connect\Model\ConfigProvider;
+use Ingenico\Connect\Model\Ingenico\Action\RetrievePayment;
+use Ingenico\Connect\Model\Ingenico\Action\UndoCapturePaymentRequest;
 
 /**
  * Class UndoCapturePaymentObserver
  *
- * @package Netresearch\Epayments\Observer
+ * @package Ingenico\Connect\Observer
  */
 class UndoCapturePaymentObserver implements ObserverInterface
 {

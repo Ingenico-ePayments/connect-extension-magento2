@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\RequestBuilder\Common;
+namespace Ingenico\Connect\Model\Ingenico\RequestBuilder\Common\Order\ShoppingCart;
 
 use Ingenico\Connect\Sdk\Domain\Definitions\AmountOfMoneyFactory;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\LineItem;
@@ -8,12 +8,9 @@ use Ingenico\Connect\Sdk\Domain\Payment\Definitions\LineItemFactory;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\LineItemInvoiceDataFactory;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\OrderLineDetailsFactory;
 use Magento\Sales\Model\Order;
-use Netresearch\Epayments\Helper\Data as DataHelper;
+use Ingenico\Connect\Helper\Data as DataHelper;
 
-/**
- * Class LineItemsBuilder
- */
-class LineItemsBuilder
+class ItemsBuilder
 {
     /**
      * @var LineItemFactory

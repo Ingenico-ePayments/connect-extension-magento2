@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\RequestBuilder\Common;
+namespace Ingenico\Connect\Model\Ingenico\RequestBuilder\Common;
 
 use Ingenico\Connect\Sdk\Domain\Definitions\FraudFields;
 use Ingenico\Connect\Sdk\Domain\Definitions\FraudFieldsFactory;

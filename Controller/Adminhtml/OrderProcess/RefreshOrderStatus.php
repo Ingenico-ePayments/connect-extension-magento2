@@ -1,13 +1,13 @@
 <?php
 
-namespace Netresearch\Epayments\Controller\Adminhtml\OrderProcess;
+namespace Ingenico\Connect\Controller\Adminhtml\OrderProcess;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
-use Netresearch\Epayments\Model\Ingenico\Action\RetrievePayment;
+use Ingenico\Connect\Model\Ingenico\Action\RetrievePayment;
 use Psr\Log\LoggerInterface;
 
 class RefreshOrderStatus extends Action

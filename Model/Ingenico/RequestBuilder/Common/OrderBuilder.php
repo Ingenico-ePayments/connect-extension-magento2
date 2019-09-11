@@ -1,7 +1,9 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\RequestBuilder\Common;
+namespace Ingenico\Connect\Model\Ingenico\RequestBuilder\Common;
 
+use Ingenico\Connect\Model\Ingenico\RequestBuilder\Common\Order\CustomerBuilder;
+use Ingenico\Connect\Model\Ingenico\RequestBuilder\Common\Order\ShoppingCartBuilder;
 use Ingenico\Connect\Sdk\Domain\Definitions\AmountOfMoneyFactory;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\AdditionalOrderInputFactory;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\OrderFactory;
@@ -9,9 +11,9 @@ use Ingenico\Connect\Sdk\Domain\Payment\Definitions\OrderReferencesFactory;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\OrderTypeInformationFactory;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Sales\Model\Order;
-use Netresearch\Epayments\Helper\Data as DataHelper;
-use Netresearch\Epayments\Model\ConfigInterface;
-use Netresearch\Epayments\Model\Ingenico\MerchantReference;
+use Ingenico\Connect\Helper\Data as DataHelper;
+use Ingenico\Connect\Model\ConfigInterface;
+use Ingenico\Connect\Model\Ingenico\MerchantReference;
 
 /**
  * Class OrderBuilder

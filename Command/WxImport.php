@@ -1,12 +1,12 @@
 <?php
 
-namespace Netresearch\Epayments\Command;
+namespace Ingenico\Connect\Command;
 
 use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Store\Model\StoreManagerInterface;
-use Netresearch\Epayments\Cron\FetchWxFiles\ProcessorInterface;
+use Ingenico\Connect\Cron\FetchWxFiles\ProcessorInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;

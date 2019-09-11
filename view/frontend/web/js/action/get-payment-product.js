@@ -4,8 +4,8 @@
 define([
     'ko',
     'Magento_Checkout/js/model/quote',
-    'Netresearch_Epayments/js/model/client',
-    'Netresearch_Epayments/js/model/payment/config'
+    'Ingenico_Connect/js/model/client',
+    'Ingenico_Connect/js/model/payment/config'
 ], function (ko, quote, client, config) {
     'use strict';
 

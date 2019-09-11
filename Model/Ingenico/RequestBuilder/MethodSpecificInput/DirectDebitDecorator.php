@@ -1,13 +1,13 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\RequestBuilder\MethodSpecificInput;
+namespace Ingenico\Connect\Model\Ingenico\RequestBuilder\MethodSpecificInput;
 
 use Ingenico\Connect\Sdk\DataObject;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\NonSepaDirectDebitPaymentMethodSpecificInput;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\NonSepaDirectDebitPaymentMethodSpecificInputFactory;
 use Magento\Sales\Api\Data\OrderInterface;
-use Netresearch\Epayments\Model\Config;
-use Netresearch\Epayments\Model\Ingenico\RequestBuilder\DecoratorInterface;
+use Ingenico\Connect\Model\Config;
+use Ingenico\Connect\Model\Ingenico\RequestBuilder\DecoratorInterface;
 
 /**
  * Class DirectDebitDecorator

@@ -1,14 +1,14 @@
 <?php
 
-namespace Netresearch\Epayments\Controller\InlinePayment;
+namespace Ingenico\Connect\Controller\InlinePayment;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Payment\Model\InfoInterface;
-use Netresearch\Epayments\Model\Config;
-use Netresearch\Epayments\Model\ConfigInterface;
+use Ingenico\Connect\Model\Config;
+use Ingenico\Connect\Model\ConfigInterface;
 
 class Index extends Action
 {
@@ -50,12 +50,12 @@ class Index extends Action
         $payment = $this->checkoutSession->getLastRealOrder()->getPayment();
 
         $ingenicoPaymentStatus = $payment->getAdditionalInformation(Config::PAYMENT_STATUS_KEY);
-        $message               = $this->config->getPaymentStatusInfo(mb_strtolower($ingenicoPaymentStatus));
-        $resultsMessage        = $payment->getAdditionalInformation(Config::TRANSACTION_RESULTS_KEY);
+        $message = $this->config->getPaymentStatusInfo(mb_strtolower($ingenicoPaymentStatus));
+        $resultsMessage = $payment->getAdditionalInformation(Config::TRANSACTION_RESULTS_KEY);
 
         /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-        $redirectUrl    = $payment->getAdditionalInformation(Config::REDIRECT_URL_KEY);
+        $redirectUrl = $payment->getAdditionalInformation(Config::REDIRECT_URL_KEY);
 
         if ($redirectUrl) {
             $resultRedirect->setUrl($redirectUrl);

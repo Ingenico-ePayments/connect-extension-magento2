@@ -1,15 +1,15 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Order;
+namespace Ingenico\Connect\Model\Order;
 
 use Ingenico\Connect\Sdk\Domain\Definitions\KeyValuePair;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\Definitions\DisplayedDataFactory;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Sales\Api\Data\OrderInterface;
-use Netresearch\Epayments\Helper\Data;
-use Netresearch\Epayments\Model\Config;
-use Netresearch\Epayments\Model\ConfigInterface;
-use Netresearch\Epayments\Model\Ingenico\StatusInterface;
+use Ingenico\Connect\Helper\Data;
+use Ingenico\Connect\Model\Config;
+use Ingenico\Connect\Model\ConfigInterface;
+use Ingenico\Connect\Model\Ingenico\StatusInterface;
 
 class EmailManager
 {

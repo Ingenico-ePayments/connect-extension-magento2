@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
-        <link src="Netresearch_Epayments::js/lib/connectsdk.js"/>
+        <link src="Ingenico_Connect::js/lib/connectsdk.js"/>
     </head>
     <body>
         <referenceBlock name="checkout.root">
@@ -20,8 +20,8 @@
                                                         <item name="renders" xsi:type="array">
                                                             <!-- merge payment method renders here -->
                                                             <item name="children" xsi:type="array">
-                                                                <item name="netresearch_epayments" xsi:type="array">
-                                                                    <item name="component" xsi:type="string">Netresearch_Epayments/js/view/payment/netresearch-epayments</item>
+                                                                <item name="ingenico_connect" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Ingenico_Connect/js/view/payment/ingenico-connect</item>
                                                                     <item name="methods" xsi:type="array">
                                                                         <item name="ingenico" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>

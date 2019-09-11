@@ -1,11 +1,11 @@
 <?php
 
-namespace Netresearch\Epayments\Plugin\Block\Adminhtml\Order;
+namespace Ingenico\Connect\Plugin\Block\Adminhtml\Order;
 
 use Magento\Framework\UrlInterface;
 use Magento\Sales\Block\Adminhtml\Order\View as ViewBlock;
 use Magento\Sales\Model\Order;
-use Netresearch\Epayments\Model\ConfigProvider;
+use Ingenico\Connect\Model\ConfigProvider;
 
 class View
 {

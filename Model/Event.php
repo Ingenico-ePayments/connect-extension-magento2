@@ -1,27 +1,25 @@
 <?php
 
-namespace Netresearch\Epayments\Model;
+namespace Ingenico\Connect\Model;
 
 use Magento\Framework\Api\DataObjectHelper;
-use Netresearch\Epayments\Api\Data\EventInterface;
-use Netresearch\Epayments\Api\Data\EventInterfaceFactory;
-use Netresearch\Epayments\Model\Event\DataModel;
-use Netresearch\Epayments\Model\ResourceModel\Event as EventResource;
-use Netresearch\Epayments\Model\ResourceModel\Event\Collection;
+use Ingenico\Connect\Api\Data\EventInterface;
+use Ingenico\Connect\Api\Data\EventInterfaceFactory;
+use Ingenico\Connect\Model\Event\DataModel;
+use Ingenico\Connect\Model\ResourceModel\Event as EventResource;
+use Ingenico\Connect\Model\ResourceModel\Event\Collection;
 
 /**
  * Class Event
  *
  * database representation of an event
  *
- * @package Netresearch\Epayments\Model
- * @author Paul Siedler <paul.siedler@netresearch.de>
- * @link http://www.netresearch.de/
+ * @package Ingenico\Connect\Model
  */
 class Event extends \Magento\Framework\Model\AbstractModel
 {
 
-    protected $_eventPrefix = 'netresearch_epayments_event';
+    protected $_eventPrefix = 'ingenico_epayments_event';
 
     /**
      * @var EventInterfaceFactory

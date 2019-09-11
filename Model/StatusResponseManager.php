@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model;
+namespace Ingenico\Connect\Model;
 
 use Ingenico\Connect\Sdk\Domain\Capture\CaptureResponse;
 use Ingenico\Connect\Sdk\Domain\Definitions\AbstractOrderStatus;
@@ -12,12 +12,12 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\Order\Payment;
-use Netresearch\Epayments\Model\Transaction\TransactionManager;
+use Ingenico\Connect\Model\Transaction\TransactionManager;
 
 /**
  * Class StatusResponseManager
  *
- * @package Netresearch\Epayments\Model
+ * @package Ingenico\Connect\Model
  */
 class StatusResponseManager implements StatusResponseManagerInterface
 {

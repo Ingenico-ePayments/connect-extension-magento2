@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\WxTransfer;
+namespace Ingenico\Connect\WxTransfer;
 
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;

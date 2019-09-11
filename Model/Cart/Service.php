@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Cart;
+namespace Ingenico\Connect\Model\Cart;
 
 use Magento\Bundle\Model\Product\Type as Bundle;
 use Magento\Catalog\Api\ProductRepositoryInterface;

@@ -1,10 +1,10 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Order;
+namespace Ingenico\Connect\Model\Order;
 
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Sales\Api\Data\OrderInterface;
-use Netresearch\Epayments\Model\ConfigInterface;
+use Ingenico\Connect\Model\ConfigInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\Event\Manager;
 

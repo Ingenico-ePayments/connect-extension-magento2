@@ -1,14 +1,14 @@
 <?php
 
-namespace Netresearch\Epayments\Gateway;
+namespace Ingenico\Connect\Gateway;
 
 use Magento\Framework\Registry;
 use Magento\Payment\Gateway\Config\ValueHandlerInterface;
 use Magento\Sales\Model\Order\Creditmemo;
 use Magento\Sales\Model\Order\Payment;
-use Netresearch\Epayments\Model\Config;
-use Netresearch\Epayments\Model\Ingenico\StatusInterface;
-use Netresearch\Epayments\Model\StatusResponseManager;
+use Ingenico\Connect\Model\Config;
+use Ingenico\Connect\Model\Ingenico\StatusInterface;
+use Ingenico\Connect\Model\StatusResponseManager;
 
 class CanRefund implements ValueHandlerInterface
 {

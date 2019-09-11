@@ -1,69 +1,73 @@
-Netresearch Epayments Extension
+Ingenico ePayments Connect Extension for Magento 2
 =====================
-Payment extension for processing the Magento order workflow via the Ingenico ePayments
+Payment extension for processing the Magento order workflow via the Ingenico ePayments Connect API
+
+Requirements
+------------
+To use this extension you need to have an Ingenico ePayments account.
 
 Compatibility
 -------------
-- Magento >= 2.2.6, >= 2.3.0
+This module is compatible with the following versions of Magento:
+
+- **2.2**: 2.2.6 and upward
+- **2.3**: 2.3.0 and upward
 
 Installation Instructions
 -------------------------
 
 ##### Install module 
 
-Copy (do not unzip) the package into a folder that is accessible by Composer.
+Installation via Composer requires the [Magento Composer Installer](https://github.com/Cotya/magento-composer-installer) to be in place.
 
-Add repository to your `composer.json` by running the following command: 
+Add the repository to your `composer.json` by running the following command:
 
-    composer config repositories.epayments artifact /path/to/folder/with/zip
+    composer config repositories.ingenico_connect git https://github.com/Ingenico-ePayments/connect-extension-magento2.git
 
-**Important:** the path in the above command is absolute, i.e. starting at the server (Linux) root.
-    
-Add required module:
+Add the required Composer module:
 
-    composer require nrepayments/module-epayments-m2
-    composer update
+    composer require ingenico-epayments/connect-extension-magento2
 
 ##### Configure module 
-1. In magento root dir run command **php bin/magento setup:upgrade** 
-2. Open Magento Admin > Stores > Configuration > Sales > Ingenico ePayments 
-3. Set values 
-    * General > Enabled = Yes 
-    * General > Title = Ingenico ePayments
-    * Account Settings > API Endpoint and API Endpoint (Secondary) according to https://epayments-api.developer-ingenico.com/s2sapi/v1/en_US/php/endpoints.html
-    * Account Settings > API Key = **Configuration Center provides the value**
-    * Account Settings > API Secret = **Configuration Center provides the value**
-    * Account Settings > MID (Merchant id) = **Configuration Center provides the value**
-    * Account Settings > Hosted Checkout Subdomain = can be configured on Configuration Center. By default it is: **'https://payment.'**
-4. Save Config 
-5. In magento root dir run command **php bin/magento cache:clean**
+
+1. In the Magento root directory execute `php bin/magento module:enable Ingenico_Connect`
+2. In the Magento root directory execute `php bin/magento setup:upgrade` 
+3. Open Magento Admin > Stores > Configuration > Sales > Ingenico ePayments 
+4. Set values:
+    * General section:
+        * Enabled = Yes 
+        * Title = _(Enter your preferred name to display in the checkout)_
+    * Account Settings section:
+        * API Endpoint and API Endpoint (Secondary) according to <https://epayments-api.developer-ingenico.com/s2sapi/v1/en_US/php/endpoints.html>
+        * API Key = **Configuration Center provides the value**
+        * API Secret = **Configuration Center provides the value**
+        * MID (Merchant ID) = **Configuration Center provides the value**
+        * Hosted Checkout Subdomain = can be configured on Configuration Center. By default it is: **'https://payment.'**
+    * Webhook Settings section:
+        * Webhooks Key ID = **Configuration Center provides the value**
+        * Webhooks Secret Key = **Configuration Center provides the value**
+5. Save Config 
+6. In the Magento root directory execute `php bin/magento cache:clean`
 
 ##### Test module  
 
-1. Open Magento frontend 
-2. Add product to cart  
-3. Proceed to checkout page 
-4. On "Payment Method" page click radio button "Ingenico ePayments"
-5. Available payment methods under the title 'Ingenico ePayments 'will be shown (PayPal, Visa, etc.) 
+1. Open the Magento frontend 
+2. Add a product to the cart  
+3. Proceed to the checkout page 
+4. On the "Payment Method" section select "Ingenico ePayments"
+5. The available payment methods (PayPal, Visa, etc.) should be shown under the title  
+ 
+##### Upgrade instructions
+
+If you are upgrading from a version prior to 2.0.0, please read the [upgrade instructions](doc/UPGRADE.md).
  
 Support
 -------
-In case of questions or problems, have a look at the Support Portal (FAQ):
+In case of questions or problems, you can contact the Ingenico support team: <https://www.ingenico.com/epayments/support>
 
-http://ingenico.support.netresearch.de/
-
-If the problem cannot be resolved, you can contact the Ingenico support team: 
-
-https://www.ingenico.com/epayments/support
-
-
-Developer
----------
-Netresearch DTT GmbH - [https://www.netresearch.de](https://www.netresearch.de)
-
-Licence
+License
 -------
-[MIT](https://opensource.org/licenses/MIT)
+Please refer to the included [LICENSE.txt](LICENSE.txt) file.
 
 Copyright
 ---------

@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Order;
+namespace Ingenico\Connect\Model\Order;
 
 use Magento\Sales\Api\Data\OrderInterface;
 

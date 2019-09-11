@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Controller\InlinePayment;
+namespace Ingenico\Connect\Controller\InlinePayment;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
@@ -9,11 +9,11 @@ use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NotFoundException;
 use Magento\Sales\Model\Order;
-use Netresearch\Epayments\Model\Cart\ServiceInterface;
-use Netresearch\Epayments\Model\Config;
-use Netresearch\Epayments\Model\ConfigInterface;
-use Netresearch\Epayments\Model\Ingenico\Action\GetInlinePaymentStatus;
-use Netresearch\Epayments\Model\Ingenico\StatusInterface;
+use Ingenico\Connect\Model\Cart\ServiceInterface;
+use Ingenico\Connect\Model\Config;
+use Ingenico\Connect\Model\ConfigInterface;
+use Ingenico\Connect\Model\Ingenico\Action\GetInlinePaymentStatus;
+use Ingenico\Connect\Model\Ingenico\StatusInterface;
 use Psr\Log\LoggerInterface;
 
 class ProcessReturn extends Action
@@ -78,7 +78,7 @@ class ProcessReturn extends Action
             /** @var string $info */
             $info = $this->ePaymentsConfig->getPaymentStatusInfo(mb_strtolower($ingenicoPaymentStatus));
             if ($ingenicoPaymentStatus === StatusInterface::REJECTED) {
-                throw new LocalizedException($info ? __($info): __('Unknown status'));
+                throw new LocalizedException($info ? __($info) : __('Unknown status'));
             }
             $this->messageManager->addSuccessMessage(__('Payment status:') . ' ' . ($info ?: 'Unknown status'));
 

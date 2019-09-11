@@ -1,7 +1,7 @@
 define([
     'underscore',
     'Magento_Ui/js/form/components/group',
-    'Netresearch_Epayments/js/model/payment/payment-data',
+    'Ingenico_Connect/js/model/payment/payment-data',
     'uiLayout',
 ], function (_, Group, paymentData, layout) {
     'use strict';
@@ -11,7 +11,7 @@ define([
             parent: this.name,
             name: identifier,
             additionalClasses: identifier,
-            component: 'Netresearch_Epayments/js/view/payment/component/product',
+            component: 'Ingenico_Connect/js/view/payment/component/product',
             description: description,
             checked: paymentData.currentProductIdentifier,
             product: product,
@@ -23,8 +23,8 @@ define([
         return {
             parent: this.name,
             name: identifier + '-fields',
-            component: 'Netresearch_Epayments/js/view/payment/component/collection/fields',
-            template: 'Netresearch_Epayments/payment/product/field-collection',
+            component: 'Ingenico_Connect/js/view/payment/component/collection/fields',
+            template: 'Ingenico_Connect/payment/product/field-collection',
             uid: identifier,
             product: product,
             account: account,
@@ -34,7 +34,7 @@ define([
     return Group.extend({
 
         defaults: {
-            template: 'Netresearch_Epayments/payment/product/group',
+            template: 'Ingenico_Connect/payment/product/group',
             isTokenGroup: false,
         },
 

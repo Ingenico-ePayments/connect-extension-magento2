@@ -8,16 +8,16 @@ define(
         'Magento_Checkout/js/view/payment/default',
         'uiLayout',
         'Magento_Checkout/js/action/redirect-on-success',
-        'Netresearch_Epayments/js/model/payment/products',
-        'Netresearch_Epayments/js/model/payment/groups',
-        'Netresearch_Epayments/js/action/get-payment-product',
-        'Netresearch_Epayments/js/action/create-payload',
-        'Netresearch_Epayments/js/action/preload-components',
-        'Netresearch_Epayments/js/model/payment/config',
+        'Ingenico_Connect/js/model/payment/products',
+        'Ingenico_Connect/js/model/payment/groups',
+        'Ingenico_Connect/js/action/get-payment-product',
+        'Ingenico_Connect/js/action/create-payload',
+        'Ingenico_Connect/js/action/preload-components',
+        'Ingenico_Connect/js/model/payment/config',
         'Magento_Checkout/js/model/quote',
-        'Netresearch_Epayments/js/model/payment/payment-data',
-        'Netresearch_Epayments/js/model/validation/product-field',
-        'Netresearch_Epayments/js/model/validation/ingenico'
+        'Ingenico_Connect/js/model/payment/payment-data',
+        'Ingenico_Connect/js/model/validation/product-field',
+        'Ingenico_Connect/js/model/validation/ingenico'
     ],
     function ($, ko, Component, layout, redirectOnSuccessAction, productList,
               productGroups, fetchProduct, createPayload, preloadComponents,
@@ -27,7 +27,7 @@ define(
 
         return Component.extend({
             defaults: {
-                template: 'Netresearch_Epayments/payment/ingenico',
+                template: 'Ingenico_Connect/payment/ingenico',
             },
 
             currentBillingCountry: '',
@@ -52,7 +52,7 @@ define(
                 if (!config.useFullRedirect()) {
                     this.initializeProductList();
                 }
-                
+
                 return this;
             },
 
@@ -84,6 +84,7 @@ define(
                         'ingenico_payment_product_tokenize': paymentData.tokenize().indexOf(id) !== -1,
                         'ingenico_payment_product_method': paymentData.getCurrentPaymentProduct().paymentMethod,
                         'ingenico_payment_payload': paymentData.getCurrentPayload(),
+                        'ingenico_payment_is_payment_account_on_file': window.checkoutConfig.isPaymentAccountOnFile === true,
                     }
                 };
             },
@@ -229,7 +230,7 @@ define(
                         displayArea: 'ingenico-product-groups',
                         parent: this.name,
                         component: 'uiElement',
-                        template: 'Netresearch_Epayments/payment/redirect-notice',
+                        template: 'Ingenico_Connect/payment/redirect-notice',
                         text: 'You can select your payment product in the next step.',
                     });
                 } else {
@@ -237,7 +238,7 @@ define(
                         displayArea: 'ingenico-product-groups',
                         parent: this.name,
                         dataScope: this.name,
-                        component: 'Netresearch_Epayments/js/view/payment/component/collection/groups',
+                        component: 'Ingenico_Connect/js/view/payment/component/collection/groups',
                         productGroups: productGroups.groups,
                     });
                 }

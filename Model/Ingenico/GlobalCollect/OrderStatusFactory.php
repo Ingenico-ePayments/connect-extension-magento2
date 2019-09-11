@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\GlobalCollect;
+namespace Ingenico\Connect\Model\Ingenico\GlobalCollect;
 
 use Ingenico\Connect\Sdk\Domain\Definitions\AmountOfMoney;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\OrderReferences;
@@ -9,9 +9,9 @@ use Ingenico\Connect\Sdk\Domain\Payment\Definitions\PaymentOutput;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\PaymentStatusOutput;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\RefundOutput;
 use Ingenico\Connect\Sdk\Domain\Refund\Definitions\RefundResult;
-use Netresearch\Epayments\Model\Ingenico\GlobalCollect\Wx\DataRecord;
-use Netresearch\Epayments\Model\Ingenico\GlobalCollect\Wx\PaymentData;
-use Netresearch\Epayments\Model\Ingenico\StatusInterface;
+use Ingenico\Connect\Model\Ingenico\GlobalCollect\Wx\DataRecord;
+use Ingenico\Connect\Model\Ingenico\GlobalCollect\Wx\PaymentData;
+use Ingenico\Connect\Model\Ingenico\StatusInterface;
 
 class OrderStatusFactory
 {

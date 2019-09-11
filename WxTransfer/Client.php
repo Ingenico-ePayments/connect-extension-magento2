@@ -1,17 +1,17 @@
 <?php
 
-namespace Netresearch\Epayments\WxTransfer;
+namespace Ingenico\Connect\WxTransfer;
 
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\RemoteServiceUnavailableException;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
-use Netresearch\Epayments\Model\ConfigInterface;
+use Ingenico\Connect\Model\ConfigInterface;
 
 /**
  * Class Client
- * @package Netresearch\Epayments\WxTransfer
+ * @package Ingenico\Connect\WxTransfer
  */
 class Client implements ClientInterface
 {

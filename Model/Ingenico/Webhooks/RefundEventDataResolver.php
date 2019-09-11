@@ -1,8 +1,8 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\Webhooks;
+namespace Ingenico\Connect\Model\Ingenico\Webhooks;
 
-use Netresearch\Epayments\Model\Ingenico\MerchantReference;
+use Ingenico\Connect\Model\Ingenico\MerchantReference;
 
 class RefundEventDataResolver implements EventDataResolverInterface
 {

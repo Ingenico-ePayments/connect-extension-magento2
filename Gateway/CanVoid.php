@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Gateway;
+namespace Ingenico\Connect\Gateway;
 
 class CanVoid extends AbstractValueHandler
 {

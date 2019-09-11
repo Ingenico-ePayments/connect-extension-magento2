@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Transaction;
+namespace Ingenico\Connect\Model\Transaction;
 
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
@@ -11,7 +11,7 @@ use Magento\Sales\Model\Order\Payment\Transaction;
 /**
  * Class TransactionManager
  *
- * @package Netresearch\Epayments\Model\Transaction
+ * @package Ingenico\Connect\Model\Transaction
  */
 class TransactionManager
 {

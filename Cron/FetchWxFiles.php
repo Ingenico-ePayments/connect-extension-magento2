@@ -1,9 +1,9 @@
 <?php
 
-namespace Netresearch\Epayments\Cron;
+namespace Ingenico\Connect\Cron;
 
 use Magento\Store\Model\StoreManagerInterface;
-use Netresearch\Epayments\Cron\FetchWxFiles\ProcessorInterface;
+use Ingenico\Connect\Cron\FetchWxFiles\ProcessorInterface;
 
 class FetchWxFiles
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Netresearch\Epayments\Model\Ingenico\GlobalCollect;
+namespace Ingenico\Connect\Model\Ingenico\GlobalCollect;
 
 class ProductMapper
 {

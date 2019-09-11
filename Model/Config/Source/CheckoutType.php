@@ -2,17 +2,14 @@
 /**
  * See LICENSE.md for license details.
  */
-namespace Netresearch\Epayments\Model\Config\Source;
+namespace Ingenico\Connect\Model\Config\Source;
 
-use Netresearch\Epayments\Model\Config;
+use Ingenico\Connect\Model\Config;
 
 /**
  * Class CheckoutType
  *
- * @package Netresearch\Epayments\Model\Backend\Config\Source
- * @author Max Melzer <max.melzer@netresearch.de>
- * @copyright 2018 Netresearch GmbH & Co. KG
- * @link http://www.netresearch.de/
+ * @package Ingenico\Connect\Model\Backend\Config\Source
  */
 class CheckoutType implements \Magento\Framework\Option\ArrayInterface
 {
