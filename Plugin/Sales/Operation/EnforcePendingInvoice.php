@@ -31,7 +31,7 @@ class EnforcePendingInvoice
             $invoice = $result->getCreatedInvoice();
         }
 
-        if ($result->getAdditionalInformation(Config::PAYMENT_STATUS_KEY) === StatusInterface::CAPTURE_REQUESTED
+        if ($this->isNotPaidInvoice($result)
             && $result->getAdditionalInformation(Config::PRODUCT_PAYMENT_METHOD_KEY) === 'card'
         ) {
             /**
@@ -46,5 +46,19 @@ class EnforcePendingInvoice
         }
 
         return $result;
+    }
+
+    /**
+     * Checks if invoice is actually paid on Ingenico side by payment status from response object
+     *
+     * @param OrderPaymentInterface|Payment $payment
+     * @return bool
+     */
+    protected function isNotPaidInvoice(OrderPaymentInterface $result)
+    {
+        return in_array(
+            $result->getAdditionalInformation(Config::PAYMENT_STATUS_KEY),
+            [StatusInterface::CAPTURE_REQUESTED, StatusInterface::REDIRECTED]
+        );
     }
 }
