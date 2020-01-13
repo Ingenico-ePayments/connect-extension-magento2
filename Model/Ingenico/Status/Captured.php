@@ -51,7 +51,7 @@ class Captured implements HandlerInterface
         /** @var \Magento\Sales\Model\Order\Payment $payment */
         $payment = $order->getPayment();
 
-        $captureTransaction = $this->statusResponseManager->getTransactionBy($ingenicoStatus->id);
+        $captureTransaction = $this->statusResponseManager->getTransactionBy($ingenicoStatus->id, $payment);
 
         if ($captureTransaction !== null) {
             $currentCaptureStatus = $this->statusResponseManager->get($payment, $ingenicoStatus->id);

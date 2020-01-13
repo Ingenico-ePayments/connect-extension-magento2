@@ -42,10 +42,10 @@ interface StatusResponseManagerInterface
     /**
      * If the transaction is not found, this will return an empty transaction object or null.
      *
-     * @param string $txnId
+     * @param string $transactionId
      * @return \Magento\Sales\Api\Data\TransactionInterface|null
      */
-    public function getTransactionBy($txnId);
+    public function getTransactionBy($transactionId, \Magento\Payment\Model\InfoInterface $payment);
 
     /**
      * Normalize values to be displayed in transaction info tab

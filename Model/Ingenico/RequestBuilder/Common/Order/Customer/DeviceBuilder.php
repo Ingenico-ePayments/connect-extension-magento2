@@ -7,6 +7,7 @@ use Ingenico\Connect\Sdk\Domain\Payment\Definitions\CustomerDevice;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\CustomerDeviceFactory;
 use Magento\Framework\App\Request\Http;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Sales\Api\Data\OrderInterface;
 
 class DeviceBuilder
 {
@@ -35,7 +36,7 @@ class DeviceBuilder
         $this->request = $request;
     }
 
-    public function create(): CustomerDevice
+    public function create(OrderInterface $order): CustomerDevice
     {
         $customerDevice = $this->customerDeviceFactory->create();
         $customerDevice->browserData = $this->browserDataBuilder->create();
@@ -45,6 +46,8 @@ class DeviceBuilder
         } catch (LocalizedException $exception) {
             // Do nothing
         }
+
+        $customerDevice->ipAddress = $order->getRemoteIp();
 
         return $customerDevice;
     }

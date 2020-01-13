@@ -2,7 +2,11 @@
 
 namespace Ingenico\Connect\Model\Ingenico\RequestBuilder\Common;
 
+use Ingenico\Connect\Helper\Data as DataHelper;
+use Ingenico\Connect\Model\ConfigInterface;
+use Ingenico\Connect\Model\Ingenico\MerchantReference;
 use Ingenico\Connect\Model\Ingenico\RequestBuilder\Common\Order\CustomerBuilder;
+use Ingenico\Connect\Model\Ingenico\RequestBuilder\Common\Order\ShippingBuilder;
 use Ingenico\Connect\Model\Ingenico\RequestBuilder\Common\Order\ShoppingCartBuilder;
 use Ingenico\Connect\Sdk\Domain\Definitions\AmountOfMoneyFactory;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\AdditionalOrderInputFactory;
@@ -11,9 +15,6 @@ use Ingenico\Connect\Sdk\Domain\Payment\Definitions\OrderReferencesFactory;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\OrderTypeInformationFactory;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Sales\Model\Order;
-use Ingenico\Connect\Helper\Data as DataHelper;
-use Ingenico\Connect\Model\ConfigInterface;
-use Ingenico\Connect\Model\Ingenico\MerchantReference;
 
 /**
  * Class OrderBuilder
@@ -71,6 +72,11 @@ class OrderBuilder
     private $merchantReference;
 
     /**
+     * @var ShippingBuilder
+     */
+    private $shippingBuilder;
+
+    /**
      * OrderBuilder constructor.
      *
      * @param ConfigInterface $ePaymentsConfig
@@ -94,6 +100,7 @@ class OrderBuilder
         OrderReferencesFactory $orderReferencesFactory,
         AdditionalOrderInputFactory $additionalOrderInputFactory,
         OrderTypeInformationFactory $orderTypeInformationFactory,
+        ShippingBuilder $shippingBuilder,
         MerchantReference $merchantReference
     ) {
         $this->ePaymentsConfig = $ePaymentsConfig;
@@ -106,6 +113,7 @@ class OrderBuilder
         $this->additionalOrderInputFactory = $additionalOrderInputFactory;
         $this->orderTypeInformationFactory = $orderTypeInformationFactory;
         $this->merchantReference = $merchantReference;
+        $this->shippingBuilder = $shippingBuilder;
     }
 
     /**
@@ -122,6 +130,7 @@ class OrderBuilder
         $ingenicoOrder->shoppingCart = $this->shoppingCartBuilder->create($order);
         $ingenicoOrder->references = $this->getReferences($order);
         $ingenicoOrder->additionalInput = $this->getAdditionalInput($order);
+        $ingenicoOrder->shipping = $this->shippingBuilder->create($order);
 
         return $ingenicoOrder;
     }

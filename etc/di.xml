@@ -246,13 +246,14 @@
         </arguments>
     </type>
 
-    <type name="Ingenico\Connect\Model\Ingenico\Status\CaptureRequested">
-        <plugin name="CaptureRequestedPlugin" type="Ingenico\Connect\Plugin\Model\Ingenico\Status\CaptureRequestedPlugin"/>
+    <type name="Magento\Sales\Model\Order\Payment\State\AuthorizeCommand">
+        <plugin name="UpdateOrderStatus" type="Ingenico\Connect\Plugin\Magento\Sales\Model\Order\Payment\State\AuthorizeCommand"/>
     </type>
 
-    <type name="Magento\Sales\Model\Order\Payment\Operations\CaptureOperation">
-        <plugin name="EnforcePendingInvoicePlugin" type="Ingenico\Connect\Plugin\Sales\Operation\EnforcePendingInvoice"/>
+    <type name="Magento\Sales\Model\Order\Payment\State\CaptureCommand">
+        <plugin name="UpdateOrderStatus" type="Ingenico\Connect\Plugin\Magento\Sales\Model\Order\Payment\State\CaptureCommand"/>
     </type>
+
     <type name="Ingenico\Connect\Controller\HostedCheckoutPage\ProcessReturn">
         <arguments>
             <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>

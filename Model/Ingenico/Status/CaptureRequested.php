@@ -28,8 +28,10 @@ class CaptureRequested implements HandlerInterface
             throw new LocalizedException(__('Unknown order status.'));
         }
 
-        $payment->setIsTransactionPending(true);
-        $payment->setIsTransactionClosed(false);
+        $payment->setIsTransactionPending(false);
+        $payment->setIsTransactionClosed(true);
+        $order->setState(Order::STATE_PROCESSING);
+        $order->setStatus($order->getConfig()->getStateDefaultStatus(Order::STATE_PROCESSING));
         $payment->registerCaptureNotification(Data::reformatMagentoAmount($amount));
     }
 }

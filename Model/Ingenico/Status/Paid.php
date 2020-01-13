@@ -50,9 +50,10 @@ class Paid implements HandlerInterface
      */
     public function resolveStatus(OrderInterface $order, AbstractOrderStatus $ingenicoStatus)
     {
+        /** @var \Magento\Sales\Model\Order\Payment $payment */
         $payment = $order->getPayment();
         $currentPaymentStatus = '';
-        $captureTransaction = $this->statusResponseManager->getTransactionBy($ingenicoStatus->id);
+        $captureTransaction = $this->statusResponseManager->getTransactionBy($ingenicoStatus->id, $payment);
         if ($captureTransaction !== null) {
             $currentCaptureStatus = $this->statusResponseManager->get($payment, $ingenicoStatus->id);
             $currentPaymentStatus = $currentCaptureStatus->status;

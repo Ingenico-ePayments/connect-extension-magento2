@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 2.1.0 - 2020-01-13
+
+### Changed
+
+- In previous versions, the "pending payment" status was ambiguous: it could either mean that the customer is still in the payment process or that an action of the merchant is required (like a capture for example). From this version onward:
+    - If an action is required by the customer the default order status will be "pending".
+    - If an action is required by the merchant the default order status will be "pending payment".
+- Added a default configuration settings for "amount of days to cancel stale orders" (set to 3).
+- Stale orders will now be cancelled if their status is "pending" instead of "pending payment".
+
+### Fixed
+
+- In case of a `REDIRECT` the order will now be set to "pending" instead of "processing". This goes for all redirect cases: challenges, hosted checkouts, payment methods that are redirect-based, etc.
+- After a successful challenge the order will be set to "processing" for direct capture and "pending payment" for a delayed settlement.
+- Previously, order amount paid and order amount due did not reflect the paid-status of the invoice / payment. This is now fixed.
+- Previously, the invoice status did not reflect the payment status. This is now fixed.
+    - A status of `PAID`, `CAPTURED` and `CAPTURE_REQUESTED` now mark an invoice as paid.
+- Payment transactions get closed properly.
+- Fixes a date formatting issue that would make the "cancel stale orders" feature too greedy.
+
 ## 2.0.0 - 2019-09-11
 
 ### Changed

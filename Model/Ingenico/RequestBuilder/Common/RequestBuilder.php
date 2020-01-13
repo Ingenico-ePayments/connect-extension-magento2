@@ -43,11 +43,6 @@ class RequestBuilder
     private $orderBuilder;
 
     /**
-     * @var FraudFieldsBuilder
-     */
-    private $fraudFieldsBuilder;
-
-    /**
      * @var MerchantBuilder
      */
     private $merchantBuilder;
@@ -57,14 +52,12 @@ class RequestBuilder
         ProductDecoratorPool $productDecoratorPool,
         ConfigInterface $config,
         OrderBuilder $orderBuilder,
-        FraudFieldsBuilder $fraudFieldsBuilder,
         MerchantBuilder $merchantBuilder
     ) {
         $this->methodDecoratorPool = $methodDecoratorPool;
         $this->productDecoratorPool = $productDecoratorPool;
         $this->config = $config;
         $this->orderBuilder = $orderBuilder;
-        $this->fraudFieldsBuilder = $fraudFieldsBuilder;
         $this->merchantBuilder = $merchantBuilder;
     }
 
@@ -75,7 +68,6 @@ class RequestBuilder
      */
     public function create($ingenicoRequest, Order $order)
     {
-        $ingenicoRequest->fraudFields = $this->fraudFieldsBuilder->create();
         $ingenicoRequest->order = $this->orderBuilder->create($order);
         $ingenicoRequest->merchant = $this->merchantBuilder->create($order);
 

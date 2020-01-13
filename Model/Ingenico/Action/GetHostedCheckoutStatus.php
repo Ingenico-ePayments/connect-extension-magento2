@@ -157,17 +157,10 @@ class GetHostedCheckoutStatus implements ActionInterface
             }
         }
 
-        $this->orderRepository->save($order);
-
-        // Failsafe: If no transaction was created, but we know the payId reference, create a payment transaction
-        /** @var Order\Payment $payment */
-        $payment = $order->getPayment();
-        $payId = $statusResponse->createdPaymentOutput->payment->id;
-        if ($this->statusResponseManager->getTransactionBy($payId) === null) {
-            $this->statusResponseManager->set($payment, $payId, $statusResponse->createdPaymentOutput->payment);
-            /** @var Order\Payment\Transaction $transaction */
-            $transaction = $payment->addTransaction(Order\Payment\Transaction::TYPE_PAYMENT);
-            $this->statusResponseManager->save($transaction);
+        try {
+            $this->orderRepository->save($order);
+        } catch (\Exception $exception) {
+            $this->logger->error($exception->getMessage());
         }
 
         return $order;
@@ -183,9 +176,9 @@ class GetHostedCheckoutStatus implements ActionInterface
     {
         /** \Ingenico\Connect\Sdk\Domain\Hostedcheckout\CreateHostedCheckoutResponse $statusResponse */
         $statusResponse = $this->client->getIngenicoClient()
-                                       ->merchant($this->ePaymentsConfig->getMerchantId())
-                                       ->hostedcheckouts()
-                                       ->get($hostedCheckoutId);
+            ->merchant($this->ePaymentsConfig->getMerchantId())
+            ->hostedcheckouts()
+            ->get($hostedCheckoutId);
 
         return $statusResponse;
     }
@@ -269,7 +262,7 @@ class GetHostedCheckoutStatus implements ActionInterface
         $payment = $order->getPayment();
         if (isset($statusResponse->createdPaymentOutput->displayedData)
             && $statusResponse->createdPaymentOutput->displayedData->displayedDataType
-               == self::PAYMENT_OUTPUT_SHOW_INSTRUCTIONS
+            == self::PAYMENT_OUTPUT_SHOW_INSTRUCTIONS
         ) {
             $payment->setAdditionalInformation(
                 Config::PAYMENT_SHOW_DATA_KEY,

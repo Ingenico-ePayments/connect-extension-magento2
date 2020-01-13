@@ -51,8 +51,8 @@ class Initialize implements CommandInterface
             $this->hostedCheckout->create($order);
 
             $stateObject = $commandSubject['stateObject'];
-            $stateObject->setState(Order::STATE_PENDING_PAYMENT);
-            $stateObject->setStatus(Order::STATE_PENDING_PAYMENT);
+            $stateObject->setState(Order::STATE_NEW);
+            $stateObject->setStatus('pending');
             $stateObject->setIsNotified(false);
         } catch (ResponseException $e) {
             $this->apiErrorHandler->handleError($e);

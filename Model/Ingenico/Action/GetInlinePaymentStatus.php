@@ -13,9 +13,13 @@ use Ingenico\Connect\Model\Ingenico\Status\ResolverInterface;
 use Ingenico\Connect\Model\Order\OrderServiceInterface;
 use Ingenico\Connect\Model\StatusResponseManager;
 use Ingenico\Connect\Model\Transaction\TransactionManager;
+use Psr\Log\LoggerInterface;
 
 class GetInlinePaymentStatus extends AbstractAction implements ActionInterface
 {
+    /** @var LoggerInterface */
+    private $logger;
+
     /**
      * @var ResolverInterface
      */
@@ -49,6 +53,7 @@ class GetInlinePaymentStatus extends AbstractAction implements ActionInterface
      * @param MerchantReference $merchantReference
      */
     public function __construct(
+        LoggerInterface $logger,
         StatusResponseManager $statusResponseManager,
         ClientInterface $ingenicoClient,
         TransactionManager $transactionManager,
@@ -58,6 +63,7 @@ class GetInlinePaymentStatus extends AbstractAction implements ActionInterface
         OrderRepositoryInterface $orderRepository,
         MerchantReference $merchantReference
     ) {
+        $this->logger = $logger;
         $this->statusResolver = $resolver;
         $this->orderService = $orderService;
         $this->orderRepository = $orderRepository;
@@ -91,7 +97,12 @@ class GetInlinePaymentStatus extends AbstractAction implements ActionInterface
         $order = $this->orderService->getByIncrementId($incrementId);
         $this->statusResolver->resolve($order, $response);
         $order->addRelatedObject($order->getPayment());
-        $this->orderRepository->save($order);
+
+        try {
+            $this->orderRepository->save($order);
+        } catch (\Exception $exception) {
+            $this->logger->error($exception->getMessage());
+        }
 
         return $order;
     }

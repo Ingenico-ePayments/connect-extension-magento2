@@ -90,7 +90,7 @@ class RetrievePayment extends AbstractAction implements ActionInterface
         $ingenicoPaymentId = $payment->getAdditionalInformation(Config::PAYMENT_ID_KEY);
         if (!$ingenicoPaymentId && empty($orderTransactions)) {
             try {
-                $orderWasUpdated = $this->updateHostedCheckoutStatus($order);
+                return $this->updateHostedCheckoutStatus($order);
             } catch (\Exception $e) {
                 throw new LocalizedException(__('Order is not linked with Ingenico ePayments orders.'));
             }

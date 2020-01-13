@@ -65,6 +65,9 @@
             <fraud>
                 <email_template>fraud_email</email_template>
             </fraud>
+            <pending_orders_cancellation>
+                <days>3</days>
+            </pending_orders_cancellation>
         </ingenico_epayments>
     </default>
 </config>

@@ -69,7 +69,7 @@ class Collection extends \Magento\Sales\Model\ResourceModel\Order\Collection
         $this->addFieldToFilter(
             'created_at',
             [
-                'lt' => $date->format(DateTime::DATETIME_INTERNAL_FORMAT)
+                'lt' => $date->format(DateTime::DATETIME_PHP_FORMAT),
             ]
         );
 
@@ -83,7 +83,7 @@ class Collection extends \Magento\Sales\Model\ResourceModel\Order\Collection
      */
     private function buildFilter($scopeId)
     {
-        $this->addFieldToFilter('status', Order::STATE_PENDING_PAYMENT);
+        $this->addFieldToFilter('status', 'pending');
         $this->addFieldToFilter('method', ConfigProvider::CODE);
         $this->addFieldToFilter('store_id', $scopeId);
 

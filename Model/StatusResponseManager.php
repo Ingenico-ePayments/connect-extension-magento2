@@ -8,11 +8,10 @@ use Ingenico\Connect\Sdk\Domain\Errors\Definitions\APIError;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment as IngenicoPayment;
 use Ingenico\Connect\Sdk\Domain\Payment\PaymentResponse;
 use Ingenico\Connect\Sdk\Domain\Refund\Definitions\RefundResult;
-use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\Order\Payment;
-use Ingenico\Connect\Model\Transaction\TransactionManager;
+use Magento\Sales\Model\Order\Payment\Transaction\Repository as TransactionRepository;
 
 /**
  * Class StatusResponseManager
@@ -22,27 +21,19 @@ use Ingenico\Connect\Model\Transaction\TransactionManager;
 class StatusResponseManager implements StatusResponseManagerInterface
 {
     /**
-     * @var TransactionManager
+     * @var TransactionRepository
      */
-    private $transactionManager;
-
-    /**
-     * @var SearchCriteriaBuilder
-     */
-    private $searchCriteriaBuilder;
+    private $transactionRepository;
 
     /**
      * StatusResponseManager constructor.
      *
-     * @param TransactionManager $transactionManager
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param TransactionRepository $transactionRepository
      */
     public function __construct(
-        TransactionManager $transactionManager,
-        SearchCriteriaBuilder $searchCriteriaBuilder
+        TransactionRepository $transactionRepository
     ) {
-        $this->transactionManager = $transactionManager;
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->transactionRepository = $transactionRepository;
     }
 
     /**
@@ -57,9 +48,10 @@ class StatusResponseManager implements StatusResponseManagerInterface
     {
         $orderStatus = false;
         /** @var Payment\Transaction $transaction */
-        $transaction = $this->transactionManager->retrieveTransaction($transactionId);
+        $transaction = $this->transactionRepository
+            ->getByTransactionId($transactionId, $payment->getId(), $payment->getOrder()->getId());
 
-        if ($transaction !== null && $classPath = $transaction->getAdditionalInformation(self::TRANSACTION_CLASS_KEY)) {
+        if ($transaction && $classPath = $transaction->getAdditionalInformation(self::TRANSACTION_CLASS_KEY)) {
             /** @var IngenicoPayment $orderStatus */
             $orderStatus = new $classPath();
             $orderStatus = $orderStatus->fromJson(
@@ -96,7 +88,8 @@ class StatusResponseManager implements StatusResponseManagerInterface
         }
 
         /** @var Payment\Transaction $transaction */
-        $transaction = $this->getTransactionBy($transactionId);
+        $transaction = $this->transactionRepository
+            ->getByTransactionId($transactionId, $payment->getId(), $payment->getOrder()->getId());
         $objectClassName = get_class($orderStatus);
         $objectJson = $orderStatus->toJson();
 
@@ -107,7 +100,6 @@ class StatusResponseManager implements StatusResponseManagerInterface
                 Payment\Transaction::RAW_DETAILS,
                 $this->getVisibleInfo($orderStatus)
             );
-            $this->transactionManager->updateTransaction($transaction);
             $payment->getOrder()->addRelatedObject($transaction);
         } else {
             // If transaction does not (yet) exist
@@ -155,13 +147,15 @@ class StatusResponseManager implements StatusResponseManagerInterface
      * @param string $txnId
      * @return \Magento\Sales\Api\Data\TransactionInterface|null
      */
-    public function getTransactionBy($txnId)
+    public function getTransactionBy($transactionId, InfoInterface $payment)
     {
-        return $this->transactionManager->retrieveTransaction($txnId);
+        return $this->transactionRepository
+            ->getByTransactionId($transactionId, $payment->getId(), $payment->getOrder()->getId());
     }
 
     /**
      * Normalize values to be displayed in transaction info tab
+     *
      * @param mixed $info
      * @return mixed
      */
@@ -185,6 +179,6 @@ class StatusResponseManager implements StatusResponseManagerInterface
      */
     public function save(\Magento\Sales\Api\Data\TransactionInterface $transaction)
     {
-        $this->transactionManager->updateTransaction($transaction);
+        $this->transactionRepository->save($transaction);
     }
 }
