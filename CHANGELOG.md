@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 2.1.2 - 2020-02-17
+
+### Changed
+
+- Review the scope of the system configuration settings.
+- Added required property to outgoing payments requests for merchants based in Brazil.
+- Update PHP SDK to v6.5.0
+
+### Fixed
+
+- Fixes issue where company information VAT number was not populated in outgoing request.
+- Fixes issue where tokens were not saved for registered customers when using the hosted checkout.
+- Fixes issue that when a payment response contained more than one token it would not be stored correctly in Magento.
+- Fixes issue where milliseconds from webhooks were not saved in the database.
+
 ## 2.1.1 - 2020-01-13
 
 ### Fixed

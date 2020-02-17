@@ -131,8 +131,17 @@
             <argument name="logger" xsi:type="object">ingenicoRequestLogger</argument>
         </arguments>
     </type>
-
     <type name="Ingenico\Connect\Model\Ingenico\Webhooks">
+        <arguments>
+            <argument name="logger" xsi:type="object">ingenicoRequestLogger</argument>
+        </arguments>
+    </type>
+    <type name="Ingenico\Connect\Model\Ingenico\Action\HostedCheckout\TokenManagement">
+        <arguments>
+            <argument name="logger" xsi:type="object">ingenicoRequestLogger</argument>
+        </arguments>
+    </type>
+    <type name="Ingenico\Connect\Model\Ingenico\Client\Communicator">
         <arguments>
             <argument name="logger" xsi:type="object">ingenicoRequestLogger</argument>
         </arguments>

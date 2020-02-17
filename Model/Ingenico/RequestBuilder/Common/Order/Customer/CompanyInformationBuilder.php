@@ -32,15 +32,22 @@ class CompanyInformationBuilder
     public function create(OrderInterface $order): CompanyInformation
     {
         $companyInformation = $this->companyInformationFactory->create();
-        $companyInformation->vatNumber = $order->getCustomerTaxvat();
-
-        if ($order->getCustomerTaxvat() !== null || !$order->getCustomerId()) {
+        $companyInformation->vatNumber = $this->getOrderTaxvat($order);
+        if ($companyInformation->vatNumber !== null || !$order->getCustomerId()) {
             return $companyInformation;
         }
 
         $companyInformation->vatNumber = $this->getCustomerTaxvat((int) $order->getCustomerId());
-
         return $companyInformation;
+    }
+
+    protected function getOrderTaxvat(OrderInterface $order): ?string
+    {
+        if ($order->getBillingAddress() && $order->getBillingAddress()->getVatId() !== '') {
+            return $order->getBillingAddress()->getVatId();
+        }
+
+        return null;
     }
 
     protected function getCustomerTaxvat(int $customerId): ?string

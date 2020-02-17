@@ -2,6 +2,7 @@
 
 namespace Ingenico\Connect\Model\Ingenico\Action;
 
+use Ingenico\Connect\Model\Ingenico\Action\HostedCheckout\TokenManagement;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\GetHostedCheckoutResponse;
 use Magento\Framework\App\Request\Http;
 use Magento\Framework\Exception\LocalizedException;
@@ -14,7 +15,6 @@ use Ingenico\Connect\Model\ConfigInterface;
 use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
 use Ingenico\Connect\Model\Ingenico\MerchantReference;
 use Ingenico\Connect\Model\Ingenico\Status\ResolverInterface;
-use Ingenico\Connect\Model\Ingenico\Token\TokenServiceInterface;
 use Ingenico\Connect\Model\Order\OrderServiceInterface;
 use Ingenico\Connect\Model\StatusResponseManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -64,11 +64,6 @@ class GetHostedCheckoutStatus implements ActionInterface
     private $statusResolver;
 
     /**
-     * @var TokenServiceInterface
-     */
-    private $tokenService;
-
-    /**
      * @var OrderRepository
      */
     private $orderRepository;
@@ -83,24 +78,16 @@ class GetHostedCheckoutStatus implements ActionInterface
      */
     private $merchantReference;
 
-    /** @var StatusResponseManagerInterface */
+    /**
+     * @var StatusResponseManagerInterface
+     */
     private $statusResponseManager;
 
     /**
-     * GetHostedCheckoutStatus constructor.
-     *
-     * @param LoggerInterface $logger
-     * @param ClientInterface $client
-     * @param ConfigInterface $ePaymentsConfig
-     * @param Http $request
-     * @param OrderSender $orderSender
-     * @param ResolverInterface $statusResolver
-     * @param TokenServiceInterface $tokenService
-     * @param OrderRepository $orderRepository
-     * @param OrderServiceInterface $orderService
-     * @param MerchantReference $merchantReference
-     * @param StatusResponseManagerInterface $statusResponseManager
+     * @var TokenManagement
      */
+    private $tokenManagement;
+
     public function __construct(
         LoggerInterface $logger,
         ClientInterface $client,
@@ -108,11 +95,11 @@ class GetHostedCheckoutStatus implements ActionInterface
         Http $request,
         OrderSender $orderSender,
         ResolverInterface $statusResolver,
-        TokenServiceInterface $tokenService,
         OrderRepository $orderRepository,
         OrderServiceInterface $orderService,
         MerchantReference $merchantReference,
-        StatusResponseManagerInterface $statusResponseManager
+        StatusResponseManagerInterface $statusResponseManager,
+        TokenManagement $tokenManagement
     ) {
         $this->logger = $logger;
         $this->client = $client;
@@ -120,11 +107,11 @@ class GetHostedCheckoutStatus implements ActionInterface
         $this->request = $request;
         $this->orderSender = $orderSender;
         $this->statusResolver = $statusResolver;
-        $this->tokenService = $tokenService;
         $this->orderRepository = $orderRepository;
         $this->orderService = $orderService;
         $this->merchantReference = $merchantReference;
         $this->statusResponseManager = $statusResponseManager;
+        $this->tokenManagement = $tokenManagement;
     }
 
     /**
@@ -149,7 +136,7 @@ class GetHostedCheckoutStatus implements ActionInterface
         if ($statusResponse->status === self::PAYMENT_CREATED) {
             $this->checkReturnmac($order);
             $this->processOrder($order, $statusResponse);
-            $this->processTokens($order, $statusResponse);
+            $this->tokenManagement->processTokens($order, $statusResponse);
             try {
                 $this->orderSender->send($order);
             } catch (\Exception $e) {
@@ -275,32 +262,5 @@ class GetHostedCheckoutStatus implements ActionInterface
         $payment->setAdditionalInformation(Config::PAYMENT_ID_KEY, $ingenicoPaymentId);
         $payment->setAdditionalInformation(Config::PAYMENT_STATUS_KEY, $ingenicoPaymentStatus);
         $payment->setAdditionalInformation(Config::PAYMENT_STATUS_CODE_KEY, $ingenicoPaymentStatusCode);
-    }
-
-    /**
-     * @param OrderInterface $order
-     * @param GetHostedCheckoutResponse $statusResponse
-     */
-    private function processTokens($order, $statusResponse)
-    {
-        $tokens = $statusResponse->createdPaymentOutput->tokens;
-        if ($tokens) {
-
-            /** @var int $customerId */
-            $customerId = $order->getCustomerId();
-            /** @var string $paymentProductId */
-            $paymentProductId = $order->getPayment()->getAdditionalInformation(Config::PRODUCT_ID_KEY);
-            if (($customerId < 1) || empty($paymentProductId)) {
-                $this->logger->error(
-                    "Empty value detected: customerId = $customerId, paymentProductId = $paymentProductId"
-                );
-            } else {
-                $this->tokenService->add(
-                    $customerId,
-                    $paymentProductId,
-                    $tokens
-                );
-            }
-        }
     }
 }

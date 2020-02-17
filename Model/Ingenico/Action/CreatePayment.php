@@ -133,9 +133,11 @@ class CreatePayment implements ActionInterface
         CreatePaymentResponse $response
     ) {
         if ($order->getCustomerId() && $response->creationOutput && $response->creationOutput->token) {
-            $tokenString = $response->creationOutput->token;
+            $tokens = array_filter(explode(',', $response->creationOutput->token));
             $productId = $order->getPayment()->getAdditionalInformation(Config::PRODUCT_ID_KEY);
-            $this->tokenService->add($order->getCustomerId(), $productId, $tokenString);
+            foreach ($tokens as $token) {
+                $this->tokenService->add($order->getCustomerId(), $productId, $token);
+            }
         }
     }
 

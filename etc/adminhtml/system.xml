@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-        <section id="ingenico_epayments" translate="label" type="text" sortOrder="500" showInDefault="1" showInWebsite="1" showInStore="1" >
+        <section id="ingenico_epayments" translate="label" type="text" sortOrder="500" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Ingenico ePayments</label>
             <tab>sales</tab>
             <resource>Ingenico_Connect::epayments_config</resource>
             <group id="general" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>General</label>
-                <field id="version" translate="label" type="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="version" translate="label" type="label" sortOrder="10" showInDefault="1">
                     <label>Version</label>
                     <frontend_model>Ingenico\Connect\Block\Adminhtml\System\Config\Field\Version</frontend_model>
                 </field>
-                <field id="active" translate="label" type="Netresearch\ConfigFields\Model\Type\Toggle" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="active" translate="label" type="Netresearch\ConfigFields\Model\Type\Toggle" sortOrder="10" showInDefault="1" showInWebsite="1">
                     <label>Enabled</label>
                     <tooltip>This controls if the payment method is visible in the checkout.</tooltip>
                     <comment><![CDATA[Show payment method in checkout]]></comment>
@@ -22,59 +22,56 @@
             </group>
             <group id="settings" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Account Settings</label>
-                <field id="api_endpoint" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="api_endpoint" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1">
                     <label>API Endpoint</label>
                     <validate>required-entry</validate>
                     <tooltip>You will receive this information from Ingenico.</tooltip>
                     <comment><![CDATA[Available endpoints are listed in the <a target="_blank" href="https://epayments-api.developer-ingenico.com/s2sapi/v1/en_US/php/endpoints.html">API Docs</a>.]]></comment>
                     <backend_model>Ingenico\Connect\Model\Adminhtml\System\Config\Validator\ApiEndPoint</backend_model>
                 </field>
-                <field id="api_endpoint_secondary" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="api_endpoint_secondary" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1">
                     <label>API Endpoint (Secondary)</label>
                     <tooltip>You will receive this information from Ingenico.</tooltip>
                     <comment><![CDATA[Fallback if primary endpoint fails.]]></comment>
                 </field>
-                <field id="api_key" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="api_key" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1">
                     <label>API Key ID</label>
                     <tooltip>You will receive this information from Ingenico.</tooltip>
                     <backend_model>Ingenico\Connect\Model\Config\Backend\ApiKey</backend_model>
                 </field>
-                <field id="api_secret" translate="label" type="obscure" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="api_secret" translate="label" type="obscure" sortOrder="70" showInDefault="1" showInWebsite="1">
                     <label>API Secret</label>
                     <backend_model>\Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                     <tooltip>You will receive this information from Ingenico.</tooltip>
                 </field>
-                <field id="merchant_id" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="merchant_id" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1">
                     <label>MID (Merchant ID)</label>
                     <tooltip>You will receive this information from Ingenico.</tooltip>
                 </field>
-                <field id="descriptor" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="descriptor" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1">
                     <label>Soft Descriptor</label>
                     <tooltip>You will receive this information from Ingenico.</tooltip>
                 </field>
-                <field id="hosted_checkout_subdomain" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="hosted_checkout_subdomain" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1">
                     <label>Hosted Checkout Subdomain</label>
                     <tooltip>You will receive this information from Ingenico.</tooltip>
                 </field>
-                <field id="system_prefix" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="system_prefix" translate="label" type="text" sortOrder="100" showInDefault="1">
                     <label>System Identifier Prefix</label>
                     <tooltip><![CDATA[If you have multiple systems linked to one Ingenico account you might want to set a unique system identifier, so webhook events can be matched to the corresponding shop instance.]]></tooltip>
                     <comment><![CDATA[The entered text will be added as prefix to the order increment id and sent to Ingenico as merchantReference paremeter.]]></comment>
                 </field>
-                <field id="log_all_requests" translate="label" type="Netresearch\ConfigFields\Model\Type\Toggle" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="log_all_requests" translate="label" type="Netresearch\ConfigFields\Model\Type\Toggle" sortOrder="110" showInDefault="1">
                     <label>Log All Requests</label>
                     <frontend_model>\Ingenico\Connect\Block\Adminhtml\System\Config\Field\LogAllRequests</frontend_model>
                     <tooltip>Select if you want to log the communication between Ingenico and your shop.</tooltip>
                 </field>
             </group>
 
-            <group id="checkout" translate="label" type="text" sortOrder="11" showInDefault="1"
-                   showInWebsite="1"
-                   showInStore="0">
+            <group id="checkout" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Checkout Settings</label>
                 <comment>Configuration of the Magento checkout</comment>
-                <field id="inline_payments" translate="label" type="Netresearch\ConfigFields\Model\Type\Radioset" sortOrder="1" showInDefault="1"
-                        showInWebsite="1" showInStore="1">
+                <field id="inline_payments" translate="label" type="Netresearch\ConfigFields\Model\Type\Radioset" sortOrder="1" showInDefault="1" showInWebsite="1">
                     <label>Checkout Type</label>
                     <comment>
                         Using inline payments requires your Magento store to be PCI compliant on level SAQ-A EP.
@@ -90,12 +87,10 @@
                 </field>
             </group>
 
-            <group id="captures" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1"
-                   showInStore="0">
+            <group id="captures" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1">
                 <label>Capture Settings</label>
                 <comment><![CDATA[Configuration of payment capture operations]]></comment>
-                <field id="capture_mode" translate="label" type="Netresearch\ConfigFields\Model\Type\Radioset" sortOrder="1" showInDefault="1"
-                       showInWebsite="1" showInStore="1">
+                <field id="capture_mode" translate="label" type="Netresearch\ConfigFields\Model\Type\Radioset" sortOrder="1" showInDefault="1" showInWebsite="1">
                     <label>Capture mode</label>
                     <tooltip>Select the capture operation mode. Default is 'Delayed Settlement'.</tooltip>
                     <comment>If the current payment product does not support 'Delayed settlement', a direct capture will be performed.</comment>
@@ -103,48 +98,51 @@
                 </field>
             </group>
 
-            <group id="webhook" translate="label" type="text" sortOrder="16" showInDefault="1" showInWebsite="0" showInStore="0">
+            <group id="webhook" translate="label" type="text" sortOrder="16" showInDefault="1" showInWebsite="1">
                 <label>Webhook Settings</label>
-                <field id="webhooks_key_id" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="webhooks_key_id" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1">
                     <label>Webhooks Key ID (set 1)</label>
                     <tooltip>You will receive this information from Ingenico.</tooltip>
                     <backend_model>Ingenico\Connect\Model\Config\Backend\ApiKey</backend_model>
                 </field>
-                <field id="webhooks_secret_key" translate="label" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="webhooks_secret_key" translate="label" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="1">
                     <label>Webhooks Secret Key (set 1)</label>
                     <backend_model>\Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                     <tooltip>You will receive this information from Ingenico.</tooltip>
                 </field>
-                <field id="webhooks_key_id2" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="webhooks_key_id2" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1">
                     <label>Webhooks Key ID (set 2)</label>
                     <comment><![CDATA[Fallback if primary key (set 1) fails.]]></comment>
                     <tooltip>You will receive this information from Ingenico.</tooltip>
                     <backend_model>Ingenico\Connect\Model\Config\Backend\ApiKey</backend_model>
                 </field>
-                <field id="webhooks_secret_key2" translate="label" type="obscure" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="webhooks_secret_key2" translate="label" type="obscure" sortOrder="40" showInDefault="1" showInWebsite="1">
                     <label>Webhooks Secret Key (set 2)</label>
                     <backend_model>\Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                     <comment><![CDATA[Fallback if primary key (set 1) fails.]]></comment>
                     <tooltip>You will receive this information from Ingenico.</tooltip>
                 </field>
             </group>
-            <group id="pending_orders_cancellation" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+
+            <group id="pending_orders_cancellation" translate="label" type="text" sortOrder="20" showInDefault="1">
                 <label>Cancellation of pending orders</label>
-                <field id="days" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="days" translate="label" type="text" sortOrder="10" showInDefault="1">
                     <label>Number of days before cancellation</label>
                     <tooltip>Abandoned orders will be cancelled after this many days.</tooltip>
                     <comment><![CDATA[This requires working Magento Cronjobs!]]></comment>
                 </field>
             </group>
-            <group id="fraud" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+
+            <group id="fraud" translate="label" type="text" sortOrder="30" showInDefault="1">
                 <label>Fraud Notification</label>
-                <field id="manager_email" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="manager_email" translate="label" type="text" sortOrder="10" showInDefault="1">
                     <label>Manager Email</label>
                     <validate>validate-email required-entry</validate>
                     <tooltip>If a possible fraud is detected, a notification will be sent to this email address.</tooltip>
                     <comment><![CDATA[Destination email address for Fraud notifications.]]></comment>
                 </field>
             </group>
+
             <group id="payment_statuses" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Payment statuses</label>
                 <comment><![CDATA[This is list of <strong>payment statuses</strong> and their <strong>definition</strong>.<br />
@@ -222,6 +220,7 @@
                     <validate>required-entry</validate>
                 </field>
             </group>
+
             <group id="payment_method_groups" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Payment Methods Frontend Output</label>
                 <comment><![CDATA[This is a list of <strong>payment methods</strong> by which payment options are grouped in the checkout.<br />
@@ -259,21 +258,22 @@
                     <validate>required-entry</validate>
                 </field>
             </group>
-            <group id="email_settings" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+
+            <group id="email_settings" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1">
                 <label>Customer Notification Email Settings</label>
-                <field id="payment_successful" translate="label" type="Netresearch\ConfigFields\Model\Type\Toggle" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="payment_successful" translate="label" type="Netresearch\ConfigFields\Model\Type\Toggle" sortOrder="10" showInDefault="1" showInWebsite="1">
                     <label>Payment Successful</label>
                 </field>
-                <field id="fraud_suspicion" translate="label" type="Netresearch\ConfigFields\Model\Type\Toggle" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="fraud_suspicion" translate="label" type="Netresearch\ConfigFields\Model\Type\Toggle" sortOrder="20" showInDefault="1" showInWebsite="1">
                     <label>Fraud Suspicion</label>
                 </field>
-                <field id="action_needed" translate="label" type="Netresearch\ConfigFields\Model\Type\Toggle" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="action_needed" translate="label" type="Netresearch\ConfigFields\Model\Type\Toggle" sortOrder="30" showInDefault="1" showInWebsite="1">
                     <label>Customer Action Needed</label>
                 </field>
-                <field id="delayed_settlement" translate="label" type="Netresearch\ConfigFields\Model\Type\Toggle" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="delayed_settlement" translate="label" type="Netresearch\ConfigFields\Model\Type\Toggle" sortOrder="40" showInDefault="1" showInWebsite="1">
                     <label>Delayed Settlement</label>
                 </field>
-                <field id="slow_3rd_party" translate="label" type="Netresearch\ConfigFields\Model\Type\Toggle" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="slow_3rd_party" translate="label" type="Netresearch\ConfigFields\Model\Type\Toggle" sortOrder="50" showInDefault="1" showInWebsite="1">
                     <label>Slow 3rd Party</label>
                 </field>
             </group>

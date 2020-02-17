@@ -7,6 +7,7 @@ use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Framework\Setup\UpgradeSchemaInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class UpgradeSchema
@@ -16,27 +17,41 @@ use Magento\Framework\Setup\UpgradeSchemaInterface;
 class UpgradeSchema implements UpgradeSchemaInterface
 {
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    /**
      * @param SchemaSetupInterface $setup
      * @param ModuleContextInterface $context
      * @throws \Zend_Db_Exception
      */
     public function upgrade(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
-        $setup->startSetup();
-
         if (version_compare($context->getVersion(), '1.0.1') < 0) {
             $this->addWxUpdateColumns($setup);
         }
+
         if (version_compare($context->getVersion(), '1.5.0') < 0) {
             $this->addWebhookEventTable($setup);
         }
+
         if (version_compare($context->getVersion(), '1.5.1') < 0) {
             $this->updateWebhookEventTable($setup);
         }
+
         if (version_compare($context->getVersion(), '2.0.0') < 0) {
             $this->updateAclRolesResourceId($setup);
         }
-        $setup->endSetup();
+
+        if (version_compare($context->getVersion(), '2.1.2', '<')) {
+            $this->updateWebhookEventCreatedAtAttribute($setup);
+        }
     }
 
     /**
@@ -177,6 +192,29 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 ['resource_id' => 'Ingenico_Connect::download_logfile'],
                 'resource_id = "Netresearch_Epayments::download_logfile"'
             );
+        }
+    }
+
+    private function updateWebhookEventCreatedAtAttribute(SchemaSetupInterface $setup)
+    {
+        $tableName = $setup->getTable('epayments_webhook_event');
+        if ($setup->getConnection()->isTableExists($tableName)) {
+            // We need to perform a native query, since Magento's MySQL adapter does not support
+            // setting a length for a timestamp prior before v5.6.4 :
+            $version = $setup->getConnection()->fetchOne('SELECT VERSION()');
+            if (version_compare($version, '5.6.4', '>=')) {
+                $setup->getConnection()->query(
+                    sprintf(
+                        'ALTER TABLE %1$s MODIFY COLUMN %2$s TIMESTAMP(4) NULL COMMENT \'%3$s\';',
+                        $tableName,
+                        EventInterface::CREATED_TIMESTAMP,
+                        'Creation date of event on platform'
+                    )
+                );
+            } else {
+                // phpcs:ignore Generic.Files.LineLength.TooLong
+                $this->logger->warning('MySQL version does not support fractional seconds. Race conditions in webhooks might occur');
+            }
         }
     }
 }

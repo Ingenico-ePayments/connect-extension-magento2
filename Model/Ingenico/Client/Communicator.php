@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ingenico\Connect\Model\Ingenico\Client;
 
+use Exception;
 use Ingenico\Connect\Sdk\CallContext;
 use Ingenico\Connect\Sdk\CommunicatorConfiguration;
-use Ingenico\Connect\Sdk\DataObject;
-use Ingenico\Connect\Sdk\InvalidResponseException;
+use Ingenico\Connect\Sdk\Connection;
 use Ingenico\Connect\Sdk\RequestObject;
 use Ingenico\Connect\Sdk\ResponseClassMap;
+use Psr\Log\LoggerInterface;
 
 class Communicator extends \Ingenico\Connect\Sdk\Communicator
 {
@@ -25,6 +28,20 @@ class Communicator extends \Ingenico\Connect\Sdk\Communicator
      * @var bool
      */
     private $secondaryCommunicatorConfigurationEnabled = false;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(
+        Connection $connection,
+        CommunicatorConfiguration $communicatorConfiguration,
+        LoggerInterface $logger
+    ) {
+        parent::__construct($connection, $communicatorConfiguration);
+        $this->logger = $logger;
+    }
 
     /**
      * Sets secondary communicator configuration which is used to make a second attempt of call in case if first one
@@ -48,50 +65,20 @@ class Communicator extends \Ingenico\Connect\Sdk\Communicator
         CallContext $callContext = null
     ) {
         try {
-            $result = $this->parentGet(
-                $responseClassMap,
-                $relativeUriPath,
-                $clientMetaInfo,
-                $requestParameters,
-                $callContext
-            );
-        } catch (InvalidResponseException $e) {
-            $this->swapCommunicatorConfiguration();
-            $result = $this->parentGet(
-                $responseClassMap,
-                $relativeUriPath,
-                $clientMetaInfo,
-                $requestParameters,
-                $callContext
-            );
-        } catch (\ErrorException $e) {
-            $this->swapCommunicatorConfiguration();
-            $result = $this->parentGet(
-                $responseClassMap,
-                $relativeUriPath,
-                $clientMetaInfo,
-                $requestParameters,
-                $callContext
-            );
-        } catch (\Exception $e) {
-            throw $e;
+            return parent::get(...func_get_args());
+        } catch (Exception $exception) {
+            $this->logWarning($exception);
         }
 
-        return $result;
-    }
+        $this->swapCommunicatorConfiguration();
 
-    /**
-     * @param $responseClassMap
-     * @param $relativeUriPath
-     * @param $clientMetaInfo
-     * @param $requestParameters
-     * @param $callContext
-     * @return DataObject
-     * @throws \Exception
-     */
-    protected function parentGet($responseClassMap, $relativeUriPath, $clientMetaInfo, $requestParameters, $callContext)
-    {
-        return parent::get($responseClassMap, $relativeUriPath, $clientMetaInfo, $requestParameters, $callContext);
+        try {
+            return parent::get(...func_get_args());
+        } catch (Exception $exception) {
+            $this->logEmergency($exception);
+        }
+
+        throw $exception;
     }
 
     /**
@@ -105,55 +92,20 @@ class Communicator extends \Ingenico\Connect\Sdk\Communicator
         CallContext $callContext = null
     ) {
         try {
-            $result = $this->parentDelete(
-                $responseClassMap,
-                $relativeUriPath,
-                $clientMetaInfo,
-                $requestParameters,
-                $callContext
-            );
-        } catch (InvalidResponseException $e) {
-            $this->swapCommunicatorConfiguration();
-            $result = $this->parentDelete(
-                $responseClassMap,
-                $relativeUriPath,
-                $clientMetaInfo,
-                $requestParameters,
-                $callContext
-            );
-        } catch (\ErrorException $e) {
-            $this->swapCommunicatorConfiguration();
-            $result = $this->parentDelete(
-                $responseClassMap,
-                $relativeUriPath,
-                $clientMetaInfo,
-                $requestParameters,
-                $callContext
-            );
-        } catch (\Exception $e) {
-            throw $e;
+            return parent::delete(...func_get_args());
+        } catch (Exception $exception) {
+            $this->logWarning($exception);
         }
 
-        return $result;
-    }
+        $this->swapCommunicatorConfiguration();
 
-    /**
-     * @param $responseClassMap
-     * @param $relativeUriPath
-     * @param $clientMetaInfo
-     * @param $requestParameters
-     * @param $callContext
-     * @return DataObject
-     * @throws \Exception
-     */
-    protected function parentDelete(
-        $responseClassMap,
-        $relativeUriPath,
-        $clientMetaInfo,
-        $requestParameters,
-        $callContext
-    ) {
-        return parent::delete($responseClassMap, $relativeUriPath, $clientMetaInfo, $requestParameters, $callContext);
+        try {
+            return parent::delete(...func_get_args());
+        } catch (Exception $exception) {
+            $this->logEmergency($exception);
+        }
+
+        throw $exception;
     }
 
     /**
@@ -163,72 +115,25 @@ class Communicator extends \Ingenico\Connect\Sdk\Communicator
         ResponseClassMap $responseClassMap,
         $relativeUriPath,
         $clientMetaInfo = '',
-        DataObject $body = null,
+        $requestBodyObject = null,
         RequestObject $requestParameters = null,
         CallContext $callContext = null
     ) {
         try {
-            $result = $this->parentPost(
-                $responseClassMap,
-                $relativeUriPath,
-                $clientMetaInfo,
-                $body,
-                $requestParameters,
-                $callContext
-            );
-        } catch (InvalidResponseException $e) {
-            $this->swapCommunicatorConfiguration();
-            $result = $this->parentPost(
-                $responseClassMap,
-                $relativeUriPath,
-                $clientMetaInfo,
-                $body,
-                $requestParameters,
-                $callContext
-            );
-        } catch (\ErrorException $e) {
-            $this->swapCommunicatorConfiguration();
-            $result = $this->parentPost(
-                $responseClassMap,
-                $relativeUriPath,
-                $clientMetaInfo,
-                $body,
-                $requestParameters,
-                $callContext
-            );
-        } catch (\Exception $e) {
-            throw $e;
+            return parent::post(...func_get_args());
+        } catch (Exception $exception) {
+            $this->logWarning($exception);
         }
 
-        return $result;
-    }
+        $this->swapCommunicatorConfiguration();
 
-    /**
-     * @param $responseClassMap
-     * @param $relativeUriPath
-     * @param $clientMetaInfo
-     * @param $body
-     * @param $requestParameters
-     * @param $callContext
-     * @return DataObject
-     * @throws \Exception
-     */
-    protected function parentPost(
-        $responseClassMap,
-        $relativeUriPath,
-        $clientMetaInfo,
-        $body,
-        $requestParameters,
-        $callContext
-    ) {
-        return parent::post(
-            $responseClassMap,
-            $relativeUriPath,
-            $clientMetaInfo,
-            $body,
-            $requestParameters,
-            $callContext
-        );
+        try {
+            return parent::post(...func_get_args());
+        } catch (Exception $exception) {
+            $this->logEmergency($exception);
+        }
+
+        throw $exception;
     }
 
     /**
@@ -238,72 +143,25 @@ class Communicator extends \Ingenico\Connect\Sdk\Communicator
         ResponseClassMap $responseClassMap,
         $relativeUriPath,
         $clientMetaInfo = '',
-        DataObject $body = null,
+        $requestBodyObject = null,
         RequestObject $requestParameters = null,
         CallContext $callContext = null
     ) {
         try {
-            $result = $this->parentPut(
-                $responseClassMap,
-                $relativeUriPath,
-                $clientMetaInfo,
-                $body,
-                $requestParameters,
-                $callContext
-            );
-        } catch (InvalidResponseException $e) {
-            $this->swapCommunicatorConfiguration();
-            $result = $this->parentPut(
-                $responseClassMap,
-                $relativeUriPath,
-                $clientMetaInfo,
-                $body,
-                $requestParameters,
-                $callContext
-            );
-        } catch (\ErrorException $e) {
-            $this->swapCommunicatorConfiguration();
-            $result = $this->parentPut(
-                $responseClassMap,
-                $relativeUriPath,
-                $clientMetaInfo,
-                $body,
-                $requestParameters,
-                $callContext
-            );
-        } catch (\Exception $e) {
-            throw $e;
+            return parent::put(...func_get_args());
+        } catch (Exception $exception) {
+            $this->logWarning($exception);
         }
 
-        return $result;
-    }
+        $this->swapCommunicatorConfiguration();
 
-    /**
-     * @param $responseClassMap
-     * @param $relativeUriPath
-     * @param $clientMetaInfo
-     * @param $body
-     * @param $requestParameters
-     * @param $callContext
-     * @return DataObject
-     * @throws \Exception
-     */
-    protected function parentPut(
-        $responseClassMap,
-        $relativeUriPath,
-        $clientMetaInfo,
-        $body,
-        $requestParameters,
-        $callContext
-    ) {
-        return parent::put(
-            $responseClassMap,
-            $relativeUriPath,
-            $clientMetaInfo,
-            $body,
-            $requestParameters,
-            $callContext
-        );
+        try {
+            return parent::put(...func_get_args());
+        } catch (Exception $exception) {
+            $this->logEmergency($exception);
+        }
+
+        throw $exception;
     }
 
     /**
@@ -319,5 +177,31 @@ class Communicator extends \Ingenico\Connect\Sdk\Communicator
             $this->secondaryCommunicatorConfigurationEnabled = false;
             $this->setCommunicatorConfiguration($this->originalCommunicatorConfiguration);
         }
+    }
+
+    /**
+     * @param Exception $exception
+     */
+    private function logWarning(Exception $exception)
+    {
+        $this->logger->warning(
+            sprintf(
+                'Unable to perform request using primary communicator configuration: %1$s',
+                $exception->getMessage()
+            )
+        );
+    }
+
+    /**
+     * @param Exception $exception
+     */
+    private function logEmergency(Exception $exception)
+    {
+        $this->logger->emergency(
+            sprintf(
+                'Unable to perform request using secondary communicator configuration: %1$s',
+                $exception->getMessage()
+            )
+        );
     }
 }

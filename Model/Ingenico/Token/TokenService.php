@@ -2,24 +2,41 @@
 
 namespace Ingenico\Connect\Model\Ingenico\Token;
 
+use Ingenico\Connect\Model\ResourceModel\Token as TokenResource;
+use Ingenico\Connect\Model\ResourceModel\Token\CollectionFactory as TokenCollectionFactory;
+
 class TokenService implements TokenServiceInterface
 {
-    /** @var TokenFactory */
+    /**
+     * @var TokenFactory
+     */
     private $tokenFactory;
 
-    /** @var \Ingenico\Connect\Model\ResourceModel\Token */
+    /**
+     * @var TokenResource
+     */
     private $tokenResource;
 
     /**
+     * @var TokenCollectionFactory
+     */
+    private $tokenCollectionFactory;
+
+    /**
+     * TokenService constructor.
+     *
      * @param TokenFactory $tokenFactory
-     * @param \Ingenico\Connect\Model\ResourceModel\Token $tokenResource
+     * @param TokenCollectionFactory $tokenCollectionFactory
+     * @param TokenResource $tokenResource
      */
     public function __construct(
         TokenFactory $tokenFactory,
-        \Ingenico\Connect\Model\ResourceModel\Token $tokenResource
+        TokenCollectionFactory $tokenCollectionFactory,
+        TokenResource $tokenResource
     ) {
         $this->tokenFactory = $tokenFactory;
         $this->tokenResource = $tokenResource;
+        $this->tokenCollectionFactory = $tokenCollectionFactory;
     }
 
     /**
@@ -27,10 +44,9 @@ class TokenService implements TokenServiceInterface
      */
     public function add($customerId, $paymentProductId, $token)
     {
-        /** @var \Ingenico\Connect\Model\Ingenico\Token\Token[] $tokenModel */
         $tokenValues = $this->find($customerId, $paymentProductId);
+
         if (!in_array($token, $tokenValues)) {
-            /** @var \Ingenico\Connect\Model\Ingenico\Token\Token $tokenModel */
             $tokenModel = $this->tokenFactory->create();
             $tokenModel->setCustomerId($customerId);
             $tokenModel->setPaymentProductId($paymentProductId);
@@ -44,9 +60,7 @@ class TokenService implements TokenServiceInterface
      */
     public function find($customerId, $paymentProductId = null)
     {
-        $tokenModel = $this->tokenFactory->create();
-        $tokenCollection = $tokenModel->getCollection();
-
+        $tokenCollection = $this->tokenCollectionFactory->create();
         $tokenCollection->setCustomerId($customerId);
         if ($paymentProductId) {
             $tokenCollection->setPaymentProductId($paymentProductId);
@@ -65,18 +79,15 @@ class TokenService implements TokenServiceInterface
     public function deleteAll($customerId, $tokens = [])
     {
         if ($customerId && !empty($tokens)) {
-            $tokenModel = $this->tokenFactory->create();
-            /** @var \Ingenico\Connect\Model\ResourceModel\Token\Collection $tokenCollection */
-            $tokenCollection = $tokenModel->getCollection();
-            $tokenCollection->setCustomerId($customerId)
-                            ->addFieldToFilter(
-                                'token',
-                                ['in', $tokens]
-                            );
+            $tokenCollection = $this->tokenCollectionFactory->create();
+            $tokenCollection
+                ->setCustomerId($customerId)
+                ->addFieldToFilter('token', ['in', $tokens]);
             /** @var Token $token */
             foreach ($tokenCollection->getItems() as $token) {
                 $token->isDeleted(true);
             }
+
             $tokenCollection->save();
         }
     }
