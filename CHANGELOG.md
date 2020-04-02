@@ -4,6 +4,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 2.2.0 - 2020-04-02
+
+### Added
+
+- Added GitHub issue template
+- Added GitHub link to admin configuration
+- Added API endpoint to expose client token for headless checkout
+- Added version checker
+- Added a fallback for the fraud notifications, in case the fraud email is not set an admin notification will be created
+
+### Changed
+
+- Changed the server meta data that is sent to Ingenico to include Magento and module version.
+- Disallowed payment products 201, 302, 320, 705, 730 and 770 when using "Payment products and input fields on Hosted Checkout" or "Payment products in Magento checkout, input fields on Hosted Checkout" because they are not supported by the RPP. 
+- Remove secondary API Endpoint
+- Remove secondary Webhook Key
+- Remove secondary Webhook Secret
+- Made a separate section in the system configuration for advanced settings and moved a a lot of settings around.
+- In the system configuration, the "Api Endpoint" is no longer a text field, but a dropdown where you can select the API Endpoint (since these are pre-defined).
+- Changed layout for configuration settings
+- Changes in the refund flow:
+    - When a refund is requested for a processing order the order will be set "on hold" until the refund is approved or cancelled.
+    - When a refund is cancelled the order will be set to it's original state before the refund was requested.
+    - When a refund is approved the order will follow the default Magento flow for credit memos.
+- Changed `Ingenico\Connect\Model\Ingenico\Webhooks`-namespace to `Ingenico\Connect\Model\Ingenico\Webhook`.
+- Renamed `Ingenico\Connect\Model\Ingenico\Webhooks` to `Ingenico\Connect\Model\Ingenico\Webhook\Handler`.
+- Made the `ingenico_epayments/fraud/manager_email` not mandatory
+
+### Fixed
+
+- Fixes issue where a refundable payment status from Ingenico would not allow online refunds in Magento.
+- Locales that are unsupported by the Ingenico API will no longer throw an error. Instead they will be mapped. If a locale cannot be determined, the module will fall back to the default locale configured by the merchant in Magento.
+- CC Expiry date are now obfuscated in webhook logs.
+- Fixed issue where webhooks would no longer be processed if there were too many failed attempts in the database.
+
 ## 2.1.2 - 2020-02-17
 
 ### Changed

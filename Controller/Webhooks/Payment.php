@@ -5,8 +5,8 @@ namespace Ingenico\Connect\Controller\Webhooks;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Webapi\Exception;
-use Ingenico\Connect\Model\Ingenico\Webhooks;
-use Ingenico\Connect\Model\Ingenico\Webhooks\PaymentEventDataResolver;
+use Ingenico\Connect\Model\Ingenico\Webhook\Handler;
+use Ingenico\Connect\Model\Ingenico\Webhook\Event\PaymentResolver;
 
 /**
  * Class Payment
@@ -16,30 +16,30 @@ use Ingenico\Connect\Model\Ingenico\Webhooks\PaymentEventDataResolver;
 class Payment extends Webhook
 {
     /**
-     * @var PaymentEventDataResolver
+     * @var PaymentResolver
      */
-    private $paymentEventDataResolver;
+    private $paymentResolver;
 
     /**
-     * @var Webhooks
+     * @var Handler
      */
-    private $webhooks;
+    private $webhookHandler;
 
     /**
      * Payment constructor.
      *
      * @param Context $context
-     * @param PaymentEventDataResolver $paymentEventDataResolver
-     * @param Webhooks $webhooks
+     * @param PaymentResolver $paymentResolver
+     * @param Handler $webhookHandler
      */
     public function __construct(
         Context $context,
-        PaymentEventDataResolver $paymentEventDataResolver,
-        Webhooks $webhooks
+        PaymentResolver $paymentResolver,
+        Handler $webhookHandler
     ) {
         parent::__construct($context);
-        $this->paymentEventDataResolver = $paymentEventDataResolver;
-        $this->webhooks = $webhooks;
+        $this->paymentResolver = $paymentResolver;
+        $this->webhookHandler = $webhookHandler;
     }
 
     /**
@@ -58,7 +58,7 @@ class Payment extends Webhook
 
         try {
             /** @var string $result */
-            $result = $this->webhooks->handle($this->paymentEventDataResolver);
+            $result = $this->webhookHandler->handle($this->paymentResolver);
             $response->setContents($result);
         } catch (\RuntimeException $exception) {
             // on invalid signature or version mismatch the event could not be unwrapped

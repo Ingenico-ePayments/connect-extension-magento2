@@ -29,6 +29,7 @@ class Service implements ServiceInterface
 
     /**
      * Service constructor.
+     *
      * @param SearchCriteriaBuilder $criteriaBuilder
      * @param CreditmemoRepositoryInterface $creditmemoRepository
      */
@@ -47,8 +48,8 @@ class Service implements ServiceInterface
      *
      * @param OrderPaymentInterface|Payment $payment
      * @param string $transactionId
-     * @throws NotFoundException
      * @return CreditmemoInterface|Creditmemo
+     * @throws NotFoundException
      */
     public function getCreditmemo(OrderPaymentInterface $payment, $transactionId = null)
     {
@@ -61,7 +62,7 @@ class Service implements ServiceInterface
         }
 
         throw new NotFoundException(
-            __('No creditmemo for found.')
+            __('No creditmemo for payment found.')
         );
     }
 

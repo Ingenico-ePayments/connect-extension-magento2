@@ -17,17 +17,7 @@ class Communicator extends \Ingenico\Connect\Sdk\Communicator
     /**
      * @var CommunicatorConfiguration
      */
-    private $originalCommunicatorConfiguration;
-
-    /**
-     * @var CommunicatorConfiguration
-     */
-    private $secondaryCommunicatorConfiguration;
-
-    /**
-     * @var bool
-     */
-    private $secondaryCommunicatorConfigurationEnabled = false;
+    private $communicatorConfiguration;
 
     /**
      * @var LoggerInterface
@@ -44,17 +34,6 @@ class Communicator extends \Ingenico\Connect\Sdk\Communicator
     }
 
     /**
-     * Sets secondary communicator configuration which is used to make a second attempt of call in case if first one
-     * was terminated by any reason (i.e. invalid response, runtime error, timeout etc)
-     *
-     * @param CommunicatorConfiguration $communicatorConfiguration
-     */
-    public function setSecondaryCommunicatorConfiguration(CommunicatorConfiguration $communicatorConfiguration)
-    {
-        $this->secondaryCommunicatorConfiguration = $communicatorConfiguration;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function get(
@@ -64,14 +43,6 @@ class Communicator extends \Ingenico\Connect\Sdk\Communicator
         RequestObject $requestParameters = null,
         CallContext $callContext = null
     ) {
-        try {
-            return parent::get(...func_get_args());
-        } catch (Exception $exception) {
-            $this->logWarning($exception);
-        }
-
-        $this->swapCommunicatorConfiguration();
-
         try {
             return parent::get(...func_get_args());
         } catch (Exception $exception) {
@@ -91,14 +62,6 @@ class Communicator extends \Ingenico\Connect\Sdk\Communicator
         RequestObject $requestParameters = null,
         CallContext $callContext = null
     ) {
-        try {
-            return parent::delete(...func_get_args());
-        } catch (Exception $exception) {
-            $this->logWarning($exception);
-        }
-
-        $this->swapCommunicatorConfiguration();
-
         try {
             return parent::delete(...func_get_args());
         } catch (Exception $exception) {
@@ -122,14 +85,6 @@ class Communicator extends \Ingenico\Connect\Sdk\Communicator
         try {
             return parent::post(...func_get_args());
         } catch (Exception $exception) {
-            $this->logWarning($exception);
-        }
-
-        $this->swapCommunicatorConfiguration();
-
-        try {
-            return parent::post(...func_get_args());
-        } catch (Exception $exception) {
             $this->logEmergency($exception);
         }
 
@@ -150,46 +105,10 @@ class Communicator extends \Ingenico\Connect\Sdk\Communicator
         try {
             return parent::put(...func_get_args());
         } catch (Exception $exception) {
-            $this->logWarning($exception);
-        }
-
-        $this->swapCommunicatorConfiguration();
-
-        try {
-            return parent::put(...func_get_args());
-        } catch (Exception $exception) {
             $this->logEmergency($exception);
         }
 
         throw $exception;
-    }
-
-    /**
-     * Changes original communicator configuration to secondary configuration
-     */
-    protected function swapCommunicatorConfiguration()
-    {
-        if (!$this->secondaryCommunicatorConfigurationEnabled && $this->secondaryCommunicatorConfiguration) {
-            $this->secondaryCommunicatorConfigurationEnabled = true;
-            $this->originalCommunicatorConfiguration = $this->getCommunicatorConfiguration();
-            $this->setCommunicatorConfiguration($this->secondaryCommunicatorConfiguration);
-        } elseif ($this->originalCommunicatorConfiguration) {
-            $this->secondaryCommunicatorConfigurationEnabled = false;
-            $this->setCommunicatorConfiguration($this->originalCommunicatorConfiguration);
-        }
-    }
-
-    /**
-     * @param Exception $exception
-     */
-    private function logWarning(Exception $exception)
-    {
-        $this->logger->warning(
-            sprintf(
-                'Unable to perform request using primary communicator configuration: %1$s',
-                $exception->getMessage()
-            )
-        );
     }
 
     /**
@@ -199,7 +118,7 @@ class Communicator extends \Ingenico\Connect\Sdk\Communicator
     {
         $this->logger->emergency(
             sprintf(
-                'Unable to perform request using secondary communicator configuration: %1$s',
+                'Unable to perform request using communicator configuration: %1$s',
                 $exception->getMessage()
             )
         );

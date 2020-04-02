@@ -5,6 +5,7 @@ namespace Ingenico\Connect\Model\Ingenico\Status\Refund;
 use Magento\Sales\Api\Data\CreditmemoInterface;
 use Ingenico\Connect\Model\Ingenico\Status\HandlerInterface;
 use Ingenico\Connect\Model\Ingenico\StatusInterface;
+use Magento\Sales\Api\Data\TransactionInterface;
 
 interface RefundHandlerInterface extends HandlerInterface
 {
@@ -17,8 +18,12 @@ interface RefundHandlerInterface extends HandlerInterface
     const REFUND_CANCELLED = 'CANCELLED';
 
     /**
-     * @param CreditmemoInterface $creditmemo
+     * @param CreditmemoInterface $creditMemo
+     * @param TransactionInterface|null $transaction
      * @return void
      */
-    public function applyCreditmemo(CreditmemoInterface $creditmemo);
+    public function applyCreditmemo(
+        CreditmemoInterface $creditMemo,
+        TransactionInterface $transaction = null
+    );
 }

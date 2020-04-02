@@ -10,7 +10,7 @@ abstract class Data
      * @param float $amount
      * @return int
      */
-    public static function formatIngenicoAmount($amount)
+    public static function formatIngenicoAmount($amount): int
     {
         return (int) number_format($amount * 100, 0, '.', '');
     }
@@ -19,10 +19,10 @@ abstract class Data
      * Reverse Ingenico formatting for money amount
      *
      * @param int $amount
-     * @return float|int
+     * @return float
      */
-    public static function reformatMagentoAmount($amount)
+    public static function reformatMagentoAmount($amount): float
     {
-        return $amount / 100;
+        return floatval($amount / 100);
     }
 }

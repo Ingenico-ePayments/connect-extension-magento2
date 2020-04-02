@@ -1,33 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ingenico\Connect\Model\Ingenico\Action\Refund;
 
-use Ingenico\Connect\Sdk\Domain\Refund\RefundResponse;
+use Ingenico\Connect\Model\Ingenico\Status\Refund\Cancelled;
+use Ingenico\Connect\Model\Transaction\TransactionManager;
+use Ingenico\Connect\Sdk\Domain\Refund\Definitions\RefundResult;
+use Ingenico\Connect\Sdk\ResponseException;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Sales\Model\Order\Creditmemo;
-use Ingenico\Connect\Model\ConfigInterface;
-use Ingenico\Connect\Model\Ingenico\Action\AbstractAction;
-use Ingenico\Connect\Model\Ingenico\Action\ActionInterface;
+use Magento\Sales\Api\CreditmemoRepositoryInterface;
+use Magento\Sales\Api\Data\CreditmemoInterface;
+use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use Ingenico\Connect\Model\Ingenico\Action\RetrievePayment;
 use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
 use Ingenico\Connect\Model\Ingenico\Status\ResolverInterface;
-use Ingenico\Connect\Model\Ingenico\StatusInterface;
-use Ingenico\Connect\Model\StatusResponseManager;
-use Ingenico\Connect\Model\Transaction\TransactionManager;
 
-/**
- * @link https://developer.globalcollect.com/documentation/api/server/#__merchantId__payments__paymentId__cancel_post
- */
-class CancelRefund extends AbstractAction implements ActionInterface
+class CancelRefund extends AbstractRefundAction
 {
-    /**
-     * @var string[]
-     */
-    private $allowedStates = [
-        StatusInterface::PENDING_APPROVAL,
-        StatusInterface::REFUND_REQUESTED,
-    ];
-
     /**
      * @var RetrievePayment
      */
@@ -39,69 +30,91 @@ class CancelRefund extends AbstractAction implements ActionInterface
     private $statusResolver;
 
     /**
+     * @var Cancelled
+     */
+    private $refundCancelledHandler;
+
+    /**
+     * @var ClientInterface
+     */
+    private $ingenicoClient;
+
+    /**
+     * @var TransactionManager
+     */
+    private $transactionManager;
+
+    /**
      * CancelRefund constructor.
      *
-     * @param StatusResponseManager $statusResponseManager
+     * @param OrderRepositoryInterface $orderRepository
+     * @param CreditmemoRepositoryInterface $creditmemoRepository
      * @param ClientInterface $ingenicoClient
-     * @param TransactionManager $transactionManager
-     * @param ConfigInterface $config
      * @param RetrievePayment $retrievePayment
      * @param ResolverInterface $statusResolver
+     * @param Cancelled $refundCancelledHandler
+     * @param TransactionManager $transactionManager
      */
     public function __construct(
-        StatusResponseManager $statusResponseManager,
+        OrderRepositoryInterface $orderRepository,
+        CreditmemoRepositoryInterface $creditmemoRepository,
         ClientInterface $ingenicoClient,
-        TransactionManager $transactionManager,
-        ConfigInterface $config,
         RetrievePayment $retrievePayment,
-        ResolverInterface $statusResolver
+        ResolverInterface $statusResolver,
+        Cancelled $refundCancelledHandler,
+        TransactionManager $transactionManager
     ) {
+        parent::__construct($orderRepository, $creditmemoRepository);
+
         $this->retrievePayment = $retrievePayment;
         $this->statusResolver = $statusResolver;
-
-        parent::__construct($statusResponseManager, $ingenicoClient, $transactionManager, $config);
+        $this->refundCancelledHandler = $refundCancelledHandler;
+        $this->ingenicoClient = $ingenicoClient;
+        $this->transactionManager = $transactionManager;
     }
 
     /**
-     * Cancel the creditmemo at the Ingenico API
-     * and within Magento itself.
-     *
-     * @param Creditmemo $creditmemo
+     * @param OrderInterface $order
+     * @param CreditmemoInterface $creditMemo
      * @throws LocalizedException
      */
-    public function process(Creditmemo $creditmemo)
+    protected function performRefundAction(OrderInterface $order, CreditmemoInterface $creditMemo)
     {
-        $order = $creditmemo->getOrder();
-        $refundId = $creditmemo->getTransactionId();
+        $refundId = $creditMemo->getTransactionId();
+        $this->validateCancellability($refundId);
 
-        $payment = $order->getPayment();
+        // Cancel refund via Ingenico API:
+        try {
+            $this->ingenicoClient->ingenicoRefundCancel(
+                $refundId,
+                $order->getStoreId()
+            );
+        } catch (ResponseException $exception) {
+            throw new LocalizedException(
+                __('Error while trying to cancel the refund: %1', $exception->getMessage())
+            );
+        }
 
-        $refundResponse = $this->statusResponseManager->get($payment, $refundId);
+        // If no exception is thrown it means that the API returned a valid
+        // and we can assume the refund is cancelled.
+        $this->refundCancelledHandler->applyCreditmemo($creditMemo);
+    }
 
-        $isAllowedStatus = in_array(
-            $refundResponse->status,
-            $this->allowedStates
-        );
-        if (!$isAllowedStatus) {
+    /**
+     * @param string $refundId
+     * @throws LocalizedException
+     */
+    private function validateCancellability(string $refundId)
+    {
+        $transaction = $this->transactionManager->retrieveTransaction($refundId);
+        $refundResponse = $this->transactionManager->getResponseDataFromTransaction($transaction);
+
+        if (!$refundResponse instanceof RefundResult) {
+            throw new LocalizedException(__('Stored response data is not a refund response'));
+        }
+
+        if (!$refundResponse->statusOutput->isCancellable) {
             throw new LocalizedException(__("Cannot cancel refund with status $refundResponse->status"));
         }
-
-        // Cancel refund via Ingenico API
-        $this->ingenicoClient->ingenicoRefundCancel(
-            $refundResponse->id,
-            $order->getStoreId()
-        );
-
-        // Retrieve current status from api and update because
-        // cancelRefund only returns a HTTP status code
-        $this->retrievePayment->process($order);
-        /** @var RefundResponse $response */
-        $response = $this->statusResponseManager->get($payment, $refundId);
-
-        if ($response->status !== StatusInterface::CANCELLED) {
-            throw new LocalizedException(__('Cancelation was unsucessful'));
-        }
-
-        $this->postProcess($payment, $response);
     }
 }

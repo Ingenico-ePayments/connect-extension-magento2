@@ -35,7 +35,6 @@ define([
                     component: 'Ingenico_Connect/js/view/payment/component/collection/products',
                     isTokenGroup: isTokenGroup,
                     additionalClasses: 'group-' + group.id,
-                    label: group.name,
                     products: group.products,
                     accounts: group.accounts,
                 });

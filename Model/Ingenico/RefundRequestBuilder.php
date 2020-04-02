@@ -11,6 +11,13 @@ use Ingenico\Connect\Sdk\Domain\Refund\Definitions\RefundReferences;
 use Ingenico\Connect\Sdk\Domain\Refund\RefundRequest;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 
+/**
+ * Class RefundRequestBuilder
+ *
+ * @package Ingenico\Connect\Model\Ingenico
+ * @deprecated use \Ingenico\Connect\Model\Ingenico\RequestBuilder\Refund\RefundRequestBuilder instead
+ * @see \Ingenico\Connect\Model\Ingenico\RequestBuilder\Refund\RefundRequestBuilder
+ */
 class RefundRequestBuilder
 {
     /**
@@ -120,6 +127,9 @@ class RefundRequestBuilder
         $this->request = $refundRequest;
     }
 
+    /**
+     * @deprecated use \Ingenico\Connect\Model\Ingenico\RequestBuilder\Refund\RefundRequestBuilder::build() instead
+     */
     public function create()
     {
         $this->request->refundDate = $this->dateTime->date('Ymd');

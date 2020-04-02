@@ -7,6 +7,7 @@ use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment as IngenicoPayment;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\Order\Payment;
+use Magento\Sales\Model\Order\Payment\Transaction;
 
 /**
  * Interface StatusResponseManagerInterface
@@ -15,8 +16,14 @@ use Magento\Sales\Model\Order\Payment;
  */
 interface StatusResponseManagerInterface
 {
+    /**
+     * @deprecated Use those of the TransactionManager instead
+     */
     const TRANSACTION_INFO_KEY = 'gc_response_object';
 
+    /**
+     * @deprecated Use those of the TransactionManager instead
+     */
     const TRANSACTION_CLASS_KEY = 'gc_response_class';
 
     /**
@@ -38,6 +45,15 @@ interface StatusResponseManagerInterface
      * @throws LocalizedException
      */
     public function set(InfoInterface $payment, $transactionId, AbstractOrderStatus $orderStatus);
+
+    /**
+     * Serialize response data and store it on a transaction
+     *
+     * @param AbstractOrderStatus $responseData
+     * @param Transaction $transaction
+     * @return null
+     */
+    public function setResponseDataOnTransaction(AbstractOrderStatus $responseData, Transaction $transaction);
 
     /**
      * If the transaction is not found, this will return an empty transaction object or null.

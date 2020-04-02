@@ -40,14 +40,6 @@ define([],
         };
 
         /**
-         * Get customized payment product group titles by product code
-         * @returns {object}
-         */
-        let getGroupTitles = function () {
-            return config.paymentMethodGroupTitles;
-        };
-
-        /**
          * Get image url of a loading spinner.
          * @return {string}
          */
@@ -76,7 +68,6 @@ define([],
             getHostedCheckoutUrl: getHostedCheckoutUrl,
             getInlineSuccessUrl: getInlineSuccessUrl,
             getLocale: getLocale,
-            getGroupTitles: getGroupTitles,
             useInlinePayments: useInlinePayments,
             useFullRedirect: useFullRedirect,
             getLoaderImage: getLoaderImage,

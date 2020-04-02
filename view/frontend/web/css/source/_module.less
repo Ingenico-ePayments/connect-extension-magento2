@@ -1,20 +1,18 @@
 #ingenico_groups_container {
-
   max-width: 500px;
 
-  /**
-   * Payment products group
-   */
   fieldset {
-    border: 2px solid grey;
-    padding: 1em;
-
-    /**
-     * Payment product label
-     */
     .choice.field {
       position: relative;
-      margin-bottom: 10px;
+      border: 1px solid lightgrey;
+      padding: .5em 1em;
+      margin-bottom: .5em;
+
+      > input.radio {
+        position: absolute;
+        top: 20px;
+      }
+
       .label-image {
         display: inline-block;
         vertical-align: middle;
@@ -22,13 +20,42 @@
         width: 60px !important;
         padding-right: 10px
       }
-
     }
   }
 
-  /**
-   * Token group
-   */
+  .label {
+    display: block;
+    cursor: pointer;
+    padding-left: 20px;
+  }
+
+  .fields {
+    position: relative;
+    border: 1px solid lightgrey;
+    padding: .5em 1em;
+    margin-top: ~"calc(-.5em - 1px)";
+    margin-bottom: .5em;
+    background: #f8f8f8;
+
+    .field {
+      .label {
+        padding: 0;
+        margin-bottom: 5px;
+        font-size: 90%;
+        font-weight: normal;
+      }
+    }
+
+    .choice.field {
+      border: 0;
+      padding: 0;
+
+      .label {
+        display: inline;
+      }
+    }
+  }
+
   .group-token {
     .choice.field > .label {
       font-size: 1.3em;

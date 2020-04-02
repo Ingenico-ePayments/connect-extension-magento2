@@ -23,8 +23,13 @@ define([
         return a.displayHints.sortOrder - b.displayHints.sortOrder
     };
 
-    return {
+    // These product ID's are not allowed in RPP:
+    let disallowedProductIds = [302, 320, 770, 730, 705, 201];
+    let disallowProductByIdFilter = function (paymentProduct) {
+        return disallowedProductIds.indexOf(paymentProduct.id) === -1;
+    };
 
+    return {
         isLoading: isLoading,
         basicPaymentProducts: basicPaymentProducts,
         accountsOnFile: accountsOnFile,
@@ -36,6 +41,14 @@ define([
         reload: function (messageContainer) {
             isLoading(true);
             fetchPaymentProducts().then(function (response) {
+
+                // Remove payment methods that cannot be used for the RPP:
+                if (!config.useInlinePayments()) {
+                    response.basicPaymentProducts = response.basicPaymentProducts.filter(disallowProductByIdFilter);
+                    disallowedProductIds.forEach(function (id) {
+                        delete response.basicPaymentProductById[id];
+                    });
+                }
 
                 // transfer response to locally stored variables
                 productsResponse(response);

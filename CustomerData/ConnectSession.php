@@ -2,9 +2,12 @@
 
 namespace Ingenico\Connect\CustomerData;
 
+use Exception;
+use Ingenico\Connect\Api\SessionManagerInterface;
 use Magento\Checkout\Model\Session;
 use Magento\Customer\CustomerData\SectionSourceInterface;
-use Ingenico\Connect\Model\Ingenico\Action\CreateSession;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
  * Class ConnectSession
@@ -14,36 +17,44 @@ class ConnectSession implements SectionSourceInterface
 {
     /** @var Session */
     private $checkoutSession;
-
-    /** @var CreateSession */
-    private $createSessionAction;
-
+    
+    /** @var SessionManagerInterface */
+    private $sessionManager;
+    
     /**
-     * ConnectSession constructor.
      * @param Session $checkoutSession
-     * @param CreateSession $createSessionAction
+     * @param SessionManagerInterface $sessionManager
      */
-    public function __construct(
-        Session $checkoutSession,
-        CreateSession $createSessionAction
-    ) {
+    public function __construct(Session $checkoutSession, SessionManagerInterface $sessionManager)
+    {
         $this->checkoutSession = $checkoutSession;
-        $this->createSessionAction = $createSessionAction;
+        $this->sessionManager = $sessionManager;
     }
-
+    
     /**
      * Get Session data for customer
      *
      * @return string[]
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function getSectionData()
     {
         $customerId = $this->checkoutSession->getQuote()->getCustomerId();
         try {
-            $response = $this->createSessionAction->create($customerId);
-            return ['data' => $response];
-        } catch (\Exception $e) {
-            return ['error' => $e->getMessage()];
+            if ($customerId === null) {
+                return [
+                    'data' => $this->sessionManager->createAnonymousSession()
+                ];
+            }
+            
+            return [
+                'data' => $this->sessionManager->createCustomerSession($customerId)
+            ];
+        } catch (Exception $e) {
+            return [
+                'error' => $e->getMessage()
+            ];
         }
     }
 }

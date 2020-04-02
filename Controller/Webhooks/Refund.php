@@ -5,8 +5,8 @@ namespace Ingenico\Connect\Controller\Webhooks;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Webapi\Exception;
-use Ingenico\Connect\Model\Ingenico\Webhooks;
-use Ingenico\Connect\Model\Ingenico\Webhooks\RefundEventDataResolver;
+use Ingenico\Connect\Model\Ingenico\Webhook\Handler;
+use Ingenico\Connect\Model\Ingenico\Webhook\Event\RefundResolver;
 
 /**
  * Class Refund
@@ -18,30 +18,30 @@ use Ingenico\Connect\Model\Ingenico\Webhooks\RefundEventDataResolver;
 class Refund extends Webhook
 {
     /**
-     * @var RefundEventDataResolver
+     * @var RefundResolver
      */
-    private $refundEventDataResolver;
+    private $refundResolver;
 
     /**
-     * @var Webhooks
+     * @var Handler
      */
-    private $webhooks;
+    private $webhookHandler;
 
     /**
      * Refund constructor.
      *
      * @param Context $context
-     * @param RefundEventDataResolver $refundEventDataResolver
-     * @param Webhooks $webhooks
+     * @param RefundResolver $refundResolver
+     * @param Handler $webhookHandler
      */
     public function __construct(
         Context $context,
-        RefundEventDataResolver $refundEventDataResolver,
-        Webhooks $webhooks
+        RefundResolver $refundResolver,
+        Handler $webhookHandler
     ) {
         parent::__construct($context);
-        $this->refundEventDataResolver = $refundEventDataResolver;
-        $this->webhooks = $webhooks;
+        $this->refundResolver = $refundResolver;
+        $this->webhookHandler = $webhookHandler;
     }
 
     /**
@@ -60,7 +60,7 @@ class Refund extends Webhook
 
         try {
             /** @var string $result */
-            $result = $this->webhooks->handle($this->refundEventDataResolver);
+            $result = $this->webhookHandler->handle($this->refundResolver);
             $response->setContents($result);
         } catch (\RuntimeException $exception) {
             // on invalid signature or version mismatch the event could not be unwrapped

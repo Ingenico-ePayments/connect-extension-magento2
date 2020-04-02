@@ -50,11 +50,9 @@ class CancelRefund extends Action
         $creditmemoId = $this->getRequest()->getParam('creditmemo_id');
 
         try {
-            /** @var Creditmemo $refund */
-            $refund = $this->creditmemoRepository->get($creditmemoId);
-
-            $this->refundCancel->process($refund);
-
+            /** @var Creditmemo $creditMemo */
+            $creditMemo = $this->creditmemoRepository->get($creditmemoId);
+            $this->refundCancel->process($creditMemo);
             $this->messageManager->addSuccessMessage(__('The refund was cancelled.'));
         } catch (\Exception $e) {
             $this->messageManager->addErrorMessage(__('Unable to refresh the refund.'));

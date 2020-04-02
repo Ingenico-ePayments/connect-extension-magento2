@@ -75,14 +75,12 @@ class ConfigProvider implements ConfigProviderInterface
     {
         $storeId = $this->storeManager->getStore()->getId();
         $checkoutType = $this->config->getCheckoutType($storeId);
-        $paymentMethodGroupTitles = $this->config->getProductGroupTitles($storeId);
         return [
             'payment' => [
                 'ingenico' => [
                     'hostedCheckoutPageUrl' => $this->urlBuilder->getUrl('epayments/hostedCheckoutPage'),
                     'inlineSuccessUrl' => $this->urlBuilder->getUrl('epayments/inlinePayment'),
                     'locale' => $this->resolver->getLocale(),
-                    'paymentMethodGroupTitles' => $paymentMethodGroupTitles,
                     'useInlinePayments' => $checkoutType === Config::CONFIG_INGENICO_CHECKOUT_TYPE_INLINE,
                     'useFullRedirect' => $checkoutType === Config::CONFIG_INGENICO_CHECKOUT_TYPE_REDIRECT,
                     'loaderImage' => $this->assetRepo->getUrlWithParams('images/loader-2.gif', []),

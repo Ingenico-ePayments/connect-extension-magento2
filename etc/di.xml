@@ -20,6 +20,8 @@
     <preference for="Ingenico\Connect\Api\EventRepositoryInterface" type="Ingenico\Connect\Model\Event\EventRepository"/>
     <preference for="Ingenico\Connect\Api\Data\EventInterface" type="Ingenico\Connect\Model\Event\DataModel"/>
     <preference for="Ingenico\Connect\Api\Data\EventSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+    <preference for="Ingenico\Connect\Api\SessionManagerInterface" type="Ingenico\Connect\Model\Ingenico\Session\SessionManager"/>
+    <preference for="Ingenico\Connect\Api\Data\SessionInterface" type="Ingenico\Connect\Model\Ingenico\Session\Session"/>
 
     <!-- Payment method set up via Magento 2 Payment Gateway API -->
     <virtualType name="IngenicoFacade" type="Magento\Payment\Model\Method\Adapter">
@@ -131,7 +133,7 @@
             <argument name="logger" xsi:type="object">ingenicoRequestLogger</argument>
         </arguments>
     </type>
-    <type name="Ingenico\Connect\Model\Ingenico\Webhooks">
+    <type name="Ingenico\Connect\Model\Ingenico\Webhook\Handler">
         <arguments>
             <argument name="logger" xsi:type="object">ingenicoRequestLogger</argument>
         </arguments>
@@ -142,6 +144,11 @@
         </arguments>
     </type>
     <type name="Ingenico\Connect\Model\Ingenico\Client\Communicator">
+        <arguments>
+            <argument name="logger" xsi:type="object">ingenicoRequestLogger</argument>
+        </arguments>
+    </type>
+    <type name="Ingenico\Connect\Model\Event\Processor">
         <arguments>
             <argument name="logger" xsi:type="object">ingenicoRequestLogger</argument>
         </arguments>
@@ -255,12 +262,42 @@
         </arguments>
     </type>
 
+    <type name="Ingenico\Connect\Model\Ingenico\RequestBuilder\CreateHostedCheckout\RequestBuilder">
+        <arguments>
+            <argument name="resolver" xsi:type="object">Ingenico\Connect\Locale\Resolver</argument>
+        </arguments>
+    </type>
+    <type name="Ingenico\Connect\Model\Ingenico\Action\CreateHostedCheckout">
+        <arguments>
+            <argument name="localeResolver" xsi:type="object">Ingenico\Connect\Locale\Resolver</argument>
+        </arguments>
+    </type>
+
     <type name="Magento\Sales\Model\Order\Payment\State\AuthorizeCommand">
-        <plugin name="UpdateOrderStatus" type="Ingenico\Connect\Plugin\Magento\Sales\Model\Order\Payment\State\AuthorizeCommand"/>
+        <plugin name="updateOrderStatus" type="Ingenico\Connect\Plugin\Magento\Sales\Model\Order\Payment\State\AuthorizeCommand"/>
     </type>
 
     <type name="Magento\Sales\Model\Order\Payment\State\CaptureCommand">
-        <plugin name="UpdateOrderStatus" type="Ingenico\Connect\Plugin\Magento\Sales\Model\Order\Payment\State\CaptureCommand"/>
+        <plugin name="updateOrderStatus" type="Ingenico\Connect\Plugin\Magento\Sales\Model\Order\Payment\State\CaptureCommand"/>
+    </type>
+
+    <type name="Magento\Sales\Model\Order\StateResolver">
+        <plugin name="updateOrderStatus" type="Ingenico\Connect\Plugin\Magento\Sales\Model\Order\StateResolver"/>
+    </type>
+
+    <!--
+        The following plugins are required to implement Ingenico's refund flow into Magento:
+    -->
+    <type name="Magento\Sales\Model\Order\Creditmemo">
+        <plugin name="preventRefundCancellation" type="Ingenico\Connect\Plugin\Magento\Sales\Model\Order\Creditmemo"/>
+    </type>
+
+    <type name="Magento\Sales\Api\CreditmemoManagementInterface">
+        <plugin name="allowPendingRefunds" type="Ingenico\Connect\Plugin\Magento\Sales\Model\Service\CreditmemoService"/>
+    </type>
+
+    <type name="Magento\Sales\Model\Order\Payment">
+        <plugin name="preventUniqueConstraintViolation" type="Ingenico\Connect\Plugin\Magento\Sales\Model\Order\Payment"/>
     </type>
 
     <type name="Ingenico\Connect\Controller\HostedCheckoutPage\ProcessReturn">

@@ -6,6 +6,7 @@ use Ingenico\Connect\Sdk\Domain\Definitions\AbstractOrderStatus;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\CreditmemoInterface;
 use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\Data\TransactionInterface;
 use Magento\Sales\Model\Order;
 
 class NullStatus implements RefundHandlerInterface
@@ -21,10 +22,11 @@ class NullStatus implements RefundHandlerInterface
     }
 
     /**
-     * @param CreditmemoInterface $creditmemo
+     * @param CreditmemoInterface $creditMemo
+     * @param TransactionInterface|null $transaction
      * @throws LocalizedException
      */
-    public function applyCreditmemo(CreditmemoInterface $creditmemo)
+    public function applyCreditmemo(CreditmemoInterface $creditMemo, TransactionInterface $transaction = null)
     {
         throw new LocalizedException(__('Status is not implemented.'));
     }

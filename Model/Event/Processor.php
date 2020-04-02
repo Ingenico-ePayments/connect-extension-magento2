@@ -1,23 +1,28 @@
 <?php
-/**
- * See LICENSE.md for license details.
- */
+
+declare(strict_types=1);
 
 namespace Ingenico\Connect\Model\Event;
 
+use Ingenico\Connect\Model\Order\OrderServiceInterface;
 use Ingenico\Connect\Sdk\Domain\Webhooks\WebhooksEvent;
 use Ingenico\Connect\Sdk\Domain\Webhooks\WebhooksEventFactory;
-use Magento\Framework\Api\SearchCriteriaBuilderFactory;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SortOrderBuilder;
-use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Sales\Api\Data\OrderStatusHistoryInterfaceFactory;
+use Magento\Sales\Api\OrderManagementInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
-use Magento\Sales\Model\Order;
 use Ingenico\Connect\Api\Data\EventInterface;
 use Ingenico\Connect\Api\EventRepositoryInterface;
 use Ingenico\Connect\Model\Ingenico\Status\ResolverInterface;
+use Psr\Log\LoggerInterface;
 
 class Processor
 {
+    const MESSAGE_NO_ORDER_FOUND = 'webhook: no order found';
+
     /**
      * @var WebhooksEventFactory
      */
@@ -34,11 +39,6 @@ class Processor
     private $orderRepository;
 
     /**
-     * @var SearchCriteriaBuilderFactory
-     */
-    private $criteriaBuilderFactory;
-
-    /**
      * @var ResolverInterface
      */
     private $statusResolver;
@@ -49,91 +49,109 @@ class Processor
     private $sortOrderBuilder;
 
     /**
-     * Processor constructor.
-     *
-     * @param WebhooksEventFactory $webhookEventFactory
-     * @param EventRepositoryInterface $eventRepository
-     * @param OrderRepositoryInterface $orderRepository
-     * @param SearchCriteriaBuilderFactory $criteriaBuilderFactory
-     * @param ResolverInterface $statusResolver
-     * @param SortOrderBuilder $sortOrderBuilder
+     * @var SearchCriteriaBuilder
      */
+    private $searchCriteriaBuilder;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @var OrderManagementInterface
+     */
+    private $orderManagement;
+
+    /**
+     * @var OrderStatusHistoryInterfaceFactory
+     */
+    private $orderStatusHistoryFactory;
+
+    /**
+     * @var OrderServiceInterface
+     */
+    private $orderService;
+
     public function __construct(
         WebhooksEventFactory $webhookEventFactory,
         EventRepositoryInterface $eventRepository,
         OrderRepositoryInterface $orderRepository,
-        SearchCriteriaBuilderFactory $criteriaBuilderFactory,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
         ResolverInterface $statusResolver,
-        SortOrderBuilder $sortOrderBuilder
+        SortOrderBuilder $sortOrderBuilder,
+        LoggerInterface $logger,
+        OrderManagementInterface $orderManagement,
+        OrderStatusHistoryInterfaceFactory $orderStatusHistoryFactory,
+        OrderServiceInterface $orderService
     ) {
         $this->webhookEventFactory = $webhookEventFactory;
         $this->eventRepository = $eventRepository;
         $this->orderRepository = $orderRepository;
-        $this->criteriaBuilderFactory = $criteriaBuilderFactory;
         $this->statusResolver = $statusResolver;
         $this->sortOrderBuilder = $sortOrderBuilder;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->logger = $logger;
+        $this->orderManagement = $orderManagement;
+        $this->orderStatusHistoryFactory = $orderStatusHistoryFactory;
+        $this->orderService = $orderService;
     }
 
     /**
      * @param int $limit
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function processBatch($limit = 20)
     {
-        $criteriaBuilder = $this->criteriaBuilderFactory->create();
-        $criteriaBuilder->addFilter(
+        $this->searchCriteriaBuilder->addFilter(
             EventInterface::STATUS,
             [
                 EventInterface::STATUS_NEW,
-                EventInterface::STATUS_FAILED,
-            ],
-            'in'
+            ]
         );
-        $criteriaBuilder->setPageSize($limit);
-        $criteriaBuilder->addSortOrder(
-            $this->sortOrderBuilder->setField(EventInterface::CREATED_TIMESTAMP)
-                                   ->setAscendingDirection()
-                                   ->create()
+        $this->searchCriteriaBuilder->setPageSize($limit);
+        $this->searchCriteriaBuilder->addSortOrder(
+            $this->sortOrderBuilder
+                ->setField(EventInterface::CREATED_TIMESTAMP)
+                ->setAscendingDirection()
+                ->create()
         );
-        $events = $this->eventRepository->getList($criteriaBuilder->create())->getItems();
 
-        $orderIncrementIds = array_reduce(
-            $events,
-            /**
-             * @param $carry string[]
-             * @param $event EventInterface
-             * @return string[]
-             */
-            function ($carry, $event) {
-                $carry[] = $event->getOrderIncrementId();
-
-                return $carry;
-            },
-            []
-        );
-        $criteriaBuilder->addFilter('increment_id', $orderIncrementIds, 'in');
-
-        $orders = $this->orderRepository->getList($criteriaBuilder->create())->getItems();
+        $events = $this->eventRepository
+            ->getList($this->searchCriteriaBuilder->create())
+            ->getItems();
 
         /** @var EventInterface $event */
         foreach ($events as $event) {
-            $this->processEvent($event, $orders);
+            $this->processEvent($event);
         }
     }
 
     /**
      * @param EventInterface $event
-     * @param Order[] $orders
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
-    private function processEvent(EventInterface $event, array $orders)
+    private function processEvent(EventInterface $event)
     {
+        try {
+            $order = $this->orderService->getByIncrementId($event->getOrderIncrementId());
+        } catch (NoSuchEntityException $exception) {
+            $this->logger->warning(
+                self::MESSAGE_NO_ORDER_FOUND,
+                [
+                    'increment_id' => $event->getOrderIncrementId(),
+                    'event_id' => $event->getEventId(),
+                ]
+            );
+            $event->setStatus(EventInterface::STATUS_FAILED);
+            $this->eventRepository->save($event);
+            return;
+        }
+
         /** @var WebhooksEvent $webhookEvent */
         $webhookEvent = $this->webhookEventFactory->create();
         $webhookEvent = $webhookEvent->fromJson($event->getPayload());
-        $order = $this->getOrderForEvent($orders, $event);
-        $event->setStatus(EventInterface::STATUS_PROCESSING);
-        $this->eventRepository->save($event);
+
         try {
             $this->statusResolver->resolve($order, $this->extractStatusObject($webhookEvent));
             $order->setDataChanges(true);
@@ -143,25 +161,19 @@ class Processor
         } catch (\Exception $exception) {
             $event->setStatus(EventInterface::STATUS_FAILED);
             $this->eventRepository->save($event);
+            $this->orderManagement->addComment(
+                $order->getEntityId(),
+                $this->orderStatusHistoryFactory->create([
+                    'data' => [
+                        'comment' => __(
+                            'Error occurred while trying to process the webhook: %1',
+                            $exception->getMessage()
+                        )->render(),
+                        'status' => $order->getStatus(),
+                    ],
+                ])
+            );
         }
-    }
-
-    /**
-     * @param OrderInterface[] $orders
-     * @param EventInterface $event
-     * @return OrderInterface
-     */
-    private function getOrderForEvent($orders, EventInterface $event)
-    {
-        $result = array_filter(
-            $orders,
-            function ($order) use ($event) {
-                /** @var OrderInterface $order */
-                return $order->getIncrementId() === $event->getOrderIncrementId();
-            }
-        );
-
-        return array_shift($result);
     }
 
     /**

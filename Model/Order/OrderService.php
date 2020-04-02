@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ingenico\Connect\Model\Order;
 
-use Magento\Framework\Api\SearchCriteriaBuilderFactory;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 
@@ -14,34 +17,42 @@ class OrderService implements OrderServiceInterface
     private $orderRepository;
 
     /**
-     * @var SearchCriteriaBuilderFactory
+     * @var SearchCriteriaBuilder
      */
-    private $criteriaBuilderFactory;
+    private $searchCriteriaBuilder;
 
     /**
      * OrderService constructor.
      *
      * @param OrderRepositoryInterface $orderRepository
-     * @param SearchCriteriaBuilderFactory $criteriaBuilderFactory
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
      */
     public function __construct(
         OrderRepositoryInterface $orderRepository,
-        SearchCriteriaBuilderFactory $criteriaBuilderFactory
+        SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
         $this->orderRepository = $orderRepository;
-        $this->criteriaBuilderFactory = $criteriaBuilderFactory;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
     }
 
     /**
-     * @param int $incrementId
+     * @param string $incrementId
      * @return OrderInterface
+     * @throws NoSuchEntityException
      */
-    public function getByIncrementId($incrementId)
+    public function getByIncrementId(string $incrementId): OrderInterface
     {
-        $criteriaBuilder = $this->criteriaBuilderFactory->create();
-        $criteriaBuilder->addFilter('increment_id', $incrementId);
-        $orderList = $this->orderRepository->getList($criteriaBuilder->create())->getItems();
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->addFilter(OrderInterface::INCREMENT_ID, $incrementId)
+            ->create();
+        $orderList = $this->orderRepository->getList($searchCriteria);
 
-        return array_shift($orderList);
+        if ($orderList->getTotalCount() === 0) {
+            throw new NoSuchEntityException(__('No order found with increment ID %1', $incrementId));
+        }
+
+        $orders = $orderList->getItems();
+
+        return $orders[key($orders)];
     }
 }

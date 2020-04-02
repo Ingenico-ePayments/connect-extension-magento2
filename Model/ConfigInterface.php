@@ -4,9 +4,8 @@ namespace Ingenico\Connect\Model;
 
 interface ConfigInterface
 {
-
     /**
-     * Returns boolean for modul activation status
+     * Returns boolean for module activation status
      *
      * @param int|null $storeId
      * @return bool
@@ -54,14 +53,6 @@ interface ConfigInterface
     public function getApiEndpoint($storeId = null);
 
     /**
-     * Returns Secondary Api Endpoint
-     *
-     * @param int|null $storeId
-     * @return string
-     */
-    public function getSecondaryApiEndpoint($storeId = null);
-
-    /**
      * @param int|null $storeId
      * @return string
      */
@@ -90,26 +81,10 @@ interface ConfigInterface
     public function getWebHooksSecretKey($storeId = null);
 
     /**
-     * Returns WebHooks Key Id
-     *
-     * @param int|null $storeId
-     * @return string
-     */
-    public function getWebHooksKeyId2($storeId = null);
-
-    /**
-     * Returns WebHooks Secret Key
-     *
-     * @param int|null $storeId
-     * @return string
-     */
-    public function getWebHooksSecretKey2($storeId = null);
-
-    /**
      * Returns Fraud Manager Email
      *
      * @param int|null $storeId
-     * @return string
+     * @return string|null
      */
     public function getFraudManagerEmail($storeId = null);
 
@@ -209,10 +184,11 @@ interface ConfigInterface
     public function getIntegrator();
 
     /**
-     * @param int|null $storeId
-     * @return array
+     * Returns extension id
+     *
+     * @return string
      */
-    public function getProductGroupTitles($storeId = null);
+    public function getMagentoVersion();
 
     /**
      * Returns payment status info

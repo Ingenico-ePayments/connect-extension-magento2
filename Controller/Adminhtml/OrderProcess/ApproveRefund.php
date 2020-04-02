@@ -53,10 +53,10 @@ class ApproveRefund extends Action
         $creditmemoId = $this->getRequest()->getParam('creditmemo_id');
 
         try {
-            /** @var Creditmemo $refund */
-            $refund = $this->creditmemoRepository->get($creditmemoId);
+            /** @var Creditmemo $creditMemo */
+            $creditMemo = $this->creditmemoRepository->get($creditmemoId);
 
-            $this->approveRefund->process($refund);
+            $this->approveRefund->process($creditMemo);
 
             $this->messageManager->addSuccessMessage(__('The refund was approved.'));
         } catch (ResponseException $e) {

@@ -14,7 +14,7 @@ define([
         defaults: {
             isLoading: false,
             visible: true,
-            containerVisible: true,
+            containerVisible: false,
             fieldsLoaded: false,
         },
 

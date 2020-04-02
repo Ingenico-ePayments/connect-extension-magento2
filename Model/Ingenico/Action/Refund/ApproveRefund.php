@@ -1,142 +1,117 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ingenico\Connect\Model\Ingenico\Action\Refund;
 
-use Ingenico\Connect\Sdk\Domain\Refund\ApproveRefundRequest;
+use Ingenico\Connect\Model\Ingenico\RequestBuilder\Refund\ApproveRefundRequestBuilder;
+use Ingenico\Connect\Model\Ingenico\Status\Refund\RefundRequested;
+use Ingenico\Connect\Model\Transaction\TransactionManager;
+use Ingenico\Connect\Sdk\Domain\Refund\ApproveRefundRequestFactory;
+use Ingenico\Connect\Sdk\Domain\Refund\Definitions\RefundResult;
+use Ingenico\Connect\Sdk\ResponseException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\CreditmemoRepositoryInterface;
-use Magento\Sales\Model\Order\Creditmemo;
-use Ingenico\Connect\Helper\Data as DataHelper;
-use Ingenico\Connect\Model\ConfigInterface;
-use Ingenico\Connect\Model\ConfigProvider;
-use Ingenico\Connect\Model\Ingenico\Action\AbstractAction;
-use Ingenico\Connect\Model\Ingenico\Action\ActionInterface;
-use Ingenico\Connect\Model\Ingenico\Action\RetrievePayment;
+use Magento\Sales\Api\Data\CreditmemoInterface;
+use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
-use Ingenico\Connect\Model\Ingenico\Status\ResolverInterface;
 use Ingenico\Connect\Model\Ingenico\StatusInterface;
-use Ingenico\Connect\Model\StatusResponseManager;
-use Ingenico\Connect\Model\Transaction\TransactionManager;
 
-class ApproveRefund extends AbstractAction implements ActionInterface
+class ApproveRefund extends AbstractRefundAction
 {
     /**
-     * @var string[]
+     * @var RefundRequested
      */
-    private $allowedStates = [StatusInterface::PENDING_APPROVAL];
+    private $refundRequestedHandler;
 
     /**
-     * @var RetrievePayment
+     * @var ClientInterface
      */
-    private $retrievePayment;
+    private $ingenicoClient;
 
     /**
-     * @var ResolverInterface
+     * @var TransactionManager
      */
-    private $statusResolver;
+    private $transactionManager;
 
     /**
-     * @var ApproveRefundRequest
+     * @var ApproveRefundRequestBuilder
      */
-    private $approveRefundRequest;
-
-    /**
-     * @var CreditmemoRepositoryInterface
-     */
-    private $creditmemoRepository;
+    private $approveRefundRequestBuilder;
 
     /**
      * ApproveRefund constructor.
      *
-     * @param StatusResponseManager $statusResponseManager
-     * @param ClientInterface $ingenicoClient
-     * @param TransactionManager $transactionManager
-     * @param ConfigInterface $config
-     * @param ApproveRefundRequest $approveRefundRequest
      * @param CreditmemoRepositoryInterface $creditmemoRepository
-     * @param RetrievePayment $retrievePayment
-     * @param ResolverInterface $statusResolver
+     * @param OrderRepositoryInterface $orderRepository
+     * @param ClientInterface $ingenicoClient
+     * @param ApproveRefundRequestBuilder $approveRefundRequestBuilder
+     * @param RefundRequested $refundRequestedHandler
+     * @param TransactionManager $transactionManager
      */
     public function __construct(
-        StatusResponseManager $statusResponseManager,
-        ClientInterface $ingenicoClient,
-        TransactionManager $transactionManager,
-        ConfigInterface $config,
-        ApproveRefundRequest $approveRefundRequest,
         CreditmemoRepositoryInterface $creditmemoRepository,
-        RetrievePayment $retrievePayment,
-        ResolverInterface $statusResolver
+        OrderRepositoryInterface $orderRepository,
+        ClientInterface $ingenicoClient,
+        ApproveRefundRequestBuilder $approveRefundRequestBuilder,
+        RefundRequested $refundRequestedHandler,
+        TransactionManager $transactionManager
     ) {
-        $this->approveRefundRequest = $approveRefundRequest;
-        $this->creditmemoRepository = $creditmemoRepository;
-        $this->retrievePayment = $retrievePayment;
-        $this->statusResolver = $statusResolver;
+        parent::__construct($orderRepository, $creditmemoRepository);
 
-        parent::__construct($statusResponseManager, $ingenicoClient, $transactionManager, $config);
+        $this->ingenicoClient = $ingenicoClient;
+        $this->approveRefundRequestBuilder = $approveRefundRequestBuilder;
+        $this->refundRequestedHandler = $refundRequestedHandler;
+        $this->transactionManager = $transactionManager;
     }
 
     /**
-     * Approve the creditmemo at the Ingenico API
-     *
-     * @param Creditmemo $creditmemo
+     * @param OrderInterface $order
+     * @param CreditmemoInterface $creditMemo
      * @throws LocalizedException
      */
-    public function process(Creditmemo $creditmemo)
+    protected function performRefundAction(OrderInterface $order, CreditmemoInterface $creditMemo)
     {
-        $order = $creditmemo->getOrder();
-        $refundId = $creditmemo->getTransactionId();
-        $payment = $order->getPayment();
+        $refundId = $creditMemo->getTransactionId();
+        $this->validateApprovability($refundId);
 
-        $refundResponse = $this->statusResponseManager->get($payment, $refundId);
-
-        $isAllowedStatus = in_array(
-            $refundResponse->status,
-            $this->allowedStates
-        );
-        if (!$isAllowedStatus && $this->isIngenicoOpenRefund($creditmemo)) {
-            throw new LocalizedException(__("Cannot approve refund with status $refundResponse->status"));
+        // Approve refund via Ingenico API:
+        try {
+            $request = $this->approveRefundRequestBuilder->build($creditMemo);
+            $this->ingenicoClient->ingenicoRefundAccept(
+                $creditMemo->getTransactionId(),
+                $request,
+                $creditMemo->getStoreId()
+            );
+        } catch (ResponseException $exception) {
+            throw new LocalizedException(
+                __('Error while trying to approve the refund: %1', $exception->getMessage())
+            );
         }
 
-        // Approve refund via Ingenico API
-        $this->approveRefund($creditmemo);
-
-        // Retrieve current status from api because
-        // approveRefund only returns a HTTP status code
-        $this->retrievePayment->process($order);
-        $refundResponse = $this->statusResponseManager->get($payment, $refundId);
-
-        $this->statusResolver->resolve($order, $refundResponse);
-        // update refund status
-        $creditmemo->setState(Creditmemo::STATE_REFUNDED);
-        $this->creditmemoRepository->save($creditmemo);
+        // If no exception is thrown it means that the API returned a valid
+        // and we can assume the refund is approved.
+        $this->refundRequestedHandler->applyCreditmemo($creditMemo);
     }
 
     /**
-     * @param Creditmemo $creditmemo
+     * @param string $refundId
+     * @throws LocalizedException
      */
-    private function approveRefund(Creditmemo $creditmemo)
+    private function validateApprovability(string $refundId)
     {
-        $amount = DataHelper::formatIngenicoAmount($creditmemo->getGrandTotal());
+        $transaction = $this->transactionManager->retrieveTransaction($refundId);
+        $refundResponse = $this->transactionManager->getResponseDataFromTransaction($transaction);
 
-        $this->approveRefundRequest->amount = $amount;
+        if (!$refundResponse instanceof RefundResult) {
+            throw new LocalizedException(__('Stored response data is not a refund response'));
+        }
 
-        $this->ingenicoClient->ingenicoRefundAccept(
-            $creditmemo->getTransactionId(),
-            $this->approveRefundRequest,
-            $creditmemo->getStoreId()
-        );
-    }
-
-    /**
-     * Check if it's ingenico payment and refund status is OPEN
-     *
-     * @param Creditmemo $creditmemo
-     * @return bool
-     */
-    private function isIngenicoOpenRefund(Creditmemo $creditmemo)
-    {
-        $methodCode = $creditmemo->getOrder()->getPayment()->getMethodInstance()->getCode();
-
-        return $methodCode === ConfigProvider::CODE && $creditmemo->getState() === Creditmemo::STATE_OPEN;
+        if ($refundResponse->status !== StatusInterface::PENDING_APPROVAL) {
+            throw new LocalizedException(
+                __('Cannot approve refund with status %1', $refundResponse->status)
+            );
+        }
     }
 }

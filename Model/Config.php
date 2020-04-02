@@ -2,6 +2,7 @@
 
 namespace Ingenico\Connect\Model;
 
+use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Encryption\EncryptorInterface;
@@ -19,11 +20,8 @@ class Config implements ConfigInterface
     const CONFIG_INGENICO_CHECKOUT_TYPE = 'ingenico_epayments/checkout/inline_payments';
 
     const CONFIG_INGENICO_API_ENDPOINT = 'ingenico_epayments/settings/api_endpoint';
-    const CONFIG_INGENICO_API_ENDPOINT_SECONDARY = 'ingenico_epayments/settings/api_endpoint_secondary';
     const CONFIG_INGENICO_WEBHOOKS_KEY_ID = 'ingenico_epayments/webhook/webhooks_key_id';
     const CONFIG_INGENICO_WEBHOOKS_SECRET_KEY = 'ingenico_epayments/webhook/webhooks_secret_key';
-    const CONFIG_INGENICO_WEBHOOKS_KEY_ID2 = 'ingenico_epayments/webhook/webhooks_key_id2';
-    const CONFIG_INGENICO_WEBHOOKS_SECRET_KEY2 = 'ingenico_epayments/webhook/webhooks_secret_key2';
     const CONFIG_INGENICO_API_KEY = 'ingenico_epayments/settings/api_key';
     const CONFIG_INGENICO_API_SECRET = 'ingenico_epayments/settings/api_secret';
     const CONFIG_INGENICO_MERCHANT_ID = 'ingenico_epayments/settings/merchant_id';
@@ -43,15 +41,6 @@ class Config implements ConfigInterface
     const CONFIG_INGENICO_SFTP_PASSWORD = 'ingenico_epayments/sftp_settings/password';
     const CONFIG_INGENICO_SFTP_REMOTE_PATH = 'ingenico_epayments/sftp_settings/remote_path';
     const CONFIG_INGENICO_SYSTEM_PREFIX = 'ingenico_epayments/settings/system_prefix';
-
-    const CONFIG_INGENICO_METHODS_TOKEN = 'ingenico_epayments/payment_method_groups/TOKEN';
-    const CONFIG_INGENICO_METHODS_BANKTRANSFER = 'ingenico_epayments/payment_method_groups/BANKTRANSFER';
-    const CONFIG_INGENICO_METHODS_CARD = 'ingenico_epayments/payment_method_groups/CARD';
-    const CONFIG_INGENICO_METHODS_CASH = 'ingenico_epayments/payment_method_groups/CASH';
-    const CONFIG_INGENICO_METHODS_DIRECTDEBIT = 'ingenico_epayments/payment_method_groups/DIRECTDEBIT';
-    const CONFIG_INGENICO_METHODS_EINVOICE = 'ingenico_epayments/payment_method_groups/EINVOICE';
-    const CONFIG_INGENICO_METHODS_INVOICE = 'ingenico_epayments/payment_method_groups/INVOICE';
-    const CONFIG_INGENICO_METHODS_REDIRECT = 'ingenico_epayments/payment_method_groups/REDIRECT';
 
     const CONFIG_INGENICO_CAPTURES_MODE = 'ingenico_epayments/captures/capture_mode';
     const CONFIG_INGENICO_CAPTURES_MODE_DIRECT = 'direct';
@@ -95,16 +84,21 @@ class Config implements ConfigInterface
      */
     private $moduleList;
 
+    /** @var ProductMetadataInterface  */
+    private $productMetadata;
+
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         DirectoryList $directoryList,
         EncryptorInterface $encryptor,
-        ModuleListInterface $moduleList
+        ModuleListInterface $moduleList,
+        ProductMetadataInterface $productMetadata
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->directoryList = $directoryList;
         $this->encryptor = $encryptor;
         $this->moduleList = $moduleList;
+        $this->productMetadata = $productMetadata;
     }
 
     /**
@@ -171,14 +165,6 @@ class Config implements ConfigInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getSecondaryApiEndpoint($storeId = null)
-    {
-        return $this->getValue(self::CONFIG_INGENICO_API_ENDPOINT_SECONDARY, $storeId);
-    }
-
-    /**
      * @param int|null $storeId
      * @return string
      */
@@ -209,22 +195,6 @@ class Config implements ConfigInterface
     public function getWebHooksSecretKey($storeId = null)
     {
         return $this->encryptor->decrypt($this->getValue(self::CONFIG_INGENICO_WEBHOOKS_SECRET_KEY, $storeId));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getWebHooksKeyId2($storeId = null)
-    {
-        return $this->encryptor->decrypt($this->getValue(self::CONFIG_INGENICO_WEBHOOKS_KEY_ID2, $storeId));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getWebHooksSecretKey2($storeId = null)
-    {
-        return $this->encryptor->decrypt($this->getValue(self::CONFIG_INGENICO_WEBHOOKS_SECRET_KEY2, $storeId));
     }
 
     /**
@@ -322,7 +292,7 @@ class Config implements ConfigInterface
      */
     public function getShoppingCartExtensionName()
     {
-        return 'Ingenico Connect Magento 2 Extension';
+        return 'M2.Connect';
     }
 
     /**
@@ -330,25 +300,19 @@ class Config implements ConfigInterface
      */
     public function getIntegrator()
     {
-        return 'Ingenico DTT GmbH';
+        return 'Ingenico';
     }
 
     /**
-     * @param int|null $storeId
-     * @return array
+     * {@inheritDoc}
      */
-    public function getProductGroupTitles($storeId = null)
+    public function getMagentoVersion()
     {
-        return [
-            'token' => $this->getValue(self::CONFIG_INGENICO_METHODS_TOKEN, $storeId),
-            'bankTransfer' => $this->getValue(self::CONFIG_INGENICO_METHODS_BANKTRANSFER, $storeId),
-            'card' => $this->getValue(self::CONFIG_INGENICO_METHODS_CARD, $storeId),
-            'cash' => $this->getValue(self::CONFIG_INGENICO_METHODS_CASH, $storeId),
-            'directDebit' => $this->getValue(self::CONFIG_INGENICO_METHODS_DIRECTDEBIT, $storeId),
-            'eInvoice' => $this->getValue(self::CONFIG_INGENICO_METHODS_EINVOICE, $storeId),
-            'invoice' => $this->getValue(self::CONFIG_INGENICO_METHODS_INVOICE, $storeId),
-            'redirect' => $this->getValue(self::CONFIG_INGENICO_METHODS_REDIRECT, $storeId),
-        ];
+        return sprintf(
+            'M%s %s',
+            $this->productMetadata->getVersion(),
+            $this->productMetadata->getEdition()
+        );
     }
 
     /**
@@ -402,7 +366,7 @@ class Config implements ConfigInterface
         return $this->getValue(self::CONFIG_INGENICO_SFTP_REMOTE_PATH, $storeId);
     }
 
-    /***
+    /**
      * @inheritdoc
      */
     public function getReferencePrefix()

@@ -11,6 +11,7 @@ use Ingenico\Connect\Sdk\Domain\Refund\Definitions\RefundResult;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\Order\Payment;
+use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository as TransactionRepository;
 
 /**
@@ -43,11 +44,13 @@ class StatusResponseManager implements StatusResponseManagerInterface
      * @param InfoInterface|Payment $payment
      * @param string $transactionId
      * @return IngenicoPayment|false
+     * @deprecated This kind of information needs to be stored on the transaction, not on the payment object. Use
+     *     \Ingenico\Connect\Model\Transaction\TransactionManager::getResponseDataFromTransaction() instead
      */
     public function get(InfoInterface $payment, $transactionId)
     {
         $orderStatus = false;
-        /** @var Payment\Transaction $transaction */
+        /** @var Transaction $transaction */
         $transaction = $this->transactionRepository
             ->getByTransactionId($transactionId, $payment->getId(), $payment->getOrder()->getId());
 
@@ -77,6 +80,8 @@ class StatusResponseManager implements StatusResponseManagerInterface
      * @param $transactionId
      * @param AbstractOrderStatus $orderStatus
      * @throws LocalizedException
+     * @deprecated This kind of information needs to be stored on the transaction, not on the payment object. Use
+     *     \Ingenico\Connect\Model\Transaction\TransactionManager::setResponseDataOnTransaction() instead.
      */
     public function set(
         InfoInterface $payment,
@@ -87,33 +92,46 @@ class StatusResponseManager implements StatusResponseManagerInterface
             throw new LocalizedException(__('Unknown payment status.'));
         }
 
-        /** @var Payment\Transaction $transaction */
+        /** @var Transaction $transaction */
         $transaction = $this->transactionRepository
             ->getByTransactionId($transactionId, $payment->getId(), $payment->getOrder()->getId());
-        $objectClassName = get_class($orderStatus);
-        $objectJson = $orderStatus->toJson();
 
         if ($transaction && $transaction->getId()) {
-            $transaction->setAdditionalInformation(self::TRANSACTION_CLASS_KEY, $objectClassName);
-            $transaction->setAdditionalInformation(self::TRANSACTION_INFO_KEY, $objectJson);
-            $transaction->setAdditionalInformation(
-                Payment\Transaction::RAW_DETAILS,
-                $this->getVisibleInfo($orderStatus)
-            );
+            $this->setResponseDataOnTransaction($orderStatus, $transaction);
             $payment->getOrder()->addRelatedObject($transaction);
         } else {
+            $objectClassName = get_class($orderStatus);
+            $objectJson = $orderStatus->toJson();
             // If transaction does not (yet) exist
             $payment->setTransactionAdditionalInfo(self::TRANSACTION_CLASS_KEY, $objectClassName);
             $payment->setTransactionAdditionalInfo(self::TRANSACTION_INFO_KEY, $objectJson);
             // setTransactionAdditionalInfo's doc block type hints are broken, but passing (string, array) works.
             $payment->setTransactionAdditionalInfo(
-                Payment\Transaction::RAW_DETAILS,
+                Transaction::RAW_DETAILS,
                 $this->getVisibleInfo($orderStatus)
             );
         }
 
         $payment->setAdditionalInformation(Config::PAYMENT_STATUS_KEY, $orderStatus->status);
         $payment->setAdditionalInformation(Config::PAYMENT_STATUS_CODE_KEY, $orderStatus->statusOutput->statusCode);
+    }
+
+    /**
+     * @param AbstractOrderStatus $responseData
+     * @param Transaction $transaction
+     * @throws LocalizedException
+     * @deprecated Use the one on to the TransactionManager instead
+     */
+    public function setResponseDataOnTransaction(AbstractOrderStatus $responseData, Transaction $transaction)
+    {
+        $objectClassName = get_class($responseData);
+        $objectJson = $responseData->toJson();
+        $transaction->setAdditionalInformation(self::TRANSACTION_CLASS_KEY, $objectClassName);
+        $transaction->setAdditionalInformation(self::TRANSACTION_INFO_KEY, $objectJson);
+        $transaction->setAdditionalInformation(
+            Transaction::RAW_DETAILS,
+            $this->getVisibleInfo($responseData)
+        );
     }
 
     /**
@@ -146,6 +164,7 @@ class StatusResponseManager implements StatusResponseManagerInterface
      *
      * @param string $txnId
      * @return \Magento\Sales\Api\Data\TransactionInterface|null
+     * @deprecated This kind of information needs to be stored on the transaction, not on the payment object
      */
     public function getTransactionBy($transactionId, InfoInterface $payment)
     {
@@ -176,6 +195,7 @@ class StatusResponseManager implements StatusResponseManagerInterface
      *
      * @param \Magento\Sales\Api\Data\TransactionInterface $transaction
      * @return void
+     * @deprecated Use the save()-method of the TransactionManager instead
      */
     public function save(\Magento\Sales\Api\Data\TransactionInterface $transaction)
     {

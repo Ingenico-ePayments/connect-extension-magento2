@@ -2,6 +2,7 @@
 
 namespace Ingenico\Connect\Model\Ingenico;
 
+use Ingenico\Connect\Model\Ingenico\Client\Communicator\ConfigurationBuilder;
 use Ingenico\Connect\Sdk\DefaultConnectionFactory;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\CreateHostedCheckoutRequest;
 use Ingenico\Connect\Sdk\Domain\Payment\ApprovePaymentRequest;
@@ -16,90 +17,99 @@ use Ingenico\Connect\Sdk\Domain\Sessions\SessionResponse;
 use Ingenico\Connect\Sdk\Merchant\Products\GetProductParams;
 use Ingenico\Connect\Sdk\Merchant\Products\GetProductParamsFactory;
 use Magento\Framework\App\Request\Http;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Store\Model\StoreManagerInterface;
 use Ingenico\Connect\Model\ConfigInterface;
 use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
-use Ingenico\Connect\Model\Ingenico\Client\CommunicatorConfigurationFactory;
 use Ingenico\Connect\Model\Ingenico\Client\CommunicatorFactory;
 use Ingenico\Connect\Model\Ingenico\Client\CommunicatorLoggerFactory;
-use Ingenico\Connect\Model\Ingenico\Client\ShoppingCartExtensionFactory;
 
 class Client implements ClientInterface
 {
-    /** @var ConfigInterface */
+    /**
+     * @var ConfigInterface
+     */
     private $ePaymentsConfig;
 
-    /** @var \Ingenico\Connect\Sdk\Client[] */
+    /**
+     * @var \Ingenico\Connect\Sdk\Client[]
+     */
     private $ingenicoClient = [];
 
     /**
-     * @var ShoppingCartExtensionFactory
+     * @var CommunicatorLoggerFactory
      */
-    private $shoppingCartExtensionFactory;
-
-    /** @var CommunicatorLoggerFactory */
     private $communicatorLoggerFactory;
 
-    /** @var CommunicatorConfigurationFactory */
-    private $communicatorConfigurationFactory;
-
-    /** @var CommunicatorFactory */
+    /**
+     * @var CommunicatorFactory
+     */
     private $communicatorFactory;
 
-    /** @var ClientFactory */
+    /**
+     * @var ClientFactory
+     */
     private $clientFactory;
 
-    /** @var DefaultConnectionFactory */
+    /**
+     * @var DefaultConnectionFactory
+     */
     private $defaultConnectionFactory;
 
-    /** @var FindProductsParamsFactory */
+    /**
+     * @var FindProductsParamsFactory
+     */
     private $findProductParamsFactory;
 
-    /** @var StoreManagerInterface */
+    /**
+     * @var StoreManagerInterface
+     */
     private $storeManager;
 
     /**
-     * @var \Magento\Framework\App\RequestInterface | Http
+     * @var RequestInterface | Http
      */
     private $request;
+
+    /**
+     * @var Client\Communicator\ConfigurationBuilder
+     */
+    private $configurationBuilder;
 
     /**
      * Client constructor.
      *
      * @param ConfigInterface $ePaymentsConfig
-     * @param ShoppingCartExtensionFactory $shoppingCartExtensionFactory
      * @param CommunicatorLoggerFactory $communicatorLoggerFactory
-     * @param CommunicatorConfigurationFactory $communicatorConfigurationFactory
+     * @param ConfigurationBuilder $configurationBuilder
      * @param CommunicatorFactory $communicatorFactory
      * @param ClientFactory $clientFactory
      * @param DefaultConnectionFactory $defaultConnectionFactory
      * @param GetProductParamsFactory $getProductParamsFactory
      * @param StoreManagerInterface $storeManager
-     * @param \Magento\Framework\App\RequestInterface $request
+     * @param RequestInterface $request
      */
     public function __construct(
         ConfigInterface $ePaymentsConfig,
-        ShoppingCartExtensionFactory $shoppingCartExtensionFactory,
         CommunicatorLoggerFactory $communicatorLoggerFactory,
-        CommunicatorConfigurationFactory $communicatorConfigurationFactory,
+        ConfigurationBuilder $configurationBuilder,
         CommunicatorFactory $communicatorFactory,
         ClientFactory $clientFactory,
         DefaultConnectionFactory $defaultConnectionFactory,
         GetProductParamsFactory $getProductParamsFactory,
         StoreManagerInterface $storeManager,
-        \Magento\Framework\App\RequestInterface $request
+        RequestInterface $request
     ) {
         $this->ePaymentsConfig = $ePaymentsConfig;
-        $this->shoppingCartExtensionFactory = $shoppingCartExtensionFactory;
         $this->communicatorLoggerFactory = $communicatorLoggerFactory;
-        $this->communicatorConfigurationFactory = $communicatorConfigurationFactory;
         $this->communicatorFactory = $communicatorFactory;
         $this->clientFactory = $clientFactory;
         $this->findProductParamsFactory = $getProductParamsFactory;
         $this->defaultConnectionFactory = $defaultConnectionFactory;
         $this->storeManager = $storeManager;
         $this->request = $request;
+        $this->configurationBuilder = $configurationBuilder;
     }
 
     /**
@@ -110,20 +120,8 @@ class Client implements ClientInterface
     private function initialize($scopeId)
     {
         if (!isset($this->ingenicoClient[$scopeId])) {
-            $config = $this->buildCommunicatorConfiguration($scopeId);
-
-            $secondaryConfig = $this->buildCommunicatorConfiguration(
-                $scopeId,
-                [
-                    'api_endpoint' => $this->ePaymentsConfig->getSecondaryApiEndpoint(
-                        $scopeId
-                    ),
-                ]
-            );
-            $this->ingenicoClient[$scopeId] = $this->buildFromConfiguration(
-                $config,
-                $secondaryConfig
-            );
+            $config = $this->configurationBuilder->build($scopeId);
+            $this->ingenicoClient[$scopeId] = $this->buildFromConfiguration($config);
         }
     }
 
@@ -391,7 +389,7 @@ class Client implements ClientInterface
      */
     public function ingenicoTestAccount($scopeId = null, $data = [])
     {
-        $client = $this->buildFromConfiguration($this->buildCommunicatorConfiguration($scopeId, $data));
+        $client = $this->buildFromConfiguration($this->configurationBuilder->build($scopeId, $data));
         $response = $client
             ->merchant($data['merchant_id'])
             ->services()
@@ -401,41 +399,10 @@ class Client implements ClientInterface
     }
 
     /**
-     * @param $scopeId
-     * @param string[] $data
-     * @return \Ingenico\Connect\Sdk\CommunicatorConfiguration
-     */
-    private function buildCommunicatorConfiguration($scopeId, $data = [])
-    {
-        $cartExtension = $this->shoppingCartExtensionFactory->create(
-            $this->ePaymentsConfig->getIntegrator(),
-            $this->ePaymentsConfig->getShoppingCartExtensionName(),
-            $this->ePaymentsConfig->getVersion()
-        );
-
-        $apiKey = !empty($data['api_key']) ? $data['api_key'] : $this->ePaymentsConfig->getApiKey($scopeId);
-        $apiSecret = !empty($data['api_secret']) ? $data['api_secret'] : $this->ePaymentsConfig->getApiSecret($scopeId);
-        $apiEndpoint = !empty($data['api_endpoint']) ?
-            $data['api_endpoint'] : $this->ePaymentsConfig->getApiEndpoint($scopeId);
-
-        $configuration = $this->communicatorConfigurationFactory
-            ->create(
-                $apiKey,
-                $apiSecret,
-                $apiEndpoint,
-                $this->ePaymentsConfig->getIntegrator()
-            );
-
-        $configuration->setShoppingCartExtension($cartExtension);
-        return $configuration;
-    }
-
-    /**
      * @param $communicatorConfiguration
-     * @param $secondaryCommunicatorConfiguration
      * @return \Ingenico\Connect\Sdk\Client
      */
-    private function buildFromConfiguration($communicatorConfiguration, $secondaryCommunicatorConfiguration = null)
+    private function buildFromConfiguration($communicatorConfiguration)
     {
         $defaultConnection = $this->defaultConnectionFactory->create();
         $communicator = $this->communicatorFactory
@@ -445,9 +412,6 @@ class Client implements ClientInterface
                     'communicatorConfiguration' => $communicatorConfiguration,
                 ]
             );
-        if ($secondaryCommunicatorConfiguration !== null) {
-            $communicator->setSecondaryCommunicatorConfiguration($secondaryCommunicatorConfiguration);
-        }
 
         $clientMetaInfo = [
             'platformIdentifier' => $this->request->getServer('HTTP_USER_AGENT'),

@@ -45,8 +45,6 @@ class CanRefund implements ValueHandlerInterface
      */
     public function handle(array $subject, $storeId = null)
     {
-        $result = false;
-
         /** @var Payment $payment */
         $payment = $subject['payment']->getPayment();
         $paymentId = $payment->getAdditionalInformation(Config::PAYMENT_ID_KEY);
@@ -58,22 +56,15 @@ class CanRefund implements ValueHandlerInterface
             $creditmemo->getTransactionId() &&
             $refundResponse = $this->statusResponseManager->get($payment, $creditmemo->getTransactionId())
         ) {
-            $result = $refundResponse->status == StatusInterface::PENDING_APPROVAL;
-        } elseif (($paymentResponse = $this->statusResponseManager->get($payment, $paymentId)) &&
-                  isset($paymentResponse->statusOutput->isRefundable)
-        ) {
-            $result = $paymentResponse->statusOutput->isRefundable;
-            if (!$result &&
-                 $creditmemo &&
-                 $creditmemo->getInvoice() &&
-                 $invoiceId = $creditmemo->getInvoice()->getTransactionId()
-            ) {
-                // @FIXME: This is a workaround until the ingenico api always reports the is_refundable property!
-                $paymentResponse = $this->statusResponseManager->get($payment, $invoiceId);
-                $result = in_array($paymentResponse->statusOutput->statusCode, [9, 95]);
-            }
+            return $refundResponse->status == StatusInterface::PENDING_APPROVAL;
         }
 
-        return $result;
+        if (($paymentResponse = $this->statusResponseManager->get($payment, $paymentId)) &&
+            isset($paymentResponse->statusOutput->isRefundable)
+        ) {
+            return $paymentResponse->statusOutput->isRefundable;
+        }
+
+        return false;
     }
 }

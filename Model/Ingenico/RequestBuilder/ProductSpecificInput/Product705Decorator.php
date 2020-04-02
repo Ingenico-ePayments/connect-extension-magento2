@@ -37,6 +37,10 @@ class Product705Decorator implements DecoratorInterface
      */
     public function decorate(DataObject $request, OrderInterface $order)
     {
+        if (!$request instanceof CreatePaymentRequest) {
+            return $request;
+        }
+
         $input = $this->inputFactory->create();
         $input->transactionType = 'first-payment';
         $request->directDebitPaymentMethodSpecificInput->paymentProduct705SpecificInput = $input;

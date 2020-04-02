@@ -3,6 +3,7 @@
 namespace Ingenico\Connect\Model\Ingenico\RequestBuilder\MethodSpecificInput;
 
 use Ingenico\Connect\Sdk\DataObject;
+use Ingenico\Connect\Sdk\Domain\Payment\CreatePaymentRequest;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\NonSepaDirectDebitPaymentMethodSpecificInput;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\NonSepaDirectDebitPaymentMethodSpecificInputFactory;
 use Magento\Sales\Api\Data\OrderInterface;
@@ -35,6 +36,10 @@ class DirectDebitDecorator implements DecoratorInterface
      */
     public function decorate(DataObject $request, OrderInterface $order)
     {
+        if (!$request instanceof CreatePaymentRequest) {
+            return $request;
+        }
+
         /** @var NonSepaDirectDebitPaymentMethodSpecificInput $input */
         $input = $this->specificInputFactory->create();
         $input->paymentProductId = $this->getProductId($order);

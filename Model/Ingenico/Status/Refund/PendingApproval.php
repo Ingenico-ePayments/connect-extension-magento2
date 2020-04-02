@@ -6,6 +6,8 @@ use Ingenico\Connect\Sdk\Domain\Definitions\AbstractOrderStatus;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\CreditmemoInterface;
 use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\Data\TransactionInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Creditmemo;
 use Ingenico\Connect\Model\Order\Creditmemo\Service;
@@ -17,20 +19,32 @@ class PendingApproval implements RefundHandlerInterface
      * @var TransactionManager
      */
     private $transactionManager;
+
     /**
      * @var Service
      */
     private $creditMemoService;
 
     /**
+     * @var OrderRepositoryInterface
+     */
+    private $orderRepository;
+
+    /**
      * PendingApproval constructor.
+     *
      * @param TransactionManager $transactionManager
      * @param Service $creditMemoService
+     * @param OrderRepositoryInterface $orderRepository
      */
-    public function __construct(TransactionManager $transactionManager, Service $creditMemoService)
-    {
+    public function __construct(
+        TransactionManager $transactionManager,
+        Service $creditMemoService,
+        OrderRepositoryInterface $orderRepository
+    ) {
         $this->transactionManager = $transactionManager;
         $this->creditMemoService = $creditMemoService;
+        $this->orderRepository = $orderRepository;
     }
 
     /**
@@ -50,11 +64,25 @@ class PendingApproval implements RefundHandlerInterface
     /**
      * {@inheritDoc}
      */
-    public function applyCreditmemo(CreditmemoInterface $creditmemo)
+    public function applyCreditmemo(CreditmemoInterface $creditMemo, TransactionInterface $transaction = null)
     {
+        if (!$creditMemo instanceof Creditmemo) {
+            return;
+        }
+
         /** @TODO(nr): Gateway\CanRefund checks if status is appropriate for approval. */
-        $creditmemo->setState(Creditmemo::STATE_OPEN);
-        $transaction = $this->transactionManager->retrieveTransaction($creditmemo->getTransactionId());
+        $creditMemo->setState(Creditmemo::STATE_OPEN);
+        $order = $creditMemo->getOrder();
+
+        // Put the order on hold when a refund requires approval:
+        if ($order->canHold()) {
+            $order->hold();
+        }
+
+        if ($transaction === null) {
+            $transaction = $this->transactionManager->retrieveTransaction($creditMemo->getTransactionId());
+        }
+
         if ($transaction !== null) {
             $transaction->setIsClosed(false);
             $this->transactionManager->updateTransaction($transaction);

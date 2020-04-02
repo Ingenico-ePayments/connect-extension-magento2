@@ -25,7 +25,6 @@ define([
 
             productList.isLoading(true);
 
-            let groupTitles = config.getGroupTitles();
             let groupsMap = new Map();
 
             /**
@@ -34,7 +33,6 @@ define([
             if (config.useInlinePayments() && productList.accountsOnFile().length > 0) {
                 groupsMap.set('token', {
                     'id': 'token',
-                    'name': groupTitles.token,
                     'products': [],
                     'accounts': []
                 });
@@ -54,7 +52,6 @@ define([
                         product.paymentMethod,
                         {
                             'id': product.paymentMethod,
-                            'name': groupTitles[product.paymentMethod],
                             'products': [product],
                             'accounts': []
                         }

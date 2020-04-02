@@ -2,6 +2,8 @@
 
 namespace Ingenico\Connect\Model\Ingenico\Action;
 
+use Exception;
+use Ingenico\Connect\Sdk\Domain\Capture\CaptureResponse;
 use Ingenico\Connect\Sdk\Domain\Capture\Definitions\Capture;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment as IngenicoPayment;
 use Ingenico\Connect\Sdk\Domain\Payment\PaymentResponse;
@@ -91,22 +93,26 @@ class RetrievePayment extends AbstractAction implements ActionInterface
         if (!$ingenicoPaymentId && empty($orderTransactions)) {
             try {
                 return $this->updateHostedCheckoutStatus($order);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 throw new LocalizedException(__('Order is not linked with Ingenico ePayments orders.'));
             }
         }
 
         foreach ($orderTransactions as $transaction) {
             $currentStatus = $this->getCurrentStatus($payment, $transaction);
+            if (!$currentStatus) {
+                continue;
+            }
+
             $updateStatus = $this->getUpdateStatus($order, $currentStatus);
-            if ($updateStatus->status !== $currentStatus->status) {
+            if ($this->requiresUpdate($currentStatus, $updateStatus)) {
                 $this->statusResolver->resolve($order, $updateStatus);
 
+                // @TODO: this looks like an ugly fix. Extend the integration test suite to check if this is required:
+                // @TODO: this only needs to be tested for UndoCapturePaymentObserver
                 /** @var Payment\Transaction $transaction */
-                $transaction = $this->transactionManager->retrieveTransaction($transaction->getTxnId());
-                if ($transaction !== null) {
-                    $order->addRelatedObject($transaction);
-                }
+                $this->addTransactionToOrder($order, $transaction);
+                // @TODO: end ugly fix
                 $order->addRelatedObject($payment);
                 $orderWasUpdated = true;
             } else {
@@ -136,7 +142,7 @@ class RetrievePayment extends AbstractAction implements ActionInterface
     /**
      * @param Order $order
      * @param IngenicoPayment|RefundResult|Capture $currentStatus
-     * @return \Ingenico\Connect\Sdk\Domain\Capture\CaptureResponse|PaymentResponse|RefundResponse
+     * @return CaptureResponse|PaymentResponse|RefundResponse
      * @throws LocalizedException
      */
     private function getUpdateStatus(Order $order, $currentStatus)
@@ -163,7 +169,7 @@ class RetrievePayment extends AbstractAction implements ActionInterface
      *
      * @param Order|OrderInterface $order
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     private function updateHostedCheckoutStatus(Order $order)
     {
@@ -172,5 +178,41 @@ class RetrievePayment extends AbstractAction implements ActionInterface
         $ingenicoPaymentId = $order->getPayment()->getAdditionalInformation(Config::PAYMENT_ID_KEY);
 
         return $ingenicoPaymentId !== null;
+    }
+
+    /**
+     * @param CaptureResponse|PaymentResponse|RefundResponse $currentStatus
+     * @param CaptureResponse|PaymentResponse|RefundResponse $updateStatus
+     * @return bool
+     */
+    private function requiresUpdate($currentStatus, $updateStatus): bool
+    {
+        return $currentStatus->status !== $updateStatus->status ||
+            $currentStatus->statusOutput->toJson() !== $updateStatus->statusOutput->toJson();
+    }
+
+    /**
+     * @fixme: this method can be most likely be removed entirely as soon
+     * as the integration test also covers UndoCapturePaymentObserver
+     * @param Order $order
+     * @param Payment\Transaction $transaction
+     * @return Payment\Transaction|null
+     */
+    private function addTransactionToOrder(Order $order, Payment\Transaction $transaction)
+    {
+        $transaction = $this->transactionManager->retrieveTransaction($transaction->getTxnId());
+        if ($transaction !== null) {
+            $found = false;
+            foreach ($order->getRelatedObjects() as $relatedObject) {
+                if ($relatedObject instanceof Payment\Transaction &&
+                    (int) $relatedObject->getId() === (int) $transaction->getId()) {
+                    $found = true;
+                }
+            }
+            if (!$found) {
+                $order->addRelatedObject($transaction);
+            }
+        }
+        return $transaction;
     }
 }

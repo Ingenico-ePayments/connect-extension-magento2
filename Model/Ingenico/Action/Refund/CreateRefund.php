@@ -1,35 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ingenico\Connect\Model\Ingenico\Action\Refund;
 
-use Magento\Framework\Stdlib\DateTime\DateTime;
-use Magento\Sales\Model\Order;
-use Ingenico\Connect\Helper\Data as DataHelper;
+use Ingenico\Connect\Model\Ingenico\RequestBuilder\Refund\RefundRequestBuilder;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Sales\Api\CreditmemoRepositoryInterface;
+use Magento\Sales\Api\Data\CreditmemoInterface;
+use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Api\TransactionRepositoryInterface;
 use Ingenico\Connect\Model\Config;
-use Ingenico\Connect\Model\ConfigInterface;
-use Ingenico\Connect\Model\Ingenico\Action\AbstractAction;
-use Ingenico\Connect\Model\Ingenico\Action\ActionInterface;
 use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
 use Ingenico\Connect\Model\Ingenico\CallContextBuilder;
-use Ingenico\Connect\Model\Ingenico\MerchantReference;
-use Ingenico\Connect\Model\Ingenico\RefundRequestBuilder;
 use Ingenico\Connect\Model\Ingenico\Status\Refund\RefundHandlerInterface;
 use Ingenico\Connect\Model\Ingenico\Status\ResolverInterface;
-use Ingenico\Connect\Model\StatusResponseManager;
 use Ingenico\Connect\Model\Transaction\TransactionManager;
+use Magento\Sales\Model\Order\Payment\Transaction;
 
 /**
- * @link https://developer.globalcollect.com/documentation/api/server/#__merchantId__payments__paymentId__refund_post
+ * Class CreateRefund
+ *
+ * @package Ingenico\Connect\Model\Ingenico\Action\Refund
  */
-class CreateRefund extends AbstractAction implements ActionInterface
+class CreateRefund extends AbstractRefundAction
 {
-    const EMAIL_MESSAGE_TYPE = 'html';
-
-    /**
-     * @var DateTime
-     */
-    private $dateTime;
-
     /**
      * @var ResolverInterface
      */
@@ -46,81 +42,102 @@ class CreateRefund extends AbstractAction implements ActionInterface
     private $callContextBuilder;
 
     /**
-     * @var MerchantReference
+     * @var TransactionRepositoryInterface
      */
-    private $merchantReference;
+    private $transactionRepository;
+
+    /**
+     * @var ClientInterface
+     */
+    private $ingenicoClient;
+
+    /**
+     * @var TransactionManager
+     */
+    private $transactionManager;
 
     /**
      * CreateRefund constructor.
      *
-     * @param StatusResponseManager $statusResponseManager
+     * @param OrderRepositoryInterface $orderRepository
+     * @param CreditmemoRepositoryInterface $creditmemoRepository
      * @param ClientInterface $ingenicoClient
-     * @param TransactionManager $transactionManager
-     * @param ConfigInterface $ePaymentsConfig
-     * @param DateTime $dateTime
      * @param ResolverInterface $statusResolver
      * @param RefundRequestBuilder $refundRequestBuilder
      * @param CallContextBuilder $callContextBuilder
-     * @param MerchantReference $merchantReference
+     * @param TransactionRepositoryInterface $transactionRepository
+     * @param TransactionManager $transactionManager
      */
     public function __construct(
-        StatusResponseManager $statusResponseManager,
+        OrderRepositoryInterface $orderRepository,
+        CreditmemoRepositoryInterface $creditmemoRepository,
         ClientInterface $ingenicoClient,
-        TransactionManager $transactionManager,
-        ConfigInterface $ePaymentsConfig,
-        DateTime $dateTime,
         ResolverInterface $statusResolver,
         RefundRequestBuilder $refundRequestBuilder,
         CallContextBuilder $callContextBuilder,
-        MerchantReference $merchantReference
+        TransactionRepositoryInterface $transactionRepository,
+        TransactionManager $transactionManager
     ) {
-        $this->dateTime = $dateTime;
+        parent::__construct($orderRepository, $creditmemoRepository);
+
         $this->statusResolver = $statusResolver;
         $this->refundRequestbuilder = $refundRequestBuilder;
         $this->callContextBuilder = $callContextBuilder;
-        $this->merchantReference = $merchantReference;
-
-        parent::__construct($statusResponseManager, $ingenicoClient, $transactionManager, $ePaymentsConfig);
+        $this->transactionRepository = $transactionRepository;
+        $this->ingenicoClient = $ingenicoClient;
+        $this->transactionManager = $transactionManager;
     }
 
     /**
-     * Create refund
-     *
-     * @param Order $order
-     * @param float $amount
+     * @param OrderInterface $order
+     * @param CreditmemoInterface $creditMemo
+     * @throws LocalizedException
      */
-    public function process(Order $order, $amount)
+    protected function performRefundAction(OrderInterface $order, CreditmemoInterface $creditMemo)
     {
-        /** @var \Magento\Sales\Model\Order\Payment $payment */
         $payment = $order->getPayment();
-        $ingenicoPaymentId = $payment->getAdditionalInformation(Config::PAYMENT_ID_KEY);
+        $amount = $creditMemo->getBaseGrandTotal();
+        $paymentId = $payment->getAdditionalInformation(Config::PAYMENT_ID_KEY);
 
-        $billing = $order->getBillingAddress();
-        if ($billing !== null) {
-            $this->refundRequestbuilder->setCountryCode($billing->getCountryId());
-        }
-        $this->refundRequestbuilder->setAmount(DataHelper::formatIngenicoAmount($amount));
-        $this->refundRequestbuilder->setCurrencyCode($order->getBaseCurrencyCode());
-        $this->refundRequestbuilder->setCustomerEmail($order->getCustomerEmail() ?: '');
-        $this->refundRequestbuilder->setCustomerLastname($order->getCustomerLastname() ?: '');
-        $this->refundRequestbuilder->setEmailMessageType(self::EMAIL_MESSAGE_TYPE);
-        $this->refundRequestbuilder->setMerchantReference($this->merchantReference->generateMerchantReference($order));
-
-        $request = $this->refundRequestbuilder->create();
+        $request = $this->refundRequestbuilder->build($order, (float) $amount);
         $callContext = $this->callContextBuilder->create();
 
         $response = $this->ingenicoClient->ingenicoRefund(
-            $ingenicoPaymentId,
+            $paymentId,
             $request,
             $callContext,
             $order->getStoreId()
         );
 
+        // Attach transaction to payment:
+        $payment->setLastTransId($response->id);
+        $payment->setTransactionId($response->id);
+
+        // Create a transaction for the refund:
+        $creditMemo->setTransactionId($response->id);
+
+        $transaction = $payment->addTransaction(Transaction::TYPE_REFUND);
+        $this->transactionManager->setResponseDataOnTransaction($response, $transaction);
+
+        // Set the parent transaction:
+        $invoice = $creditMemo->getInvoice();
+        $captureTxn = $this->transactionRepository->getByTransactionId(
+            $invoice->getTransactionId(),
+            $payment->getId(),
+            $order->getId()
+        );
+
+        if ($captureTxn) {
+            $transaction->setParentTxnId($captureTxn->getTxnId());
+            $payment->setParentTransactionId($captureTxn->getTxnId());
+            $payment->setShouldCloseParentTransaction(true);
+        }
+
         /** @var RefundHandlerInterface $handler */
         $handler = $this->statusResolver->getHandlerByType(ResolverInterface::TYPE_REFUND, $response->status);
-        $handler->applyCreditmemo($payment->getCreditmemo());
 
-        $payment->setLastTransId($response->id);
+        // This handler can either be the PENDING_APPROVAL or REFUND_REQUESTED-handler:
+        $handler->applyCreditmemo($creditMemo, $transaction);
 
         $payment->setPreparedMessage(
             sprintf(
@@ -129,7 +146,5 @@ class CreateRefund extends AbstractAction implements ActionInterface
                 $response->statusOutput->statusCode
             )
         );
-
-        $this->postProcess($payment, $response);
     }
 }
