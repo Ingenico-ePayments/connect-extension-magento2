@@ -139,8 +139,17 @@ class Handler
             sprintf(
                 'Received incoming webhook event with id %1$s:' . PHP_EOL . '%2$s',
                 $event->id,
-                $jsonData
+                $this->obfuscate($jsonData)
             )
+        );
+    }
+
+    private function obfuscate(string $body): string
+    {
+        return preg_replace(
+            '/"expiryDate":(\s?)"(\d{2})(\d{2})"/mUis',
+            '"expiryDate":$1"**$3"',
+            $body
         );
     }
 

@@ -54,7 +54,7 @@ class Unmarshaller
         $secretKeyStore = $this->keyStoreFactory->create(['secretKeys' => $secretKeys]);
         $helper = $this->webhooksHelperFactory->create(['secretKeyStore' => $secretKeyStore]);
 
-        return $helper->unmarshal($this->obfuscate($body), $requestHeaders);
+        return $helper->unmarshal($body, $requestHeaders);
     }
 
     /**
@@ -74,14 +74,5 @@ class Unmarshaller
         }
 
         return $pattern;
-    }
-
-    private function obfuscate(string $body): string
-    {
-        return preg_replace(
-            '/"expiryDate":(\s?)"(\d{2})(\d{2})"/mUis',
-            '"expiryDate":$1"**$3"',
-            $body
-        );
     }
 }
