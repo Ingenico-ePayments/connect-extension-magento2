@@ -15,4 +15,11 @@ interface OrderServiceInterface
      * @throws NoSuchEntityException
      */
     public function getByIncrementId(string $incrementId): OrderInterface;
+
+    /**
+     * @param string $hostedCheckoutId
+     * @return OrderInterface
+     * @throws NoSuchEntityException
+     */
+    public function getByHostedCheckoutId(string $hostedCheckoutId): OrderInterface;
 }

@@ -1,15 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ingenico\Connect\Controller\InlinePayment;
 
+use Exception;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NotFoundException;
-use Magento\Sales\Model\Order;
-use Ingenico\Connect\Model\Cart\ServiceInterface;
 use Ingenico\Connect\Model\Config;
 use Ingenico\Connect\Model\ConfigInterface;
 use Ingenico\Connect\Model\Ingenico\Action\GetInlinePaymentStatus;
@@ -18,17 +21,20 @@ use Psr\Log\LoggerInterface;
 
 class ProcessReturn extends Action
 {
-    /** @var Session */
+    /**
+     * @var Session
+     */
     private $checkoutSession;
 
-    /** @var ConfigInterface */
+    /**
+     * @var ConfigInterface
+     */
     private $ePaymentsConfig;
 
-    /** @var LoggerInterface */
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
-
-    /** @var ServiceInterface */
-    private $refillCartService;
 
     /**
      * @var GetInlinePaymentStatus
@@ -42,7 +48,6 @@ class ProcessReturn extends Action
      * @param Session $checkoutSession
      * @param ConfigInterface $config
      * @param LoggerInterface $logger
-     * @param ServiceInterface $refillCartService
      * @param GetInlinePaymentStatus $getInlinePaymentStatus
      */
     public function __construct(
@@ -50,7 +55,6 @@ class ProcessReturn extends Action
         Session $checkoutSession,
         ConfigInterface $config,
         LoggerInterface $logger,
-        ServiceInterface $refillCartService,
         GetInlinePaymentStatus $getInlinePaymentStatus
     ) {
         parent::__construct($context);
@@ -58,14 +62,13 @@ class ProcessReturn extends Action
         $this->checkoutSession = $checkoutSession;
         $this->ePaymentsConfig = $config;
         $this->logger = $logger;
-        $this->refillCartService = $refillCartService;
         $this->inlinePaymentStatus = $getInlinePaymentStatus;
     }
 
     /**
      * Executes when a customer returns from an inline payment that caused a redirect.
      *
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     * @return ResponseInterface|ResultInterface
      */
     public function execute()
     {
@@ -83,11 +86,10 @@ class ProcessReturn extends Action
             $this->messageManager->addSuccessMessage(__('Payment status:') . ' ' . ($info ?: 'Unknown status'));
 
             return $this->redirect('checkout/onepage/success');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
             $this->logger->error($e->getMessage());
-            $this->refillCart();
-
+            $this->checkoutSession->restoreQuote();
             return $this->redirect('checkout/cart');
         }
     }
@@ -96,7 +98,7 @@ class ProcessReturn extends Action
      * Return redirect object
      *
      * @param string $path
-     * @return \Magento\Framework\Controller\ResultInterface
+     * @return ResultInterface
      */
     private function redirect($path)
     {
@@ -125,30 +127,5 @@ class ProcessReturn extends Action
         }
 
         return $paymentRefId;
-    }
-
-    /**
-     * @param Order $order
-     */
-    private function repopuplateCart(Order $order)
-    {
-        $errorsOccured = $this->refillCartService->fillCartFromOrder($this->checkoutSession, $order);
-        if ($errorsOccured) {
-            foreach ($this->refillCartService->getErrors() as $errorMessage) {
-                $this->messageManager->addErrorMessage($errorMessage, 'refill_cart');
-                $this->logger->error($errorMessage);
-            }
-        }
-    }
-
-    /**
-     * refill cart
-     */
-    private function refillCart()
-    {
-        $order = $this->checkoutSession->getLastRealOrder();
-        if (isset($order)) {
-            $this->repopuplateCart($order);
-        }
     }
 }

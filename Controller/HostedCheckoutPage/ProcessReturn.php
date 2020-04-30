@@ -1,15 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ingenico\Connect\Controller\HostedCheckoutPage;
 
+use Exception;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\NotFoundException;
 use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Sales\Model\Order;
-use Ingenico\Connect\Model\Cart\ServiceInterface;
 use Ingenico\Connect\Model\Config;
 use Ingenico\Connect\Model\ConfigInterface;
 use Ingenico\Connect\Model\Ingenico\Action\GetHostedCheckoutStatus;
@@ -17,20 +21,25 @@ use Psr\Log\LoggerInterface;
 
 class ProcessReturn extends Action
 {
-    /** @var SessionManagerInterface|Session */
+    /**
+     * @var SessionManagerInterface|Session
+     */
     private $checkoutSession;
 
-    /** @var GetHostedCheckoutStatus */
+    /**
+     * @var GetHostedCheckoutStatus
+     */
     private $checkoutStatus;
 
-    /** @var ConfigInterface */
+    /**
+     * @var ConfigInterface
+     */
     private $ePaymentsConfig;
 
-    /** @var LoggerInterface */
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
-
-    /** @var ServiceInterface */
-    private $refillCartService;
 
     /**
      * ProcessReturn constructor.
@@ -40,15 +49,13 @@ class ProcessReturn extends Action
      * @param GetHostedCheckoutStatus $checkoutStatus
      * @param ConfigInterface $config
      * @param LoggerInterface $logger
-     * @param ServiceInterface $refillCartService
      */
     public function __construct(
         Context $context,
         SessionManagerInterface $checkoutSession,
         GetHostedCheckoutStatus $checkoutStatus,
         ConfigInterface $config,
-        LoggerInterface $logger,
-        ServiceInterface $refillCartService
+        LoggerInterface $logger
     ) {
         parent::__construct($context);
 
@@ -56,20 +63,28 @@ class ProcessReturn extends Action
         $this->checkoutStatus = $checkoutStatus;
         $this->ePaymentsConfig = $config;
         $this->logger = $logger;
-        $this->refillCartService = $refillCartService;
     }
 
     /**
      * Executes when a customer returns from Hosted Checkout
      *
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     * @return ResponseInterface|ResultInterface
      */
     public function execute()
     {
-        /** @var Order $order */
         try {
             $hostedCheckoutId = $this->retrieveHostedCheckoutId();
             $order = $this->checkoutStatus->process($hostedCheckoutId);
+
+            // Handle order cancellation:
+            if ($order->getState() === Order::STATE_CANCELED) {
+                $this->messageManager->addNoticeMessage(
+                    __('You cancelled the payment. Please select a different payment option and place your order again')
+                );
+                $this->checkoutSession->restoreQuote();
+                return $this->redirect('checkout/cart');
+            }
+
             /** @var string $transactionStatus */
             $transactionStatus = $order->getPayment()->getAdditionalInformation(Config::PAYMENT_STATUS_KEY);
             /** @var string $info */
@@ -77,10 +92,10 @@ class ProcessReturn extends Action
             $this->messageManager->addSuccessMessage(__('Payment status:') . ' ' . ($info ?: 'Unknown status'));
 
             return $this->redirect('checkout/onepage/success');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
             $this->logger->error($e->getMessage());
-            $this->refillCart();
+            $this->checkoutSession->restoreQuote();
 
             return $this->redirect('checkout/cart');
         }
@@ -90,7 +105,7 @@ class ProcessReturn extends Action
      * Return redirect object
      *
      * @param $url
-     * @return \Magento\Framework\Controller\ResultInterface
+     * @return ResultInterface
      */
     private function redirect($url)
     {
@@ -123,30 +138,5 @@ class ProcessReturn extends Action
         }
 
         return $hostedCheckoutId;
-    }
-
-    /**
-     * @param Order $order
-     */
-    private function repopuplateCart(Order $order)
-    {
-        $errorsOccured = $this->refillCartService->fillCartFromOrder($this->checkoutSession, $order);
-        if ($errorsOccured) {
-            foreach ($this->refillCartService->getErrors() as $errorMessage) {
-                $this->messageManager->addErrorMessage($errorMessage, 'refill_cart');
-                $this->logger->error($errorMessage);
-            }
-        }
-    }
-
-    /**
-     * Refill cart
-     */
-    private function refillCart()
-    {
-        $order = $this->checkoutSession->getLastRealOrder();
-        if (isset($order)) {
-            $this->repopuplateCart($order);
-        }
     }
 }

@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Ingenico\Connect\Model\Ingenico\Action\Refund;
 
 use Ingenico\Connect\Model\Ingenico\RequestBuilder\Refund\RefundRequestBuilder;
+use Ingenico\Connect\Model\Ingenico\Status\Refund\PendingApproval;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Message\ManagerInterface;
 use Magento\Sales\Api\CreditmemoRepositoryInterface;
 use Magento\Sales\Api\Data\CreditmemoInterface;
 use Magento\Sales\Api\Data\OrderInterface;
@@ -17,6 +19,7 @@ use Ingenico\Connect\Model\Ingenico\CallContextBuilder;
 use Ingenico\Connect\Model\Ingenico\Status\Refund\RefundHandlerInterface;
 use Ingenico\Connect\Model\Ingenico\Status\ResolverInterface;
 use Ingenico\Connect\Model\Transaction\TransactionManager;
+use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\Payment\Transaction;
 
 /**
@@ -57,17 +60,10 @@ class CreateRefund extends AbstractRefundAction
     private $transactionManager;
 
     /**
-     * CreateRefund constructor.
-     *
-     * @param OrderRepositoryInterface $orderRepository
-     * @param CreditmemoRepositoryInterface $creditmemoRepository
-     * @param ClientInterface $ingenicoClient
-     * @param ResolverInterface $statusResolver
-     * @param RefundRequestBuilder $refundRequestBuilder
-     * @param CallContextBuilder $callContextBuilder
-     * @param TransactionRepositoryInterface $transactionRepository
-     * @param TransactionManager $transactionManager
+     * @var ManagerInterface
      */
+    private $messageManager;
+
     public function __construct(
         OrderRepositoryInterface $orderRepository,
         CreditmemoRepositoryInterface $creditmemoRepository,
@@ -76,7 +72,8 @@ class CreateRefund extends AbstractRefundAction
         RefundRequestBuilder $refundRequestBuilder,
         CallContextBuilder $callContextBuilder,
         TransactionRepositoryInterface $transactionRepository,
-        TransactionManager $transactionManager
+        TransactionManager $transactionManager,
+        ManagerInterface $messageManager
     ) {
         parent::__construct($orderRepository, $creditmemoRepository);
 
@@ -86,6 +83,7 @@ class CreateRefund extends AbstractRefundAction
         $this->transactionRepository = $transactionRepository;
         $this->ingenicoClient = $ingenicoClient;
         $this->transactionManager = $transactionManager;
+        $this->messageManager = $messageManager;
     }
 
     /**
@@ -111,6 +109,7 @@ class CreateRefund extends AbstractRefundAction
 
         // Attach transaction to payment:
         $payment->setLastTransId($response->id);
+        // @todo: setTransactionId() does not exist on OrderPaymentInterface:
         $payment->setTransactionId($response->id);
 
         // Create a transaction for the refund:
@@ -120,11 +119,12 @@ class CreateRefund extends AbstractRefundAction
         $this->transactionManager->setResponseDataOnTransaction($response, $transaction);
 
         // Set the parent transaction:
+        // @todo: getInvoice() does not exist in CreditmemoInterface:
         $invoice = $creditMemo->getInvoice();
         $captureTxn = $this->transactionRepository->getByTransactionId(
             $invoice->getTransactionId(),
             $payment->getId(),
-            $order->getId()
+            $order->getEntityId()
         );
 
         if ($captureTxn) {
@@ -146,5 +146,12 @@ class CreateRefund extends AbstractRefundAction
                 $response->statusOutput->statusCode
             )
         );
+
+        if ($handler instanceof PendingApproval) {
+            $this->messageManager->addNoticeMessage(
+            //phpcs:ignore Generic.Files.LineLength.TooLong
+                __('It appears that your account at Ingenico is configured that refunds require approval, please contact us')
+            );
+        }
     }
 }

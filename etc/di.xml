@@ -11,7 +11,6 @@
     <preference for="Ingenico\Connect\Cron\FetchWxFiles\StatusUpdateResolverInterface" type="\Ingenico\Connect\Cron\FetchWxFiles\StatusUpdateResolver"/>
     <preference for="Ingenico\Connect\WxTransfer\Sftp\ClientInterface" type="Ingenico\Connect\WxTransfer\Sftp\Client"/>
     <preference for="Ingenico\Connect\WxTransfer\ClientInterface" type="Ingenico\Connect\WxTransfer\Client"/>
-    <preference for="Ingenico\Connect\Model\Cart\ServiceInterface" type="Ingenico\Connect\Model\Cart\Service"/>
     <preference for="Ingenico\Connect\Model\Ingenico\Status\ResolverInterface" type="Ingenico\Connect\Model\Ingenico\Status\Resolver"/>
     <preference for="Ingenico\Connect\Model\Order\Creditmemo\ServiceInterface" type="Ingenico\Connect\Model\Order\Creditmemo\Service"/>
     <preference for="Ingenico\Connect\Model\StatusResponseManagerInterface" type="Ingenico\Connect\Model\StatusResponseManager"/>

@@ -5,6 +5,7 @@
         <payment>
             <ingenico>
                 <model>IngenicoFacade</model>
+                <title>Ingenico</title>
             </ingenico>
         </payment>
         <ingenico_epayments>

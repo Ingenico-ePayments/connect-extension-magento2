@@ -2,18 +2,18 @@
 
 namespace Ingenico\Connect\Model\Ingenico\Action;
 
+use Ingenico\Connect\Model\Ingenico\Action\HostedCheckout\StatusManagement;
 use Ingenico\Connect\Model\Ingenico\Action\HostedCheckout\TokenManagement;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\GetHostedCheckoutResponse;
 use Magento\Framework\App\Request\Http;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\OrderRepository;
 use Ingenico\Connect\Model\Config;
 use Ingenico\Connect\Model\ConfigInterface;
-use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
-use Ingenico\Connect\Model\Ingenico\MerchantReference;
 use Ingenico\Connect\Model\Ingenico\Status\ResolverInterface;
 use Ingenico\Connect\Model\Order\OrderServiceInterface;
 use Ingenico\Connect\Model\StatusResponseManagerInterface;
@@ -32,16 +32,12 @@ class GetHostedCheckoutStatus implements ActionInterface
     const PAYMENT_STATUS_CATEGORY_UNKNOWN = 'STATUS_UNKNOWN';
     const PAYMENT_STATUS_CATEGORY_REJECTED = 'REJECTED';
     const PAYMENT_OUTPUT_SHOW_INSTRUCTIONS = 'SHOW_INSTRUCTIONS';
+    const CANCELLED_BY_CONSUMER = 'CANCELLED_BY_CONSUMER';
 
     /**
      * @var LoggerInterface
      */
     private $logger;
-
-    /**
-     * @var ClientInterface
-     */
-    private $client;
 
     /**
      * @var ConfigInterface
@@ -74,11 +70,6 @@ class GetHostedCheckoutStatus implements ActionInterface
     private $orderService;
 
     /**
-     * @var MerchantReference
-     */
-    private $merchantReference;
-
-    /**
      * @var StatusResponseManagerInterface
      */
     private $statusResponseManager;
@@ -88,59 +79,62 @@ class GetHostedCheckoutStatus implements ActionInterface
      */
     private $tokenManagement;
 
+    /**
+     * @var StatusManagement
+     */
+    private $statusManagement;
+
     public function __construct(
         LoggerInterface $logger,
-        ClientInterface $client,
         ConfigInterface $ePaymentsConfig,
         Http $request,
         OrderSender $orderSender,
         ResolverInterface $statusResolver,
         OrderRepository $orderRepository,
         OrderServiceInterface $orderService,
-        MerchantReference $merchantReference,
         StatusResponseManagerInterface $statusResponseManager,
-        TokenManagement $tokenManagement
+        TokenManagement $tokenManagement,
+        StatusManagement $statusManagement
     ) {
         $this->logger = $logger;
-        $this->client = $client;
         $this->ePaymentsConfig = $ePaymentsConfig;
         $this->request = $request;
         $this->orderSender = $orderSender;
         $this->statusResolver = $statusResolver;
         $this->orderRepository = $orderRepository;
         $this->orderService = $orderService;
-        $this->merchantReference = $merchantReference;
         $this->statusResponseManager = $statusResponseManager;
         $this->tokenManagement = $tokenManagement;
+        $this->statusManagement = $statusManagement;
     }
 
     /**
      * Load HostedCheckout instance from API and apply it to corresponding order
      *
-     * @param $hostedCheckoutId
+     * @param string $hostedCheckoutId
      * @return OrderInterface|null
      * @throws LocalizedException
      */
-    public function process($hostedCheckoutId)
+    public function process(string $hostedCheckoutId)
     {
-        $statusResponse = $this->getStatusResponse($hostedCheckoutId);
+        $order = $this->getOrder($hostedCheckoutId);
+        $statusResponse = $this->statusManagement->getStatus($hostedCheckoutId);
 
-        $this->validateResponse($statusResponse);
-        $incrementId = $this->merchantReference->extractOrderReference(
-            $statusResponse->createdPaymentOutput->payment->paymentOutput->references->merchantReference
-        );
-        $order = $this->orderService->getByIncrementId($incrementId);
+        if ($statusResponse->status === self::CANCELLED_BY_CONSUMER) {
+            $order->cancel();
+        } else {
+            $this->validateResponse($statusResponse);
+            $this->checkPaymentStatusCategory($statusResponse, $order);
 
-        $this->checkPaymentStatusCategory($statusResponse, $order);
-
-        if ($statusResponse->status === self::PAYMENT_CREATED) {
-            $this->checkReturnmac($order);
-            $this->processOrder($order, $statusResponse);
-            $this->tokenManagement->processTokens($order, $statusResponse);
-            try {
-                $this->orderSender->send($order);
-            } catch (\Exception $e) {
-                $this->logger->error($e->getMessage());
+            if ($statusResponse->status === self::PAYMENT_CREATED) {
+                $this->checkReturnmac($order);
+                $this->processOrder($order, $statusResponse);
+                $this->tokenManagement->processTokens($order, $statusResponse);
+                try {
+                    $this->orderSender->send($order);
+                } catch (\Exception $e) {
+                    $this->logger->error($e->getMessage());
+                }
             }
         }
 
@@ -151,23 +145,6 @@ class GetHostedCheckoutStatus implements ActionInterface
         }
 
         return $order;
-    }
-
-    /**
-     * Get status response
-     *
-     * @param string $hostedCheckoutId
-     * @return GetHostedCheckoutResponse
-     */
-    private function getStatusResponse($hostedCheckoutId)
-    {
-        /** \Ingenico\Connect\Sdk\Domain\Hostedcheckout\CreateHostedCheckoutResponse $statusResponse */
-        $statusResponse = $this->client->getIngenicoClient()
-            ->merchant($this->ePaymentsConfig->getMerchantId())
-            ->hostedcheckouts()
-            ->get($hostedCheckoutId);
-
-        return $statusResponse;
     }
 
     /**
@@ -262,5 +239,23 @@ class GetHostedCheckoutStatus implements ActionInterface
         $payment->setAdditionalInformation(Config::PAYMENT_ID_KEY, $ingenicoPaymentId);
         $payment->setAdditionalInformation(Config::PAYMENT_STATUS_KEY, $ingenicoPaymentStatus);
         $payment->setAdditionalInformation(Config::PAYMENT_STATUS_CODE_KEY, $ingenicoPaymentStatusCode);
+    }
+
+    /**
+     * @param string $hostedCheckoutId
+     * @return OrderInterface
+     * @throws LocalizedException
+     */
+    private function getOrder(string $hostedCheckoutId): OrderInterface
+    {
+        try {
+            $order = $this->orderService->getByHostedCheckoutId($hostedCheckoutId);
+        } catch (NoSuchEntityException $exception) {
+            throw new LocalizedException(
+                __('There was no order found for RPP (hosted checkout ID: %1)', $hostedCheckoutId)
+            );
+        }
+
+        return $order;
     }
 }
