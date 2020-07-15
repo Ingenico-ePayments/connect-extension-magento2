@@ -63,6 +63,25 @@ define([],
             return Boolean(Number(config.useFullRedirect));
         };
 
+        /**
+         * Returns if a customer is logged in
+         * @returns {boolean}
+         */
+        let isCustomerLoggedIn = function () {
+            return Boolean(Number(config.isCustomerLoggedIn));
+        };
+
+        /**
+         * Whether card payment methods need to be grouped
+         */
+        let groupCardPaymentMethods = function () {
+            return Boolean(Number(config.groupCardPaymentMethods));
+        };
+
+        let connectSession = function () {
+            return config.connectSession;
+        }
+
         return {
             init: init,
             getHostedCheckoutUrl: getHostedCheckoutUrl,
@@ -71,6 +90,9 @@ define([],
             useInlinePayments: useInlinePayments,
             useFullRedirect: useFullRedirect,
             getLoaderImage: getLoaderImage,
+            isCustomerLoggedIn: isCustomerLoggedIn,
+            groupCardPaymentMethods: groupCardPaymentMethods,
+            connectSession: connectSession,
         };
     }
 );

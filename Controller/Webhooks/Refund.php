@@ -1,12 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ingenico\Connect\Controller\Webhooks;
 
+use Exception;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultFactory;
-use Magento\Framework\Webapi\Exception;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Webapi\Exception as WebApiException;
 use Ingenico\Connect\Model\Ingenico\Webhook\Handler;
 use Ingenico\Connect\Model\Ingenico\Webhook\Event\RefundResolver;
+use Psr\Log\LoggerInterface;
+use RuntimeException;
 
 /**
  * Class Refund
@@ -36,10 +43,11 @@ class Refund extends Webhook
      */
     public function __construct(
         Context $context,
+        LoggerInterface $logger,
         RefundResolver $refundResolver,
         Handler $webhookHandler
     ) {
-        parent::__construct($context);
+        parent::__construct($context, $logger);
         $this->refundResolver = $refundResolver;
         $this->webhookHandler = $webhookHandler;
     }
@@ -47,7 +55,7 @@ class Refund extends Webhook
     /**
      * Handles refund.* events
      *
-     * @return false|\Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     * @return false|ResponseInterface|ResultInterface
      */
     public function execute()
     {
@@ -62,10 +70,11 @@ class Refund extends Webhook
             /** @var string $result */
             $result = $this->webhookHandler->handle($this->refundResolver);
             $response->setContents($result);
-        } catch (\RuntimeException $exception) {
-            // on invalid signature or version mismatch the event could not be unwrapped
-            $response->setHttpResponseCode(Exception::HTTP_INTERNAL_ERROR);
-        } catch (\Exception $exception) {
+        } catch (RuntimeException $exception) {
+            $this->logException($exception);
+            $response->setHttpResponseCode(WebApiException::HTTP_INTERNAL_ERROR);
+        } catch (Exception $exception) {
+            $this->logException($exception);
             $response->setContents($exception->getMessage());
         }
 

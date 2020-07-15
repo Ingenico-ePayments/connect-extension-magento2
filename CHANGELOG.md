@@ -1,8 +1,29 @@
 # Changelog
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+
+## 2.3.0 - 2020-07-15
+
+### Added
+
+- Added a link to ePayments documentation in the admin panel.
+- Added extra logging to the webhook controllers
+- Added the option to group credit card payments in the checkout
+- Added test API connection button to the admin panel.
+
+### Changed
+
+- Changed the scope of System Index Identifier config from global to website.
+- Checkout session token gets regenerated when entering the checkout process, this prevents customers to end up with 
+an expired session token and not seeing any payment methods.
+- Dropped support for WX files.
+
+### Removed
+
+- Removed external Netresearch dependencies
 
 ## 2.2.1 - 2020-04-30
 
@@ -34,6 +55,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added API endpoint to expose client token for headless checkout
 - Added version checker
 - Added a fallback for the fraud notifications, in case the fraud email is not set an admin notification will be created
+- Added a technical partner link to system configuration
 
 ### Changed
 

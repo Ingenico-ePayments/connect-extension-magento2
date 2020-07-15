@@ -2,7 +2,9 @@
 
 namespace Ingenico\Connect\Model;
 
+use Ingenico\Connect\CustomerData\ConnectSession;
 use Magento\Checkout\Model\ConfigProviderInterface;
+use Magento\Customer\Model\Session;
 use Magento\Framework\Locale\Resolver;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Asset\Repository;
@@ -39,11 +41,19 @@ class ConfigProvider implements ConfigProviderInterface
      * @var Repository
      */
     private $assetRepo;
-
+    
+    /** @var Session */
+    private $customerSession;
+    
     /**
      * @var StoreManagerInterface
      */
     private $storeManager;
+
+    /**
+     * @var ConnectSession
+     */
+    private $connectSession;
 
     /**
      * ConfigProvider constructor.
@@ -53,19 +63,25 @@ class ConfigProvider implements ConfigProviderInterface
      * @param Resolver $resolver
      * @param Repository $assetRepo
      * @param StoreManagerInterface $storeManager
+     * @param Session $customerSession
+     * @param ConnectSession $connectSession
      */
     public function __construct(
         UrlInterface $urlBuilder,
         ConfigInterface $config,
         Resolver $resolver,
         Repository $assetRepo,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        ConnectSession $connectSession,
+        Session $customerSession
     ) {
         $this->urlBuilder = $urlBuilder;
         $this->config = $config;
         $this->resolver = $resolver;
         $this->assetRepo = $assetRepo;
         $this->storeManager = $storeManager;
+        $this->connectSession = $connectSession;
+        $this->customerSession = $customerSession;
     }
 
     /**
@@ -81,9 +97,12 @@ class ConfigProvider implements ConfigProviderInterface
                     'hostedCheckoutPageUrl' => $this->urlBuilder->getUrl('epayments/hostedCheckoutPage'),
                     'inlineSuccessUrl' => $this->urlBuilder->getUrl('epayments/inlinePayment'),
                     'locale' => $this->resolver->getLocale(),
+                    'groupCardPaymentMethods' => $this->config->getGroupCardPaymentMethods(),
                     'useInlinePayments' => $checkoutType === Config::CONFIG_INGENICO_CHECKOUT_TYPE_INLINE,
                     'useFullRedirect' => $checkoutType === Config::CONFIG_INGENICO_CHECKOUT_TYPE_REDIRECT,
                     'loaderImage' => $this->assetRepo->getUrlWithParams('images/loader-2.gif', []),
+                    'isCustomerLoggedIn' => $this->customerSession->isLoggedIn(),
+                    'connectSession' => $this->connectSession->getSectionData(),
                 ],
             ],
         ];

@@ -7,10 +7,6 @@
     <preference for="Ingenico\Connect\Model\OrderUpdate\OrderInterface" type="Ingenico\Connect\Model\OrderUpdate\Order"/>
     <preference for="Ingenico\Connect\Model\OrderUpdate\SchedulerInterface" type="Ingenico\Connect\Model\OrderUpdate\Scheduler"/>
     <preference for="Ingenico\Connect\Model\OrderUpdate\HistoryManagerInterface" type="Ingenico\Connect\Model\OrderUpdate\HistoryManager"/>
-    <preference for="Ingenico\Connect\Cron\FetchWxFiles\ProcessorInterface" type="Ingenico\Connect\Cron\FetchWxFiles\Processor"/>
-    <preference for="Ingenico\Connect\Cron\FetchWxFiles\StatusUpdateResolverInterface" type="\Ingenico\Connect\Cron\FetchWxFiles\StatusUpdateResolver"/>
-    <preference for="Ingenico\Connect\WxTransfer\Sftp\ClientInterface" type="Ingenico\Connect\WxTransfer\Sftp\Client"/>
-    <preference for="Ingenico\Connect\WxTransfer\ClientInterface" type="Ingenico\Connect\WxTransfer\Client"/>
     <preference for="Ingenico\Connect\Model\Ingenico\Status\ResolverInterface" type="Ingenico\Connect\Model\Ingenico\Status\Resolver"/>
     <preference for="Ingenico\Connect\Model\Order\Creditmemo\ServiceInterface" type="Ingenico\Connect\Model\Order\Creditmemo\Service"/>
     <preference for="Ingenico\Connect\Model\StatusResponseManagerInterface" type="Ingenico\Connect\Model\StatusResponseManager"/>
@@ -120,10 +116,15 @@
     </type>
 
     <!-- Ingenico Client setup-->
+    <virtualType name="ingenicoRequestHandler" type="Ingenico\Connect\Logger\Handler\DebugHandler">
+        <arguments>
+            <argument name="fileName" xsi:type="string">/var/log/ingenico_epayments.log</argument>
+        </arguments>
+    </virtualType>
     <virtualType name="ingenicoRequestLogger" type="Magento\Framework\Logger\Monolog">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="system" xsi:type="object">Ingenico\Connect\Model\RequestLogger</item>
+                <item name="system" xsi:type="object">ingenicoRequestHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -152,12 +153,27 @@
             <argument name="logger" xsi:type="object">ingenicoRequestLogger</argument>
         </arguments>
     </type>
+    <type name="Ingenico\Connect\Controller\Webhooks\Payment">
+        <arguments>
+            <argument name="logger" xsi:type="object">ingenicoRequestLogger</argument>
+        </arguments>
+    </type>
+    <type name="Ingenico\Connect\Controller\Webhooks\Refund">
+        <arguments>
+            <argument name="logger" xsi:type="object">ingenicoRequestLogger</argument>
+        </arguments>
+    </type>
 
     <!-- Auto order update setup-->
+    <virtualType name="realTimeHandler" type="Ingenico\Connect\Logger\Handler\InfoHandler">
+        <arguments>
+            <argument name="fileName" xsi:type="string">/var/log/order_update.log</argument>
+        </arguments>
+    </virtualType>
     <virtualType name="realTimeLogger" type="Magento\Framework\Logger\Monolog">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="system" xsi:type="object">Ingenico\Connect\Model\OrderUpdate\Logger</item>
+                <item name="system" xsi:type="object">realTimeHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -176,40 +192,15 @@
             <argument name="logger" xsi:type="object">realTimeLogger</argument>
         </arguments>
     </type>
-    <virtualType name="wxLogger" type="Magento\Framework\Logger\Monolog">
-        <arguments>
-            <argument name="handlers" xsi:type="array">
-                <item name="system" xsi:type="object">Ingenico\Connect\Cron\FetchWxFiles\Logger</item>
-            </argument>
-        </arguments>
-    </virtualType>
-    <type name="Ingenico\Connect\Cron\FetchWxFiles\Processor">
-        <arguments>
-            <argument name="logger" xsi:type="object">wxLogger</argument>
-        </arguments>
-    </type>
-    <type name="Ingenico\Connect\Cron\FetchWxFiles\StatusUpdateResolver">
-        <arguments>
-            <argument name="logger" xsi:type="object">wxLogger</argument>
-        </arguments>
-    </type>
 
     <type name="Magento\Framework\Console\CommandList">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="ingenico_wximport" xsi:type="object">Ingenico\Connect\Command\WxImport</item>
                 <item name="ingenico_events" xsi:type="object">Ingenico\Connect\Command\ProcessEvents</item>
             </argument>
         </arguments>
     </type>
 
-    <type name="Ingenico\Connect\Command\WxImport">
-        <arguments>
-            <argument name="storeManager" xsi:type="object">Magento\Store\Model\StoreManagerInterface\Proxy</argument>
-            <argument name="processor" xsi:type="object">Ingenico\Connect\Cron\FetchWxFiles\ProcessorInterface\Proxy</argument>
-            <argument name="appState" xsi:type="object">Magento\Framework\App\State\Proxy</argument>
-        </arguments>
-    </type>
     <type name="Ingenico\Connect\Command\ProcessEvents">
         <arguments>
             <argument name="processor" xsi:type="object">Ingenico\Connect\Model\Event\Processor\Proxy</argument>

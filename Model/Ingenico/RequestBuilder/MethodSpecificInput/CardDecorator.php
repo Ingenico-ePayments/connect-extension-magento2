@@ -59,11 +59,15 @@ class CardDecorator implements DecoratorInterface
      */
     public function decorate(DataObject $request, OrderInterface $order)
     {
+        $paymentProductId = $order->getPayment()->getAdditionalInformation(Config::PRODUCT_ID_KEY);
+        if ($paymentProductId === 'cards') {
+            return $request;
+        }
         $input = $this->cardPaymentMethodSpecificInputFactory->create();
         $input->recurring = $this->cardRecurrenceDetailsFactory->create();
         $input->threeDSecure = $this->threeDSecureBuilder->create($order);
         $input->transactionChannel = self::TRANSACTION_CHANNEL;
-        $input->paymentProductId = $order->getPayment()->getAdditionalInformation(Config::PRODUCT_ID_KEY);
+        $input->paymentProductId = $paymentProductId;
 
         // Retrieve capture mode from config
         $captureMode = $this->config->getCaptureMode($order->getStoreId());

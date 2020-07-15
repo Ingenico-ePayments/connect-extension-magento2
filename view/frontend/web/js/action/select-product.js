@@ -11,6 +11,11 @@ define([
     let activeFieldsCollection = {};
 
     let updatePaymentProduct = function () {
+        if (activeFieldsCollection.product.id === 'cards') {
+            paymentData.setCurrentPaymentProduct(activeFieldsCollection.product);
+            return;
+        }
+
         fetchProduct(activeFieldsCollection.product.id).then(function (fullProduct) {
             paymentData.setCurrentPaymentProduct(fullProduct);
         });
@@ -18,6 +23,16 @@ define([
 
     let updatePaymentData = function () {
         paymentData.fieldData = {};
+
+        let fieldComponents = activeFieldsCollection.elems();
+        for (let fieldComponent of fieldComponents) {
+            if (!fieldComponent.field) {
+                continue;
+            }
+
+            paymentData.fieldData[fieldComponent.field.id] = fieldComponent.value();
+        }
+
         activeFieldsCollection.elems.subscribe(function (fieldComponents) {
             for (let fieldComponent of fieldComponents) {
                 if (fieldComponent.field) {
@@ -27,6 +42,7 @@ define([
                 }
             }
         });
+
         if (activeFieldsCollection.account) {
             paymentData.setCurrentAccountOnFile(activeFieldsCollection.account);
         } else {

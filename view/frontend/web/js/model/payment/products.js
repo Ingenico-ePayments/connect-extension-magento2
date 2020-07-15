@@ -4,9 +4,10 @@
 define([
     'Ingenico_Connect/js/action/get-payment-products',
     'Ingenico_Connect/js/action/get-payment-product',
+    'Ingenico_Connect/js/action/get-card-payment-group',
     'Ingenico_Connect/js/model/payment/config',
     'ko'
-], function (fetchPaymentProducts, fetchPaymentProduct, config, ko) {
+], function (fetchPaymentProducts, fetchPaymentProduct, fetchCardPaymentGroup, config, ko) {
     'use strict';
 
     let basicPaymentProducts = ko.observableArray([]).extend({
@@ -15,6 +16,7 @@ define([
         accountsOnFile = ko.observableArray([]).extend({
             rateLimit: {method: "notifyWhenChangesStop", timeout: 20}
         }),
+        cardGroupPaymentMethod = ko.observable(),
         productsResponse = ko.observable();
 
     let isLoading = ko.observable(false);
@@ -34,26 +36,48 @@ define([
         basicPaymentProducts: basicPaymentProducts,
         accountsOnFile: accountsOnFile,
         productsResponse: productsResponse,
+        cardGroupPaymentMethod: cardGroupPaymentMethod,
 
         /**
          * @param {HTMLElement} messageContainer
          */
         reload: function (messageContainer) {
             isLoading(true);
-            fetchPaymentProducts().then(function (response) {
+            Promise.all([fetchPaymentProducts(), fetchCardPaymentGroup()]).then(responses => {
+                const paymentProductsResponse = responses[0];
 
-                // Remove payment methods that cannot be used for the RPP:
                 if (!config.useInlinePayments()) {
-                    response.basicPaymentProducts = response.basicPaymentProducts.filter(disallowProductByIdFilter);
+                    paymentProductsResponse.basicPaymentProducts = paymentProductsResponse.basicPaymentProducts.filter(disallowProductByIdFilter);
                     disallowedProductIds.forEach(function (id) {
-                        delete response.basicPaymentProductById[id];
+                        delete paymentProductsResponse.basicPaymentProductById[id];
                     });
                 }
 
-                // transfer response to locally stored variables
-                productsResponse(response);
-                accountsOnFile(response.accountsOnFile);
-                basicPaymentProducts(response.basicPaymentProducts.sort(sortFunction));
+                if (config.groupCardPaymentMethods()) {
+                    const cardPaymentMethodIds = [];
+                    paymentProductsResponse.basicPaymentProducts.forEach(function (paymentProduct) {
+                        if (!paymentProduct.paymentProductGroup || paymentProduct.paymentProductGroup !== 'cards') {
+                            return;
+                        }
+
+                        cardPaymentMethodIds.push(paymentProduct.id);
+                    });
+
+                    cardPaymentMethodIds.forEach(function (id) {
+                        delete paymentProductsResponse.basicPaymentProductById[id];
+                    });
+
+                    paymentProductsResponse.basicPaymentProducts = paymentProductsResponse.basicPaymentProducts.filter(
+                        function (paymentProduct) {
+                            return cardPaymentMethodIds.indexOf(paymentProduct.id) === -1;
+                        }
+                    );
+                }
+
+                cardGroupPaymentMethod(responses[1]);
+                productsResponse(paymentProductsResponse);
+                accountsOnFile(paymentProductsResponse.accountsOnFile);
+                basicPaymentProducts(paymentProductsResponse.basicPaymentProducts.sort(sortFunction));
 
                 isLoading(false);
             }, function () {

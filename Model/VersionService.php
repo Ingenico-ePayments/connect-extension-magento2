@@ -7,6 +7,7 @@ namespace Ingenico\Connect\Model;
 use Ingenico\Connect\GitHub\Dto\Release;
 use Ingenico\Connect\Helper\GitHub;
 use Ingenico\Connect\GitHub\Client;
+use Ingenico\Connect\Helper\MetaData;
 use Magento\Framework\App\Cache;
 
 use function __;
@@ -30,7 +31,12 @@ class VersionService
      * @var Config
      */
     protected $configHelper;
-
+    
+    /**
+     * @var MetaData
+     */
+    protected $metaDataHelper;
+    
     /**
      * @var Cache
      */
@@ -39,18 +45,18 @@ class VersionService
     public function __construct(
         GitHub $gitHubHelper,
         Client $gitHubClient,
-        Config $configHelper,
+        MetaData $metaDataHelper,
         Cache $cache
     ) {
         $this->gitHubHelper = $gitHubHelper;
         $this->gitHubClient = $gitHubClient;
-        $this->configHelper = $configHelper;
         $this->cache = $cache;
+        $this->metaDataHelper = $metaDataHelper;
     }
 
     public function getCurrentVersion(): string
     {
-        return $this->configHelper->getVersion();
+        return $this->metaDataHelper->getModuleVersion();
     }
 
     public function getLatestRelease(): Release

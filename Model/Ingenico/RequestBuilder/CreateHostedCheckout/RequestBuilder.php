@@ -2,10 +2,12 @@
 
 namespace Ingenico\Connect\Model\Ingenico\RequestBuilder\CreateHostedCheckout;
 
+use Ingenico\Connect\Sdk\Domain\Definitions\PaymentProductFilter;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\CreateHostedCheckoutRequest;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\CreateHostedCheckoutRequestFactory;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\Definitions\HostedCheckoutSpecificInput;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\Definitions\HostedCheckoutSpecificInputFactory;
+use Ingenico\Connect\Sdk\Domain\Hostedcheckout\Definitions\PaymentProductFiltersHostedCheckout;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Sales\Model\Order;
@@ -113,6 +115,9 @@ class RequestBuilder
         if ($variant = $this->config->getHostedCheckoutVariant($order->getStoreId())) {
             $specificInput->variant = $variant;
         }
+        if ($paymentProductFilters = $this->getPaymentProductFilters($order)) {
+            $specificInput->paymentProductFilters = $paymentProductFilters;
+        }
 
         return $specificInput;
     }
@@ -133,5 +138,18 @@ class RequestBuilder
         ));
 
         return $tokens === '' ? null : $tokens;
+    }
+
+    private function getPaymentProductFilters(Order $order)
+    {
+        $payment = $order->getPayment();
+        if ($payment === null || $payment->getAdditionalInformation(Config::PRODUCT_ID_KEY) !== 'cards') {
+            return null;
+        }
+        $paymentProductFilters = new PaymentProductFiltersHostedCheckout();
+        $restrictTo = new PaymentProductFilter();
+        $restrictTo->groups = ['cards'];
+        $paymentProductFilters->restrictTo = $restrictTo;
+        return $paymentProductFilters;
     }
 }

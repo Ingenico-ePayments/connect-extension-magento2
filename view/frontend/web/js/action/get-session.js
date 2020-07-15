@@ -1,18 +1,16 @@
 define([
     'ko',
-    'Magento_Customer/js/customer-data'
-], function (ko, customerData) {
+    'Ingenico_Connect/js/model/payment/config'
+], function (ko, config) {
     'use strict';
 
-    var cacheKey = 'connect_session';
-    var sessionData = customerData.get(cacheKey);
-
     return function () {
-        if (sessionData().error) {
-            var message = 'Could not load Ingenico session data: ' + sessionData().error;
+        let sessionData = config.connectSession();
+        if (sessionData.error) {
+            let message = 'Could not load Ingenico session data: ' + sessionData.error;
             console.warn(message);
             throw message;
         }
-        return sessionData().data;
+        return sessionData.data;
     }
 });

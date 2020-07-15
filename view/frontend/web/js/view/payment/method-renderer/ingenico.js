@@ -70,19 +70,27 @@ define(
             },
 
             getData: function () {
-                let id, label;
+                let id, label, paymentMethod, currentPaymentMethodProduct;
 
-                if (paymentData.getCurrentPaymentProduct()) {
-                    id = paymentData.getCurrentPaymentProduct().id;
-                    label = paymentData.getCurrentPaymentProduct().displayHints.label;
+                currentPaymentMethodProduct = paymentData.getCurrentPaymentProduct();
+                if (currentPaymentMethodProduct) {
+                    if (paymentData.getCurrentPaymentProduct().id === 'cards'
+                        && paymentData.getCurrentCardPaymentProduct()) {
+                        currentPaymentMethodProduct = paymentData.getCurrentCardPaymentProduct();
+                    }
+
+                    id = currentPaymentMethodProduct.id;
+                    label = currentPaymentMethodProduct.displayHints.label;
+                    paymentMethod = currentPaymentMethodProduct.paymentMethod;
                 }
+
                 return {
                     'method': this.item.method,
                     'additional_data': {
                         'ingenico_payment_product_id': id,
                         'ingenico_payment_product_label': label,
                         'ingenico_payment_product_tokenize': paymentData.tokenize().indexOf(id) !== -1,
-                        'ingenico_payment_product_method': paymentData.getCurrentPaymentProduct().paymentMethod,
+                        'ingenico_payment_product_method': paymentMethod,
                         'ingenico_payment_payload': paymentData.getCurrentPayload(),
                         'ingenico_payment_is_payment_account_on_file': window.checkoutConfig.isPaymentAccountOnFile === true,
                     }
@@ -141,7 +149,12 @@ define(
             assemblePayloadData: function () {
                 let data = {};
 
-                data['paymentProduct'] = paymentData.getCurrentPaymentProduct();
+                let currentPaymentProduct = paymentData.getCurrentPaymentProduct();
+                if (currentPaymentProduct.id === 'cards') {
+                   currentPaymentProduct = paymentData.getCurrentCardPaymentProduct();
+                }
+
+                data['paymentProduct'] = currentPaymentProduct;
                 if (paymentData.getCurrentAccountOnFile()) {
                     data['accountOnFile'] = paymentData.getCurrentAccountOnFile();
                 }
@@ -234,6 +247,16 @@ define(
                         text: 'You can select your payment product in the next step.',
                     });
                 } else {
+                    if (config.groupCardPaymentMethods()) {
+                        components.push({
+                            displayArea: 'ingenico-product-groups',
+                            parent: this.name,
+                            dataScope: this.name,
+                            component: 'Ingenico_Connect/js/view/payment/component/card/group',
+                            cardGroupPaymentMethod: productList.cardGroupPaymentMethod,
+                        })
+                    }
+
                     components.push({
                         displayArea: 'ingenico-product-groups',
                         parent: this.name,

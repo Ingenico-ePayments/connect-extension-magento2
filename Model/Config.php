@@ -2,16 +2,14 @@
 
 namespace Ingenico\Connect\Model;
 
-use Magento\Framework\App\ProductMetadataInterface;
+use Ingenico\Connect\Helper\MetaData;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Encryption\EncryptorInterface;
-use Magento\Framework\Module\ModuleListInterface;
 use Magento\Store\Model\ScopeInterface;
 
 class Config implements ConfigInterface
 {
-    const MODULE_NAME = 'Ingenico_Connect';
     const CONFIG_INGENICO_ACTIVE = 'ingenico_epayments/general/active';
 
     const CONFIG_INGENICO_CHECKOUT_TYPE_HOSTED_CHECKOUT = '0';
@@ -35,13 +33,10 @@ class Config implements ConfigInterface
     const CONFIG_INGENICO_UPDATE_EMAIL = 'ingenico_epayments/email_settings';
     const CONFIG_SALES_EMAIL_IDENTITY = 'sales_email/order/identity';
     const CONFIG_INGENICO_PAYMENT_STATUS = 'ingenico_epayments/payment_statuses';
-    const CONFIG_INGENICO_SFTP_ACTIVE = 'ingenico_epayments/sftp_settings/active';
-    const CONFIG_INGENICO_SFTP_HOST = 'ingenico_epayments/sftp_settings/host';
-    const CONFIG_INGENICO_SFTP_USERNAME = 'ingenico_epayments/sftp_settings/username';
-    const CONFIG_INGENICO_SFTP_PASSWORD = 'ingenico_epayments/sftp_settings/password';
-    const CONFIG_INGENICO_SFTP_REMOTE_PATH = 'ingenico_epayments/sftp_settings/remote_path';
     const CONFIG_INGENICO_SYSTEM_PREFIX = 'ingenico_epayments/settings/system_prefix';
-
+    // phpcs:ignore Generic.Files.LineLength.TooLong
+    const CONFIG_INGENIC_GROUP_CARD_PAYMENT_METHODS = 'ingenico_epayments/settings/ux/payment_methods/group_card_payment_methods';
+    
     const CONFIG_INGENICO_CAPTURES_MODE = 'ingenico_epayments/captures/capture_mode';
     const CONFIG_INGENICO_CAPTURES_MODE_DIRECT = 'direct';
     const CONFIG_INGENICO_CAPTURES_MODE_AUTHORIZE = 'authorize';
@@ -63,44 +58,37 @@ class Config implements ConfigInterface
     const HOSTED_CHECKOUT_ID_KEY = 'ingenico_hosted_checkout_id';
     const RETURNMAC_KEY = 'ingenico_returnmac';
     const IDEMPOTENCE_KEY = 'ingenico_idempotence_key';
-
+    
     /**
      * @var ScopeConfigInterface
      */
     private $scopeConfig;
-
+    
     /**
      * @var DirectoryList
      */
     private $directoryList;
-
+    
     /**
      * @var EncryptorInterface
      */
     private $encryptor;
-
-    /**
-     * @var ModuleListInterface
-     */
-    private $moduleList;
-
-    /** @var ProductMetadataInterface  */
-    private $productMetadata;
-
+    
+    /** @var MetaData */
+    private $metaDataHelper;
+    
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         DirectoryList $directoryList,
         EncryptorInterface $encryptor,
-        ModuleListInterface $moduleList,
-        ProductMetadataInterface $productMetadata
+        MetaData $metaDataHelper
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->directoryList = $directoryList;
         $this->encryptor = $encryptor;
-        $this->moduleList = $moduleList;
-        $this->productMetadata = $productMetadata;
+        $this->metaDataHelper = $metaDataHelper;
     }
-
+    
     /**
      * @param $field
      * @param null $storeId
@@ -109,18 +97,6 @@ class Config implements ConfigInterface
     private function getValue($field, $storeId = null)
     {
         return $this->scopeConfig->getValue($field, ScopeInterface::SCOPE_STORE, $storeId);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getVersion($storeId = null)
-    {
-        if ($moduleData = $this->moduleList->getOne(self::MODULE_NAME)) {
-            return $moduleData['setup_version'] ?? __('Unknown');
-        }
-
-        return __('Unknown');
     }
 
     /**
@@ -290,34 +266,6 @@ class Config implements ConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function getShoppingCartExtensionName()
-    {
-        return 'M2.Connect';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIntegrator()
-    {
-        return 'Ingenico';
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getMagentoVersion()
-    {
-        return sprintf(
-            'M%s %s',
-            $this->productMetadata->getVersion(),
-            $this->productMetadata->getEdition()
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getPaymentStatusInfo($status, $storeId = null)
     {
         return $this->getValue(
@@ -327,50 +275,25 @@ class Config implements ConfigInterface
     }
 
     /**
-     * (@inheritDoc}
-     */
-    public function getSftpActive($storeId = null)
-    {
-        return $this->getValue(self::CONFIG_INGENICO_SFTP_ACTIVE, $storeId);
-    }
-
-    /**
-     * (@inheritDoc}
-     */
-    public function getSftpHost($storeId = null)
-    {
-        return $this->getValue(self::CONFIG_INGENICO_SFTP_HOST, $storeId);
-    }
-
-    /**
-     * (@inheritDoc}
-     */
-    public function getSftpUsername($storeId = null)
-    {
-        return $this->getValue(self::CONFIG_INGENICO_SFTP_USERNAME, $storeId);
-    }
-
-    /**
-     * (@inheritDoc}
-     */
-    public function getSftpPassword($storeId = null)
-    {
-        return $this->encryptor->decrypt($this->getValue(self::CONFIG_INGENICO_SFTP_PASSWORD, $storeId));
-    }
-
-    /**
-     * (@inheritDoc}
-     */
-    public function getSftpRemotePath($storeId = null)
-    {
-        return $this->getValue(self::CONFIG_INGENICO_SFTP_REMOTE_PATH, $storeId);
-    }
-
-    /**
      * @inheritdoc
      */
     public function getReferencePrefix()
     {
-        return (string) $this->getValue(self::CONFIG_INGENICO_SYSTEM_PREFIX);
+        return (string) $this->scopeConfig->getValue(
+            self::CONFIG_INGENICO_SYSTEM_PREFIX,
+            ScopeInterface::SCOPE_WEBSITE
+        );
+    }
+    
+    /**
+     * @inheritDoc
+     */
+    public function getGroupCardPaymentMethods($storeId = null)
+    {
+        return (bool) $this->scopeConfig->getValue(
+            self::CONFIG_INGENIC_GROUP_CARD_PAYMENT_METHODS,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
     }
 }

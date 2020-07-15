@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ingenico\Connect\Model\System\Message;
 
-use Ingenico\Connect\Model\Config;
+use Ingenico\Connect\Helper\MetaData;
 use Ingenico\Connect\Model\VersionService;
 use Magento\Framework\Notification\MessageInterface;
 use Magento\Framework\Phrase;
@@ -12,13 +12,17 @@ use Magento\Framework\Phrase;
 class UpdateAvailable implements MessageInterface
 {
     const MESSAGE_IDENTITY = 'connect_update_available_message';
-
+    
     /** @var VersionService */
     private $versionService;
-
-    public function __construct(VersionService $versionService)
+    
+    /** @var MetaData */
+    private $metaDataHelper;
+    
+    public function __construct(MetaData $metaDataHelper, VersionService $versionService)
     {
         $this->versionService = $versionService;
+        $this->metaDataHelper = $metaDataHelper;
     }
 
     public function getIdentity(): string
@@ -40,7 +44,7 @@ class UpdateAvailable implements MessageInterface
 
         return __(
             $this->getTextTemplate(),
-            str_replace('_', ' ', Config::MODULE_NAME),
+            str_replace('_', ' ', $this->metaDataHelper->getModuleName()),
             $latestRelease->getTagName(),
             $latestRelease->getUrl()
         );

@@ -13,14 +13,6 @@ interface ConfigInterface
     public function isActive($storeId = null);
 
     /**
-     * Returns version of current extension
-     *
-     * @param int|null $storeId
-     * @return string
-     */
-    public function getVersion($storeId = null);
-
-    /**
      * Returns Api Key
      *
      * @param int|null $storeId
@@ -170,27 +162,6 @@ interface ConfigInterface
     public function getUpdateEmailEnabled($code, $storeId = null);
 
     /**
-     * Return shoppingCartExtension name
-     *
-     * @return mixed
-     */
-    public function getShoppingCartExtensionName();
-
-    /**
-     * Returns integrator information
-     *
-     * @return string
-     */
-    public function getIntegrator();
-
-    /**
-     * Returns extension id
-     *
-     * @return string
-     */
-    public function getMagentoVersion();
-
-    /**
      * Returns payment status info
      *
      * @param int|null $storeId
@@ -200,47 +171,13 @@ interface ConfigInterface
     public function getPaymentStatusInfo($status, $storeId = null);
 
     /**
-     * Returns if sftp usage is active
-     *
-     * @param int|null $storeId
-     * @return string
-     */
-    public function getSftpActive($storeId = null);
-
-    /**
-     * Returns sftp host
-     *
-     * @param int|null $storeId
-     * @return string
-     */
-    public function getSftpHost($storeId = null);
-
-    /**
-     * Returns sftp name
-     *
-     * @param int|null $storeId
-     * @return string
-     */
-    public function getSftpUsername($storeId = null);
-
-    /**
-     * Returns sftp password
-     *
-     * @param int|null $storeId
-     * @return string
-     */
-    public function getSftpPassword($storeId = null);
-
-    /**
-     * Returns sftp remote path
-     *
-     * @param int|null $storeId
-     * @return string
-     */
-    public function getSftpRemotePath($storeId = null);
-
-    /**
      * @return string
      */
     public function getReferencePrefix();
+    
+    /**
+     * @param int|null $storeId
+     * @return bool
+     */
+    public function getGroupCardPaymentMethods($storeId = null);
 }

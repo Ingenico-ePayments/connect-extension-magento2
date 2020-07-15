@@ -26,6 +26,11 @@
                 <hosted_checkout_subdomain>https://payment.</hosted_checkout_subdomain>
                 <log_all_requests>0</log_all_requests>
                 <log_all_requests_file>ingenico_epayments.log</log_all_requests_file>
+                <ux>
+                    <payment_methods>
+                        <group_card_payment_methods>0</group_card_payment_methods>
+                    </payment_methods>
+                </ux>
             </settings>
             <checkout>
                 <inline_payments>0</inline_payments>

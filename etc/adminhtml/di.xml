@@ -12,6 +12,7 @@
         <arguments>
             <argument name="messages" xsi:type="array">
                 <item name="connect_update_available" xsi:type="string">Ingenico\Connect\Model\System\Message\UpdateAvailable</item>
+                <item name="connect_logging_enabled" xsi:type="string">Ingenico\Connect\Model\System\Message\LoggingEnabled</item>
             </argument>
         </arguments>
     </type>

@@ -9,7 +9,7 @@ use Ingenico\Connect\GitHub\Dto\Builder\ReleaseBuilder;
 use Ingenico\Connect\GitHub\Dto\ReleaseFactory;
 use Ingenico\Connect\GitHub\Dto\Release;
 use Ingenico\Connect\Helper\GitHub;
-use Ingenico\Connect\Model\ConfigInterface;
+use Ingenico\Connect\Helper\MetaData;
 use function is_object;
 use Magento\Framework\HTTP\ClientInterfaceFactory;
 use Psr\Log\LoggerInterface;
@@ -24,14 +24,14 @@ class Client
     /** @var ClientInterfaceFactory */
     private $clientFactory;
     
-    /** @var ConfigInterface */
-    private $config;
-    
     /** @var ReleaseBuilder */
     private $releaseBuilder;
     
     /** @var ReleaseFactory */
     private $releaseFactory;
+    
+    /** @var MetaData */
+    private $metaDataHelper;
     
     /** @var LoggerInterface */
     private $logger;
@@ -39,16 +39,16 @@ class Client
     public function __construct(
         GitHub $gitHubHelper,
         ClientInterfaceFactory $clientFactory,
-        ConfigInterface $config,
         ReleaseBuilder $releaseBuilder,
         ReleaseFactory $releaseFactory,
+        MetaData $metaDataHelper,
         LoggerInterface $logger
     ) {
         $this->gitHubHelper = $gitHubHelper;
         $this->clientFactory = $clientFactory;
-        $this->config = $config;
         $this->releaseBuilder = $releaseBuilder;
         $this->releaseFactory = $releaseFactory;
+        $this->metaDataHelper = $metaDataHelper;
         $this->logger = $logger;
     }
     
@@ -56,7 +56,7 @@ class Client
     {
         try {
             $client = $this->clientFactory->create();
-            $client->addHeader('User-Agent', $this->config->getIntegrator());
+            $client->addHeader('User-Agent', $this->metaDataHelper->getExtensionCreator());
             $client->get(sprintf('%s/releases/latest', $this->gitHubHelper->getApiUrl()));
             $latestReleaseObject = json_decode($client->getBody());
             
@@ -70,7 +70,7 @@ class Client
                 'exception' => $exception->getMessage(),
                 'trace' => $exception->getTraceAsString()
             ]);
-    
+
             return $this->releaseFactory->create();
         }
     }

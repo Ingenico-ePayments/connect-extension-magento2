@@ -35,13 +35,11 @@ class ConnectSession implements SectionSourceInterface
      * Get Session data for customer
      *
      * @return string[]
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
      */
     public function getSectionData()
     {
-        $customerId = $this->checkoutSession->getQuote()->getCustomerId();
         try {
+            $customerId = $this->checkoutSession->getQuote()->getCustomerId();
             if ($customerId === null) {
                 return [
                     'data' => $this->sessionManager->createAnonymousSession()

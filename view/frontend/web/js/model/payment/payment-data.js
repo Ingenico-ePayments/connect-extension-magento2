@@ -7,6 +7,7 @@ define(['ko'],
 
         let currentProductIdentifier = ko.observable('');
         let currentPaymentProduct = ko.observable(false);
+        let currentCardPaymentProduct = ko.observable(false);
         let currentAccountOnFile = ko.observable(false);
         let currentPayload = ko.observable(false);
         let fieldData = {};
@@ -14,6 +15,8 @@ define(['ko'],
 
         return {
             currentProductIdentifier: currentProductIdentifier,
+
+            currentCardPaymentProduct: currentCardPaymentProduct,
 
             fieldData: fieldData,
 
@@ -25,6 +28,10 @@ define(['ko'],
 
             setCurrentPaymentProduct: function (value) {
                 currentPaymentProduct(value)
+            },
+
+            setCurrentCardPaymentProduct: function (value) {
+                currentCardPaymentProduct(value)
             },
 
             setCurrentAccountOnFile: function (value) {
@@ -41,6 +48,10 @@ define(['ko'],
 
             getCurrentPaymentProduct: function () {
                 return currentPaymentProduct()
+            },
+
+            getCurrentCardPaymentProduct: function() {
+                return currentCardPaymentProduct()
             },
 
             getCurrentAccountOnFile: function () {

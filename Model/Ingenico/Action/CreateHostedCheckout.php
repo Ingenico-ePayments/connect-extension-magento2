@@ -68,13 +68,11 @@ class CreateHostedCheckout extends AbstractAction implements ActionInterface
         $countryCode = $order->getBillingAddress()->getCountryId();
         $locale = $this->resolver->getLocale();
         $checkoutSubdomain = $this->ePaymentsConfig->getHostedCheckoutSubDomain($scopeId);
-        $shouldHavePaymentProduct = $this->ePaymentsConfig
-                ->getCheckoutType($scopeId) !== Config::CONFIG_INGENICO_CHECKOUT_TYPE_REDIRECT;
 
         /** @var InfoInterface $payment */
         $payment = $order->getPayment();
 
-        if ($shouldHavePaymentProduct) {
+        if ($this->shouldHavePaymentProduct($order)) {
             $paymentProductId = $payment->getAdditionalInformation(Config::PRODUCT_ID_KEY);
             try {
                 /** @var PaymentProductResponse $ingenicoPaymentProduct */
@@ -120,5 +118,20 @@ class CreateHostedCheckout extends AbstractAction implements ActionInterface
         $payment->setAdditionalInformation(Config::REDIRECT_URL_KEY, $ingenicoRedirectUrl);
         $payment->setAdditionalInformation(Config::HOSTED_CHECKOUT_ID_KEY, $response->hostedCheckoutId);
         $payment->setAdditionalInformation(Config::RETURNMAC_KEY, $response->RETURNMAC);
+    }
+
+    /**
+     * @param Order $order
+     * @return boolean
+     */
+    private function shouldHavePaymentProduct(Order $order)
+    {
+        $scopeId = $order->getStoreId();
+        if ($this->ePaymentsConfig->getCheckoutType($scopeId) === Config::CONFIG_INGENICO_CHECKOUT_TYPE_REDIRECT) {
+            return false;
+        }
+        $payment = $order->getPayment();
+        $paymentProductId = $payment->getAdditionalInformation(Config::PRODUCT_ID_KEY);
+        return $paymentProductId !== 'cards';
     }
 }

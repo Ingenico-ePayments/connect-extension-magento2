@@ -1,0 +1,51 @@
+<?php
+/* @var $block \Ingenico\Connect\Block\Adminhtml\System\Config\Field\TestApiConnection */
+?>
+
+<script>
+    require([
+        'jquery',
+        'mage/translate',
+        'prototype'
+    ], function(jQuery, $t) {
+        let testAPIConnectionSpan = jQuery('#test_api_connection');
+
+        jQuery('#test_api_connection_button').click(function () {
+            new Ajax.Request('<?php echo $block->getAjaxUrl() ?>', {
+                method: 'GET',
+                loaderArea: false,
+                asynchronous: true,
+                onCreate: function() {
+                    testAPIConnectionSpan.find('.success').hide();
+                    testAPIConnectionSpan.find('.failure').hide();
+                    testAPIConnectionSpan.find('.processing').show();
+                    jQuery('#test_api_connection_message').text('');
+                },
+                onSuccess: function(response) {
+                    testAPIConnectionSpan.find('.processing').hide();
+                    const resultText = JSON.parse(response.responseText);
+                    testAPIConnectionSpan.find('.success').show();
+                    jQuery('#test_api_connection_message').text(resultText).css('color', 'green');
+                },
+                onFailure: function(response) {
+                    testAPIConnectionSpan.find('.processing').hide();
+                    testAPIConnectionSpan.find('.failure').show();
+                    let resultText = $t('Something went wrong. Please check your account settings and try again.');
+                    if (response.status === 422) {
+                        resultText = JSON.parse(response.responseText);
+                    }
+                    jQuery('#test_api_connection_message').text(resultText).css('color', 'red');
+                }
+            });
+        });
+    });
+</script>
+
+<?php echo $block->getButtonHtml() ?>
+<span id="test_api_connection">
+    <img class="processing" hidden="hidden" alt="Testing API" style="margin:-1px 5px" src="<?php echo $block->getViewFileUrl('images/process_spinner.gif') ?>"/>
+    <img class="success" hidden="hidden" alt="API test succeeded" style="margin:-3px 5px" src="<?php echo $block->getViewFileUrl('images/rule_component_apply.gif') ?>"/>
+    <img class="failure" hidden="hidden" alt="API test failed" style="margin:-2px 5px" src="<?php echo $block->getViewFileUrl('images/rule_component_remove.gif') ?>"/>
+    <br>
+    <span id="test_api_connection_message"></span>
+</span>

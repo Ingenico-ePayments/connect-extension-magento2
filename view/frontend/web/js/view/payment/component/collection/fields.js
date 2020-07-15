@@ -36,18 +36,18 @@ define([
 
             if (!this.fieldsLoaded) {
                 this.isLoading(true);
+
+                if (this.product.paymentProductFields && this.product.paymentProductFields.length) {
+                    layout(this.createLayout(this.product));
+                    this.fieldsVisiblity(true);
+                    this.fieldsLoaded = true;
+                    this.isLoading(false);
+                    return;
+                }
+
                 fetchProduct(this.product.id).then(function (fullProduct) {
-                    let layouts = [];
-                    for (let field of fullProduct.paymentProductFields) {
-                        layouts.push(this.getProductFieldLayout(field));
-                    }
-                    if (!this.account && this.product.allowsTokenization && !this.product.autoTokenized) {
-                        layouts.push(this.getTokenizeCheckboxLayout());
-                    }
-                    if (fullProduct.paymentProductFields.length === 0) {
-                        layouts.push(this.getRedirectInfoLayout());
-                    }
-                    layout(layouts);
+                    layout(this.createLayout(fullProduct));
+
                     this.fieldsVisiblity(true);
                     this.fieldsLoaded = true;
                     this.isLoading(false);
@@ -58,12 +58,43 @@ define([
             }
         },
 
-        getProductFieldLayout: function(field) {
+        createLayout: function(product) {
+            let layouts = [];
+            for (let field of product.paymentProductFields) {
+                layouts.push(this.getProductFieldLayout(field, product));
+            }
+            if (!this.account && this.product.allowsTokenization && !this.product.autoTokenized && config.isCustomerLoggedIn()) {
+                layouts.push(this.getTokenizeCheckboxLayout());
+            }
+            if (product.paymentProductFields.length === 0) {
+                layouts.push(this.getRedirectInfoLayout());
+            }
+
+            return layouts;
+        },
+
+        getProductFieldLayout: function(field, product) {
+            const customProductFieldLayout = this.getCustomProductFieldLayout(field, product);
+            if (customProductFieldLayout) {
+                return customProductFieldLayout;
+            }
+
             return {
                 parent: this.name,
                 component: 'Ingenico_Connect/js/view/payment/component/field',
                 field: field,
                 account: this.account,
+            }
+        },
+
+        getCustomProductFieldLayout: function(field, product) {
+            if (product.id === 'cards' && field.id === 'cardNumber') {
+                return {
+                    parent: this.name,
+                    component: 'Ingenico_Connect/js/view/payment/component/card/field/cardnumber',
+                    field: field,
+                    account: this.account,
+                }
             }
         },
 

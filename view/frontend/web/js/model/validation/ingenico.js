@@ -17,6 +17,12 @@ define([
             }
 
             let product = paymentData.getCurrentPaymentProduct();
+            if (product && product.id === 'cards') {
+                const cardPaymentProduct = paymentData.getCurrentCardPaymentProduct();
+                if (cardPaymentProduct) {
+                    product = cardPaymentProduct;
+                }
+            }
 
             if (!product) {
                 alert('Please select a payment product');
