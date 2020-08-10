@@ -26,6 +26,8 @@ define([
                 return;
             }
 
+            cardGroupPaymentMethod.allowsTokenization = true
+
             this.destroyChildren();
             const cardLayout = {
                 name: 'group-card',
@@ -33,7 +35,7 @@ define([
                 component: 'Ingenico_Connect/js/view/payment/component/card/method',
                 isTokenGroup: false,
                 additionalClasses: 'group-card',
-                product: cardGroupPaymentMethod,
+                product: cardGroupPaymentMethod
             };
 
             layout([cardLayout]);

@@ -70,13 +70,20 @@ define(
             },
 
             getData: function () {
-                let id, label, paymentMethod, currentPaymentMethodProduct;
+                let id,
+                    label,
+                    paymentMethod,
+                    currentPaymentMethodProduct,
+                    tokenize;
 
                 currentPaymentMethodProduct = paymentData.getCurrentPaymentProduct();
+                tokenize = paymentData.tokenize().indexOf(id) !== -1;
+
                 if (currentPaymentMethodProduct) {
                     if (paymentData.getCurrentPaymentProduct().id === 'cards'
                         && paymentData.getCurrentCardPaymentProduct()) {
                         currentPaymentMethodProduct = paymentData.getCurrentCardPaymentProduct();
+                        tokenize = paymentData.tokenize().indexOf('cards') !== -1;
                     }
 
                     id = currentPaymentMethodProduct.id;
@@ -89,7 +96,7 @@ define(
                     'additional_data': {
                         'ingenico_payment_product_id': id,
                         'ingenico_payment_product_label': label,
-                        'ingenico_payment_product_tokenize': paymentData.tokenize().indexOf(id) !== -1,
+                        'ingenico_payment_product_tokenize': tokenize,
                         'ingenico_payment_product_method': paymentMethod,
                         'ingenico_payment_payload': paymentData.getCurrentPayload(),
                         'ingenico_payment_is_payment_account_on_file': window.checkoutConfig.isPaymentAccountOnFile === true,

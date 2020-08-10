@@ -3,7 +3,8 @@ define([
     'Ingenico_Connect/js/model/payment/payment-data',
     'Ingenico_Connect/js/model/payment-method/card',
     'ko',
-], function (Field, paymentData, cardPayment, ko) {
+    'uiRegistry'
+], function (Field, paymentData, cardPayment, ko, registry) {
     'use strict';
 
     return Field.extend({
@@ -81,6 +82,7 @@ define([
             const currentCardPaymentProduct = paymentData.getCurrentCardPaymentProduct();
             this.logo(currentCardPaymentProduct === null ? '' : currentCardPaymentProduct.displayHints.logo);
             this.logoDescription(currentCardPaymentProduct === null ? '' : currentCardPaymentProduct.displayHints.label);
+            registry.get('cardAllowsTokenization')(currentCardPaymentProduct === null ? false : currentCardPaymentProduct.allowsTokenization === true);
         }
     });
 });

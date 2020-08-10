@@ -64,7 +64,9 @@ define([
                     });
 
                     cardPaymentMethodIds.forEach(function (id) {
-                        delete paymentProductsResponse.basicPaymentProductById[id];
+                        if (paymentProductsResponse.basicPaymentProductById[id].accountsOnFile.length === 0) {
+                            delete paymentProductsResponse.basicPaymentProductById[id];
+                        }
                     });
 
                     paymentProductsResponse.basicPaymentProducts = paymentProductsResponse.basicPaymentProducts.filter(

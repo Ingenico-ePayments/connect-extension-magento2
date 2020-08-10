@@ -1,8 +1,20 @@
 <div class="choice field">
-    <input type="checkbox" class="checkbox" data-bind="checked: value, checkedValue: checkedValue, attr: { id: uid, disabled: disabled, name: inputName }, hasFocus: focused">
+    <input type="checkbox"
+           class="checkbox"
+           data-bind="checked: value,
+              checkedValue: checkedValue,
+              attr: {
+                id: uid,
+                disabled: !enabled(),
+                name: inputName
+              },
+              hasFocus: focused">
 
     <label class="label" data-bind="checked: value, attr: { for: uid }">
         <span data-bind="text: description || label"></span>
+        <!-- ko if: checkedValue === 'cards' && cardAllowsTokenization() === false -->
+            <span data-bind="i18n: '(not supported by this card)'"></span>
+        <!-- /ko -->
     </label>
 
     <!-- ko if: notice -->

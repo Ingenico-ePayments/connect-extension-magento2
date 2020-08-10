@@ -49,6 +49,13 @@ Add the required Composer module:
 5. Save Config 
 6. In the Magento root directory execute `php bin/magento cache:clean`
 
+#### Configure webhooks endpoints
+
+Webhooks must be configured in Configuration Center for payments and refunds.
+
+1. Open Magento Admin > Stores > Configuration > Sales > Ingenico ePayments > Settings
+2. Copy webhooks endpoints and configure them in Configuration Center according to <https://epayments.developer-ingenico.com/documentation/webhooks/>
+
 ##### Test module  
 
 1. Open the Magento frontend 
