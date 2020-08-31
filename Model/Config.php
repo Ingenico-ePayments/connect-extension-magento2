@@ -33,14 +33,18 @@ class Config implements ConfigInterface
     const CONFIG_INGENICO_UPDATE_EMAIL = 'ingenico_epayments/email_settings';
     const CONFIG_SALES_EMAIL_IDENTITY = 'sales_email/order/identity';
     const CONFIG_INGENICO_PAYMENT_STATUS = 'ingenico_epayments/payment_statuses';
+    const CONFIG_INGENICO_REFUND_STATUS = 'ingenico_epayments/refund_statuses';
     const CONFIG_INGENICO_SYSTEM_PREFIX = 'ingenico_epayments/settings/system_prefix';
+    const CONFIG_ALLOW_OFFLINE_REFUNDS = 'ingenico_epayments/settings/allow_offline_refunds';
+
     // phpcs:ignore Generic.Files.LineLength.TooLong
     const CONFIG_INGENIC_GROUP_CARD_PAYMENT_METHODS = 'ingenico_epayments/settings/ux/payment_methods/group_card_payment_methods';
-    
+
     const CONFIG_INGENICO_CAPTURES_MODE = 'ingenico_epayments/captures/capture_mode';
     const CONFIG_INGENICO_CAPTURES_MODE_DIRECT = 'direct';
     const CONFIG_INGENICO_CAPTURES_MODE_AUTHORIZE = 'authorize';
     const CONFIG_INGENICO_HOSTED_CHECKOUT_VARIANT = 'ingenico_epayments/checkout/hosted_checkout_variant';
+    const CONFIG_INGENICO_HOSTED_CHECKOUT_GUEST_VARIANT = 'ingenico_epayments/checkout/hosted_checkout_guest_variant';
 
     /** AdditionalInformation keys */
     const PAYMENT_ID_KEY = 'ingenico_payment_id';
@@ -58,25 +62,25 @@ class Config implements ConfigInterface
     const HOSTED_CHECKOUT_ID_KEY = 'ingenico_hosted_checkout_id';
     const RETURNMAC_KEY = 'ingenico_returnmac';
     const IDEMPOTENCE_KEY = 'ingenico_idempotence_key';
-    
+
     /**
      * @var ScopeConfigInterface
      */
     private $scopeConfig;
-    
+
     /**
      * @var DirectoryList
      */
     private $directoryList;
-    
+
     /**
      * @var EncryptorInterface
      */
     private $encryptor;
-    
+
     /** @var MetaData */
     private $metaDataHelper;
-    
+
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         DirectoryList $directoryList,
@@ -88,7 +92,7 @@ class Config implements ConfigInterface
         $this->encryptor = $encryptor;
         $this->metaDataHelper = $metaDataHelper;
     }
-    
+
     /**
      * @param $field
      * @param null $storeId
@@ -224,6 +228,14 @@ class Config implements ConfigInterface
     /**
      * {@inheritdoc}
      */
+    public function getHostedCheckoutGuestVariant($storeId = null)
+    {
+        return $this->getValue(self::CONFIG_INGENICO_HOSTED_CHECKOUT_GUEST_VARIANT, $storeId);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getPendingOrdersCancellationPeriod($storeId = null)
     {
         return $this->getValue(self::CONFIG_INGENICO_PENDING_ORDERS_DAYS, $storeId);
@@ -269,7 +281,18 @@ class Config implements ConfigInterface
     public function getPaymentStatusInfo($status, $storeId = null)
     {
         return $this->getValue(
-            mb_strtolower(self::CONFIG_INGENICO_PAYMENT_STATUS . DIRECTORY_SEPARATOR . $status),
+            mb_strtolower(self::CONFIG_INGENICO_PAYMENT_STATUS . '/' . $status),
+            $storeId
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRefundStatusInfo($status, $storeId = null)
+    {
+        return $this->getValue(
+            mb_strtolower(self::CONFIG_INGENICO_REFUND_STATUS . '/' . $status),
             $storeId
         );
     }
@@ -284,7 +307,7 @@ class Config implements ConfigInterface
             ScopeInterface::SCOPE_WEBSITE
         );
     }
-    
+
     /**
      * @inheritDoc
      */
@@ -295,5 +318,13 @@ class Config implements ConfigInterface
             ScopeInterface::SCOPE_STORE,
             $storeId
         );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function allowOfflineRefunds(): bool
+    {
+        return (int) $this->scopeConfig->getValue(self::CONFIG_ALLOW_OFFLINE_REFUNDS) === 1;
     }
 }

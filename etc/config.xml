@@ -35,6 +35,8 @@
             </settings>
             <checkout>
                 <inline_payments>0</inline_payments>
+                <hosted_checkout_variant>100</hosted_checkout_variant>
+                <hosted_checkout_guest_variant>100</hosted_checkout_guest_variant>
             </checkout>
             <captures>
                 <capture_mode>authorize</capture_mode>
@@ -69,6 +71,15 @@
                 <chargebacked><![CDATA[The transaction has been chargebacked]]></chargebacked>
                 <refunded><![CDATA[The transaction has been refunded]]></refunded>
             </payment_statuses>
+            <refund_statusses>
+                <created><![CDATA[The transaction has been created.]]></created>
+                <cancelled><![CDATA[You have cancelled the refund]]></cancelled>
+                <rejected><![CDATA[The refund has been rejected]]></rejected>
+                <pending_approval><![CDATA[The transaction is awaiting approval from you to proceed with the processing of the refund]]></pending_approval>
+                <refund_requested><![CDATA[The transaction is in the queue to be refunded]]></refund_requested>
+                <captured><![CDATA[We have successfully refunded the consumer and has received an online confirmation from the third party]]></captured>
+                <refunded><![CDATA[We have successfully refunded the consumer]]></refunded>
+            </refund_statusses>
             <fraud>
                 <email_template>fraud_email</email_template>
             </fraud>

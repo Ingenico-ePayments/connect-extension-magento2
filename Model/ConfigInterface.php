@@ -121,6 +121,14 @@ interface ConfigInterface
     public function getHostedCheckoutVariant($storeId = null);
 
     /**
+     * Return Hosted Checkout Guest Variant
+     *
+     * @param null|int $storeId
+     * @return string
+     */
+    public function getHostedCheckoutGuestVariant($storeId = null);
+
+    /**
      * Returns period after which pending orders will be canceled
      *
      * @param int|null $storeId
@@ -171,13 +179,27 @@ interface ConfigInterface
     public function getPaymentStatusInfo($status, $storeId = null);
 
     /**
+     * Returns refund status info
+     *
+     * @param $status
+     * @param null $storeId
+     * @return mixed
+     */
+    public function getRefundStatusInfo($status, $storeId = null);
+
+    /**
      * @return string
      */
     public function getReferencePrefix();
-    
+
     /**
      * @param int|null $storeId
      * @return bool
      */
     public function getGroupCardPaymentMethods($storeId = null);
+
+    /**
+     * @return bool
+     */
+    public function allowOfflineRefunds(): bool;
 }

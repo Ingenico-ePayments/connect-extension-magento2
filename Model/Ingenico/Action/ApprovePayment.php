@@ -136,9 +136,8 @@ class ApprovePayment extends AbstractAction implements ActionInterface
      */
     private function approvePayment($ingenicoPaymentId, Payment $payment, $amount)
     {
-        $this->orderReferencesApprovePayment->merchantReference = $this->merchantReference->generateMerchantReference(
-            $payment->getOrder()
-        );
+        $this->orderReferencesApprovePayment->merchantReference = $this->merchantReference
+            ->generateMerchantReferenceForOrder($payment->getOrder());
 
         $this->orderApprovePayment->references = $this->orderReferencesApprovePayment;
 

@@ -33,6 +33,7 @@ interface StatusResponseManagerInterface
      * @param InfoInterface|Payment $payment
      * @param string $transactionId
      * @return IngenicoPayment|false
+     * @deprecated
      */
     public function get(InfoInterface $payment, $transactionId);
 
@@ -43,6 +44,7 @@ interface StatusResponseManagerInterface
      * @param $transactionId
      * @param AbstractOrderStatus $orderStatus
      * @throws LocalizedException
+     * @deprecated
      */
     public function set(InfoInterface $payment, $transactionId, AbstractOrderStatus $orderStatus);
 
@@ -52,6 +54,7 @@ interface StatusResponseManagerInterface
      * @param AbstractOrderStatus $responseData
      * @param Transaction $transaction
      * @return null
+     * @deprecated
      */
     public function setResponseDataOnTransaction(AbstractOrderStatus $responseData, Transaction $transaction);
 
@@ -60,6 +63,7 @@ interface StatusResponseManagerInterface
      *
      * @param string $transactionId
      * @return \Magento\Sales\Api\Data\TransactionInterface|null
+     * @deprecated
      */
     public function getTransactionBy($transactionId, \Magento\Payment\Model\InfoInterface $payment);
 
@@ -76,6 +80,7 @@ interface StatusResponseManagerInterface
      *
      * @param \Magento\Sales\Api\Data\TransactionInterface $transaction
      * @return void
+     * @deprecated
      */
     public function save(\Magento\Sales\Api\Data\TransactionInterface $transaction);
 }

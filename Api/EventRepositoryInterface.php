@@ -37,7 +37,6 @@ interface EventRepositoryInterface
      *
      * @param string $orderIncrementId
      * @return \Ingenico\Connect\Api\Data\EventSearchResultsInterface
-     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getListByOrderIncrementId($orderIncrementId);
 
@@ -46,7 +45,6 @@ interface EventRepositoryInterface
      *
      * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
      * @return \Ingenico\Connect\Api\Data\EventSearchResultsInterface
-     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria);
 

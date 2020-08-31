@@ -8,7 +8,7 @@ use Magento\Sales\Model\OrderRepository;
 use Ingenico\Connect\Model\Config;
 use Ingenico\Connect\Model\ConfigInterface;
 use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
-use Ingenico\Connect\Model\Ingenico\Status\ResolverInterface;
+use Ingenico\Connect\Model\Ingenico\Status\Payment\ResolverInterface;
 
 class Order implements OrderInterface
 {
@@ -107,6 +107,9 @@ class Order implements OrderInterface
             return;
         }
 
+        // @fixme: this will only process payments, not refunds
+        // also: not sure if this code is needed at all...
+        // this has something to do with the webhook workaround cron :-/
         try {
             // call ingenico
             /** @var \Ingenico\Connect\Sdk\Domain\Payment\PaymentResponse $response */
@@ -154,9 +157,9 @@ class Order implements OrderInterface
     private function getIngenicoPayment($ingenicoPaymentId, $scopeId)
     {
         $response = $this->ingenicoClient->getIngenicoClient($scopeId)
-                                         ->merchant($this->config->getMerchantId($scopeId))
-                                         ->payments()
-                                         ->get($ingenicoPaymentId);
+            ->merchant($this->config->getMerchantId($scopeId))
+            ->payments()
+            ->get($ingenicoPaymentId);
 
         return $response;
     }

@@ -10,7 +10,6 @@ use Magento\Framework\Exception\CouldNotSaveException;
 use Ingenico\Connect\Api\Data\EventInterface;
 use Ingenico\Connect\Api\Data\EventInterfaceFactory;
 use Ingenico\Connect\Api\EventRepositoryInterface;
-use Ingenico\Connect\Model\Ingenico\Status\ResolverInterface;
 use Psr\Log\LoggerInterface;
 use Ingenico\Connect\Model\Ingenico\Webhook\Event\ResolverInterface as EventResolverInterface;
 

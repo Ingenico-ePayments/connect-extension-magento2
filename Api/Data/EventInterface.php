@@ -22,6 +22,7 @@ interface EventInterface
     const STATUS_PROCESSING = 1;
     const STATUS_SUCCESS = 2;
     const STATUS_FAILED = 3;
+    const STATUS_IGNORED = 4;
 
     /**
      * Get event_id

@@ -143,7 +143,7 @@ class RefundRequestBuilder
         $this->setCustomerEmail($order->getCustomerEmail() ?: '');
         $this->setCustomerLastname($order->getCustomerLastname() ?: '');
         $this->setEmailMessageType(self::EMAIL_MESSAGE_TYPE);
-        $this->setMerchantReference($this->merchantReference->generateMerchantReference($order));
+        $this->setMerchantReference($this->merchantReference->generateMerchantReferenceForOrder($order));
 
         return $this->create();
     }

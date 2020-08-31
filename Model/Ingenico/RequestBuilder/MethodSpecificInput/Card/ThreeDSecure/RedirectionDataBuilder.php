@@ -43,7 +43,7 @@ class RedirectionDataBuilder
     {
         $redirectionData = $this->redirectionDataFactory->create();
 
-        $redirectionData->variant = $this->config->getHostedCheckoutVariant($order->getStoreId());
+        $redirectionData->variant = $this->getHostedCheckoutVariant($order);
         try {
             $redirectionData->returnUrl = $this->getReturnUrl($order);
         } catch (NotFoundException $exception) {
@@ -67,5 +67,13 @@ class RedirectionDataBuilder
             return $this->urlBuilder->getUrl(RequestBuilder::REDIRECT_PAYMENT_RETURN_URL);
         }
         return $this->urlBuilder->getUrl(RequestBuilder::HOSTED_CHECKOUT_RETURN_URL);
+    }
+
+    private function getHostedCheckoutVariant(OrderInterface $order)
+    {
+        if ($order->getCustomerIsGuest()) {
+            return $this->config->getHostedCheckoutGuestVariant(($order->getStoreId()));
+        }
+        return $this->config->getHostedCheckoutVariant($order->getStoreId());
     }
 }

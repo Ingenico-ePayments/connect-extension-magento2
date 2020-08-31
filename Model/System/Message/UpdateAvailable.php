@@ -58,6 +58,6 @@ class UpdateAvailable implements MessageInterface
     private function getTextTemplate(): string
     {
         //phpcs:ignore Generic.Files.LineLength.TooLong
-        return '%1 version %2 has been released. Please refer to the changelog on (<a href="%3" target="_blank">GitHub</a>) for the changes and update instructions.';
+        return 'You are using an old version of %1 module! Version %2 has been released. Please refer to the changelog on (<a href="%3" target="_blank">GitHub</a>) for the changes and update instructions.';
     }
 }

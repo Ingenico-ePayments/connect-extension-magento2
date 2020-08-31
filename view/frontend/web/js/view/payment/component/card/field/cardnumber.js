@@ -2,10 +2,25 @@ define([
     'Ingenico_Connect/js/view/payment/component/field',
     'Ingenico_Connect/js/model/payment/payment-data',
     'Ingenico_Connect/js/model/payment-method/card',
+    'Ingenico_Connect/js/action/get-payment-products',
     'ko',
     'uiRegistry'
-], function (Field, paymentData, cardPayment, ko, registry) {
+], function (Field, paymentData, cardPayment, getPaymentProducts, ko, registry) {
     'use strict';
+
+    let extractCardPaymentProducts = function (paymentProducts) {
+        let cardPaymentProducts = [];
+        paymentProducts.forEach(function(paymentProduct) {
+            if (paymentProduct.paymentMethod === 'card') {
+                cardPaymentProducts.push(paymentProduct);
+            }
+        })
+        return cardPaymentProducts;
+    }
+
+    let sortFunction = function (a, b) {
+        return a.displayHints.displayOrder - b.displayHints.displayOrder
+    };
 
     return Field.extend({
 
@@ -13,6 +28,7 @@ define([
             lastValue: '',
             logo: '',
             logoDescription: '',
+            creditCardLogos: '',
         },
 
         initialize: function () {
@@ -22,6 +38,9 @@ define([
 
             this.logo = ko.observable('');
             this.logoDescription = ko.observable('');
+            this.creditCardLogos = ko.observableArray([]);
+
+            this.fetchCreditCardLogos();
 
             return this;
         },
@@ -82,7 +101,24 @@ define([
             const currentCardPaymentProduct = paymentData.getCurrentCardPaymentProduct();
             this.logo(currentCardPaymentProduct === null ? '' : currentCardPaymentProduct.displayHints.logo);
             this.logoDescription(currentCardPaymentProduct === null ? '' : currentCardPaymentProduct.displayHints.label);
-            registry.get('cardAllowsTokenization')(currentCardPaymentProduct === null ? false : currentCardPaymentProduct.allowsTokenization === true);
+            const cardAllowsTokenization = registry.get('cardAllowsTokenization');
+            if (cardAllowsTokenization) {
+                cardAllowsTokenization(currentCardPaymentProduct === null ? false : currentCardPaymentProduct.allowsTokenization === true);
+            }
+        },
+
+        fetchCreditCardLogos: function () {
+            getPaymentProducts().then(response => {
+                let creditCardLogos = [];
+                const paymentProducts = extractCardPaymentProducts(response.basicPaymentProducts.sort(sortFunction));
+                if (paymentProducts.length > 10) {
+                    paymentProducts.length = 10;
+                }
+                paymentProducts.forEach(function(paymentProduct) {
+                    creditCardLogos.push(paymentProduct.displayHints.logo);
+                });
+                this.creditCardLogos(creditCardLogos);
+            })
         }
     });
 });

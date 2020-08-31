@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Ingenico\Connect\Model\Ingenico\Action\Refund;
 
 use Ingenico\Connect\Model\Ingenico\RequestBuilder\Refund\RefundRequestBuilder;
-use Ingenico\Connect\Model\Ingenico\Status\Refund\PendingApproval;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Message\ManagerInterface;
 use Magento\Sales\Api\CreditmemoRepositoryInterface;
 use Magento\Sales\Api\Data\CreditmemoInterface;
 use Magento\Sales\Api\Data\OrderInterface;
@@ -16,10 +14,9 @@ use Magento\Sales\Api\TransactionRepositoryInterface;
 use Ingenico\Connect\Model\Config;
 use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
 use Ingenico\Connect\Model\Ingenico\CallContextBuilder;
-use Ingenico\Connect\Model\Ingenico\Status\Refund\RefundHandlerInterface;
-use Ingenico\Connect\Model\Ingenico\Status\ResolverInterface;
+use Ingenico\Connect\Model\Ingenico\Status\Refund\ResolverInterface;
 use Ingenico\Connect\Model\Transaction\TransactionManager;
-use Magento\Sales\Model\Order\Payment;
+use Magento\Sales\Model\Order\Creditmemo;
 use Magento\Sales\Model\Order\Payment\Transaction;
 
 /**
@@ -37,7 +34,7 @@ class CreateRefund extends AbstractRefundAction
     /**
      * @var RefundRequestBuilder
      */
-    private $refundRequestbuilder;
+    private $refundRequestBuilder;
 
     /**
      * @var CallContextBuilder
@@ -59,11 +56,6 @@ class CreateRefund extends AbstractRefundAction
      */
     private $transactionManager;
 
-    /**
-     * @var ManagerInterface
-     */
-    private $messageManager;
-
     public function __construct(
         OrderRepositoryInterface $orderRepository,
         CreditmemoRepositoryInterface $creditmemoRepository,
@@ -72,18 +64,16 @@ class CreateRefund extends AbstractRefundAction
         RefundRequestBuilder $refundRequestBuilder,
         CallContextBuilder $callContextBuilder,
         TransactionRepositoryInterface $transactionRepository,
-        TransactionManager $transactionManager,
-        ManagerInterface $messageManager
+        TransactionManager $transactionManager
     ) {
         parent::__construct($orderRepository, $creditmemoRepository);
 
         $this->statusResolver = $statusResolver;
-        $this->refundRequestbuilder = $refundRequestBuilder;
+        $this->refundRequestBuilder = $refundRequestBuilder;
         $this->callContextBuilder = $callContextBuilder;
         $this->transactionRepository = $transactionRepository;
         $this->ingenicoClient = $ingenicoClient;
         $this->transactionManager = $transactionManager;
-        $this->messageManager = $messageManager;
     }
 
     /**
@@ -97,7 +87,7 @@ class CreateRefund extends AbstractRefundAction
         $amount = $creditMemo->getBaseGrandTotal();
         $paymentId = $payment->getAdditionalInformation(Config::PAYMENT_ID_KEY);
 
-        $request = $this->refundRequestbuilder->build($order, (float) $amount);
+        $request = $this->refundRequestBuilder->build($order, (float) $amount);
         $callContext = $this->callContextBuilder->create();
 
         $response = $this->ingenicoClient->ingenicoRefund(
@@ -133,11 +123,18 @@ class CreateRefund extends AbstractRefundAction
             $payment->setShouldCloseParentTransaction(true);
         }
 
-        /** @var RefundHandlerInterface $handler */
-        $handler = $this->statusResolver->getHandlerByType(ResolverInterface::TYPE_REFUND, $response->status);
+        // @todo: do this cleaner:
+        if ($creditMemo instanceof Creditmemo) {
+            // This temporary transaction is set on the credit memo in
+            // the case of a new credit memo; in this scenario the credit
+            // memo is still in the creation process and the transaction
+            // cannot yet be found by using the default Magento methods
+            // probably use the registry for this instead?
+            // @see the various refund status handlers
+            $creditMemo->setData('tmp_transaction', $transaction);
+        }
 
-        // This handler can either be the PENDING_APPROVAL or REFUND_REQUESTED-handler:
-        $handler->applyCreditmemo($creditMemo, $transaction);
+        $this->statusResolver->resolve($creditMemo, $response);
 
         $payment->setPreparedMessage(
             sprintf(
@@ -146,12 +143,5 @@ class CreateRefund extends AbstractRefundAction
                 $response->statusOutput->statusCode
             )
         );
-
-        if ($handler instanceof PendingApproval) {
-            $this->messageManager->addNoticeMessage(
-            //phpcs:ignore Generic.Files.LineLength.TooLong
-                __('It appears that your account at Ingenico is configured that refunds require approval, please contact us')
-            );
-        }
     }
 }

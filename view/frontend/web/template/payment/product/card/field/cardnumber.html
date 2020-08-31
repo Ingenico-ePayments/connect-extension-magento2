@@ -13,3 +13,11 @@
 <!-- ko if: logo -->
 <img class="cardnumber-image" data-bind="attr: {src: logo, title: logoDescription}"/>
 <!-- /ko -->
+<!-- ko foreach: { data: creditCardLogos, as: 'creditCardLogo' } -->
+    <!-- ko if: !$parent.logo() || creditCardLogo === $parent.logo() -->
+    <img class="card-logo" data-bind="attr: {src: creditCardLogo}">
+    <!-- /ko -->
+    <!-- ko if: $parent.logo() && creditCardLogo !== $parent.logo() -->
+    <img class="card-logo card-logo-dimmed" data-bind="attr: {src: creditCardLogo}">
+    <!-- /ko -->
+<!-- /ko -->

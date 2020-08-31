@@ -67,7 +67,22 @@ Webhooks must be configured in Configuration Center for payments and refunds.
 ##### Upgrade instructions
 
 If you are upgrading from a version prior to 2.0.0, please read the [upgrade instructions](doc/UPGRADE.md).
- 
+
+##### Hooking into the module
+
+Each time a status change from Ingenico is processed, an event is 
+dispatched where you can hook in to. The name of these events are:
+
+    ingenico_connect_[payment/refund/hosted_checkout]_[ingenico_status]
+    
+Some examples:
+
+    ingenico_connect_payment_capture_requested
+    ingenico_connect_refund_refund_requested
+    ingenico_connect_hosted_checkout_cancelled_by_consumer
+
+A list of all possible statuses from Ingenico can be found [in the documentation](https://epayments-api.developer-ingenico.com/s2sapi/v1/en_US/java/statuses.html?paymentPlatform=ALL).
+
 Support
 -------
 In case of questions or problems, you can contact the Ingenico support team: <https://www.ingenico.com/epayments/support>

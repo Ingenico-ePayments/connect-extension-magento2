@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Ingenico\Connect\Model\Ingenico\Action\Refund;
 
 use Ingenico\Connect\Model\Ingenico\RequestBuilder\Refund\ApproveRefundRequestBuilder;
-use Ingenico\Connect\Model\Ingenico\Status\Refund\RefundRequested;
+use Ingenico\Connect\Model\Ingenico\Status\Refund\Handler\RefundRequested;
 use Ingenico\Connect\Model\Transaction\TransactionManager;
 use Ingenico\Connect\Sdk\Domain\Refund\ApproveRefundRequestFactory;
 use Ingenico\Connect\Sdk\Domain\Refund\Definitions\RefundResult;

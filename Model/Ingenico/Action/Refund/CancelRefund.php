@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ingenico\Connect\Model\Ingenico\Action\Refund;
 
-use Ingenico\Connect\Model\Ingenico\Status\Refund\Cancelled;
+use Ingenico\Connect\Model\Ingenico\Status\Refund\Handler\Cancelled;
 use Ingenico\Connect\Model\Transaction\TransactionManager;
 use Ingenico\Connect\Sdk\Domain\Refund\Definitions\RefundResult;
 use Ingenico\Connect\Sdk\ResponseException;
@@ -15,7 +15,6 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Ingenico\Connect\Model\Ingenico\Action\RetrievePayment;
 use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
-use Ingenico\Connect\Model\Ingenico\Status\ResolverInterface;
 
 class CancelRefund extends AbstractRefundAction
 {
@@ -23,11 +22,6 @@ class CancelRefund extends AbstractRefundAction
      * @var RetrievePayment
      */
     private $retrievePayment;
-
-    /**
-     * @var ResolverInterface
-     */
-    private $statusResolver;
 
     /**
      * @var Cancelled
@@ -51,7 +45,6 @@ class CancelRefund extends AbstractRefundAction
      * @param CreditmemoRepositoryInterface $creditmemoRepository
      * @param ClientInterface $ingenicoClient
      * @param RetrievePayment $retrievePayment
-     * @param ResolverInterface $statusResolver
      * @param Cancelled $refundCancelledHandler
      * @param TransactionManager $transactionManager
      */
@@ -60,14 +53,12 @@ class CancelRefund extends AbstractRefundAction
         CreditmemoRepositoryInterface $creditmemoRepository,
         ClientInterface $ingenicoClient,
         RetrievePayment $retrievePayment,
-        ResolverInterface $statusResolver,
         Cancelled $refundCancelledHandler,
         TransactionManager $transactionManager
     ) {
         parent::__construct($orderRepository, $creditmemoRepository);
 
         $this->retrievePayment = $retrievePayment;
-        $this->statusResolver = $statusResolver;
         $this->refundCancelledHandler = $refundCancelledHandler;
         $this->ingenicoClient = $ingenicoClient;
         $this->transactionManager = $transactionManager;

@@ -112,7 +112,7 @@ class RequestBuilder
         $specificInput->tokens = $this->getTokens($order);
         $specificInput->validateShoppingCart = true;
         $specificInput->returnCancelState = true;
-        if ($variant = $this->config->getHostedCheckoutVariant($order->getStoreId())) {
+        if ($variant = $this->getHostedCheckoutVariant($order)) {
             $specificInput->variant = $variant;
         }
         if ($paymentProductFilters = $this->getPaymentProductFilters($order)) {
@@ -151,5 +151,13 @@ class RequestBuilder
         $restrictTo->groups = ['cards'];
         $paymentProductFilters->restrictTo = $restrictTo;
         return $paymentProductFilters;
+    }
+
+    private function getHostedCheckoutVariant(Order $order)
+    {
+        if ($order->getCustomerIsGuest()) {
+            return $this->config->getHostedCheckoutGuestVariant(($order->getStoreId()));
+        }
+        return $this->config->getHostedCheckoutVariant($order->getStoreId());
     }
 }

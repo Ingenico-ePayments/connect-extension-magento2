@@ -18,6 +18,7 @@ use Magento\Sales\Model\Order\Payment\Transaction\Repository as TransactionRepos
  * Class StatusResponseManager
  *
  * @package Ingenico\Connect\Model
+ * @deprecated
  */
 class StatusResponseManager implements StatusResponseManagerInterface
 {

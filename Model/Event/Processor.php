@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace Ingenico\Connect\Model\Event;
 
+use Exception;
+use Ingenico\Connect\Model\Ingenico\Status\Payment\ResolverInterface as PaymentResolverInterface;
+use Ingenico\Connect\Model\Ingenico\Status\Refund\ResolverInterface as RefundResolverInterface;
 use Ingenico\Connect\Model\Order\OrderServiceInterface;
+use Ingenico\Connect\Sdk\Domain\Payment\PaymentResponse;
+use Ingenico\Connect\Sdk\Domain\Refund\RefundResponse;
 use Ingenico\Connect\Sdk\Domain\Webhooks\WebhooksEvent;
 use Ingenico\Connect\Sdk\Domain\Webhooks\WebhooksEventFactory;
 use Magento\Framework\Api\SearchCriteriaBuilder;
@@ -16,8 +21,9 @@ use Magento\Sales\Api\OrderManagementInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Ingenico\Connect\Api\Data\EventInterface;
 use Ingenico\Connect\Api\EventRepositoryInterface;
-use Ingenico\Connect\Model\Ingenico\Status\ResolverInterface;
+use Magento\Sales\Model\Order;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 
 class Processor
 {
@@ -37,11 +43,6 @@ class Processor
      * @var OrderRepositoryInterface
      */
     private $orderRepository;
-
-    /**
-     * @var ResolverInterface
-     */
-    private $statusResolver;
 
     /**
      * @var SortOrderBuilder
@@ -73,28 +74,40 @@ class Processor
      */
     private $orderService;
 
+    /**
+     * @var PaymentResolverInterface
+     */
+    private $paymentResolver;
+
+    /**
+     * @var RefundResolverInterface
+     */
+    private $refundResolver;
+
     public function __construct(
         WebhooksEventFactory $webhookEventFactory,
         EventRepositoryInterface $eventRepository,
         OrderRepositoryInterface $orderRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        ResolverInterface $statusResolver,
         SortOrderBuilder $sortOrderBuilder,
         LoggerInterface $logger,
         OrderManagementInterface $orderManagement,
         OrderStatusHistoryInterfaceFactory $orderStatusHistoryFactory,
-        OrderServiceInterface $orderService
+        OrderServiceInterface $orderService,
+        PaymentResolverInterface $paymentResolver,
+        RefundResolverInterface $refundResolver
     ) {
         $this->webhookEventFactory = $webhookEventFactory;
         $this->eventRepository = $eventRepository;
         $this->orderRepository = $orderRepository;
-        $this->statusResolver = $statusResolver;
         $this->sortOrderBuilder = $sortOrderBuilder;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->logger = $logger;
         $this->orderManagement = $orderManagement;
         $this->orderStatusHistoryFactory = $orderStatusHistoryFactory;
         $this->orderService = $orderService;
+        $this->paymentResolver = $paymentResolver;
+        $this->refundResolver = $refundResolver;
     }
 
     /**
@@ -153,12 +166,32 @@ class Processor
         $webhookEvent = $webhookEvent->fromJson($event->getPayload());
 
         try {
-            $this->statusResolver->resolve($order, $this->extractStatusObject($webhookEvent));
+            $statusResponseObject = $this->extractStatusObject($webhookEvent);
+            $className = get_class($statusResponseObject);
+            switch ($className) {
+                case PaymentResponse::class:
+                    $this->paymentResolver->resolve($order, $statusResponseObject);
+                    break;
+                case RefundResponse::class:
+                    if ($order instanceof Order) {
+                        // @todo: extract the fetching of the correct credit memo
+                        // according to the status response to a separate class:
+                        // This is so wrong... Don't release like this!
+                        // It will have unforeseen side-effects with multiple refunds on one order
+                        // SCGC-409 will fix this.
+                        $creditMemo = $order->getCreditmemosCollection()->getFirstItem();
+                        $this->refundResolver->resolve($creditMemo, $statusResponseObject);
+                    }
+                    break;
+                default:
+                    throw new LocalizedException(__('Unsupported status object: %1', get_class($statusResponseObject)));
+            }
+
             $order->setDataChanges(true);
             $this->orderRepository->save($order);
             $event->setStatus(EventInterface::STATUS_SUCCESS);
             $this->eventRepository->save($event);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $event->setStatus(EventInterface::STATUS_FAILED);
             $this->eventRepository->save($event);
             $this->orderManagement->addComment(
@@ -178,7 +211,7 @@ class Processor
 
     /**
      * @param WebhooksEvent $event
-     * @return \Ingenico\Connect\Sdk\Domain\Payment\PaymentResponse|\Ingenico\Connect\Sdk\Domain\Refund\RefundResponse
+     * @return PaymentResponse|RefundResponse
      */
     private function extractStatusObject(WebhooksEvent $event)
     {
@@ -190,7 +223,7 @@ class Processor
                 return $event->refund;
             case 'payout':
             default:
-                throw new \RuntimeException("Event type {$event->type} not supported.");
+                throw new RuntimeException("Event type {$event->type} not supported.");
         }
     }
 }

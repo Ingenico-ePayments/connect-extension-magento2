@@ -137,7 +137,7 @@ class OrderBuilder
     private function getReferences(Order $order)
     {
         $references = $this->orderReferencesFactory->create();
-        $references->merchantReference = $this->merchantReference->generateMerchantReference($order);
+        $references->merchantReference = $this->merchantReference->generateMerchantReferenceForOrder($order);
         $references->descriptor = $this->ePaymentsConfig->getDescriptor();
 
         return $references;

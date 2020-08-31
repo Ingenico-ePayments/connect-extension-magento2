@@ -7,16 +7,20 @@
     <preference for="Ingenico\Connect\Model\OrderUpdate\OrderInterface" type="Ingenico\Connect\Model\OrderUpdate\Order"/>
     <preference for="Ingenico\Connect\Model\OrderUpdate\SchedulerInterface" type="Ingenico\Connect\Model\OrderUpdate\Scheduler"/>
     <preference for="Ingenico\Connect\Model\OrderUpdate\HistoryManagerInterface" type="Ingenico\Connect\Model\OrderUpdate\HistoryManager"/>
-    <preference for="Ingenico\Connect\Model\Ingenico\Status\ResolverInterface" type="Ingenico\Connect\Model\Ingenico\Status\Resolver"/>
+    <preference for="Ingenico\Connect\Model\Ingenico\Status\Payment\ResolverInterface" type="Ingenico\Connect\Model\Ingenico\Status\Payment\Resolver"/>
+    <preference for="Ingenico\Connect\Model\Ingenico\Status\Refund\ResolverInterface" type="Ingenico\Connect\Model\Ingenico\Status\Refund\Resolver"/>
     <preference for="Ingenico\Connect\Model\Order\Creditmemo\ServiceInterface" type="Ingenico\Connect\Model\Order\Creditmemo\Service"/>
     <preference for="Ingenico\Connect\Model\StatusResponseManagerInterface" type="Ingenico\Connect\Model\StatusResponseManager"/>
-    <preference for="Ingenico\Connect\Model\Ingenico\Status\PoolInterface" type="Ingenico\Connect\Model\Ingenico\Status\Pool"/>
+    <preference for="Ingenico\Connect\Model\Ingenico\Status\Payment\PoolInterface" type="Ingenico\Connect\Model\Ingenico\Status\Payment\Pool"/>
+    <preference for="Ingenico\Connect\Model\Ingenico\Status\Refund\PoolInterface" type="Ingenico\Connect\Model\Ingenico\Status\Refund\Pool"/>
     <preference for="Ingenico\Connect\Model\Order\OrderServiceInterface" type="Ingenico\Connect\Model\Order\OrderService"/>
     <preference for="Ingenico\Connect\Api\EventRepositoryInterface" type="Ingenico\Connect\Model\Event\EventRepository"/>
+    <preference for="Ingenico\Connect\Api\EventManagerInterface" type="Ingenico\Connect\Model\Event\EventManager"/>
     <preference for="Ingenico\Connect\Api\Data\EventInterface" type="Ingenico\Connect\Model\Event\DataModel"/>
     <preference for="Ingenico\Connect\Api\Data\EventSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
     <preference for="Ingenico\Connect\Api\SessionManagerInterface" type="Ingenico\Connect\Model\Ingenico\Session\SessionManager"/>
     <preference for="Ingenico\Connect\Api\Data\SessionInterface" type="Ingenico\Connect\Model\Ingenico\Session\Session"/>
+    <preference for="Ingenico\Connect\Model\Order\Payment\OrderPaymentManagementInterface" type="Ingenico\Connect\Model\Order\Payment\OrderPaymentManagement"/>
 
     <!-- Payment method set up via Magento 2 Payment Gateway API -->
     <virtualType name="IngenicoFacade" type="Magento\Payment\Model\Method\Adapter">
@@ -208,47 +212,51 @@
         </arguments>
     </type>
 
-    <virtualType name="Ingenico\Connect\Model\Ingenico\Status\Virtual\PaymentStatusPool" type="Ingenico\Connect\Model\Ingenico\Status\Pool">
+    <virtualType name="paymentStatusHandlerPool" type="Ingenico\Connect\Model\Ingenico\Status\Payment\Pool">
         <arguments>
             <argument name="statusHandlers" xsi:type="array">
-                <item name="REDIRECTED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Redirected</item>
-                <item name="PENDING_PAYMENT" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\PendingPayment</item>
-                <item name="ACCOUNT_VERIFIED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\NullStatus</item>
-                <item name="PENDING_FRAUD_APPROVAL" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\PendingFraudApproval</item>
-                <item name="AUTHORIZATION_REQUESTED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\AuthorizationRequested</item>
-                <item name="PENDING_APPROVAL" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\PendingApproval</item>
-                <item name="PENDING_CAPTURE" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\PendingCapture</item>
-                <item name="CAPTURE_REQUESTED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\CaptureRequested</item>
-                <item name="CAPTURED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Captured</item>
-                <item name="PAID" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Paid</item>
-                <item name="REVERSED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\RejectedCapture</item>
-                <item name="CHARGEBACKED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\RejectedCapture</item>
-                <item name="REJECTED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Rejected</item>
-                <item name="REJECTED_CAPTURE" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\RejectedCapture</item>
-                <item name="CANCELLED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Cancelled</item>
+                <item name="REDIRECTED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Payment\Handler\Redirected</item>
+                <item name="PENDING_PAYMENT" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Payment\Handler\PendingPayment</item>
+                <item name="ACCOUNT_VERIFIED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Payment\Handler\NullStatus</item>
+                <item name="PENDING_FRAUD_APPROVAL" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Payment\Handler\PendingFraudApproval</item>
+                <item name="AUTHORIZATION_REQUESTED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Payment\Handler\AuthorizationRequested</item>
+                <item name="PENDING_APPROVAL" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Payment\Handler\PendingApproval</item>
+                <item name="PENDING_CAPTURE" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Payment\Handler\PendingCapture</item>
+                <item name="CAPTURE_REQUESTED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Payment\Handler\CaptureRequested</item>
+                <item name="CAPTURED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Payment\Handler\Captured</item>
+                <item name="PAID" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Payment\Handler\Paid</item>
+                <item name="REVERSED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Payment\Handler\RejectedCapture</item>
+                <item name="CHARGEBACKED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Payment\Handler\RejectedCapture</item>
+                <item name="REJECTED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Payment\Handler\Rejected</item>
+                <item name="REJECTED_CAPTURE" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Payment\Handler\RejectedCapture</item>
+                <item name="CANCELLED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Payment\Handler\Cancelled</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="Ingenico\Connect\Model\Ingenico\Status\Virtual\RefundStatusPool" type="Ingenico\Connect\Model\Ingenico\Status\Pool">
+    <virtualType name="refundStatusHandlerPool" type="Ingenico\Connect\Model\Ingenico\Status\Refund\Pool">
         <arguments>
             <argument name="statusHandlers" xsi:type="array">
-                <item name="CREATED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Refund\NullStatus</item>
-                <item name="PENDING_APPROVAL" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Refund\PendingApproval</item>
-                <item name="REJECTED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Refund\NullStatus</item>
-                <item name="REFUND_REQUESTED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Refund\RefundRequested</item>
-                <item name="CAPTURED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Refund\Refunded</item>
-                <item name="REFUNDED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Refund\Refunded</item>
-                <item name="CANCELLED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Refund\Cancelled</item>
+                <item name="CREATED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Refund\Handler\NullStatus</item>
+                <item name="PENDING_APPROVAL" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Refund\Handler\PendingApproval</item>
+                <item name="REJECTED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Refund\Handler\NullStatus</item>
+                <item name="REFUND_REQUESTED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Refund\Handler\RefundRequested</item>
+                <item name="CAPTURED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Refund\Handler\Refunded</item>
+                <item name="REFUNDED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Refund\Handler\Refunded</item>
+                <item name="CANCELLED" xsi:type="string">Ingenico\Connect\Model\Ingenico\Status\Refund\Handler\Cancelled</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <type name="Ingenico\Connect\Model\Ingenico\Status\Resolver">
+    <type name="Ingenico\Connect\Model\Ingenico\Status\Payment\Resolver">
         <arguments>
-            <argument name="refundHandlerPool" xsi:type="object">Ingenico\Connect\Model\Ingenico\Status\Virtual\RefundStatusPool</argument>
-            <argument name="paymentHandlerPool" xsi:type="object">Ingenico\Connect\Model\Ingenico\Status\Virtual\PaymentStatusPool</argument>
-            <argument name="creditMemoService" xsi:type="object">Ingenico\Connect\Model\Order\Creditmemo\Service\Proxy</argument>
+            <argument name="statusHandlerPool" xsi:type="object">paymentStatusHandlerPool</argument>
+        </arguments>
+    </type>
+
+    <type name="Ingenico\Connect\Model\Ingenico\Status\Refund\Resolver">
+        <arguments>
+            <argument name="statusHandlerPool" xsi:type="object">refundStatusHandlerPool</argument>
         </arguments>
     </type>
 

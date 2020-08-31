@@ -1,12 +1,21 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <type name="Magento\Sales\Block\Adminhtml\Order\View">
-        <plugin name="addButtonRefreshOrderPayment" type="Ingenico\Connect\Plugin\Block\Adminhtml\Order\View"/>
-    </type>
     <type name="Magento\Sales\Block\Adminhtml\Order\Creditmemo\View">
         <plugin name="addButtonRefundApprove"
-                type="Ingenico\Connect\Plugin\Block\Adminhtml\Order\Creditmemo\View"/>
+                type="Ingenico\Connect\Plugin\Magento\Sales\Block\Adminhtml\Order\Creditmemo\View"/>
+    </type>
+    <type name="Magento\Sales\Block\Adminhtml\Order\View">
+        <plugin name="manipulateOrderViewPage"
+                type="Ingenico\Connect\Plugin\Magento\Sales\Block\Adminhtml\Order\View"/>
+    </type>
+    <type name="Magento\Sales\Block\Adminhtml\Order\Creditmemo\Create\Items">
+        <plugin name="removeOfflineCreditMemo"
+                type="Ingenico\Connect\Plugin\Magento\Sales\Block\Adminhtml\Order\Creditmemo\Create\Items"/>
+    </type>
+    <type name="Magento\Sales\Block\Adminhtml\Order\Invoice\View">
+        <plugin name="removeOfflineCreditMemo"
+                type="Ingenico\Connect\Plugin\Magento\Sales\Block\Adminhtml\Order\Invoice\View"/>
     </type>
     <type name="Magento\Framework\Notification\MessageList">
         <arguments>
@@ -15,5 +24,9 @@
                 <item name="connect_logging_enabled" xsi:type="string">Ingenico\Connect\Model\System\Message\LoggingEnabled</item>
             </argument>
         </arguments>
+    </type>
+    <type name="Magento\Sales\Controller\Adminhtml\Order\View">
+        <plugin name="update_order_for_capture_requested"
+                type="Ingenico\Connect\Plugin\Magento\Sales\Controller\Adminhtml\Order\View"/>
     </type>
 </config>

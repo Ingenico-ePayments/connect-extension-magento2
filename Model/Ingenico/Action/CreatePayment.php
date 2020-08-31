@@ -11,7 +11,7 @@ use Ingenico\Connect\Model\Config;
 use Ingenico\Connect\Model\ConfigInterface;
 use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
 use Ingenico\Connect\Model\Ingenico\RequestBuilder\CreatePayment\RequestBuilder;
-use Ingenico\Connect\Model\Ingenico\Status\ResolverInterface;
+use Ingenico\Connect\Model\Ingenico\Status\Payment\ResolverInterface;
 use Ingenico\Connect\Model\Ingenico\Token\TokenServiceInterface;
 use Psr\Log\LoggerInterface;
 

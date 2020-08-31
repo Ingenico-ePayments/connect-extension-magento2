@@ -19,7 +19,7 @@ use Ingenico\Connect\Model\Config;
 use Ingenico\Connect\Model\ConfigInterface;
 use Ingenico\Connect\Model\ConfigProvider;
 use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
-use Ingenico\Connect\Model\Ingenico\Status\ResolverInterface;
+use Ingenico\Connect\Model\Ingenico\Status\Payment\ResolverInterface;
 use Ingenico\Connect\Model\StatusResponseManager;
 use Ingenico\Connect\Model\Transaction\TransactionManager;
 

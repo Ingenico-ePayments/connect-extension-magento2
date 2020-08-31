@@ -14,7 +14,7 @@ use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\OrderRepository;
 use Ingenico\Connect\Model\Config;
 use Ingenico\Connect\Model\ConfigInterface;
-use Ingenico\Connect\Model\Ingenico\Status\ResolverInterface;
+use Ingenico\Connect\Model\Ingenico\Status\Payment\ResolverInterface;
 use Ingenico\Connect\Model\Order\OrderServiceInterface;
 use Ingenico\Connect\Model\StatusResponseManagerInterface;
 use Psr\Log\LoggerInterface;

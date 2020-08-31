@@ -5,7 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## 2.3.2 - 2020-08-2
+## 2.4.0 - 2020-08-31
+
+- Added a merchant reference validator.
+- Added hosted checkout guest variant id.
+- Added option to admin to disable offline refunds to prevent the accidentally creation of offline refunds.
+- Fixes an issue with webhooks where a second payment attempt in the hosted checkout pages would accidentally cancel the order in Magento.
+- Dispatch Magento events for status handlers. See [the readme](README.md) for more details on this.
+- Status updates for refunds are now added the the comment history on the related credit memo. Earlier all comments where added to the order, unclear if it was about a payment or a refund.
+- The following classes and interfaces have been removed:
+    - `Ingenico\Connect\Model\Ingenico\RefundRequestBuilder`
+    - `Ingenico\Connect\Model\Ingenico\Status\Resolver`
+    - `Ingenico\Connect\Model\Ingenico\Status\ResolverInterface`
+    - `Ingenico\Connect\Model\Ingenico\Status\Refund\RefundHandlerInterface`
+    - `Ingenico\Connect\Model\Ingenico\StatusFactory`
+- Add tooltip with credit card icons to grouped cards.
+
+## 2.3.2 - 2020-08-02
 - Fixed an issue with the token checkbox not working correctly
 
 ## 2.3.1 - 2020-08-10

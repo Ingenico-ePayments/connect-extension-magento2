@@ -109,6 +109,9 @@
                     <source_model>Ingenico\Connect\Model\Config\Source\CheckoutType</source_model>
                     <config_path>ingenico_epayments/checkout/inline_payments</config_path>
                 </field>
+                <field id="allow_offline_refunds" translate="label" type="Ingenico\Connect\Data\Form\Element\Toggle" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allow offline refunds</label>
+                </field>
                 <!--
                     Advanced settings:
                 -->
@@ -121,12 +124,20 @@
                     </depends>
                     <label>UX</label>
                     <field id="hosted_checkout_variant" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Hosted Checkout Variant</label>
+                        <label>Hosted Checkout Variant (Registered Customer)</label>
                         <comment>
                             Enter the ID of the variant (template) to use for the Hosted Checkout, e.g. "101".
                         </comment>
                         <tooltip>Numeric ID of Hosted Checkout template.</tooltip>
                         <config_path>ingenico_epayments/checkout/hosted_checkout_variant</config_path>
+                    </field>
+                    <field id="hosted_checkout_guest_variant" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Hosted Checkout Variant (Guest Customer)</label>
+                        <comment>
+                            Enter the ID of the guest variant (template) to use for the Hosted Checkout, e.g. "101".
+                        </comment>
+                        <tooltip>Numeric ID of Guest Hosted Checkout template.</tooltip>
+                        <config_path>ingenico_epayments/checkout/hosted_checkout_guest_variant</config_path>
                     </field>
                     <field id="hosted_checkout_subdomain" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1">
                         <label>Hosted Checkout Subdomain</label>
@@ -300,7 +311,8 @@
                     <field id="system_prefix" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1">
                         <label>System Identifier Prefix</label>
                         <tooltip><![CDATA[If you have multiple systems linked to one Ingenico account you might want to set a unique system identifier, so webhook events can be matched to the corresponding shop instance.]]></tooltip>
-                        <comment><![CDATA[The entered text will be added as prefix to the order increment id and sent to Ingenico as merchantReference paremeter.]]></comment>
+                        <comment><![CDATA[The entered text will be added as prefix to the order increment id and sent to Ingenico as <code>merchantReference</code> paremeter. Please note that the <code>merchantReference</code> cannot be longer than 30 characters.]]></comment>
+                        <backend_model>Ingenico\Connect\Model\Config\Backend\SystemPrefix</backend_model>
                         <config_path>ingenico_epayments/settings/system_prefix</config_path>
                     </field>
                     <field id="log_all_requests" translate="label" type="Ingenico\Connect\Data\Form\Element\Toggle" sortOrder="50" showInDefault="1">
