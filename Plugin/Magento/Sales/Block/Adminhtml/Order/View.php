@@ -27,22 +27,27 @@ class View extends AbstractOrder
         $this->urlBuilder = $urlBuilder;
     }
 
-    public function aroundAddButton(
+    public function beforeAddButton(
         BaseView $subject,
-        callable $proceed,
         ...$args
     ) {
-        if ($args[0] === 'order_creditmemo') {
-            if (!$this->allowOfflineRefund($subject->getOrder())) {
-                return null;
-            }
-
-            if ($subject->getOrder()->getPayment()->getMethod() === ConfigProvider::CODE) {
-                $this->addExtraOptionsToCreditMemoDialog($args[1], $subject);
-            }
+        if ($args[0] === 'order_creditmemo' && $this->allowOfflineRefund($subject->getOrder())) {
+            $this->addExtraOptionsToCreditMemoDialog($args[1], $subject);
         }
 
-        return $proceed(...$args);
+        return $args;
+    }
+
+    public function afterAddButton(
+        BaseView $subject,
+        $result,
+        $buttonId
+    ) {
+        if ($buttonId === 'order_creditmemo' && !$this->allowOfflineRefund($subject->getOrder())) {
+            $subject->removeButton('order_creditmemo');
+        }
+
+        return $result;
     }
 
     /**

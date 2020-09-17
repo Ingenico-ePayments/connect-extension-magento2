@@ -61,8 +61,8 @@ class CreditmemoService
      * have 2 different results:
      *  - PENDING_APPROVAL : A Refund is requested but needs to be approved by the merchant
      *  - REFUND_REQUESTED : A Refund is requested by the carrier
-     * In both cases the order will be set "on hold". Only the
-     * PENDING_APPROVAL is cancellable by the merchant.
+     * In case of a PENDING_APPROVAL the order will be set "on hold".
+     * Only the PENDING_APPROVAL is cancellable by the merchant.
      *
      * @param MagentoCreditmemoService $subject
      * @param callable $proceed

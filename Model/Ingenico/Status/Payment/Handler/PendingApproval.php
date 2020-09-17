@@ -33,8 +33,6 @@ class PendingApproval extends AbstractHandler implements HandlerInterface
             // If the order is in "pending" status (for example, after a challenged authorize)
             // We need to call the "authorize()"-method directly, otherwise the order state doesn't get updated:
             $payment->authorize(false, $amount);
-        } else {
-            $payment->registerAuthorizationNotification($amount);
         }
 
         $this->dispatchEvent($order, $ingenicoStatus);

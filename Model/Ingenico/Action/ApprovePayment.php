@@ -2,6 +2,7 @@
 
 namespace Ingenico\Connect\Model\Ingenico\Action;
 
+use Ingenico\Connect\Model\Order\Payment\OrderPaymentManagement;
 use Ingenico\Connect\Sdk\Domain\Payment\ApprovePaymentRequest;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\OrderApprovePayment;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\OrderReferencesApprovePayment;
@@ -100,6 +101,10 @@ class ApprovePayment extends AbstractAction implements ActionInterface
         $ingenicoPaymentId = $status->id;
 
         $response = $this->approvePayment($ingenicoPaymentId, $payment, $amount);
+        $payment->setAdditionalInformation(
+            OrderPaymentManagement::KEY_PAYMENT_STATUS,
+            $response->status
+        );
 
         if (!$this->orderstatusHelper->shouldOrderSkipPaymentReview($response)) {
             // move order into payment_review

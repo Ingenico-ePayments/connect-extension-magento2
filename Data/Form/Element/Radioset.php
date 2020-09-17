@@ -12,10 +12,9 @@ class Radioset extends Radios
      * Add a display none style since the css directive that hides the original input element is missing in
      * system_config.
      *
-     * @param mixed $value
      * @return string
      */
-    public function getStyle($value): string
+    public function getStyle(): string
     {
         return 'display:none';
     }

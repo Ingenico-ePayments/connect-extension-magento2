@@ -6,6 +6,7 @@ namespace Ingenico\Connect\Model\Ingenico\Status\Payment\Handler;
 
 use Ingenico\Connect\Model\Ingenico\Status\Payment\HandlerInterface;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment as IngenicoPayment;
+use Magento\Framework\Event\ManagerInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order\Payment;
 use Ingenico\Connect\Helper\Data;
@@ -26,9 +27,13 @@ class PendingFraudApproval extends AbstractHandler implements HandlerInterface
      * PendingFraudApproval constructor.
      *
      * @param ConfigInterface $epaymentsConfig
+     * @param ManagerInterface $eventManager
      */
-    public function __construct(ConfigInterface $epaymentsConfig)
-    {
+    public function __construct(
+        ConfigInterface $epaymentsConfig,
+        ManagerInterface $eventManager
+    ) {
+        parent::__construct($eventManager);
         $this->epaymentsConfig = $epaymentsConfig;
     }
 

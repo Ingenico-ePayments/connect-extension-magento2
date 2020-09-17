@@ -6,6 +6,7 @@ namespace Ingenico\Connect\Model\Ingenico\Status\Payment\Handler;
 
 use Ingenico\Connect\Model\Ingenico\Status\Payment\HandlerInterface;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
+use Magento\Framework\Event\ManagerInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Ingenico\Connect\Model\ConfigInterface;
@@ -21,8 +22,10 @@ class PendingPayment extends AbstractHandler implements HandlerInterface
     private $epaymentsConfig;
 
     public function __construct(
-        ConfigInterface $epaymentsConfig
+        ConfigInterface $epaymentsConfig,
+        ManagerInterface $eventManager
     ) {
+        parent::__construct($eventManager);
         $this->epaymentsConfig = $epaymentsConfig;
     }
 

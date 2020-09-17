@@ -7,6 +7,11 @@ namespace Ingenico\Connect\Model\Event\Processor;
 use Ingenico\Connect\Api\Data\EventInterface;
 use Ingenico\Connect\Api\EventManagerInterface;
 use Ingenico\Connect\Api\EventRepositoryInterface;
+use Ingenico\Connect\Model\Order\OrderServiceInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Sales\Model\Order;
+use Psr\Log\LoggerInterface;
+use function sprintf;
 
 /**
  * Process second attempts from the database and mark previous attempts as
@@ -20,6 +25,8 @@ use Ingenico\Connect\Api\EventRepositoryInterface;
  */
 class SecondAttempts
 {
+    const MESSAGE_NO_ORDER_FOUND = 'webhook: no order found';
+
     /**
      * @var EventRepositoryInterface
      */
@@ -30,12 +37,26 @@ class SecondAttempts
      */
     private $eventManager;
 
+    /**
+     * @var OrderServiceInterface
+     */
+    private $orderService;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     public function __construct(
         EventRepositoryInterface $eventRepository,
-        EventManagerInterface $eventManager
+        EventManagerInterface $eventManager,
+        OrderServiceInterface $orderService,
+        LoggerInterface $logger
     ) {
         $this->eventRepository = $eventRepository;
         $this->eventManager = $eventManager;
+        $this->orderService = $orderService;
+        $this->logger = $logger;
     }
 
     public function markOldAttemptsAsIgnored(string $hostedCheckoutId)
@@ -56,9 +77,32 @@ class SecondAttempts
                 if (self::getAttempt($json) < $maxAttempt) {
                     $event->setStatus(EventInterface::STATUS_IGNORED);
                     $this->eventRepository->save($event);
+                    $this->addIgnoredWebhookAttemptCommentToOrder($event);
                 }
             }
         }
+    }
+
+    private function addIgnoredWebhookAttemptCommentToOrder(EventInterface $event)
+    {
+        try {
+            /** @var Order $order */
+            $order = $this->orderService->getByIncrementId($event->getOrderIncrementId());
+        } catch (NoSuchEntityException $noSuchEntityException) {
+            $this->logger->warning(
+                self::MESSAGE_NO_ORDER_FOUND,
+                [
+                    'increment_id' => $event->getOrderIncrementId(),
+                    'event_id' => $event->getEventId(),
+                ]
+            );
+            return;
+        }
+
+        $order->addCommentToStatusHistory(__(
+            'Ignoring webhook %1: webhook was sent due to a new payment attempt on the RPP',
+            $event->getEventId()
+        ));
     }
 
     /**

@@ -2,8 +2,9 @@ define([
     'underscore',
     'Magento_Ui/js/form/components/group',
     'Ingenico_Connect/js/model/payment/payment-data',
+    'Ingenico_Connect/js/model/payment/config',
     'uiLayout',
-], function (_, Group, paymentData, layout) {
+], function (_, Group, paymentData, config, layout) {
     'use strict';
 
     let generateProductComponent = function (identifier, description, product, account) {
@@ -29,6 +30,17 @@ define([
             product: product,
             account: account,
         };
+    };
+
+    let generateProductTooltips = function (identifier, product) {
+        return {
+            parent: this.name,
+            name: identifier + '-tooltips',
+            component: 'Ingenico_Connect/js/view/payment/component/collection/tooltips',
+            template: 'Ingenico_Connect/payment/product/field-collection',
+            uid: identifier,
+            product: product,
+        }
     };
 
     return Group.extend({
@@ -65,6 +77,9 @@ define([
 
                 layouts.push(generateProductComponent.call(this, identifier, description, product, account));
                 layouts.push(generateProductFields.call(this, identifier, product, account));
+                if (!config.useInlinePayments()) {
+                    layouts.push(generateProductTooltips.call(this, identifier, product));
+                }
             }
             _.defer(function(){
                 layout(layouts);

@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Ingenico\Connect\Model\Ingenico\Status\Payment\Handler;
 
+use Ingenico\Connect\Helper\Data;
 use Ingenico\Connect\Model\Ingenico\Status\Payment\HandlerInterface;
+use Ingenico\Connect\Sdk\Domain\Capture\Definitions\Capture as IngenicoCapture;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
+use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment as IngenicoPayment;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
-use Ingenico\Connect\Helper\Data as DataHelper;
-use Ingenico\Connect\Model\Ingenico\StatusInterface;
 use Ingenico\Connect\Model\StatusResponseManagerInterface;
 use Magento\Sales\Model\Order\Config;
 
@@ -30,11 +31,6 @@ class Captured extends AbstractHandler implements HandlerInterface
     private $statusResponseManager;
 
     /**
-     * @var CaptureRequestedFactory
-     */
-    private $captureRequestedFactory;
-
-    /**
      * @var Config
      */
     private $orderConfig;
@@ -42,17 +38,16 @@ class Captured extends AbstractHandler implements HandlerInterface
     /**
      * Captured constructor.
      *
+     * @param ManagerInterface $eventManager
+     * @param Config $orderConfig
      * @param StatusResponseManagerInterface $statusResponseManager
-     * @param CaptureRequestedFactory $captureRequestedFactory
      */
     public function __construct(
         ManagerInterface $eventManager,
         Config $orderConfig,
-        StatusResponseManagerInterface $statusResponseManager,
-        CaptureRequestedFactory $captureRequestedFactory
+        StatusResponseManagerInterface $statusResponseManager
     ) {
         parent::__construct($eventManager);
-        $this->captureRequestedFactory = $captureRequestedFactory;
         $this->statusResponseManager = $statusResponseManager;
         $this->orderConfig = $orderConfig;
     }
@@ -62,40 +57,33 @@ class Captured extends AbstractHandler implements HandlerInterface
      */
     public function resolveStatus(OrderInterface $order, Payment $ingenicoStatus)
     {
-        /** @var \Magento\Sales\Model\Order\Payment $payment */
+        /** @var Order\Payment $payment */
         $payment = $order->getPayment();
 
-        $captureTransaction = $this->statusResponseManager->getTransactionBy($ingenicoStatus->id, $payment);
-
-        if ($captureTransaction !== null) {
-            $currentCaptureStatus = $this->statusResponseManager->get($payment, $ingenicoStatus->id);
-            $currentIngenicoPaymentStatus = $currentCaptureStatus->status;
-
-            if ($currentIngenicoPaymentStatus !== StatusInterface::CAPTURE_REQUESTED) {
-                /** @var CaptureRequested $captureRequestedHandler */
-                $captureRequestedHandler = $this->captureRequestedFactory->create();
-                $captureRequestedHandler->resolveStatus($order, $ingenicoStatus);
-            }
-        }
-
-        if ($ingenicoStatus instanceof \Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment) {
+        if ($ingenicoStatus instanceof IngenicoPayment) {
             $amount = $ingenicoStatus->paymentOutput->amountOfMoney->amount;
-        } elseif ($ingenicoStatus instanceof \Ingenico\Connect\Sdk\Domain\Capture\Definitions\Capture) {
+        } elseif ($ingenicoStatus instanceof IngenicoCapture) {
             $amount = $ingenicoStatus->captureOutput->amountOfMoney->amount;
         } else {
             throw new LocalizedException(__('Unknown order status.'));
         }
 
+        $captureTransaction = $this->statusResponseManager->getTransactionBy($ingenicoStatus->id, $payment);
+
         if ($order->getState() === Order::STATE_PAYMENT_REVIEW && $order->getStatus() === Order::STATUS_FRAUD) {
             $payment->setIsTransactionApproved(true);
             $payment->update(false);
         }
-        $payment->setNotificationResult(true);
-        $payment->setIsTransactionClosed(true);
+
         $payment->setIsTransactionPending(false);
+        $payment->setIsTransactionClosed(true);
         $order->setState(Order::STATE_PROCESSING);
         $order->setStatus($this->orderConfig->getStateDefaultStatus(Order::STATE_PROCESSING));
-        $payment->registerCaptureNotification(DataHelper::reformatMagentoAmount($amount));
+        $payment->registerCaptureNotification(Data::reformatMagentoAmount($amount));
+
+        if ($captureTransaction === null) {
+            $payment->setNotificationResult(true);
+        }
 
         $this->dispatchEvent($order, $ingenicoStatus);
     }

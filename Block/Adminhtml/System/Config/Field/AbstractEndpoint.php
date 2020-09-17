@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Ingenico\Connect\Block\Adminhtml\System\Config\Field;
 
 use Magento\Backend\Block\Template\Context;
-use Magento\Backend\Model\UrlInterface;
+use Magento\Framework\Url;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 
@@ -17,13 +17,13 @@ abstract class AbstractEndpoint extends Field
     private $routePath;
 
     /**
-     * @var UrlInterface
+     * @var Url
      */
     private $url;
 
     public function __construct(
         Context $context,
-        UrlInterface $url,
+        Url $url,
         string $routePath,
         array $data = []
     ) {

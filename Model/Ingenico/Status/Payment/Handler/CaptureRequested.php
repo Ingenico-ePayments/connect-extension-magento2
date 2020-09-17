@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Ingenico\Connect\Model\Ingenico\Status\Payment\Handler;
 
 use Ingenico\Connect\Model\Ingenico\Status\Payment\HandlerInterface;
+use Ingenico\Connect\Sdk\Domain\Capture\Definitions\Capture as IngenicoCapture;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
+use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment as IngenicoPayment;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\OrderInterface;
@@ -35,12 +37,12 @@ class CaptureRequested extends AbstractHandler implements HandlerInterface
      */
     public function resolveStatus(OrderInterface $order, Payment $ingenicoStatus)
     {
-        /** @var \Magento\Sales\Model\Order\Payment $payment */
+        /** @var Order\Payment $payment */
         $payment = $order->getPayment();
 
-        if ($ingenicoStatus instanceof \Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment) {
+        if ($ingenicoStatus instanceof IngenicoPayment) {
             $amount = $ingenicoStatus->paymentOutput->amountOfMoney->amount;
-        } elseif ($ingenicoStatus instanceof \Ingenico\Connect\Sdk\Domain\Capture\Definitions\Capture) {
+        } elseif ($ingenicoStatus instanceof IngenicoCapture) {
             $amount = $ingenicoStatus->captureOutput->amountOfMoney->amount;
         } else {
             throw new LocalizedException(__('Unknown order status.'));
