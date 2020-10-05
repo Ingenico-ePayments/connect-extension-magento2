@@ -14,13 +14,17 @@
     <preference for="Ingenico\Connect\Model\Ingenico\Status\Payment\PoolInterface" type="Ingenico\Connect\Model\Ingenico\Status\Payment\Pool"/>
     <preference for="Ingenico\Connect\Model\Ingenico\Status\Refund\PoolInterface" type="Ingenico\Connect\Model\Ingenico\Status\Refund\Pool"/>
     <preference for="Ingenico\Connect\Model\Order\OrderServiceInterface" type="Ingenico\Connect\Model\Order\OrderService"/>
+    <preference for="Ingenico\Connect\Model\Transaction\TransactionManagerInterface" type="Ingenico\Connect\Model\Transaction\TransactionManager"/>
     <preference for="Ingenico\Connect\Api\EventRepositoryInterface" type="Ingenico\Connect\Model\Event\EventRepository"/>
     <preference for="Ingenico\Connect\Api\EventManagerInterface" type="Ingenico\Connect\Model\Event\EventManager"/>
     <preference for="Ingenico\Connect\Api\Data\EventInterface" type="Ingenico\Connect\Model\Event\DataModel"/>
     <preference for="Ingenico\Connect\Api\Data\EventSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
     <preference for="Ingenico\Connect\Api\SessionManagerInterface" type="Ingenico\Connect\Model\Ingenico\Session\SessionManager"/>
     <preference for="Ingenico\Connect\Api\Data\SessionInterface" type="Ingenico\Connect\Model\Ingenico\Session\Session"/>
-    <preference for="Ingenico\Connect\Model\Order\Payment\OrderPaymentManagementInterface" type="Ingenico\Connect\Model\Order\Payment\OrderPaymentManagement"/>
+    <preference for="Ingenico\Connect\Api\OrderPaymentManagementInterface" type="Ingenico\Connect\Model\Order\Payment\OrderPaymentManagement"/>
+    <preference for="Ingenico\Connect\Api\RefundManagementInterface" type="Ingenico\Connect\Model\Ingenico\Action\Refund\RefundManagement"/>
+    <preference for="Ingenico\Connect\Api\PaymentManagementInterface" type="Ingenico\Connect\Model\Ingenico\Action\Payment\PaymentManagement"/>
+    <preference for="Ingenico\Connect\Api\FrontendLoggerInterface" type="Ingenico\Connect\Logger\FrontendLogger"/>
 
     <!-- Payment method set up via Magento 2 Payment Gateway API -->
     <virtualType name="IngenicoFacade" type="Magento\Payment\Model\Method\Adapter">
@@ -163,6 +167,11 @@
         </arguments>
     </type>
     <type name="Ingenico\Connect\Controller\Webhooks\Refund">
+        <arguments>
+            <argument name="logger" xsi:type="object">ingenicoRequestLogger</argument>
+        </arguments>
+    </type>
+    <type name="Ingenico\Connect\Logger\FrontendLogger">
         <arguments>
             <argument name="logger" xsi:type="object">ingenicoRequestLogger</argument>
         </arguments>

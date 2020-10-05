@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ingenico\Connect\Model\Ingenico\Status\Refund\Handler;
 
+use Ingenico\Connect\Model\Config;
 use Ingenico\Connect\Model\Ingenico\Status\Refund\HandlerInterface;
 use Ingenico\Connect\Model\Transaction\TransactionManager;
 use Ingenico\Connect\Sdk\Domain\Refund\Definitions\RefundResult;
@@ -41,6 +42,11 @@ class RefundRequested extends AbstractHandler implements HandlerInterface
     private $orderRepository;
 
     /**
+     * @var Config
+     */
+    private $config;
+
+    /**
      * RefundRequested constructor.
      *
      * @param Service $creditMemoService
@@ -54,13 +60,15 @@ class RefundRequested extends AbstractHandler implements HandlerInterface
         RefundAdapterInterface $refundAdapter,
         TransactionManager $transactionManager,
         OrderRepositoryInterface $orderRepository,
-        ManagerInterface $eventManager
+        ManagerInterface $eventManager,
+        Config $config
     ) {
         parent::__construct($eventManager);
         $this->creditMemoService = $creditMemoService;
         $this->refundAdapter = $refundAdapter;
         $this->transactionManager = $transactionManager;
         $this->orderRepository = $orderRepository;
+        $this->config = $config;
     }
 
     /**
@@ -68,15 +76,16 @@ class RefundRequested extends AbstractHandler implements HandlerInterface
      */
     public function resolveStatus(CreditmemoInterface $creditMemo, RefundResult $ingenicoStatus)
     {
-        $this->applyCreditmemo($creditMemo);
+        $this->applyCreditmemo($creditMemo, $ingenicoStatus);
         $this->dispatchEvent($creditMemo, $ingenicoStatus);
     }
 
     /**
      * @param CreditmemoInterface $creditMemo
+     * @param RefundResult $ingenicoStatus
      * @throws LocalizedException
      */
-    public function applyCreditmemo(CreditmemoInterface $creditMemo)
+    public function applyCreditmemo(CreditmemoInterface $creditMemo, RefundResult $ingenicoStatus)
     {
         if (!$creditMemo instanceof Creditmemo) {
             throw new LogicException('Only ' . Creditmemo::class . ' is supported');
@@ -103,8 +112,15 @@ class RefundRequested extends AbstractHandler implements HandlerInterface
         }
 
         // Process refund using the default Magento refund adapter:
+        // Don't allow an additional request to be made to the gateway:
         $creditMemo->setPaymentRefundDisallowed(true);
         $creditMemo->setRefundTransaction($transaction);
+        // Set proper message to use instead of "We refunded x Offline":
+        $creditMemo->getOrder()
+            ->getPayment()
+            ->setMessage(
+                $this->config->getRefundStatusInfo($ingenicoStatus->status) . '.'
+            );
         $this->refundAdapter->refund($creditMemo, $creditMemo->getOrder(), true);
 
         if ($transaction === null) {

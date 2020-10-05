@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ingenico\Connect\Model\Order\Payment;
 
 use DateTime;
+use Ingenico\Connect\Api\OrderPaymentManagementInterface;
 use Ingenico\Connect\Model\StatusResponseManagerInterface;
 use LogicException;
 use Magento\Framework\Intl\DateTimeFactory;

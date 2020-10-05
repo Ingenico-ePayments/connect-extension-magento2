@@ -145,6 +145,14 @@ interface ConfigInterface
     public function getLogAllRequests($storeId = null);
 
     /**
+     * Returns flag (enable/disable) to log all frontend requests
+     *
+     * @param int|null $storeId
+     * @return bool
+     */
+    public function getLogFrontendRequests($storeId = null);
+
+    /**
      * Returns file name of log file
      *
      * @param int|null $storeId

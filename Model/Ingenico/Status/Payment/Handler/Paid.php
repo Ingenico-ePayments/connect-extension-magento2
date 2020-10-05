@@ -71,7 +71,9 @@ class Paid extends AbstractHandler implements HandlerInterface
             $currentPaymentStatus = $currentCaptureStatus->status;
         }
 
-        if ($currentPaymentStatus !== StatusInterface::CAPTURED) {
+        if ($currentPaymentStatus !== StatusInterface::CAPTURED &&
+            $currentPaymentStatus !== StatusInterface::CAPTURE_REQUESTED
+        ) {
             if ($ingenicoStatus instanceof IngenicoPayment) {
                 $amount = $ingenicoStatus->paymentOutput->amountOfMoney->amount;
             } elseif ($ingenicoStatus instanceof IngenicoCapture) {

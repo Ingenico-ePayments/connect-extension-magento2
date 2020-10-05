@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ingenico\Connect\Model\Transaction;
 
 use Ingenico\Connect\Sdk\Domain\Definitions\AbstractOrderStatus;
@@ -17,7 +19,7 @@ use Magento\Sales\Model\Order\Payment\Transaction;
  *
  * @package Ingenico\Connect\Model\Transaction
  */
-class TransactionManager
+class TransactionManager implements TransactionManagerInterface
 {
     const TRANSACTION_INFO_KEY = 'gc_response_object';
     const TRANSACTION_CLASS_KEY = 'gc_response_class';
@@ -54,11 +56,7 @@ class TransactionManager
         $this->filterBuilder = $filterBuilder;
     }
 
-    /**
-     * @param string $txnId
-     * @return Transaction|null
-     */
-    public function retrieveTransaction($txnId)
+    public function retrieveTransaction(string $txnId): ?TransactionInterface
     {
         $searchCriteria = $this->searchCriteriaBuilder->addFilter('txn_id', $txnId);
         $searchCriteria->setPageSize(1);

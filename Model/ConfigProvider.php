@@ -41,10 +41,10 @@ class ConfigProvider implements ConfigProviderInterface
      * @var Repository
      */
     private $assetRepo;
-    
+
     /** @var Session */
     private $customerSession;
-    
+
     /**
      * @var StoreManagerInterface
      */
@@ -103,6 +103,7 @@ class ConfigProvider implements ConfigProviderInterface
                     'loaderImage' => $this->assetRepo->getUrlWithParams('images/loader-2.gif', []),
                     'isCustomerLoggedIn' => $this->customerSession->isLoggedIn(),
                     'connectSession' => $this->connectSession->getSectionData(),
+                    'logFrontendRequests' => $this->config->getLogFrontendRequests()
                 ],
             ],
         ];

@@ -9,6 +9,7 @@ use Ingenico\Connect\Api\EventManagerInterface;
 use Ingenico\Connect\Api\EventRepositoryInterface;
 use Ingenico\Connect\Model\Order\OrderServiceInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Psr\Log\LoggerInterface;
 use function sprintf;
@@ -43,6 +44,11 @@ class SecondAttempts
     private $orderService;
 
     /**
+     * @var OrderRepositoryInterface
+     */
+    private $orderRepository;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -51,11 +57,13 @@ class SecondAttempts
         EventRepositoryInterface $eventRepository,
         EventManagerInterface $eventManager,
         OrderServiceInterface $orderService,
+        OrderRepositoryInterface $orderRepository,
         LoggerInterface $logger
     ) {
         $this->eventRepository = $eventRepository;
         $this->eventManager = $eventManager;
         $this->orderService = $orderService;
+        $this->orderRepository = $orderRepository;
         $this->logger = $logger;
     }
 
@@ -103,6 +111,8 @@ class SecondAttempts
             'Ignoring webhook %1: webhook was sent due to a new payment attempt on the RPP',
             $event->getEventId()
         ));
+
+        $this->orderRepository->save($order);
     }
 
     /**

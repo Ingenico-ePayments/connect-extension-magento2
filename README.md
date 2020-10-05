@@ -1,22 +1,31 @@
-Ingenico ePayments Connect Extension for Magento 2
-=====================
+# Ingenico ePayments Connect Extension for Magento 2
+
 Payment extension for processing the Magento order workflow via the Ingenico ePayments Connect API
 
-Requirements
-------------
-To use this extension you need to have an Ingenico ePayments account.
+## Requirements
 
-Compatibility
--------------
+To use this extension you need to have:
+
+- an Ingenico ePayments account.
+- webhook events for payment & refund configured for the account. The webhook endpoints used by the Magento store are shown in the Magento admin. (`Admin > Stores > Configuration > Sales > Ingenico ePayments > Settings`)
+
+## Compatibility
+
 This module is compatible with the following versions of Magento:
 
-- **2.2**: 2.2.6 and upward
-- **2.3**: 2.3.0 and upward
+- **Magento 2.3**
+- **Magento 2.4**
 
-Installation Instructions
--------------------------
+If you want to install the module in an older version of Magento, you can
+choose the correct version from the following list:
 
-##### Install module 
+- **Magento 2.2** : Version 2.4.0 of this module
+- **Magento 2.1** : Not supported
+- **Magento 2.0** : Not supported
+
+## Installation Instructions
+
+### Install module 
 
 Installation via Composer requires the [Magento Composer Installer](https://github.com/Cotya/magento-composer-installer) to be in place.
 
@@ -28,7 +37,7 @@ Add the required Composer module:
 
     composer require ingenico-epayments/connect-extension-magento2
 
-##### Configure module 
+### Configure module 
 
 1. In the Magento root directory execute `php bin/magento module:enable Ingenico_Connect`
 2. In the Magento root directory execute `php bin/magento setup:upgrade` 
@@ -49,14 +58,7 @@ Add the required Composer module:
 5. Save Config 
 6. In the Magento root directory execute `php bin/magento cache:clean`
 
-#### Configure webhooks endpoints
-
-Webhooks must be configured in Configuration Center for payments and refunds.
-
-1. Open Magento Admin > Stores > Configuration > Sales > Ingenico ePayments > Settings
-2. Copy webhooks endpoints and configure them in Configuration Center according to <https://epayments.developer-ingenico.com/documentation/webhooks/>
-
-##### Test module  
+### Test module  
 
 1. Open the Magento frontend 
 2. Add a product to the cart  
@@ -64,11 +66,13 @@ Webhooks must be configured in Configuration Center for payments and refunds.
 4. On the "Payment Method" section select "Ingenico ePayments"
 5. The available payment methods (PayPal, Visa, etc.) should be shown under the title  
  
-##### Upgrade instructions
+## Information for integrators
+
+### Upgrade instructions
 
 If you are upgrading from a version prior to 2.0.0, please read the [upgrade instructions](doc/UPGRADE.md).
 
-##### Hooking into the module
+### Hooking into the module
 
 Each time a status change from Ingenico is processed, an event is 
 dispatched where you can hook in to. The name of these events are:
@@ -83,15 +87,15 @@ Some examples:
 
 A list of all possible statuses from Ingenico can be found [in the documentation](https://epayments-api.developer-ingenico.com/s2sapi/v1/en_US/java/statuses.html?paymentPlatform=ALL).
 
-Support
--------
+## Support
+
 In case of questions or problems, you can contact the Ingenico support team: <https://www.ingenico.com/epayments/support>
 
-License
--------
+## License
+
 Please refer to the included [LICENSE.txt](LICENSE.txt) file.
 
-Copyright
----------
+## Copyright
+
 (c) 2019 Ingenico eCommerce Solutions Bvba
 

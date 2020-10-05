@@ -5,11 +5,13 @@ define([
     'Magento_Checkout/js/model/quote',
     'Ingenico_Connect/js/model/client',
     'Ingenico_Connect/js/model/payment/config',
-    'Ingenico_Connect/js/model/locale-resolver'
-], function (quote, client, config, localeResolver) {
+    'Ingenico_Connect/js/model/locale-resolver',
+    'Ingenico_Connect/js/action/logger'
+], function (quote, client, config, localeResolver, logger) {
     'use strict';
 
     return function () {
+        let requestId;
         try {
             let sdkClient = client.initialize();
             let payload = {
@@ -20,8 +22,14 @@ define([
                 locale: localeResolver.getBaseLocale(config.getLocale())
             };
 
-            return sdkClient.getBasicPaymentProducts(payload);
+            requestId = logger.logRequest('getPaymentProduct', payload);
+            let response = sdkClient.getBasicPaymentProducts(payload);
+            response.then((result) => {
+                logger.logResponse(requestId, result);
+            })
+            return response;
         } catch (error) {
+            logger.logResponse(requestId, error);
             return Promise.reject(error);
         }
     }

@@ -180,6 +180,11 @@ class Processor
                         // It will have unforeseen side-effects with multiple refunds on one order
                         // SCGC-409 will fix this.
                         $creditMemo = $order->getCreditmemosCollection()->getFirstItem();
+                        // SCGC-464 : Don't break cron chain if a refund is created in the WPC
+                        if ($creditMemo->getEntityId() === null) {
+                            throw new LocalizedException(__('No credit memo found for this order'));
+                        }
+
                         $this->refundResolver->resolve($creditMemo, $statusResponseObject);
                     }
                     break;

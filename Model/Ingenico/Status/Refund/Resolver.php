@@ -55,8 +55,14 @@ class Resolver extends AbstractResolver implements ResolverInterface
         }
 
         $this->preparePayment($order->getPayment(), $status);
-        $statusHandler = $this->statusHandlerPool->get($status->status);
-        $statusHandler->resolveStatus($creditMemo, $status);
+        // Only run the resolver on an actual status change, otherwise
+        // only update the meta-data:
+        $additionalInformation = $order->getPayment()->getAdditionalInformation();
+        $currentStatus = $additionalInformation[self::KEY_STATUS] ?? null;
+        if ($status->status !== $currentStatus) {
+            $statusHandler = $this->statusHandlerPool->get($status->status);
+            $statusHandler->resolveStatus($creditMemo, $status);
+        }
 
         $this->updateStatusCodeChangeDate($order, $status);
         $this->updateStatus($order, $status);

@@ -78,8 +78,20 @@ define([],
             return Boolean(Number(config.groupCardPaymentMethods));
         };
 
-        let connectSession = function () {
+        /**
+         * Get session ID created by Connect
+         * @returns {any}
+         */
+        let getConnectSession = function () {
             return config.connectSession;
+        }
+
+        /**
+         * Should frontend XHR requests be logged?
+         * @returns {boolean}
+         */
+        let isLogFrontendRequests = function () {
+            return Boolean(config.logFrontendRequests);
         }
 
         return {
@@ -92,7 +104,8 @@ define([],
             getLoaderImage: getLoaderImage,
             isCustomerLoggedIn: isCustomerLoggedIn,
             groupCardPaymentMethods: groupCardPaymentMethods,
-            connectSession: connectSession,
+            connectSession: getConnectSession,
+            isLogFrontendRequests: isLogFrontendRequests
         };
     }
 );

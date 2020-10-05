@@ -8,7 +8,7 @@ use Exception;
 use Ingenico\Connect\Model\ConfigProvider;
 use Ingenico\Connect\Model\Ingenico\Action\RetrievePayment;
 use Ingenico\Connect\Model\Ingenico\StatusInterface;
-use Ingenico\Connect\Model\Order\Payment\OrderPaymentManagementInterface;
+use Ingenico\Connect\Api\OrderPaymentManagementInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Controller\Adminhtml\Order\View as ViewController;
 

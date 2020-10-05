@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Ingenico\Connect\Model\Ingenico\Action\Refund;
 
-use Ingenico\Connect\Model\Ingenico\RequestBuilder\Refund\ApproveRefundRequestBuilder;
+use Ingenico\Connect\Api\RefundManagementInterface;
 use Ingenico\Connect\Model\Ingenico\Status\Refund\Handler\RefundRequested;
 use Ingenico\Connect\Model\Transaction\TransactionManager;
-use Ingenico\Connect\Sdk\Domain\Refund\ApproveRefundRequestFactory;
 use Ingenico\Connect\Sdk\Domain\Refund\Definitions\RefundResult;
-use Ingenico\Connect\Sdk\ResponseException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\CreditmemoRepositoryInterface;
 use Magento\Sales\Api\Data\CreditmemoInterface;
@@ -36,9 +34,9 @@ class ApproveRefund extends AbstractRefundAction
     private $transactionManager;
 
     /**
-     * @var ApproveRefundRequestBuilder
+     * @var RefundManagementInterface
      */
-    private $approveRefundRequestBuilder;
+    private $refundManagement;
 
     /**
      * ApproveRefund constructor.
@@ -46,24 +44,24 @@ class ApproveRefund extends AbstractRefundAction
      * @param CreditmemoRepositoryInterface $creditmemoRepository
      * @param OrderRepositoryInterface $orderRepository
      * @param ClientInterface $ingenicoClient
-     * @param ApproveRefundRequestBuilder $approveRefundRequestBuilder
      * @param RefundRequested $refundRequestedHandler
      * @param TransactionManager $transactionManager
+     * @param RefundManagementInterface $refundManagement
      */
     public function __construct(
         CreditmemoRepositoryInterface $creditmemoRepository,
         OrderRepositoryInterface $orderRepository,
         ClientInterface $ingenicoClient,
-        ApproveRefundRequestBuilder $approveRefundRequestBuilder,
         RefundRequested $refundRequestedHandler,
-        TransactionManager $transactionManager
+        TransactionManager $transactionManager,
+        RefundManagementInterface $refundManagement
     ) {
         parent::__construct($orderRepository, $creditmemoRepository);
 
         $this->ingenicoClient = $ingenicoClient;
-        $this->approveRefundRequestBuilder = $approveRefundRequestBuilder;
         $this->refundRequestedHandler = $refundRequestedHandler;
         $this->transactionManager = $transactionManager;
+        $this->refundManagement = $refundManagement;
     }
 
     /**
@@ -73,26 +71,10 @@ class ApproveRefund extends AbstractRefundAction
      */
     protected function performRefundAction(OrderInterface $order, CreditmemoInterface $creditMemo)
     {
-        $refundId = $creditMemo->getTransactionId();
-        $this->validateApprovability($refundId);
-
-        // Approve refund via Ingenico API:
-        try {
-            $request = $this->approveRefundRequestBuilder->build($creditMemo);
-            $this->ingenicoClient->ingenicoRefundAccept(
-                $creditMemo->getTransactionId(),
-                $request,
-                $creditMemo->getStoreId()
-            );
-        } catch (ResponseException $exception) {
-            throw new LocalizedException(
-                __('Error while trying to approve the refund: %1', $exception->getMessage())
-            );
-        }
-
-        // If no exception is thrown it means that the API returned a valid
-        // and we can assume the refund is approved.
-        $this->refundRequestedHandler->applyCreditmemo($creditMemo);
+        $this->validateApprovability($creditMemo->getTransactionId());
+        $this->refundManagement->approveRefund($creditMemo);
+        $refundStatus = $this->refundManagement->fetchRefundStatus($creditMemo);
+        $this->refundRequestedHandler->applyCreditmemo($creditMemo, $refundStatus);
     }
 
     /**
@@ -102,6 +84,7 @@ class ApproveRefund extends AbstractRefundAction
     private function validateApprovability(string $refundId)
     {
         $transaction = $this->transactionManager->retrieveTransaction($refundId);
+        // @TODO: replace stored response object with status meta-data in aditional information:
         $refundResponse = $this->transactionManager->getResponseDataFromTransaction($transaction);
 
         if (!$refundResponse instanceof RefundResult) {

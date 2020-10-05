@@ -4,16 +4,28 @@
     <route url="/V1/ingenico-connect/create-session" method="GET">
         <service class="Ingenico\Connect\Api\SessionManagerInterface" method="createAnonymousSession"/>
         <resources>
-            <resource ref="anonymous" />
+            <resource ref="anonymous"/>
         </resources>
     </route>
     <route url="/V1/ingenico-connect/me/create-session" method="GET">
         <service class="Ingenico\Connect\Api\SessionManagerInterface" method="createCustomerSession"/>
         <resources>
-            <resource ref="self" />
+            <resource ref="self"/>
         </resources>
         <data>
             <parameter name="customerId" force="true">%customer_id%</parameter>
         </data>
+    </route>
+    <route url="/V1/ingenico-connect/log-request" method="POST">
+        <service class="Ingenico\Connect\Api\FrontendLoggerInterface" method="logRequest"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/V1/ingenico-connect/log-response" method="POST">
+        <service class="Ingenico\Connect\Api\FrontendLoggerInterface" method="logResponse"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
     </route>
 </routes>

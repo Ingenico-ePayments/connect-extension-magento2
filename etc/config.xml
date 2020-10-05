@@ -71,7 +71,7 @@
                 <chargebacked><![CDATA[The transaction has been chargebacked]]></chargebacked>
                 <refunded><![CDATA[The transaction has been refunded]]></refunded>
             </payment_statuses>
-            <refund_statusses>
+            <refund_statuses>
                 <created><![CDATA[The transaction has been created.]]></created>
                 <cancelled><![CDATA[You have cancelled the refund]]></cancelled>
                 <rejected><![CDATA[The refund has been rejected]]></rejected>
@@ -79,7 +79,7 @@
                 <refund_requested><![CDATA[The transaction is in the queue to be refunded]]></refund_requested>
                 <captured><![CDATA[We have successfully refunded the consumer and has received an online confirmation from the third party]]></captured>
                 <refunded><![CDATA[We have successfully refunded the consumer]]></refunded>
-            </refund_statusses>
+            </refund_statuses>
             <fraud>
                 <email_template>fraud_email</email_template>
             </fraud>

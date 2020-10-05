@@ -27,6 +27,7 @@ class Config implements ConfigInterface
     const CONFIG_INGENICO_HOSTED_CHECKOUT_SUBDOMAIN = 'ingenico_epayments/settings/hosted_checkout_subdomain';
     const CONFIG_INGENICO_LOG_ALL_REQUESTS = 'ingenico_epayments/settings/log_all_requests';
     const CONFIG_INGENICO_LOG_ALL_REQUESTS_FILE = 'ingenico_epayments/settings/log_all_requests_file';
+    const CONFIG_INGENICO_LOG_FRONTEND_REQUESTS = 'ingenico_epayments/settings/log_frontend_requests';
     const CONFIG_INGENICO_FRAUD_MANAGER_EMAIL = 'ingenico_epayments/fraud/manager_email';
     const CONFIG_INGENICO_FRAUD_EMAIL_TEMPLATE = 'ingenico_epayments/fraud/email_template';
     const CONFIG_INGENICO_PENDING_ORDERS_DAYS = 'ingenico_epayments/pending_orders_cancellation/days';
@@ -247,6 +248,14 @@ class Config implements ConfigInterface
     public function getLogAllRequests($storeId = null)
     {
         return $this->getValue(self::CONFIG_INGENICO_LOG_ALL_REQUESTS, $storeId);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLogFrontendRequests($storeId = null)
+    {
+        return (bool) $this->getValue(self::CONFIG_INGENICO_LOG_FRONTEND_REQUESTS, $storeId);
     }
 
     /**

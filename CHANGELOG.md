@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 2.4.2 - 2020-10-05
+
+- Add a comment to the order for each multiple attempt on the RPP.
+- Fix incorrect comment when performing an online refund.
+- Fixes issue where rejected challenge would leave the order in a pending state.
+- Fixes issue where a refund initiated by the WPC could break the processing of webhook events.
+- Add logging of API requests and responses to the frontend (this is turned off by default and can be turned on in the admin).
+- Add a new service contract to handle refund logic.
+- Add a new service contract to handle payment logic.
+- Add a new service contract to get meta data from order payments.
+- Add a new service contract for frontend logging
+- The following classes have been removed:
+    - `Ingenico\Connect\Gateway\Command\IngenicoVoidCommand`
+    - `Ingenico\Connect\Model\Ingenico\Action\UndoCapturePaymentRequest`
+    - `Ingenico\Connect\Observer\UndoCapturePaymentObserver`
+
 ## 2.4.1 - 2020-09-17
 
 - Added support for Magento 2.4.0

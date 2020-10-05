@@ -45,9 +45,6 @@ define([
             getPaymentProducts().then(response => {
                 let creditCardLogos = [];
                 const paymentProducts = extractCardPaymentProducts(response.basicPaymentProducts.sort(sortFunction));
-                if (paymentProducts.length > 10) {
-                    paymentProducts.length = 10;
-                }
                 paymentProducts.forEach(function(paymentProduct) {
                     creditCardLogos.push(paymentProduct.displayHints.logo);
                 });

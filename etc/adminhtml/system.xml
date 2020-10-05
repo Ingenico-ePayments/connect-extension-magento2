@@ -317,9 +317,15 @@
                     </field>
                     <field id="log_all_requests" translate="label" type="Ingenico\Connect\Data\Form\Element\Toggle" sortOrder="50" showInDefault="1">
                         <label>Log All Requests</label>
-                        <frontend_model>\Ingenico\Connect\Block\Adminhtml\System\Config\Field\LogAllRequests</frontend_model>
-                        <tooltip>Select if you want to log the communication between Ingenico and your shop.</tooltip>
+                        <frontend_model>Ingenico\Connect\Block\Adminhtml\System\Config\Field\LogAllRequests</frontend_model>
+                        <tooltip><![CDATA[Select if you want to log the communication between Ingenico and your shop.]]></tooltip>
                         <config_path>ingenico_epayments/settings/log_all_requests</config_path>
+                    </field>
+                    <field id="log_frontend_requests" translate="label" type="Ingenico\Connect\Data\Form\Element\Toggle" sortOrder="60" showInDefault="1">
+                        <label>Log All Frontend Requests</label>
+                        <tooltip><![CDATA[Select if you want to log the frontend XHR communication between Ingenico and your shop.]]></tooltip>
+                        <comment><![CDATA[Please be aware that this will result in very big log files. Use with caution and make sure to turn it off when you're done.]]></comment>
+                        <config_path>ingenico_epayments/settings/log_frontend_requests</config_path>
                     </field>
                 </group>
             </group>
