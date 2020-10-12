@@ -4,6 +4,10 @@
 
     <exclude-pattern>*\.js</exclude-pattern>
 
+    <!-- Run against the PHPCompatibility ruleset -->
+    <rule ref="PHPCompatibility"/>
+    <config name="testVersion" value="7.3"/>
+
     <!-- Arguments -->
     <arg value="sp"/>
     <arg name="colors"/>
@@ -60,7 +64,7 @@
     <rule ref="PSR12.Operators.OperatorSpacing"/>
     <rule ref="Generic.Formatting.MultipleStatementAlignment">
         <properties>
-            <property name="maxPadding" value="1" />
+            <property name="maxPadding" value="1"/>
         </properties>
     </rule>
 </ruleset>
