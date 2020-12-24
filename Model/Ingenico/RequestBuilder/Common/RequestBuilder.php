@@ -47,18 +47,25 @@ class RequestBuilder
      */
     private $merchantBuilder;
 
+    /**
+     * @var FraudFieldsBuilder
+     */
+    private $fraudFieldsBuilder;
+
     public function __construct(
         MethodDecoratorPool $methodDecoratorPool,
         ProductDecoratorPool $productDecoratorPool,
         ConfigInterface $config,
         OrderBuilder $orderBuilder,
-        MerchantBuilder $merchantBuilder
+        MerchantBuilder $merchantBuilder,
+        FraudFieldsBuilder $fraudFieldsBuilder
     ) {
         $this->methodDecoratorPool = $methodDecoratorPool;
         $this->productDecoratorPool = $productDecoratorPool;
         $this->config = $config;
         $this->orderBuilder = $orderBuilder;
         $this->merchantBuilder = $merchantBuilder;
+        $this->fraudFieldsBuilder = $fraudFieldsBuilder;
     }
 
     /**
@@ -70,6 +77,7 @@ class RequestBuilder
     {
         $ingenicoRequest->order = $this->orderBuilder->create($order);
         $ingenicoRequest->merchant = $this->merchantBuilder->create($order);
+        $ingenicoRequest->fraudFields = $this->fraudFieldsBuilder->create($order);
 
         if ($this->config->getCheckoutType($order->getStoreId()) === Config::CONFIG_INGENICO_CHECKOUT_TYPE_REDIRECT) {
             /**

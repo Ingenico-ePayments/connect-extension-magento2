@@ -197,7 +197,6 @@ class Processor
             $event->setStatus(EventInterface::STATUS_SUCCESS);
             $this->eventRepository->save($event);
         } catch (Exception $exception) {
-            echo $exception->getMessage() . PHP_EOL;
             $event->setStatus(EventInterface::STATUS_FAILED);
             $this->eventRepository->save($event);
             $this->orderManagement->addComment(
