@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Ingenico\Connect\Model\Ingenico\Action\Refund;
 
 use Ingenico\Connect\Api\RefundManagementInterface;
-use Ingenico\Connect\Model\Ingenico\Status\Refund\Handler\RefundRequested;
+use Ingenico\Connect\Model\Ingenico\Status\Refund\ResolverInterface;
 use Ingenico\Connect\Model\Transaction\TransactionManager;
 use Ingenico\Connect\Sdk\Domain\Refund\Definitions\RefundResult;
 use Magento\Framework\Exception\LocalizedException;
@@ -18,11 +18,6 @@ use Ingenico\Connect\Model\Ingenico\StatusInterface;
 
 class ApproveRefund extends AbstractRefundAction
 {
-    /**
-     * @var RefundRequested
-     */
-    private $refundRequestedHandler;
-
     /**
      * @var ClientInterface
      */
@@ -39,29 +34,24 @@ class ApproveRefund extends AbstractRefundAction
     private $refundManagement;
 
     /**
-     * ApproveRefund constructor.
-     *
-     * @param CreditmemoRepositoryInterface $creditmemoRepository
-     * @param OrderRepositoryInterface $orderRepository
-     * @param ClientInterface $ingenicoClient
-     * @param RefundRequested $refundRequestedHandler
-     * @param TransactionManager $transactionManager
-     * @param RefundManagementInterface $refundManagement
+     * @var ResolverInterface
      */
+    private $refundStatusResolver;
+
     public function __construct(
         CreditmemoRepositoryInterface $creditmemoRepository,
         OrderRepositoryInterface $orderRepository,
         ClientInterface $ingenicoClient,
-        RefundRequested $refundRequestedHandler,
         TransactionManager $transactionManager,
-        RefundManagementInterface $refundManagement
+        RefundManagementInterface $refundManagement,
+        ResolverInterface $refundStatusResolver
     ) {
         parent::__construct($orderRepository, $creditmemoRepository);
 
         $this->ingenicoClient = $ingenicoClient;
-        $this->refundRequestedHandler = $refundRequestedHandler;
         $this->transactionManager = $transactionManager;
         $this->refundManagement = $refundManagement;
+        $this->refundStatusResolver = $refundStatusResolver;
     }
 
     /**
@@ -74,7 +64,7 @@ class ApproveRefund extends AbstractRefundAction
         $this->validateApprovability($creditMemo->getTransactionId());
         $this->refundManagement->approveRefund($creditMemo);
         $refundStatus = $this->refundManagement->fetchRefundStatus($creditMemo);
-        $this->refundRequestedHandler->applyCreditmemo($creditMemo, $refundStatus);
+        $this->refundStatusResolver->resolve($creditMemo, $refundStatus);
     }
 
     /**

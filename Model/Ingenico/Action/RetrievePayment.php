@@ -19,7 +19,8 @@ use Ingenico\Connect\Model\Config;
 use Ingenico\Connect\Model\ConfigInterface;
 use Ingenico\Connect\Model\ConfigProvider;
 use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
-use Ingenico\Connect\Model\Ingenico\Status\Payment\ResolverInterface;
+use Ingenico\Connect\Model\Ingenico\Status\Payment\ResolverInterface as PaymentResolverInterface;
+use Ingenico\Connect\Model\Ingenico\Status\Refund\ResolverInterface as RefundResolverInterface;
 use Ingenico\Connect\Model\StatusResponseManager;
 use Ingenico\Connect\Model\Transaction\TransactionManager;
 
@@ -29,9 +30,9 @@ use Ingenico\Connect\Model\Transaction\TransactionManager;
 class RetrievePayment extends AbstractAction implements ActionInterface
 {
     /**
-     * @var ResolverInterface
+     * @var PaymentResolverInterface
      */
-    private $statusResolver;
+    private $paymentStatusResolver;
 
     /**
      * @var OrderRepositoryInterface
@@ -44,13 +45,19 @@ class RetrievePayment extends AbstractAction implements ActionInterface
     private $getHostedCheckoutStatus;
 
     /**
+     * @var RefundResolverInterface
+     */
+    private $refundStatusResolver;
+
+    /**
      * RetrievePayment constructor.
      *
      * @param StatusResponseManager $statusResponseManager
      * @param ClientInterface $ingenicoClient
      * @param TransactionManager $transactionManager
      * @param ConfigInterface $config
-     * @param ResolverInterface $statusResolver
+     * @param PaymentResolverInterface $paymentStatusResolver
+     * @param RefundResolverInterface $refundStatusResolver
      * @param OrderRepositoryInterface $orderRepository
      * @param GetHostedCheckoutStatus $getHostedCheckoutStatus
      */
@@ -59,11 +66,13 @@ class RetrievePayment extends AbstractAction implements ActionInterface
         ClientInterface $ingenicoClient,
         TransactionManager $transactionManager,
         ConfigInterface $config,
-        ResolverInterface $statusResolver,
+        PaymentResolverInterface $paymentStatusResolver,
+        RefundResolverInterface $refundStatusResolver,
         OrderRepositoryInterface $orderRepository,
         GetHostedCheckoutStatus $getHostedCheckoutStatus
     ) {
-        $this->statusResolver = $statusResolver;
+        $this->paymentStatusResolver = $paymentStatusResolver;
+        $this->refundStatusResolver = $refundStatusResolver;
         $this->orderRepository = $orderRepository;
         $this->getHostedCheckoutStatus = $getHostedCheckoutStatus;
 
@@ -106,7 +115,12 @@ class RetrievePayment extends AbstractAction implements ActionInterface
 
             $updateStatus = $this->getUpdateStatus($order, $currentStatus);
             if ($this->requiresUpdate($currentStatus, $updateStatus)) {
-                $this->statusResolver->resolve($order, $updateStatus);
+                if ($updateStatus instanceof RefundResponse) {
+                    $creditMemo = $order->getCreditmemosCollection()->getFirstItem();
+                    $this->refundStatusResolver->resolve($creditMemo, $updateStatus);
+                } else {
+                    $this->paymentStatusResolver->resolve($order, $updateStatus);
+                }
 
                 // @TODO: this looks like an ugly fix. Extend the integration test suite to check if this is required:
                 // @TODO: this only needs to be tested for UndoCapturePaymentObserver
