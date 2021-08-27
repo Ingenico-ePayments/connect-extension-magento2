@@ -3,6 +3,9 @@
 namespace Ingenico\Connect\Controller\Webhooks;
 
 use Exception;
+use Ingenico\Connect\Model\Ingenico\Webhook\Handler;
+use Ingenico\Connect\Model\Ingenico\Webhook\Unmarshaller;
+use Ingenico\Connect\Sdk\Domain\Webhooks\WebhooksEvent;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Request\Http;
 use Magento\Framework\App\RequestInterface;
@@ -10,13 +13,25 @@ use Magento\Framework\Controller\Result\Raw;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Ingenico\Connect\Controller\CsrfAware\Action;
+use Magento\Framework\Webapi\Exception as WebApiException;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 
 /**
- * Abstract webhook class encapsulating general request validation functionality for webhooks
+ * Webhook class encapsulating general request validation functionality for webhooks
  */
-abstract class Webhook extends Action
+class Index extends Action
 {
+    /**
+     * @var Unmarshaller
+     */
+    private $unmarshaller;
+
+    /**
+     * @var Handler
+     */
+    private $handler;
+
     /**
      * @var LoggerInterface
      */
@@ -24,18 +39,77 @@ abstract class Webhook extends Action
 
     public function __construct(
         Context $context,
+        Unmarshaller $unmarshaller,
+        Handler $handler,
         LoggerInterface $logger
     ) {
         parent::__construct($context);
+        $this->unmarshaller = $unmarshaller;
+        $this->handler = $handler;
         $this->logger = $logger;
+    }
+
+    public function execute()
+    {
+        if ($response = $this->checkVerification()) {
+            return $response;
+        }
+
+        $response = $this->resultFactory->create(ResultFactory::TYPE_RAW);
+        $response->setHeader('Content-type', 'text/plain');
+
+        try {
+            $event = $this->getWebhookEvent();
+            if (!$this->checkEndpointTest($event)) {
+                $this->handler->handle($event);
+            }
+            $response->setContents($this->getSecuritySignature());
+        } catch (RuntimeException $exception) {
+            $this->logException($exception);
+            $response->setHttpResponseCode(WebApiException::HTTP_INTERNAL_ERROR);
+        } catch (Exception $exception) {
+            $this->logException($exception);
+            $response->setContents($exception->getMessage());
+        }
+
+        return $response;
+    }
+
+    private function getWebhookEvent(): WebhooksEvent
+    {
+        $securityKey = (string) $this->getRequest()->getHeader('X-GCS-KeyId');
+        $event = $this->unmarshaller->unmarshal(
+            $this->getRequest()->getContent(),
+            [
+                'X-GCS-Signature' => $this->getSecuritySignature(),
+                'X-GCS-KeyId' => $securityKey,
+            ]
+        );
+
+        return $event;
+    }
+
+    /**
+     * Detects Ingenico Webhook test request.
+     * When a request is an endpoint test, it should not be processed.
+     *
+     * @param WebhooksEvent $event
+     * @return bool
+     */
+    private function checkEndpointTest(WebhooksEvent $event): bool
+    {
+        return strpos($event->id, 'TEST') === 0;
+    }
+
+    private function getSecuritySignature(): string
+    {
+        return (string) $this->getRequest()->getHeader('X-GCS-Signature');
     }
 
     /**
      * Checks the headers of the request for a special endpoint verification
-     *
-     * @return ResultInterface|false
      */
-    protected function checkVerification()
+    private function checkVerification(): ?ResultInterface
     {
         $verificationString = $this->getRequest()->getHeader('X-GCS-Webhooks-Endpoint-Verification');
         if ($verificationString) {
@@ -46,7 +120,7 @@ abstract class Webhook extends Action
             return $response;
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -55,7 +129,7 @@ abstract class Webhook extends Action
      *
      * @param RequestInterface $request
      * @return Raw|ResultInterface
-     * @see \Ingenico\Connect\Controller\Webhooks\Webhook::proxyValidateForCsrf
+     * @see \Ingenico\Connect\Controller\Webhooks\Index::proxyValidateForCsrf
      */
     protected function getCsrfExceptionResponse(RequestInterface $request)
     {
@@ -77,6 +151,7 @@ abstract class Webhook extends Action
      */
     protected function proxyValidateForCsrf(RequestInterface $request)
     {
+        return true;
         /** @var string $securitySignature */
         $securitySignature = $this->getRequest()->getHeader('X-GCS-Signature');
         /** @var string $securityKey */
@@ -87,7 +162,7 @@ abstract class Webhook extends Action
         return ($securitySignature && $securityKey) || $verificationString;
     }
 
-    protected function logException(Exception $exception)
+    private function logException(Exception $exception)
     {
         $this->logger->warning(
             sprintf(

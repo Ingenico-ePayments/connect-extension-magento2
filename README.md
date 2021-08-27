@@ -7,7 +7,7 @@ Payment extension for processing the Magento order workflow via the Ingenico ePa
 To use this extension you need to have:
 
 - an Ingenico ePayments account.
-- webhook events for payment & refund configured for the account. The webhook endpoints used by the Magento store are shown in the Magento admin. (`Admin > Stores > Configuration > Sales > Ingenico ePayments > Settings`)
+- Webhook events for payment & refund configured for the account. The webhook endpoints used by the Magento store are shown in the Magento admin. (`Admin > Stores > Configuration > Sales > Ingenico ePayments > Settings`)
 
 ## Compatibility
 
@@ -29,11 +29,7 @@ choose the correct version from the following list:
 
 Installation via Composer requires the [Magento Composer Installer](https://github.com/Cotya/magento-composer-installer) to be in place.
 
-Add the repository to your `composer.json` by running the following command:
-
-    composer config repositories.ingenico_connect git https://github.com/Ingenico-ePayments/connect-extension-magento2.git
-
-Add the required Composer module:
+To install the module, run the following command:
 
     composer require ingenico-epayments/connect-extension-magento2
 

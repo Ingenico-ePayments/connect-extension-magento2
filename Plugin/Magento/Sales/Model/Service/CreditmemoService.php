@@ -7,6 +7,7 @@ namespace Ingenico\Connect\Plugin\Magento\Sales\Model\Service;
 use Exception;
 use Ingenico\Connect\Model\ConfigProvider;
 use Ingenico\Connect\Model\Ingenico\Action\Refund\CreateRefund;
+use Ingenico\Connect\Model\Ingenico\Action\Refund\RefundActionInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\CreditmemoRepositoryInterface;
@@ -20,7 +21,7 @@ class CreditmemoService
     /**
      * @var CreditmemoRepositoryInterface
      */
-    private $creditmemoRepository;
+    private $creditMemoRepository;
 
     /**
      * @var OrderRepositoryInterface
@@ -43,13 +44,13 @@ class CreditmemoService
     private $resourceConnection;
 
     public function __construct(
-        CreditmemoRepositoryInterface $creditmemoRepository,
+        CreditmemoRepositoryInterface $creditMemoRepository,
         OrderRepositoryInterface $orderRepository,
         OrderPaymentRepositoryInterface $paymentRepository,
-        CreateRefund $createRefundAction,
+        RefundActionInterface $createRefundAction,
         ResourceConnection $resourceConnection
     ) {
-        $this->creditmemoRepository = $creditmemoRepository;
+        $this->creditMemoRepository = $creditMemoRepository;
         $this->orderRepository = $orderRepository;
         $this->paymentRepository = $paymentRepository;
         $this->createRefundAction = $createRefundAction;
@@ -78,7 +79,7 @@ class CreditmemoService
         CreditmemoInterface $creditmemo,
         $offlineRequested = false
     ) {
-        if (!$this->isOrderPaidWithIngenico((int) $creditmemo->getOrderId())) {
+        if (!$this->isOrderPaidWithIngenico((int) $creditmemo->getOrderId()) || $offlineRequested) {
             return $proceed($creditmemo, $offlineRequested);
         }
 

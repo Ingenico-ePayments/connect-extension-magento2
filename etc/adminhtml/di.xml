@@ -6,16 +6,13 @@
                 type="Ingenico\Connect\Plugin\Magento\Sales\Block\Adminhtml\Order\Creditmemo\View"/>
     </type>
     <type name="Magento\Sales\Block\Adminhtml\Order\View">
-        <plugin name="manipulateOrderViewPage"
+        <plugin name="update_credit_memo_button"
+                sortOrder="10"
                 type="Ingenico\Connect\Plugin\Magento\Sales\Block\Adminhtml\Order\View"/>
     </type>
     <type name="Magento\Sales\Block\Adminhtml\Order\Creditmemo\Create\Items">
         <plugin name="removeOfflineCreditMemo"
                 type="Ingenico\Connect\Plugin\Magento\Sales\Block\Adminhtml\Order\Creditmemo\Create\Items"/>
-    </type>
-    <type name="Magento\Sales\Block\Adminhtml\Order\Invoice\View">
-        <plugin name="removeOfflineCreditMemo"
-                type="Ingenico\Connect\Plugin\Magento\Sales\Block\Adminhtml\Order\Invoice\View"/>
     </type>
     <type name="Magento\Framework\Notification\MessageList">
         <arguments>

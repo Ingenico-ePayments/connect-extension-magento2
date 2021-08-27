@@ -25,7 +25,7 @@ class Creditmemo
             return $response;
         }
 
-        if ($transaction = $this->transactionManager->retrieveTransaction($subject->getTransactionId())) {
+        if ($transaction = $this->transactionManager->retrieveTransaction((string) $subject->getTransactionId())) {
             $rawInfo = $transaction->getAdditionalInformation(Transaction::RAW_DETAILS);
             if (is_array($rawInfo) && array_key_exists('status', $rawInfo)) {
                 return $rawInfo['status'] === StatusInterface::PENDING_APPROVAL ? $response : false;

@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ingenico\Connect\Gateway\Command;
 
 use Ingenico\Connect\Sdk\ResponseException;
 use Magento\Payment\Gateway\CommandInterface;
 use Ingenico\Connect\Model\Ingenico\Action\Refund\CreateRefund;
+use Magento\Sales\Model\Order\Payment;
 
 class IngenicoRefundCommand implements CommandInterface
 {
@@ -35,7 +38,7 @@ class IngenicoRefundCommand implements CommandInterface
      */
     public function execute(array $commandSubject)
     {
-        /** @var \Magento\Sales\Model\Order\Payment $payment */
+        /** @var Payment $payment */
         $payment = $commandSubject['payment']->getPayment();
         $creditmemo = $payment->getCreditmemo();
         try {

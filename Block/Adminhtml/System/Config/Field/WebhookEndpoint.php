@@ -9,7 +9,7 @@ use Magento\Framework\Url;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 
-abstract class AbstractEndpoint extends Field
+class WebhookEndpoint extends Field
 {
     /**
      * @var string
@@ -24,7 +24,7 @@ abstract class AbstractEndpoint extends Field
     public function __construct(
         Context $context,
         Url $url,
-        string $routePath,
+        string $routePath = 'epayments/webhooks',
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -38,8 +38,13 @@ abstract class AbstractEndpoint extends Field
      */
     public function render(AbstractElement $element)
     {
-        $element->setValue($this->url->getUrl($this->routePath));
+        $element->setValue($this->getWebhookUrl());
 
         return parent::render($element);
+    }
+
+    public function getWebhookUrl(): string
+    {
+        return $this->url->getUrl($this->routePath);
     }
 }

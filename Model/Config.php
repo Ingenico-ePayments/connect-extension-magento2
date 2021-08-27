@@ -25,22 +25,22 @@ class Config implements ConfigInterface
     const CONFIG_INGENICO_MERCHANT_ID = 'ingenico_epayments/settings/merchant_id';
     const CONFIG_INGENICO_FIXED_DESCRIPTOR = 'ingenico_epayments/settings/descriptor';
     const CONFIG_INGENICO_HOSTED_CHECKOUT_SUBDOMAIN = 'ingenico_epayments/settings/hosted_checkout_subdomain';
+    // NON-EXISTANT
     const CONFIG_INGENICO_LOG_ALL_REQUESTS = 'ingenico_epayments/settings/log_all_requests';
-    const CONFIG_INGENICO_LOG_ALL_REQUESTS_FILE = 'ingenico_epayments/settings/log_all_requests_file';
+    const CONFIG_INGENICO_LOG_ALL_REQUESTS_FILE = 'ingenico_epayments/settings/log_all_requests_file'; // NON-EXISTANT
     const CONFIG_INGENICO_LOG_FRONTEND_REQUESTS = 'ingenico_epayments/settings/log_frontend_requests';
     const CONFIG_INGENICO_FRAUD_MANAGER_EMAIL = 'ingenico_epayments/fraud/manager_email';
-    const CONFIG_INGENICO_FRAUD_EMAIL_TEMPLATE = 'ingenico_epayments/fraud/email_template';
+    const CONFIG_INGENICO_FRAUD_EMAIL_TEMPLATE = 'ingenico_epayments/fraud/email_template'; // NON-EXISTANT
+    // phpcs:ignore Generic.Files.LineLength.TooLong
+    const CONFIG_INGENICO_CANCELLATION_OF_PENDING_ORDERS = 'ingenico_epayments/order_processing/cancellation_of_pending_orders'; // NO FUNCTION
     const CONFIG_INGENICO_PENDING_ORDERS_DAYS = 'ingenico_epayments/pending_orders_cancellation/days';
-    const CONFIG_INGENICO_UPDATE_EMAIL = 'ingenico_epayments/email_settings';
-    const CONFIG_SALES_EMAIL_IDENTITY = 'sales_email/order/identity';
-    const CONFIG_INGENICO_PAYMENT_STATUS = 'ingenico_epayments/payment_statuses';
-    const CONFIG_INGENICO_REFUND_STATUS = 'ingenico_epayments/refund_statuses';
+    const CONFIG_INGENICO_UPDATE_EMAIL = 'ingenico_epayments/email_settings'; // NON-EXISTANT
+    const CONFIG_SALES_EMAIL_IDENTITY = 'sales_email/order/identity'; // NON-EXISTANT
+    const CONFIG_INGENICO_PAYMENT_STATUS = 'ingenico_epayments/payment_statuses'; // NON-EXISTANT
+    const CONFIG_INGENICO_REFUND_STATUS = 'ingenico_epayments/refund_statuses'; // NON-EXISTANT
     const CONFIG_INGENICO_SYSTEM_PREFIX = 'ingenico_epayments/settings/system_prefix';
     const CONFIG_ALLOW_OFFLINE_REFUNDS = 'ingenico_epayments/settings/allow_offline_refunds';
-
-    // phpcs:ignore Generic.Files.LineLength.TooLong
-    const CONFIG_INGENIC_GROUP_CARD_PAYMENT_METHODS = 'ingenico_epayments/settings/ux/payment_methods/group_card_payment_methods';
-
+    const CONFIG_INGENIC_GROUP_CARD_PAYMENT_METHODS = 'ingenico_epayments/credit_cards/group_card_payment_methods';
     const CONFIG_INGENICO_CAPTURES_MODE = 'ingenico_epayments/captures/capture_mode';
     const CONFIG_INGENICO_CAPTURES_MODE_DIRECT = 'direct';
     const CONFIG_INGENICO_CAPTURES_MODE_AUTHORIZE = 'authorize';
@@ -79,7 +79,9 @@ class Config implements ConfigInterface
      */
     private $encryptor;
 
-    /** @var MetaData */
+    /**
+     * @var MetaData
+     */
     private $metaDataHelper;
 
     public function __construct(
@@ -99,7 +101,7 @@ class Config implements ConfigInterface
      * @param null $storeId
      * @return mixed
      */
-    private function getValue($field, $storeId = null)
+    protected function getValue($field, $storeId = null)
     {
         return $this->scopeConfig->getValue($field, ScopeInterface::SCOPE_STORE, $storeId);
     }

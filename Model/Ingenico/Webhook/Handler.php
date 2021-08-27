@@ -2,29 +2,18 @@
 
 namespace Ingenico\Connect\Model\Ingenico\Webhook;
 
+use Ingenico\Connect\Model\Ingenico\Webhook\Event\MerchantReferenceResolver;
 use Ingenico\Connect\Sdk\Domain\Webhooks\WebhooksEvent;
-use InvalidArgumentException;
-use Magento\Framework\App\Request\Http;
-use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Ingenico\Connect\Api\Data\EventInterface;
 use Ingenico\Connect\Api\Data\EventInterfaceFactory;
 use Ingenico\Connect\Api\EventRepositoryInterface;
+use Magento\Framework\Exception\InvalidArgumentException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Psr\Log\LoggerInterface;
-use Ingenico\Connect\Model\Ingenico\Webhook\Event\ResolverInterface as EventResolverInterface;
 
 class Handler
 {
-    /**
-     * @var Unmarshaller
-     */
-    private $unmarshaller;
-
-    /**
-     * @var RequestInterface|Http
-     */
-    private $request;
-
     /**
      * @var EventRepositoryInterface
      */
@@ -36,62 +25,39 @@ class Handler
     private $eventFactory;
 
     /**
+     * @var MerchantReferenceResolver
+     */
+    private $merchantReferenceResolver;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
 
-    /**
-     * Handler constructor.
-     *
-     * @param Unmarshaller $unmarshaller
-     * @param RequestInterface $request
-     * @param EventRepositoryInterface $eventRepository
-     * @param EventInterfaceFactory $eventFactory
-     * @param LoggerInterface $logger
-     */
     public function __construct(
-        Unmarshaller $unmarshaller,
-        RequestInterface $request,
         EventRepositoryInterface $eventRepository,
         EventInterfaceFactory $eventFactory,
+        MerchantReferenceResolver $merchantReferenceResolver,
         LoggerInterface $logger
     ) {
-        $this->unmarshaller = $unmarshaller;
-        $this->request = $request;
         $this->eventRepository = $eventRepository;
         $this->eventFactory = $eventFactory;
+        $this->merchantReferenceResolver = $merchantReferenceResolver;
         $this->logger = $logger;
     }
 
     /**
-     * @param EventResolverInterface $eventDataResolver
-     * @return string
+     * @param WebhooksEvent $event
      * @throws CouldNotSaveException
+     * @throws InvalidArgumentException
+     * @throws NoSuchEntityException
      */
-    public function handle(EventResolverInterface $eventDataResolver)
+    public function handle(WebhooksEvent $event): void
     {
-        /** @var string $securitySignature */
-        $securitySignature = $this->request->getHeader('X-GCS-Signature');
-        /** @var string $securityKey */
-        $securityKey = $this->request->getHeader('X-GCS-KeyId');
-
-        $event = $this->unmarshaller->unmarshal(
-            $this->request->getContent(),
-            [
-                'X-GCS-Signature' => $securitySignature,
-                'X-GCS-KeyId' => $securityKey,
-            ]
-        );
-
-        if ($this->checkEndpointTest($event)) {
-            return $securitySignature;
-        }
-
         $this->logEventData($event);
 
         try {
-            $orderIncrementId = $eventDataResolver->getMerchantOrderReference($event);
-            $this->persistEvent($event, $orderIncrementId);
+            $this->persistEvent($event);
         } catch (InvalidArgumentException $exception) {
             $this->logger->debug(
                 sprintf(
@@ -100,7 +66,7 @@ class Handler
                     $exception->getMessage()
                 )
             );
-            return $exception->getMessage();
+            throw $exception;
         } catch (CouldNotSaveException $exception) {
             $this->logger->debug(
                 sprintf(
@@ -111,20 +77,6 @@ class Handler
             );
             throw $exception;
         }
-
-        return $securitySignature;
-    }
-
-    /**
-     * Detects Ingenico Webhook test request.
-     * When a request is an endpoint test, it should not be processed.
-     *
-     * @param WebhooksEvent $event
-     * @return bool
-     */
-    private function checkEndpointTest(WebhooksEvent $event)
-    {
-        return strpos($event->id, 'TEST') === 0;
     }
 
     /**
@@ -154,16 +106,20 @@ class Handler
 
     /**
      * @param WebhooksEvent $event
-     * @param string $orderIncrementId
      * @throws CouldNotSaveException
+     * @throws NoSuchEntityException
+     * @throws InvalidArgumentException
      */
-    private function persistEvent(WebhooksEvent $event, string $orderIncrementId)
+    private function persistEvent(WebhooksEvent $event)
     {
         $eventModel = $this->eventFactory->create(
             [
                 'data' => [
                     EventInterface::EVENT_ID => $event->id,
-                    EventInterface::ORDER_INCREMENT_ID => $orderIncrementId,
+                    EventInterface::ORDER_INCREMENT_ID =>
+                        $this->merchantReferenceResolver->stripReferencePrefix(
+                            $this->merchantReferenceResolver->getMerchantReference($event)
+                        ),
                     EventInterface::PAYLOAD => $event->toJson(),
                     EventInterface::CREATED_TIMESTAMP => $event->created,
                 ],

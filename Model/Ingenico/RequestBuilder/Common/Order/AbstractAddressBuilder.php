@@ -28,7 +28,10 @@ abstract class AbstractAddressBuilder
         $dataObject->city = $orderAddress->getCity();
         $dataObject->countryCode = $orderAddress->getCountryId();
         $dataObject->state = $orderAddress->getRegion();
-        $dataObject->stateCode = $orderAddress->getRegionCode();
+        $regionCode = $this->getRegionCodeFromOrderAddress($orderAddress);
+        if ($regionCode !== null) {
+            $dataObject->stateCode = $regionCode;
+        }
         $dataObject->zip = $orderAddress->getPostcode();
         $street = $orderAddress->getStreet();
         if ($street !== null) {
@@ -62,5 +65,24 @@ abstract class AbstractAddressBuilder
             self::HOUSE_NUMBER => strrev(trim($match[2])),
             self::ADDITIONAL_INFO => strrev(trim($match[1], ' ,-')),
         ];
+    }
+
+    private function getRegionCodeFromOrderAddress(OrderAddressInterface $orderAddress): ?string
+    {
+        $regionCode = $orderAddress->getRegionCode();
+        if ($regionCode === null) {
+            return null;
+        }
+
+        // Check if the region code has the ISO-3166 format: ABC(-ABC), where the last part is optional.
+        if (preg_match('/^(?P<firstCode>[A-Z]{1,3})(-(?P<secondCode>[A-Z0-9]{1,3}))?$/i', $regionCode, $matches)) {
+            if (array_key_exists('secondCode', $matches)) {
+                $countryId = $orderAddress->getCountryId();
+                return strcasecmp((string) $countryId, $matches['firstCode']) === 0 ? $matches['secondCode'] : null;
+            }
+            return $matches['firstCode'];
+        }
+
+        return null;
     }
 }

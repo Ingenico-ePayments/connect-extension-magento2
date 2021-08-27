@@ -34,8 +34,9 @@ class OrderStatusHelper
     public function shouldOrderSkipPaymentReview(AbstractOrderStatus $ingenicoStatus)
     {
         return ($ingenicoStatus instanceof Payment || $ingenicoStatus instanceof Capture)
-               && ($this->isCapturingCcMethod($ingenicoStatus)
-                   || $ingenicoStatus->status === StatusInterface::PENDING_APPROVAL);
+            && ($this->isCapturingCcMethod($ingenicoStatus)
+                || $ingenicoStatus->status === StatusInterface::CAPTURED
+                || $ingenicoStatus->status === StatusInterface::PENDING_APPROVAL);
     }
 
     /**
@@ -47,8 +48,8 @@ class OrderStatusHelper
     private function isCapturingCcMethod(AbstractOrderStatus $ingenicoStatus)
     {
         return ($ingenicoStatus->status === StatusInterface::CAPTURE_REQUESTED
-                && in_array($this->getMethod($ingenicoStatus), $this->applicableMethods, true)
-                && in_array($this->getStatusCode($ingenicoStatus), $this->statusesForSkipping, true));
+            && in_array($this->getMethod($ingenicoStatus), $this->applicableMethods, true)
+            && in_array($this->getStatusCode($ingenicoStatus), $this->statusesForSkipping, true));
     }
 
     /**

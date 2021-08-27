@@ -2,6 +2,7 @@
 
 namespace Ingenico\Connect\Model\Ingenico\RequestBuilder\CreatePayment;
 
+use Ingenico\Connect\Sdk\Domain\Definitions\FraudFields;
 use Ingenico\Connect\Sdk\Domain\Payment\CreatePaymentRequest;
 use Ingenico\Connect\Sdk\Domain\Payment\CreatePaymentRequestFactory;
 use Magento\Sales\Model\Order;
@@ -48,6 +49,8 @@ class RequestBuilder
 
         $payload = $order->getPayment()->getAdditionalInformation(Config::CLIENT_PAYLOAD_KEY);
         $request->encryptedCustomerInput = $payload;
+        $request->fraudFields = new FraudFields();
+        $request->fraudFields->customerIpAddress = $order->getRemoteIp();
 
         return $request;
     }

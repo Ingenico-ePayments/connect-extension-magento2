@@ -8,13 +8,14 @@ use Ingenico\Connect\Model\Config;
 use Ingenico\Connect\Model\Ingenico\Status\Refund\HandlerInterface;
 use Ingenico\Connect\Model\Transaction\TransactionManager;
 use Ingenico\Connect\Sdk\Domain\Refund\Definitions\RefundResult;
-use LogicException;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\CreditmemoInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order\Creditmemo;
 use Ingenico\Connect\Model\Order\Creditmemo\Service;
+use Magento\Sales\Model\Order\Payment;
+use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\Order\RefundAdapterInterface;
 
 class RefundRequested extends AbstractHandler implements HandlerInterface
@@ -87,15 +88,22 @@ class RefundRequested extends AbstractHandler implements HandlerInterface
      */
     public function applyCreditmemo(CreditmemoInterface $creditMemo, RefundResult $ingenicoStatus)
     {
-        if (!$creditMemo instanceof Creditmemo) {
-            throw new LogicException('Only ' . Creditmemo::class . ' is supported');
-        }
+        $this->validateCreditMemo($creditMemo);
 
-        /** @var Creditmemo $creditMemo */
         // If the order cannot be unhold, the refund cannot proceed:
         if ($creditMemo->getOrder()->canUnhold()) {
             $creditMemo->getOrder()->unhold();
         }
+
+        // Update transaction ID:
+        /** @var Payment $payment */
+        $payment = $creditMemo->getOrder()->getPayment();
+        $payment->setLastTransId($ingenicoStatus->id);
+        $payment->setTransactionId($ingenicoStatus->id);
+        $creditMemo->setTransactionId($ingenicoStatus->id);
+
+        // Create transaction object:
+        $transaction = $payment->addTransaction(Transaction::TYPE_REFUND);
 
         // With the default refund flow the REFUND_REQUESTED-status is a guarantee that the refund will succeed.
         $creditMemo->setState(Creditmemo::STATE_REFUNDED);
@@ -105,16 +113,18 @@ class RefundRequested extends AbstractHandler implements HandlerInterface
         $creditMemo->getInvoice()->setBaseTotalRefunded($creditMemo->getBaseGrandTotal());
         $creditMemo->getOrder()->addRelatedObject($creditMemo->getInvoice());
 
-        if ($creditMemo instanceof Creditmemo) {
-            $transaction = $creditMemo->getData('tmp_transaction');
-        } else {
-            $transaction = null;
+        $invoice = $creditMemo->getInvoice();
+        if ($captureTxn = $this->transactionManager->retrieveTransaction($invoice->getTransactionId())) {
+            $transaction->setParentTxnId($captureTxn->getTxnId());
+            $payment->setParentTransactionId($captureTxn->getTxnId());
+            $payment->setShouldCloseParentTransaction(true);
         }
 
         // Process refund using the default Magento refund adapter:
         // Don't allow an additional request to be made to the gateway:
         $creditMemo->setPaymentRefundDisallowed(true);
         $creditMemo->setRefundTransaction($transaction);
+
         // Set proper message to use instead of "We refunded x Offline":
         $creditMemo->getOrder()
             ->getPayment()
@@ -123,14 +133,8 @@ class RefundRequested extends AbstractHandler implements HandlerInterface
             );
         $this->refundAdapter->refund($creditMemo, $creditMemo->getOrder(), true);
 
-        if ($transaction === null) {
-            $transaction = $this->transactionManager->retrieveTransaction($creditMemo->getTransactionId());
-        }
-
         // Close transaction:
-        if ($transaction !== null) {
-            $transaction->setIsClosed(true);
-            $creditMemo->getOrder()->addRelatedObject($transaction);
-        }
+        $transaction->setIsClosed(true);
+        $creditMemo->getOrder()->addRelatedObject($transaction);
     }
 }

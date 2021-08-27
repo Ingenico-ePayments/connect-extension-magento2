@@ -14,7 +14,7 @@ class Items extends AbstractOrder
         callable $proceed,
         ...$args
     ) {
-        if ($args[0] === 'submit_offline' &&
+        if (strpos($args[2]['onclick'], 'submitCreditMemoOffline') !== false &&
             !$this->allowOfflineRefund($subject->getOrder())
         ) {
             return null;

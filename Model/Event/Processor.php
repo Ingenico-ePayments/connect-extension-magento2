@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ingenico\Connect\Model\Event;
 
 use Exception;
+use Ingenico\Connect\Helper\Data;
 use Ingenico\Connect\Model\Ingenico\Status\Payment\ResolverInterface as PaymentResolverInterface;
 use Ingenico\Connect\Model\Ingenico\Status\Refund\ResolverInterface as RefundResolverInterface;
 use Ingenico\Connect\Model\Order\OrderServiceInterface;
@@ -174,13 +175,28 @@ class Processor
                     break;
                 case RefundResponse::class:
                     if ($order instanceof Order) {
-                        // @todo: extract the fetching of the correct credit memo
-                        // according to the status response to a separate class:
-                        // This is so wrong... Don't release like this!
-                        // It will have unforeseen side-effects with multiple refunds on one order
-                        // SCGC-409 will fix this.
-                        $creditMemo = $order->getCreditmemosCollection()->getFirstItem();
-                        // SCGC-464 : Don't break cron chain if a refund is created in the WPC
+                        // Find a credit memo that matches with the amount provided:
+                        // The Ingenico API currently does not return the correct merchant reference
+                        // for refunds. No matter what merchant reference you provide when requesting
+                        // the refund, the response (and the webhooks) will always contain the original
+                        // merchant reference of the order.
+                        //
+                        // We can match it on the amount, because Ingenico does not have any other metadata
+                        // regarding the order. So if you would have 2 products with the same price, and
+                        // only one needs to be refunded, it doesn't matter from Ingenico's side which
+                        // credit memo you use, since Ingenico cannot tell you.
+                        //
+                        // The only problem this can introduce for the merchant is that it could introduce
+                        // a stock issue if the wrong credit memo gets cancelled or something.
+                        // But with this shortcoming this solution is the best we can do.
+                        $refundedAmount = Data::reformatMagentoAmount(
+                            $statusResponseObject->refundOutput->amountOfMoney->amount
+                        );
+                        $creditMemo = $order
+                            ->getCreditmemosCollection()
+                            ->addFieldToFilter('base_grand_total', (string) $refundedAmount)
+                            ->getFirstItem();
+
                         if ($creditMemo->getEntityId() === null) {
                             throw new LocalizedException(__('No credit memo found for this order'));
                         }

@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 2.5.0 - 2021-08-26
+
+- Fixes issue where non-valid state codes where sent to the Ingenico API.
+- Optimizes admin configuration
+- Fixes issue where a delayed settlement with PayPal could result in a "payment review" state.
+- Fixes issue where an order that was not paid with Ingenico could not be offline refunded.
+- Added a single webhook endpoint that can replace the other 2 webhook endpoints. Previously, you had to configure 2 separate webhook endpoints in the Ingenico Configuration Center, but now you only need to configure one. The webhook URL can be found in the administration section of the module (`Admin > Stores > Configuration > Sales > Ingenico ePayments > Settings`).
+- Added composer suggestion to install the connect-extension-magento2-refund-queue module.
+
 ## 2.4.6 - 2021-01-27
 
 - Fixes issue where updating the status of a refunded order in the admin would throw an error.

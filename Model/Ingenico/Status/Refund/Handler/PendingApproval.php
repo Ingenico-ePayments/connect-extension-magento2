@@ -13,6 +13,8 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order\Creditmemo;
 use Ingenico\Connect\Model\Order\Creditmemo\Service;
 use Ingenico\Connect\Model\Transaction\TransactionManager;
+use Magento\Sales\Model\Order\Payment;
+use Magento\Sales\Model\Order\Payment\Transaction;
 
 class PendingApproval extends AbstractHandler implements HandlerInterface
 {
@@ -59,20 +61,14 @@ class PendingApproval extends AbstractHandler implements HandlerInterface
      */
     public function resolveStatus(CreditmemoInterface $creditMemo, RefundResult $ingenicoStatus)
     {
-        $this->applyCreditmemo($creditMemo);
+        $this->applyCreditmemo($creditMemo, $ingenicoStatus);
         $this->dispatchEvent($creditMemo, $ingenicoStatus);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function applyCreditmemo(CreditmemoInterface $creditMemo)
+    public function applyCreditmemo(CreditmemoInterface $creditMemo, RefundResult $ingenicoStatus)
     {
-        if (!$creditMemo instanceof Creditmemo) {
-            return;
-        }
+        $this->validateCreditMemo($creditMemo);
 
-        /** @TODO(nr): Gateway\CanRefund checks if status is appropriate for approval. */
         $creditMemo->setState(Creditmemo::STATE_OPEN);
         $order = $creditMemo->getOrder();
 
@@ -81,19 +77,23 @@ class PendingApproval extends AbstractHandler implements HandlerInterface
             $order->hold();
         }
 
-        if ($creditMemo instanceof Creditmemo) {
-            $transaction = $creditMemo->getData('tmp_transaction');
-        } else {
-            $transaction = null;
+        /** @var Payment $payment */
+        $payment = $creditMemo->getOrder()->getPayment();
+        $payment->setLastTransId($ingenicoStatus->id);
+        $payment->setTransactionId($ingenicoStatus->id);
+        $creditMemo->setTransactionId($ingenicoStatus->id);
+
+        // Create transaction object:
+        $transaction = $payment->addTransaction(Transaction::TYPE_REFUND);
+
+        $invoice = $creditMemo->getInvoice();
+        if ($captureTxn = $this->transactionManager->retrieveTransaction($invoice->getTransactionId())) {
+            $transaction->setParentTxnId($captureTxn->getTxnId());
+            $payment->setParentTransactionId($captureTxn->getTxnId());
+            $payment->setShouldCloseParentTransaction(true);
         }
 
-        if ($transaction === null) {
-            $transaction = $this->transactionManager->retrieveTransaction($creditMemo->getTransactionId());
-        }
-
-        if ($transaction !== null) {
-            $transaction->setIsClosed(false);
-            $this->transactionManager->updateTransaction($transaction);
-        }
+        $transaction->setIsClosed(false);
+        $this->transactionManager->updateTransaction($transaction);
     }
 }

@@ -31,23 +31,19 @@ class View extends AbstractOrder
         BaseView $subject,
         ...$args
     ) {
-        if ($args[0] === 'order_creditmemo' && $this->allowOfflineRefund($subject->getOrder())) {
-            $this->addExtraOptionsToCreditMemoDialog($args[1], $subject);
+        if ($subject->getOrder()->getPayment()->getMethod() !== ConfigProvider::CODE) {
+            return $args;
+        }
+
+        if ($args[0] === 'order_creditmemo') {
+            if ($this->allowOfflineRefund($subject->getOrder())) {
+                $this->addExtraOptionsToCreditMemoDialog($args[1], $subject);
+            } else {
+                $this->updateCreditMemoButton($args[1], $subject);
+            }
         }
 
         return $args;
-    }
-
-    public function afterAddButton(
-        BaseView $subject,
-        $result,
-        $buttonId
-    ) {
-        if ($buttonId === 'order_creditmemo' && !$this->allowOfflineRefund($subject->getOrder())) {
-            $subject->removeButton('order_creditmemo');
-        }
-
-        return $result;
     }
 
     /**
@@ -112,15 +108,8 @@ class View extends AbstractOrder
         $content .= '<li><a href="' . $subject->getCreditmemoUrl() . '">' .
             __('I understand and I want to create an offline refund')->render() . '</a></li>';
         /** @var Invoice $invoice */
-        $invoice = $subject->getOrder()->getInvoiceCollection()->getFirstItem();
-        if ($invoice instanceof Invoice) {
-            $invoiceUrl = $this->urlBuilder->getUrl(
-                'sales/order_creditmemo/new',
-                [
-                    'order_id' => $subject->getOrderId(),
-                    'invoice_id' => $invoice->getId(),
-                ]
-            );
+        $invoiceUrl = $this->getInvoiceUrl($subject);
+        if ($invoiceUrl !== '') {
             $content .= '<li><a href="' . $invoiceUrl . '">' .
                 __('I want to create a credit memo on the invoice')->render() . '</a></li>';
         }
@@ -129,5 +118,29 @@ class View extends AbstractOrder
             $title . '\', content:\'' . $content . '\', ' .
             'buttons:[{text: \'Cancel\',class: \'action-primary action-accept\',' .
             'click: function () {this.closeModal(true);}}]})';
+    }
+
+    private function updateCreditMemoButton(array &$buttonData, BaseView $subject)
+    {
+        $invoiceUrl = $this->getInvoiceUrl($subject);
+        if ($invoiceUrl !== '') {
+            $buttonData['onclick'] = 'window.location=\'' . $invoiceUrl . '\'';
+        }
+    }
+
+    private function getInvoiceUrl(BaseView $subject): string
+    {
+        /** @var Invoice $invoice */
+        $invoice = $subject->getOrder()->getInvoiceCollection()->getFirstItem();
+        if ($invoice instanceof Invoice) {
+            return $this->urlBuilder->getUrl(
+                'sales/order_creditmemo/new',
+                [
+                    'order_id' => $subject->getOrderId(),
+                    'invoice_id' => $invoice->getId(),
+                ]
+            );
+        }
+        return '';
     }
 }

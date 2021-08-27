@@ -51,9 +51,9 @@ abstract class AbstractRefundAction implements RefundActionInterface
 
         $this->validatePaymentMethod($order);
         $this->performRefundAction($order, $creditMemo);
+        $this->persist($order, $creditMemo);
 
-        $this->creditmemoRepository->save($creditMemo);
-        $this->orderRepository->save($order);
+        $this->performPostRefundAction($order, $creditMemo);
     }
 
     /**
@@ -66,6 +66,22 @@ abstract class AbstractRefundAction implements RefundActionInterface
         OrderInterface $order,
         CreditmemoInterface $creditMemo
     );
+
+    /**
+     * @param OrderInterface $order
+     * @param Creditmemo $creditMemo
+     */
+    protected function performPostRefundAction(OrderInterface $order, Creditmemo $creditMemo)
+    {
+        // Stub that can be used to perform post-save actions. These might
+        // be helpful for new credit memo's where an ID might be required.
+    }
+
+    final protected function persist(OrderInterface $order, Creditmemo $creditMemo)
+    {
+        $this->creditmemoRepository->save($creditMemo);
+        $this->orderRepository->save($order);
+    }
 
     /**
      * @param OrderInterface $order

@@ -161,12 +161,7 @@
             <argument name="logger" xsi:type="object">ingenicoRequestLogger</argument>
         </arguments>
     </type>
-    <type name="Ingenico\Connect\Controller\Webhooks\Payment">
-        <arguments>
-            <argument name="logger" xsi:type="object">ingenicoRequestLogger</argument>
-        </arguments>
-    </type>
-    <type name="Ingenico\Connect\Controller\Webhooks\Refund">
+    <type name="Ingenico\Connect\Controller\Webhooks\Index">
         <arguments>
             <argument name="logger" xsi:type="object">ingenicoRequestLogger</argument>
         </arguments>
@@ -299,6 +294,11 @@
         <plugin name="preventRefundCancellation" type="Ingenico\Connect\Plugin\Magento\Sales\Model\Order\Creditmemo"/>
     </type>
 
+    <type name="Ingenico\Connect\Plugin\Magento\Sales\Model\Service\CreditmemoService">
+        <arguments>
+            <argument name="createRefundAction" xsi:type="object">Ingenico\Connect\Model\Ingenico\Action\Refund\CreateRefund</argument>
+        </arguments>
+    </type>
     <type name="Magento\Sales\Api\CreditmemoManagementInterface">
         <plugin name="allowPendingRefunds" type="Ingenico\Connect\Plugin\Magento\Sales\Model\Service\CreditmemoService"/>
     </type>
@@ -311,5 +311,11 @@
         <arguments>
             <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
         </arguments>
+    </type>
+
+    <!-- This is a temporary fix for GitHub issue #31939: -->
+    <type name="Magento\AdminNotification\Model\ResourceModel\Inbox">
+        <plugin name="fixGithubIssue31939"
+                type="Ingenico\Connect\Plugin\Magento\AdminNotification\Model\ResourceModel\Inbox"/>
     </type>
 </config>

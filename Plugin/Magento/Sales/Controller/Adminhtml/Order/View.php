@@ -9,6 +9,8 @@ use Ingenico\Connect\Model\ConfigProvider;
 use Ingenico\Connect\Model\Ingenico\Action\RetrievePayment;
 use Ingenico\Connect\Model\Ingenico\StatusInterface;
 use Ingenico\Connect\Api\OrderPaymentManagementInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Controller\Adminhtml\Order\View as ViewController;
 
@@ -43,19 +45,28 @@ class View
     {
         $id = $subject->getRequest()->getParam('order_id');
         $order = $this->orderRepository->get($id);
-        $payment = $order->getPayment();
 
         try {
-            if ($payment->getMethod() === ConfigProvider::CODE &&
-                $this->orderPaymentManagement->getIngenicoPaymentStatus($payment) === StatusInterface::CAPTURE_REQUESTED
-            ) {
-                $this->retrievePayment->process($order);
-            }
+            $this->updatePaymentStatus($order);
         } catch (Exception $exception) {
             // An exception should never break the flow of viewing an order
             return null;
         }
 
         return null;
+    }
+
+    /**
+     * @param OrderInterface $order
+     * @throws LocalizedException
+     */
+    private function updatePaymentStatus(OrderInterface $order): void
+    {
+        $payment = $order->getPayment();
+        if ($payment->getMethod() === ConfigProvider::CODE &&
+            $this->orderPaymentManagement->getIngenicoPaymentStatus($payment) === StatusInterface::CAPTURE_REQUESTED
+        ) {
+            $this->retrievePayment->process($order);
+        }
     }
 }

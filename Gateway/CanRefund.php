@@ -2,69 +2,32 @@
 
 namespace Ingenico\Connect\Gateway;
 
-use Magento\Framework\Registry;
+use Magento\Framework\App\RequestInterface;
 use Magento\Payment\Gateway\Config\ValueHandlerInterface;
-use Magento\Sales\Model\Order\Creditmemo;
-use Magento\Sales\Model\Order\Payment;
-use Ingenico\Connect\Model\Config;
-use Ingenico\Connect\Model\Ingenico\StatusInterface;
-use Ingenico\Connect\Model\StatusResponseManager;
 
 class CanRefund implements ValueHandlerInterface
 {
     /**
-     * @var Registry
+     * @var RequestInterface
      */
-    private $registry;
+    private $request;
 
-    /**
-     * @var StatusResponseManager
-     */
-    private $statusResponseManager;
-
-    /**
-     * CanRefund constructor.
-     *
-     * @param StatusResponseManager $statusResponseManager
-     * @param Registry $registry
-     */
     public function __construct(
-        StatusResponseManager $statusResponseManager,
-        Registry $registry
+        RequestInterface $request
     ) {
-        $this->statusResponseManager = $statusResponseManager;
-        $this->registry = $registry;
+        $this->request = $request;
     }
 
-    /**
-     * Check if refund can be created online
-     *
-     * @param array $subject
-     * @param null $storeId
-     * @return bool
-     */
     public function handle(array $subject, $storeId = null)
     {
-        /** @var Payment $payment */
-        $payment = $subject['payment']->getPayment();
-        $paymentId = $payment->getAdditionalInformation(Config::PAYMENT_ID_KEY);
+        // Since the introduction of the refund queue, a refund can always be done
+        // @todo: undo this
 
-        /** @var Creditmemo $creditmemo */
-        $creditmemo = $this->registry->registry('current_creditmemo');
-
-        if ($creditmemo &&
-            $creditmemo->getTransactionId() &&
-            $refundResponse = $this->statusResponseManager->get($payment, $creditmemo->getTransactionId())
-        ) {
-            return $refundResponse->status == StatusInterface::PENDING_APPROVAL;
+        if ($creditMemoId = (int) $this->request->getParam('creditmemo_id')) {
+            // If we're on the credit memo page, hide the "refund"-button
+            return false;
         }
 
-        if (($paymentResponse = $this->statusResponseManager->get($payment, $paymentId)) &&
-            isset($paymentResponse->statusOutput->isRefundable)
-        ) {
-            return $paymentResponse->statusOutput->isRefundable;
-        }
-
-        return false;
+        return true;
     }
 }

@@ -4,7 +4,7 @@ namespace Ingenico\Connect\Model\Adminhtml\System\Config\Source;
 
 use Ingenico\Connect\Model\Config;
 
-class CaptureMode
+class CreditCardCaptureMode
 {
     /**
      * @var string
@@ -24,7 +24,7 @@ class CaptureMode
         return [
             [
                 'value' => $this->authorize,
-                'label' => __('Delayed Settlement')
+                'label' => __('Delayed Capture')
             ],
             [
                 'value' => $this->direct,
@@ -41,7 +41,7 @@ class CaptureMode
     public function toArray()
     {
         return [
-            $this->authorize => __('Delayed Settlement'),
+            $this->authorize => __('Delayed Capture'),
             $this->direct => __('Direct Capture'),
         ];
     }

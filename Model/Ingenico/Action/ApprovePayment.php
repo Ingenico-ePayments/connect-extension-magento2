@@ -97,8 +97,6 @@ class ApprovePayment extends AbstractAction implements ActionInterface
         $payment = $order->getPayment();
 
         $ingenicoPaymentId = $payment->getAdditionalInformation(Config::PAYMENT_ID_KEY);
-        $status = $this->statusResponseManager->get($payment, $ingenicoPaymentId);
-        $ingenicoPaymentId = $status->id;
 
         $response = $this->approvePayment($ingenicoPaymentId, $payment, $amount);
         $payment->setAdditionalInformation(

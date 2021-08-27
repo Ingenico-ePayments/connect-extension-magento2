@@ -2,6 +2,7 @@
 
 namespace Ingenico\Connect\Gateway\Command;
 
+use Ingenico\Connect\Api\OrderPaymentManagementInterface;
 use Ingenico\Connect\Sdk\ResponseException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Gateway\Command\CommandException;
@@ -12,7 +13,6 @@ use Ingenico\Connect\Model\Ingenico\Action\ApprovePayment;
 use Ingenico\Connect\Model\Ingenico\Action\CapturePayment;
 use Ingenico\Connect\Model\Ingenico\Action\CreatePayment;
 use Ingenico\Connect\Model\Ingenico\StatusInterface;
-use Ingenico\Connect\Model\StatusResponseManager;
 
 class IngenicoCaptureCommand implements CommandInterface
 {
@@ -27,11 +27,6 @@ class IngenicoCaptureCommand implements CommandInterface
     private $approvePayment;
 
     /**
-     * @var StatusResponseManager
-     */
-    private $statusResponseManager;
-
-    /**
      * @var CreatePayment
      */
     private $createPayment;
@@ -42,26 +37,31 @@ class IngenicoCaptureCommand implements CommandInterface
     private $apiErrorHandler;
 
     /**
+     * @var OrderPaymentManagementInterface
+     */
+    private $orderPaymentManagement;
+
+    /**
      * IngenicoCaptureCommand constructor.
      *
      * @param CapturePayment $capturePayment
      * @param ApprovePayment $approvePayment
-     * @param StatusResponseManager $statusResponseManager
      * @param CreatePayment $createPayment
      * @param ApiErrorHandler $apiErrorHandler
+     * @param OrderPaymentManagementInterface $orderPaymentManagement
      */
     public function __construct(
         CapturePayment $capturePayment,
         ApprovePayment $approvePayment,
-        StatusResponseManager $statusResponseManager,
         CreatePayment $createPayment,
-        ApiErrorHandler $apiErrorHandler
+        ApiErrorHandler $apiErrorHandler,
+        OrderPaymentManagementInterface $orderPaymentManagement
     ) {
         $this->capturePayment = $capturePayment;
         $this->approvePayment = $approvePayment;
-        $this->statusResponseManager = $statusResponseManager;
         $this->createPayment = $createPayment;
         $this->apiErrorHandler = $apiErrorHandler;
+        $this->orderPaymentManagement = $orderPaymentManagement;
     }
 
     /**
@@ -81,23 +81,25 @@ class IngenicoCaptureCommand implements CommandInterface
             // new order, capture process
             $this->createPayment->create($order);
             $payment->setAdditionalInformation(Config::CLIENT_PAYLOAD_KEY, null);
-
             return;
         }
 
-        // Admin capture process
-        $paymentId = $payment->getAdditionalInformation(Config::PAYMENT_ID_KEY);
-        $status = $this->statusResponseManager->get($payment, $paymentId);
+        $status = $this->orderPaymentManagement->getIngenicoPaymentStatus($payment);
 
         try {
-            if ($status->status == StatusInterface::PENDING_CAPTURE) {
-                $this->capturePayment->process($payment->getOrder(), $amount);
-            } elseif ($status->status == StatusInterface::PENDING_APPROVAL) {
-                $this->approvePayment->process($payment->getOrder(), $amount);
-            } elseif ($status->status == StatusInterface::CAPTURE_REQUESTED) {
-                throw new CommandException(__('Payment is already captured'));
-            } else {
-                throw new CommandException(__('Unknown or invalid payment status'));
+            switch ($status) {
+                case StatusInterface::PENDING_CAPTURE:
+                    $this->capturePayment->process($payment->getOrder(), $amount);
+                    break;
+                case StatusInterface::PENDING_APPROVAL:
+                    $this->approvePayment->process($payment->getOrder(), $amount);
+                    break;
+                case StatusInterface::CAPTURE_REQUESTED:
+                    throw new CommandException(__('Payment is already captured'));
+                    break;
+                default:
+                    throw new CommandException(__('Unknown or invalid payment status'));
+                    break;
             }
         } catch (ResponseException $e) {
             $this->apiErrorHandler->handleError($e);
