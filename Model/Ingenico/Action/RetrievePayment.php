@@ -163,7 +163,7 @@ class RetrievePayment extends AbstractAction implements ActionInterface
     {
         $merchant = $this->ingenicoClient
             ->getIngenicoClient($order->getStoreId())
-            ->merchant($this->ePaymentsConfig->getMerchantId($order->getStoreId()));
+            ->merchant($this->config->getMerchantId($order->getStoreId()));
 
         if ($currentStatus instanceof RefundResult) {
             $response = $merchant->refunds()->get($currentStatus->id);

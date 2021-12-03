@@ -67,7 +67,7 @@ class CreateHostedCheckout extends AbstractAction implements ActionInterface
         $currencyCode = $order->getBaseCurrencyCode();
         $countryCode = $order->getBillingAddress()->getCountryId();
         $locale = $this->resolver->getLocale();
-        $checkoutSubdomain = $this->ePaymentsConfig->getHostedCheckoutSubDomain($scopeId);
+        $checkoutSubdomain = $this->config->getHostedCheckoutSubDomain($scopeId);
 
         /** @var InfoInterface $payment */
         $payment = $order->getPayment();
@@ -126,12 +126,12 @@ class CreateHostedCheckout extends AbstractAction implements ActionInterface
      */
     private function shouldHavePaymentProduct(Order $order)
     {
-        $scopeId = $order->getStoreId();
-        if ($this->ePaymentsConfig->getCheckoutType($scopeId) === Config::CONFIG_INGENICO_CHECKOUT_TYPE_REDIRECT) {
+        $storeId = $order->getStoreId();
+        $payment = $order->getPayment();
+        if ($this->config->getCheckoutType($storeId) === Config::CONFIG_INGENICO_CHECKOUT_TYPE_HOSTED_CHECKOUT ||
+            $payment->getAdditionalInformation(Config::CLIENT_PAYLOAD_KEY)) {
             return false;
         }
-        $payment = $order->getPayment();
-        $paymentProductId = $payment->getAdditionalInformation(Config::PRODUCT_ID_KEY);
-        return $paymentProductId !== 'cards';
+        return $payment->getAdditionalInformation(Config::PRODUCT_ID_KEY) !== 'cards';
     }
 }

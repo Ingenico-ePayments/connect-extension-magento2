@@ -4,6 +4,13 @@
         <link src="Ingenico_Connect::js/lib/connectsdk.js"/>
     </head>
     <body>
+        <referenceContainer name="content.top">
+            <block class="Magento\Cms\Block\Block" name="Promo" before="-">
+                <arguments>
+                    <argument name="block_id" xsi:type="string">ingenico_banner_checkout</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
         <referenceBlock name="checkout.root">
             <arguments>
                 <argument name="jsLayout" xsi:type="array">

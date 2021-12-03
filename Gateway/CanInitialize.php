@@ -5,10 +5,15 @@
 
 namespace Ingenico\Connect\Gateway;
 
-use Magento\Payment\Gateway\Config\ValueHandlerInterface;
-use Magento\Sales\Model\Order\Payment;
 use Ingenico\Connect\Model\Config;
 use Ingenico\Connect\Model\ConfigInterface;
+use Ingenico\Connect\Model\ConfigProvider;
+use Magento\Payment\Gateway\Config\ValueHandlerInterface;
+use Magento\Sales\Model\Order\Payment;
+use Magento\Vault\Api\Data\PaymentTokenInterface;
+
+use function array_key_exists;
+use function in_array;
 
 class CanInitialize implements ValueHandlerInterface
 {
@@ -28,11 +33,6 @@ class CanInitialize implements ValueHandlerInterface
     }
 
     /**
-     * This command handles whether we need to initialize the hosted checkout. The rules are:
-     *
-     * - "Hosted Checkout" and "Direct Hosted Checkout" always need initialization
-     * - "Inline" checkout needs initialization when no payload was given.
-     *
      * @param mixed[] $subject
      * @param int|null $storeId
      *
@@ -40,15 +40,44 @@ class CanInitialize implements ValueHandlerInterface
      */
     public function handle(array $subject, $storeId = null)
     {
-        $shouldInitialize = true;
-        $isInline = $this->config->getCheckoutType($storeId) === Config::CONFIG_INGENICO_CHECKOUT_TYPE_INLINE;
-
-        if ($isInline) {
-            /** @var Payment $payment */
-            $payment = $subject['payment']->getPayment();
-            $shouldInitialize = !$payment->getAdditionalInformation(Config::CLIENT_PAYLOAD_KEY);
+        if (!array_key_exists('payment', $subject)) {
+            return $this->handleInitialize($subject, $storeId);
         }
 
-        return $shouldInitialize;
+        $payment = $subject['payment']->getPayment();
+        if (!$payment instanceof Payment) {
+            return $this->handleInitialize($subject, $storeId);
+        }
+
+        if (!$payment->getAdditionalInformation(PaymentTokenInterface::PUBLIC_HASH)) {
+            return $this->handleInitialize($subject, $storeId);
+        }
+
+        return false;
+    }
+
+    /**
+     * @param mixed[] $subject
+     * @param int|null $storeId
+     *
+     * @return bool
+     */
+    private function handleInitialize(array $subject, $storeId = null)
+    {
+        $paymentProductId =
+            $subject['payment']->getPayment()->getAdditionalInformation(Config::PRODUCT_PAYMENT_METHOD_KEY) === 'card'
+                ? 'cards' : $subject['payment']->getPayment()->getAdditionalInformation(Config::PRODUCT_ID_KEY);
+
+        if (in_array($paymentProductId, ConfigProvider::LOCKED_INLINE_PAYMENT_PRODUCTS, false)) {
+            return false;
+        }
+
+        if (!array_key_exists($paymentProductId, ConfigProvider::CONFIGURABLE_INLINE_PAYMENT_PRODUCTS)) {
+            return true;
+        }
+        return $this->config->getPaymentProductCheckoutType(
+            ConfigProvider::CONFIGURABLE_INLINE_PAYMENT_PRODUCTS[$paymentProductId],
+            $storeId
+        ) === Config::CONFIG_INGENICO_CHECKOUT_TYPE_REDIRECT;
     }
 }

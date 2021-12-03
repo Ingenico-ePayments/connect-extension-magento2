@@ -90,6 +90,17 @@ class CardDecorator implements DecoratorInterface
             $this->getUnscheduledCardOnFileRequestor($input->unscheduledCardOnFileSequenceIndicator);
         $request->cardPaymentMethodSpecificInput = $input;
 
+        $extensionAttributes = $order->getPayment()->getExtensionAttributes();
+        if ($extensionAttributes !== null) {
+            $token = $extensionAttributes->getVaultPaymentToken();
+            if ($token !== null) {
+                $request->cardPaymentMethodSpecificInput->token = $token->getGatewayToken();
+                if (!$order->getRemoteIp()) {
+                    $request->cardPaymentMethodSpecificInput->unscheduledCardOnFileRequestor = 'merchantInitiated';
+                }
+            }
+        }
+
         return $request;
     }
 

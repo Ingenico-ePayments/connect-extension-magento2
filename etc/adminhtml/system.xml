@@ -98,10 +98,9 @@
                     <frontend_model>Ingenico\Connect\Block\Adminhtml\System\Config\Field\WebhookEndpoint</frontend_model>
                     <comment>Configure your webhook in the Ingenico Configuration center with the above URL. Enable all checkboxes for "payment" and "refund".</comment>
                 </field>
-                <field id="inline_payments" translate="label comment" type="Ingenico\Connect\Data\Form\Element\Radioset" sortOrder="60" showInDefault="1" showInWebsite="1">
-                    <label>Checkout Type</label>
-                    <comment>Using inline payments requires your Magento store to be PCI compliant on level SAQ-A EP.</comment>
-                    <source_model>Ingenico\Connect\Model\Config\Source\CheckoutType</source_model>
+                <field id="inline_payments" translate="label" type="Ingenico\Connect\Data\Form\Element\Radioset" sortOrder="55" showInDefault="1" showInWebsite="1">
+                    <label>Payment Flow Type</label>
+                    <source_model>Ingenico\Connect\Model\Config\Source\PaymentFlowType</source_model>
                     <config_path>ingenico_epayments/checkout/inline_payments</config_path>
                 </field>
                 <field id="show_advanced" advanced="true" type="Ingenico\Connect\Data\Form\Element\Toggle" translate="label" sortOrder="100" showInWebsite="1" showInStore="1" showInDefault="1">
@@ -133,10 +132,38 @@
                     </group>
                     <group id="credit_cards" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1">
                         <label>Credit Cards</label>
+                        <field id="toggle" translate="label" type="Ingenico\Connect\Data\Form\Element\Radioset" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <depends>
+                                <field id="ingenico_epayments/settings/inline_payments">1</field>
+                            </depends>
+                            <label>Payments</label>
+                            <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                            <config_path>ingenico_epayments/credit_cards/toggle</config_path>
+                        </field>
+                        <field id="payment_flow_type" translate="label" type="Ingenico\Connect\Data\Form\Element\Radioset" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <depends>
+                                <field id="ingenico_epayments/settings/inline_payments">1</field>
+                            </depends>
+                            <label>Payment flow type</label>
+                            <source_model>Ingenico\Connect\Model\Config\Source\PaymentProductPaymentFlowType</source_model>
+                            <config_path>ingenico_epayments/credit_cards/payment_flow_type</config_path>
+                        </field>
                         <field id="capture_mode" translate="label" type="Ingenico\Connect\Data\Form\Element\Radioset" sortOrder="20" showInDefault="1" showInWebsite="1">
                             <label>Payment Steps</label>
                             <source_model>\Ingenico\Connect\Model\Adminhtml\System\Config\Source\CreditCardCaptureMode</source_model>
                             <config_path>ingenico_epayments/captures/capture_mode</config_path>
+                        </field>
+                        <field id="price_ranges" translate="label" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Price Ranges</label>
+                            <frontend_model>Ingenico\Connect\Block\Adminhtml\System\Config\Field\PriceRanges</frontend_model>
+                            <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                            <config_path>ingenico_epayments/credit_cards/price_ranges</config_path>
+                        </field>
+                        <field id="country_blacklist" translate="label" type="multiselect" sortOrder="26" showInDefault="1" showInWebsite="1" canRestore="0">
+                            <label>Blacklisted Countries</label>
+                            <source_model>Ingenico\Connect\Data\Form\Element\Country</source_model>
+                            <config_path>ingenico_epayments/credit_cards/country_blacklist</config_path>
+                            <can_be_empty>1</can_be_empty>
                         </field>
                         <field id="group_card_payment_methods" translate="label comment tooltip" type="Ingenico\Connect\Data\Form\Element\Toggle" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                             <depends>
@@ -148,11 +175,167 @@
                             <config_path>ingenico_epayments/credit_cards/group_card_payment_methods</config_path>
                         </field>
                     </group>
+                    <group id="ideal" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1">
+                        <depends>
+                            <field id="ingenico_epayments/settings/inline_payments">1</field>
+                        </depends>
+                        <label>iDEAL</label>
+                        <field id="toggle" translate="label" type="Ingenico\Connect\Data\Form\Element\Radioset" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Payments</label>
+                            <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                            <config_path>ingenico_epayments/ideal/toggle</config_path>
+                        </field>
+                        <field id="payment_flow_type" translate="label" type="Ingenico\Connect\Data\Form\Element\Radioset" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Payment flow type</label>
+                            <source_model>Ingenico\Connect\Model\Config\Source\PaymentProductPaymentFlowType</source_model>
+                            <config_path>ingenico_epayments/ideal/payment_flow_type</config_path>
+                        </field>
+                        <field id="price_ranges" translate="label" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Price Ranges</label>
+                            <frontend_model>Ingenico\Connect\Block\Adminhtml\System\Config\Field\PriceRanges</frontend_model>
+                            <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                            <config_path>ingenico_epayments/ideal/price_ranges</config_path>
+                        </field>
+                    </group>
+                    <group id="paypal" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1">
+                        <depends>
+                            <field id="ingenico_epayments/settings/inline_payments">1</field>
+                        </depends>
+                        <label>PayPal</label>
+                        <field id="toggle" translate="label" type="Ingenico\Connect\Data\Form\Element\Radioset" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Payments</label>
+                            <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                            <config_path>ingenico_epayments/paypal/toggle</config_path>
+                        </field>
+                        <field id="price_ranges" translate="label" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Price Ranges</label>
+                            <frontend_model>Ingenico\Connect\Block\Adminhtml\System\Config\Field\PriceRanges</frontend_model>
+                            <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                            <config_path>ingenico_epayments/paypal/price_ranges</config_path>
+                        </field>
+                        <field id="country_blacklist" translate="label" type="multiselect" sortOrder="60" showInDefault="1" showInWebsite="1" canRestore="0">
+                            <label>Blacklisted Countries</label>
+                            <source_model>Ingenico\Connect\Data\Form\Element\Country</source_model>
+                            <config_path>ingenico_epayments/paypal/country_blacklist</config_path>
+                        </field>
+                    </group>
+                    <group id="sofort" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1">
+                        <depends>
+                            <field id="ingenico_epayments/settings/inline_payments">1</field>
+                        </depends>
+                        <label>Sofort</label>
+                        <field id="toggle" translate="label" type="Ingenico\Connect\Data\Form\Element\Radioset" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Payments</label>
+                            <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                            <config_path>ingenico_epayments/sofort/toggle</config_path>
+                        </field>
+                        <field id="price_ranges" translate="label" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Price Ranges</label>
+                            <frontend_model>Ingenico\Connect\Block\Adminhtml\System\Config\Field\PriceRanges</frontend_model>
+                            <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                            <config_path>ingenico_epayments/sofort/price_ranges</config_path>
+                        </field>
+                        <field id="country_blacklist" translate="label" type="multiselect" sortOrder="60" showInDefault="1" showInWebsite="1" canRestore="0">
+                            <label>Blacklisted Countries</label>
+                            <source_model>Ingenico\Connect\Data\Form\Element\Country</source_model>
+                            <config_path>ingenico_epayments/sofort/country_blacklist</config_path>
+                        </field>
+                    </group>
+                    <group id="trustly" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1">
+                        <depends>
+                            <field id="ingenico_epayments/settings/inline_payments">1</field>
+                        </depends>
+                        <label>Trustly</label>
+                        <field id="toggle" translate="label" type="Ingenico\Connect\Data\Form\Element\Radioset" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Payments</label>
+                            <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                            <config_path>ingenico_epayments/trustly/toggle</config_path>
+                        </field>
+                        <field id="payment_flow_type" translate="label" type="Ingenico\Connect\Data\Form\Element\Radioset" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Payment flow type</label>
+                            <source_model>Ingenico\Connect\Model\Config\Source\PaymentProductPaymentFlowType</source_model>
+                            <config_path>ingenico_epayments/trustly/payment_flow_type</config_path>
+                        </field>
+                        <field id="price_ranges" translate="label" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Price Ranges</label>
+                            <frontend_model>Ingenico\Connect\Block\Adminhtml\System\Config\Field\PriceRanges</frontend_model>
+                            <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                            <config_path>ingenico_epayments/trustly/price_ranges</config_path>
+                        </field>
+                        <field id="country_blacklist" translate="label" type="multiselect" sortOrder="60" showInDefault="1" showInWebsite="1" canRestore="0">
+                            <label>Blacklisted Countries</label>
+                            <source_model>Ingenico\Connect\Data\Form\Element\Country</source_model>
+                            <config_path>ingenico_epayments/trustly/country_blacklist</config_path>
+                        </field>
+                    </group>
+                    <group id="giropay" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1">
+                        <depends>
+                            <field id="ingenico_epayments/settings/inline_payments">1</field>
+                        </depends>
+                        <label>GiroPay</label>
+                        <field id="toggle" translate="label" type="Ingenico\Connect\Data\Form\Element\Radioset" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Payments</label>
+                            <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                            <config_path>ingenico_epayments/giropay/toggle</config_path>
+                        </field>
+                        <field id="payment_flow_type" translate="label" type="Ingenico\Connect\Data\Form\Element\Radioset" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Payment flow type</label>
+                            <source_model>Ingenico\Connect\Model\Config\Source\PaymentProductPaymentFlowType</source_model>
+                            <config_path>ingenico_epayments/giropay/payment_flow_type</config_path>
+                        </field>
+                        <field id="price_ranges" translate="label" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Price Ranges</label>
+                            <frontend_model>Ingenico\Connect\Block\Adminhtml\System\Config\Field\PriceRanges</frontend_model>
+                            <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                            <config_path>ingenico_epayments/giropay/price_ranges</config_path>
+                        </field>
+                    </group>
+                    <group id="open_banking" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1">
+                        <depends>
+                            <field id="ingenico_epayments/settings/inline_payments">1</field>
+                        </depends>
+                        <label>Open Banking</label>
+                        <field id="toggle" translate="label" type="Ingenico\Connect\Data\Form\Element\Radioset" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Payments</label>
+                            <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                            <config_path>ingenico_epayments/open_banking/toggle</config_path>
+                        </field>
+                        <field id="price_ranges" translate="label" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Price Ranges</label>
+                            <frontend_model>Ingenico\Connect\Block\Adminhtml\System\Config\Field\PriceRanges</frontend_model>
+                            <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                            <config_path>ingenico_epayments/open_banking/price_ranges</config_path>
+                        </field>
+                        <field id="country_blacklist" translate="label" type="multiselect" sortOrder="60" showInDefault="1" showInWebsite="1" canRestore="0">
+                            <label>Blacklisted Countries</label>
+                            <source_model>Ingenico\Connect\Data\Form\Element\Country</source_model>
+                            <config_path>ingenico_epayments/open_banking/country_blacklist</config_path>
+                        </field>
+                    </group>
+                    <group id="paysafecard" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1">
+                        <depends>
+                            <field id="ingenico_epayments/settings/inline_payments">1</field>
+                        </depends>
+                        <label>PaySafeCard</label>
+                        <field id="toggle" translate="label" type="Ingenico\Connect\Data\Form\Element\Radioset" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Payments</label>
+                            <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                            <config_path>ingenico_epayments/paysafecard/toggle</config_path>
+                        </field>
+                        <field id="price_ranges" translate="label" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Price Ranges</label>
+                            <frontend_model>Ingenico\Connect\Block\Adminhtml\System\Config\Field\PriceRanges</frontend_model>
+                            <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                            <config_path>ingenico_epayments/paysafecard/price_ranges</config_path>
+                        </field>
+                        <field id="country_blacklist" translate="label" type="multiselect" sortOrder="60" showInDefault="1" showInWebsite="1" canRestore="0">
+                            <label>Blacklisted Countries</label>
+                            <source_model>Ingenico\Connect\Data\Form\Element\Country</source_model>
+                            <config_path>ingenico_epayments/paysafecard/country_blacklist</config_path>
+                        </field>
+                    </group>
                     <group id="token_and_mandate" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1">
                         <label>Token &amp; Mandate</label>
-                    </group>
-                    <group id="paypal" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1">
-                        <label>Paypal</label>
                     </group>
                 </group>
                 <group id="order_processing" translate="label" type="text" sortOrder="220" showInDefault="1" showInWebsite="1">

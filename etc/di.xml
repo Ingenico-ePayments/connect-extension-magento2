@@ -26,6 +26,36 @@
     <preference for="Ingenico\Connect\Api\PaymentManagementInterface" type="Ingenico\Connect\Model\Ingenico\Action\Payment\PaymentManagement"/>
     <preference for="Ingenico\Connect\Api\FrontendLoggerInterface" type="Ingenico\Connect\Logger\FrontendLogger"/>
 
+    <virtualType name="IngenicoCreditCardVaultFacade" type="Ingenico\Connect\Model\Method\Vault">
+        <arguments>
+            <argument name="code" xsi:type="const">Ingenico\Connect\Model\ConfigProvider::CODE_CC_VAULT</argument>
+            <argument name="vaultProvider" xsi:type="object">IngenicoFacade</argument>
+            <argument name="config" xsi:type="object">Ingenico\Connect\Gateway\Config\Config</argument>
+            <argument name="valueHandlerPool" xsi:type="object">IngenicoAdminTokenPaymentValueHandlerPool</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoAdminTokenPaymentValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">IngenicoAdminTokenPaymentValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoAdminTokenPaymentValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">Ingenico\AdminTokenPayment\Gateway\Config\Config</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Ingenico\AdminTokenPayment\Gateway\Config\Config" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="string">ingenico_cc_vault</argument>
+            <argument name="pathPattern" xsi:type="string">%s/general/%s</argument>
+        </arguments>
+    </virtualType>
+
     <!-- Payment method set up via Magento 2 Payment Gateway API -->
     <virtualType name="IngenicoFacade" type="Magento\Payment\Model\Method\Adapter">
         <arguments>
@@ -79,6 +109,20 @@
         </arguments>
     </virtualType>
 
+    <type name="Magento\Payment\Gateway\Command\CommandManagerPool">
+        <arguments>
+            <argument name="executors" xsi:type="array">
+                <item name="ingenico" xsi:type="string">IngenicoCommandManager</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="IngenicoCommandManager" type="Magento\Payment\Gateway\Command\CommandManager">
+        <arguments>
+            <argument name="commandPool" xsi:type="object">IngenicoCommandPool</argument>
+        </arguments>
+    </virtualType>
+
     <!-- Payment command pool set up -->
     <virtualType name="IngenicoCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
@@ -91,6 +135,8 @@
                 <item name="deny_payment" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoDenyPaymentCommand</item>
                 <item name="initialize" xsi:type="string">Ingenico\Connect\Gateway\Command\Initialize</item>
                 <item name="authorize" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoAuthorizeCommand</item>
+                <item name="vault_authorize" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoVaultAuthorizeCommand</item>
+                <item name="vault_sale" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoVaultSaleCommand</item>
             </argument>
         </arguments>
     </virtualType>

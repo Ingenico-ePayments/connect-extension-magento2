@@ -2,18 +2,29 @@
 
 namespace Ingenico\Connect\Model\Ingenico\Action;
 
+use DateTime;
+use Ingenico\Connect\Model\Config;
+use Ingenico\Connect\Model\ConfigInterface;
+use Ingenico\Connect\Model\ConfigProvider;
+use Ingenico\Connect\Model\Ingenico\Action\MerchantAction;
+use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
+use Ingenico\Connect\Model\Ingenico\RequestBuilder\CreatePayment\RequestBuilder;
+use Ingenico\Connect\Model\Ingenico\Status\Payment\ResolverInterface;
 use Ingenico\Connect\Sdk\Domain\Payment\CreatePaymentResponse;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment;
-use Ingenico\Connect\Model\Config;
-use Ingenico\Connect\Model\ConfigInterface;
-use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
-use Ingenico\Connect\Model\Ingenico\RequestBuilder\CreatePayment\RequestBuilder;
-use Ingenico\Connect\Model\Ingenico\Status\Payment\ResolverInterface;
-use Ingenico\Connect\Model\Ingenico\Token\TokenServiceInterface;
+use Magento\Vault\Api\Data\PaymentTokenFactoryInterface;
+use Magento\Vault\Api\PaymentTokenManagementInterface;
+use Magento\Vault\Model\PaymentTokenFactory;
+use Magento\Vault\Model\Ui\VaultConfigProvider;
 use Psr\Log\LoggerInterface;
+
+use function array_filter;
+use function explode;
+use function json_encode;
+use function substr;
 
 /**
  * The CreatePayment action is used for orders that have an encrypted client payload
@@ -23,6 +34,21 @@ use Psr\Log\LoggerInterface;
  */
 class CreatePayment implements ActionInterface
 {
+    private const MAP = [
+        2 => 'AE',
+        146 => 'AU',
+        132 => 'DN',
+        128 => 'DI',
+        163 => 'HC',
+        125 => 'JCB',
+        117 => 'SM',
+        3 => 'MC',
+        119 => 'MC',
+        1 => 'VI',
+        114 => 'VI',
+        122 => 'VI',
+    ];
+
     /**
      * @var ClientInterface
      */
@@ -44,11 +70,6 @@ class CreatePayment implements ActionInterface
     private $merchantAction;
 
     /**
-     * @var TokenServiceInterface
-     */
-    private $tokenService;
-
-    /**
      * @var OrderRepositoryInterface
      */
     private $orderRepository;
@@ -62,6 +83,14 @@ class CreatePayment implements ActionInterface
      * @var LoggerInterface
      */
     private $logger;
+    /**
+     * @var PaymentTokenFactory
+     */
+    private $paymentTokenFactory;
+    /**
+     * @var PaymentTokenManagementInterface
+     */
+    private $paymentTokenManagement;
 
     /**
      * CreatePayment constructor.
@@ -70,7 +99,6 @@ class CreatePayment implements ActionInterface
      * @param RequestBuilder $requestBuilder
      * @param ResolverInterface $resolver
      * @param MerchantAction $merchantAction
-     * @param TokenServiceInterface $tokenService
      * @param ConfigInterface $config
      * @param OrderRepositoryInterface $orderRepository
      * @param Order\Email\Sender\OrderSender $orderSender
@@ -81,7 +109,8 @@ class CreatePayment implements ActionInterface
         RequestBuilder $requestBuilder,
         ResolverInterface $resolver,
         MerchantAction $merchantAction,
-        TokenServiceInterface $tokenService,
+        PaymentTokenFactory $paymentTokenFactory,
+        PaymentTokenManagementInterface $paymentTokenManagement,
         OrderRepositoryInterface $orderRepository,
         Order\Email\Sender\OrderSender $orderSender,
         LoggerInterface $logger
@@ -90,7 +119,8 @@ class CreatePayment implements ActionInterface
         $this->requestBuilder = $requestBuilder;
         $this->statusResolver = $resolver;
         $this->merchantAction = $merchantAction;
-        $this->tokenService = $tokenService;
+        $this->paymentTokenFactory = $paymentTokenFactory;
+        $this->paymentTokenManagement = $paymentTokenManagement;
         $this->orderRepository = $orderRepository;
         $this->orderSender = $orderSender;
         $this->logger = $logger;
@@ -132,11 +162,28 @@ class CreatePayment implements ActionInterface
         Order $order,
         CreatePaymentResponse $response
     ) {
-        if ($order->getCustomerId() && $response->creationOutput && $response->creationOutput->token) {
+        $customerId = $order->getCustomerId();
+        if ($customerId && $response->creationOutput && $response->creationOutput->token) {
             $tokens = array_filter(explode(',', $response->creationOutput->token));
-            $productId = $order->getPayment()->getAdditionalInformation(Config::PRODUCT_ID_KEY);
             foreach ($tokens as $token) {
-                $this->tokenService->add($order->getCustomerId(), $productId, $token);
+                $paymentToken = $this->paymentTokenManagement->getByGatewayToken(
+                    $token,
+                    ConfigProvider::CODE,
+                    $customerId
+                );
+                if ($paymentToken !== null) {
+                    continue;
+                }
+
+                $paymentToken = $this->buildPaymentToken($response, $token);
+                if ($paymentToken === null) {
+                    continue;
+                }
+
+                $orderPayment = $order->getPayment();
+
+                $orderPayment->setAdditionalInformation(VaultConfigProvider::IS_ACTIVE_CODE, 1);
+                $orderPayment->getExtensionAttributes()->setVaultPaymentToken($paymentToken);
             }
         }
     }
@@ -170,5 +217,32 @@ class CreatePayment implements ActionInterface
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }
+    }
+
+    /**
+     * @param CreatePaymentResponse $response
+     * @param $token
+     * @return \Magento\Vault\Api\Data\PaymentTokenInterface
+     */
+    private function buildPaymentToken(CreatePaymentResponse $response, $token)
+    {
+        $cardPaymentMethodSpecificOutput = $response->payment->paymentOutput->cardPaymentMethodSpecificOutput;
+        if ($cardPaymentMethodSpecificOutput === null) {
+            return null;
+        }
+
+        $paymentProductId = $cardPaymentMethodSpecificOutput->paymentProductId;
+        $card = $cardPaymentMethodSpecificOutput->card;
+
+        $paymentToken = $this->paymentTokenFactory->create(PaymentTokenFactoryInterface::TOKEN_TYPE_CREDIT_CARD);
+        $paymentToken->setExpiresAt((DateTime::createFromFormat('my', $card->expiryDate))->format('Y-m-1 00:00:00'));
+        $paymentToken->setGatewayToken($token);
+        $paymentToken->setTokenDetails(json_encode([
+            'card' => substr($card->cardNumber, -4),
+            'expiry' => (DateTime::createFromFormat('my', $card->expiryDate))->format('m/y'),
+            'type' => self::MAP[$paymentProductId] ?: null,
+        ]));
+
+        return $paymentToken;
     }
 }

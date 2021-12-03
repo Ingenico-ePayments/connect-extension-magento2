@@ -21,7 +21,7 @@ class PendingFraudApproval extends AbstractHandler implements HandlerInterface
     /**
      * @var ConfigInterface
      */
-    private $epaymentsConfig;
+    private $config;
 
     /**
      * PendingFraudApproval constructor.
@@ -34,7 +34,7 @@ class PendingFraudApproval extends AbstractHandler implements HandlerInterface
         ManagerInterface $eventManager
     ) {
         parent::__construct($eventManager);
-        $this->epaymentsConfig = $epaymentsConfig;
+        $this->config = $epaymentsConfig;
     }
 
     /**
@@ -68,18 +68,20 @@ class PendingFraudApproval extends AbstractHandler implements HandlerInterface
     }
 
     /**
-     * Perform payment action registration on payment object depending on config settings
+     * Perform payment action registration on payment object depending on config settings.
+     * Client payload key is only set when inline checkout is configured for a specific payment product.
      *
      * @param OrderInterface $order
      * @param $amount
      */
     private function registerPaymentNotification(OrderInterface $order, $amount)
     {
+        $storeId = $order->getStoreId();
         /** @var Payment $payment */
         $payment = $order->getPayment();
-        $checkoutType = $this->epaymentsConfig->getCheckoutType($order->getStoreId());
-        $captureMode = $this->epaymentsConfig->getCaptureMode($order->getStoreId());
-        if ($checkoutType !== Config::CONFIG_INGENICO_CHECKOUT_TYPE_INLINE) {
+        $captureMode = $this->config->getCaptureMode($storeId);
+
+        if (!$payment->getAdditionalInformation(Config::CLIENT_PAYLOAD_KEY)) {
             /**
              * Only register something, if we have some sort of hosted checkout, otherwise we are in inline flow
              * and Magento will handle the workflow itself.

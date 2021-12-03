@@ -86,7 +86,7 @@ class GetInlinePaymentStatus extends AbstractAction implements ActionInterface
     {
         $response = $this->ingenicoClient
             ->getIngenicoClient()
-            ->merchant($this->ePaymentsConfig->getMerchantId())
+            ->merchant($this->config->getMerchantId())
             ->payments()
             ->get($referenceId);
 

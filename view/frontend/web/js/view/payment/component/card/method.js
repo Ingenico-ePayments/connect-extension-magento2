@@ -77,7 +77,7 @@ define([
 
             layouts.push(generateProductComponent.call(this, identifier, description, this.product, account));
             layouts.push(generateProductFields.call(this, identifier, this.product, account));
-            if (!config.useInlinePayments()) {
+            if (!config.useInlinePayments(paymentData.getCurrentPaymentProduct())) {
                 layouts.push(generateProductTooltips.call(this, identifier, this.product));
             }
 

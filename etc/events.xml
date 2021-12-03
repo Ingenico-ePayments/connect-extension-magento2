@@ -59,4 +59,7 @@
     <event name="ingenico_connect_refund_refund_requested">
         <observer name="add_order_comment" instance="Ingenico\Connect\Observer\Refund\AddOrderCommentObserver"/>
     </event>
+    <event name="restore_quote">
+        <observer name="magento_customerbalance" disabled="true"/>
+    </event>
 </config>

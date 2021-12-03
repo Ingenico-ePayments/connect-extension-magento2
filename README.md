@@ -43,11 +43,10 @@ To install the module, run the following command:
         * Enabled = Yes 
         * Title = _(Enter your preferred name to display in the checkout)_
     * Account Settings section:
-        * API Endpoint and API Endpoint (Secondary) according to <https://epayments-api.developer-ingenico.com/s2sapi/v1/en_US/php/endpoints.html>
+        * API Endpoint according to <https://epayments-api.developer-ingenico.com/s2sapi/v1/en_US/php/endpoints.html>
         * API Key = **Configuration Center provides the value**
         * API Secret = **Configuration Center provides the value**
         * MID (Merchant ID) = **Configuration Center provides the value**
-        * Hosted Checkout Subdomain = can be configured on Configuration Center. By default it is: **'https://payment.'**
     * Webhook Settings section:
         * Webhooks Key ID = **Configuration Center provides the value**
         * Webhooks Secret Key = **Configuration Center provides the value**
@@ -93,5 +92,5 @@ Please refer to the included [LICENSE.txt](LICENSE.txt) file.
 
 ## Copyright
 
-(c) 2019 Ingenico eCommerce Solutions Bvba
+(c) 2021 Ingenico eCommerce Solutions Bvba
 

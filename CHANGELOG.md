@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 2.6.0 - 2021-12-03
+
+- Introduce Optimized Payment Flow: only redirect customer to hosted checkout when the payment requires additional information.
+- Integrate with the Magento token vault: allow users to manage the tokens they created in their account. Allow admins to use these tokens for orders created in the admin.
+- Fixes rendering of checkout when only cards are enabled. 
+
 ## 2.5.0 - 2021-08-26
 
 - Fixes issue where non-valid state codes where sent to the Ingenico API.

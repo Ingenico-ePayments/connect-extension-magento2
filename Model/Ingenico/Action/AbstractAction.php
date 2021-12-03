@@ -29,7 +29,7 @@ abstract class AbstractAction
     /**
      * @var ConfigInterface
      */
-    protected $ePaymentsConfig;
+    protected $config;
 
     /**
      * AbstractAction constructor.
@@ -48,7 +48,7 @@ abstract class AbstractAction
         $this->statusResponseManager = $statusResponseManager;
         $this->ingenicoClient = $ingenicoClient;
         $this->transactionManager = $transactionManager;
-        $this->ePaymentsConfig = $config;
+        $this->config = $config;
     }
 
     /**

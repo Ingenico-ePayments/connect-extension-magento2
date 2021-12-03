@@ -2,20 +2,55 @@
 
 namespace Ingenico\Connect\Model;
 
+use JsonException;
 use Ingenico\Connect\Helper\MetaData;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Store\Model\ScopeInterface;
 
+use function json_decode;
+
 class Config implements ConfigInterface
 {
     const CONFIG_INGENICO_ACTIVE = 'ingenico_epayments/general/active';
 
+    const CONFIG_INGENICO_PAYMENT_PRODUCT_DISABLED = '0';
+    const CONFIG_INGENICO_PAYMENT_PRODUCT_ENABLED = '1';
+    const CONFIG_INGENICO_CREDIT_CARDS_TOGGLE = 'ingenico_epayments/credit_cards/toggle';
+    const CONFIG_INGENICO_IDEAL_TOGGLE = 'ingenico_epayments/ideal/toggle';
+    const CONFIG_INGENICO_PAYPAL_TOGGLE = 'ingenico_epayments/paypal/toggle';
+    const CONFIG_INGENICO_SOFORT_TOGGLE = 'ingenico_epayments/sofort/toggle';
+    const CONFIG_INGENICO_TRUSTLY_TOGGLE = 'ingenico_epayments/trustly/toggle';
+    const CONFIG_INGENICO_GIROPAY_TOGGLE = 'ingenico_epayments/giropay/toggle';
+    const CONFIG_INGENICO_OPEN_BANKING_TOGGLE = 'ingenico_epayments/open_banking/toggle';
+    const CONFIG_INGENICO_PAYSAFECARD_TOGGLE = 'ingenico_epayments/paysafecard/toggle';
+
     const CONFIG_INGENICO_CHECKOUT_TYPE_HOSTED_CHECKOUT = '0';
-    const CONFIG_INGENICO_CHECKOUT_TYPE_INLINE = '1';
-    const CONFIG_INGENICO_CHECKOUT_TYPE_REDIRECT = '2';
+    const CONFIG_INGENICO_CHECKOUT_TYPE_OPTIMIZED_FLOW = '1';
     const CONFIG_INGENICO_CHECKOUT_TYPE = 'ingenico_epayments/checkout/inline_payments';
+    const CONFIG_INGENICO_CHECKOUT_TYPE_INLINE = '0';
+    const CONFIG_INGENICO_CHECKOUT_TYPE_REDIRECT = '1';
+    const CONFIG_INGENICO_CREDIT_CARDS_PAYMENT_FLOW_TYPE = 'ingenico_epayments/credit_cards/payment_flow_type';
+    const CONFIG_INGENICO_IDEAL_PAYMENT_FLOW_TYPE = 'ingenico_epayments/ideal/payment_flow_type';
+    const CONFIG_INGENICO_TRUSTLY_PAYMENT_FLOW_TYPE = 'ingenico_epayments/trustly/payment_flow_type';
+    const CONFIG_INGENICO_GIROPAY_PAYMENT_FLOW_TYPE = 'ingenico_epayments/giropay/payment_flow_type';
+
+    const CONFIG_INGENICO_CREDIT_CARDS_PRICE_RANGES = 'ingenico_epayments/credit_cards/price_ranges';
+    const CONFIG_INGENICO_IDEAL_PRICE_RANGES = 'ingenico_epayments/ideal/price_ranges';
+    const CONFIG_INGENICO_PAYPAL_PRICE_RANGES = 'ingenico_epayments/paypal/price_ranges';
+    const CONFIG_INGENICO_SOFORT_PRICE_RANGES = 'ingenico_epayments/sofort/price_ranges';
+    const CONFIG_INGENICO_TRUSTLY_PRICE_RANGES = 'ingenico_epayments/trustly/price_ranges';
+    const CONFIG_INGENICO_GIROPAY_PRICE_RANGES = 'ingenico_epayments/giropay/price_ranges';
+    const CONFIG_INGENICO_OPEN_BANKING_PRICE_RANGES = 'ingenico_epayments/open_banking/price_ranges';
+    const CONFIG_INGENICO_PAYSAFECARD_PRICE_RANGES = 'ingenico_epayments/paysafecard/price_ranges';
+
+    const CONFIG_INGENICO_CREDIT_CARDS_COUNTRY_BLACKLIST = 'ingenico_epayments/credit_cards/country_blacklist';
+    const CONFIG_INGENICO_PAYPAL_COUNTRY_BLACKLIST = 'ingenico_epayments/paypal/country_blacklist';
+    const CONFIG_INGENICO_SOFORT_COUNTRY_BLACKLIST = 'ingenico_epayments/sofort/country_blacklist';
+    const CONFIG_INGENICO_TRUSTLY_COUNTRY_BLACKLIST = 'ingenico_epayments/trustly/country_blacklist';
+    const CONFIG_INGENICO_OPEN_BANKING_COUNTRY_BLACKLIST = 'ingenico_epayments/open_banking/country_blacklist';
+    const CONFIG_INGENICO_PAYSAFECARD_COUNTRY_BLACKLIST = 'ingenico_epayments/paysafecard/country_blacklist';
 
     const CONFIG_INGENICO_API_ENDPOINT = 'ingenico_epayments/settings/api_endpoint';
     const CONFIG_INGENICO_WEBHOOKS_KEY_ID = 'ingenico_epayments/webhook/webhooks_key_id';
@@ -63,6 +98,37 @@ class Config implements ConfigInterface
     const HOSTED_CHECKOUT_ID_KEY = 'ingenico_hosted_checkout_id';
     const RETURNMAC_KEY = 'ingenico_returnmac';
     const IDEMPOTENCE_KEY = 'ingenico_idempotence_key';
+
+    const CONFIGURABLE_TOGGLE_PAYMENT_PRODUCTS = [
+        'cards' => Config::CONFIG_INGENICO_CREDIT_CARDS_TOGGLE,
+        806 => Config::CONFIG_INGENICO_TRUSTLY_TOGGLE,
+        809 => Config::CONFIG_INGENICO_IDEAL_TOGGLE,
+        816 => Config::CONFIG_INGENICO_GIROPAY_TOGGLE,
+        830 => Config::CONFIG_INGENICO_PAYSAFECARD_TOGGLE,
+        836 => Config::CONFIG_INGENICO_SOFORT_TOGGLE,
+        840 => Config::CONFIG_INGENICO_PAYPAL_TOGGLE,
+        865 => Config::CONFIG_INGENICO_OPEN_BANKING_TOGGLE,
+    ];
+
+    const CONFIGURABLE_PRICE_RANGE_PAYMENT_PRODUCTS = [
+        'cards' => Config::CONFIG_INGENICO_CREDIT_CARDS_PRICE_RANGES,
+        806 => Config::CONFIG_INGENICO_TRUSTLY_PRICE_RANGES,
+        809 => Config::CONFIG_INGENICO_IDEAL_PRICE_RANGES,
+        816 => Config::CONFIG_INGENICO_GIROPAY_PRICE_RANGES,
+        830 => Config::CONFIG_INGENICO_PAYSAFECARD_PRICE_RANGES,
+        836 => Config::CONFIG_INGENICO_SOFORT_PRICE_RANGES,
+        840 => Config::CONFIG_INGENICO_PAYPAL_PRICE_RANGES,
+        865 => Config::CONFIG_INGENICO_OPEN_BANKING_PRICE_RANGES,
+    ];
+
+    const CONFIGURABLE_COUNTRY_BLACKLIST_PAYMENT_PRODUCTS = [
+        'cards' => Config::CONFIG_INGENICO_CREDIT_CARDS_COUNTRY_BLACKLIST,
+        806 => Config::CONFIG_INGENICO_TRUSTLY_COUNTRY_BLACKLIST,
+        830 => Config::CONFIG_INGENICO_PAYSAFECARD_COUNTRY_BLACKLIST,
+        836 => Config::CONFIG_INGENICO_SOFORT_COUNTRY_BLACKLIST,
+        840 => Config::CONFIG_INGENICO_PAYPAL_COUNTRY_BLACKLIST,
+        865 => Config::CONFIG_INGENICO_OPEN_BANKING_COUNTRY_BLACKLIST,
+    ];
 
     /**
      * @var ScopeConfigInterface
@@ -148,12 +214,144 @@ class Config implements ConfigInterface
     }
 
     /**
+     * @param string $configPath
+     * @param int|null $storeId
+     * @return string
+     */
+    public function getPaymentProductCheckoutType(string $configPath, ?int $storeId = null)
+    {
+        return $this->getValue($configPath, $storeId) ===
+        self::CONFIG_INGENICO_CHECKOUT_TYPE_INLINE ?
+            self::CONFIG_INGENICO_CHECKOUT_TYPE_INLINE :
+            self::CONFIG_INGENICO_CHECKOUT_TYPE_REDIRECT;
+    }
+
+    /**
+     * @param string $paymentProductId
+     * @param int|null $storeId
+     * @return string
+     */
+    public function isPaymentProductEnabled(string $paymentProductId, ?int $storeId = null)
+    {
+        if (!array_key_exists($paymentProductId, self::CONFIGURABLE_TOGGLE_PAYMENT_PRODUCTS)) {
+            return true;
+        }
+        return $this->getValue(self::CONFIGURABLE_TOGGLE_PAYMENT_PRODUCTS[$paymentProductId], $storeId) ===
+        self::CONFIG_INGENICO_PAYMENT_PRODUCT_ENABLED ?
+            self::CONFIG_INGENICO_PAYMENT_PRODUCT_ENABLED :
+            self::CONFIG_INGENICO_PAYMENT_PRODUCT_DISABLED;
+    }
+
+    /**
+     * @inheritDoc
+     * @throws JsonException
+     */
+    public function getPaymentProductPriceRanges(string $paymentProductId, ?int $storeId = null): array
+    {
+        if (!array_key_exists($paymentProductId, self::CONFIGURABLE_PRICE_RANGE_PAYMENT_PRODUCTS)) {
+            return [];
+        }
+        return $this->formatPaymentProductPriceRanges($paymentProductId, $storeId);
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function isPriceInPaymentProductPriceRange(
+        float $orderPrice,
+        string $currencyCode,
+        string $paymentProductId,
+        ?int $storeId = null
+    ): bool {
+        if (!array_key_exists($paymentProductId, self::CONFIGURABLE_PRICE_RANGE_PAYMENT_PRODUCTS)) {
+            return true;
+        }
+        $productPriceRanges = $this->formatPaymentProductPriceRanges($paymentProductId, $storeId);
+        if (empty($productPriceRanges) || !array_key_exists($currencyCode, $productPriceRanges)) {
+            return true;
+        }
+        if ((array_key_exists('min', $productPriceRanges[$currencyCode]) &&
+                $productPriceRanges[$currencyCode]['min'] > $orderPrice) ||
+            (array_key_exists('max', $productPriceRanges[$currencyCode]) &&
+                $productPriceRanges[$currencyCode]['max'] < $orderPrice)
+        ) {
+            return false;
+        }
+        return true;
+    }
+
+    private function formatPaymentProductPriceRanges(string $paymentProductId, ?int $storeId = null): array
+    {
+        $formattedPaymentProductPriceRanges = [];
+        $paymentProductPriceRanges = json_decode($this->getValue(
+            self::CONFIGURABLE_PRICE_RANGE_PAYMENT_PRODUCTS[$paymentProductId],
+            $storeId
+        ));
+        if ($paymentProductPriceRanges === false) {
+            throw new JsonException('Unable to decode payment product price range JSON.');
+        }
+        foreach ((array) $paymentProductPriceRanges as $priceRange) {
+            $priceRange = (array) $priceRange;
+            $formattedPriceRange = [];
+            if (!array_key_exists('minimum', $priceRange) || !array_key_exists('maximum', $priceRange)) {
+                throw new JsonException('Payment product price range JSON malformed.');
+            }
+            if ($priceRange['minimum'] === '' && $priceRange['maximum'] === '') {
+                continue;
+            }
+            if ($priceRange['minimum'] !== '') {
+                $formattedPriceRange['min'] = (float) str_replace(',', '.', $priceRange['minimum']);
+            }
+            if ($priceRange['maximum'] !== '') {
+                $formattedPriceRange['max'] = (float) str_replace(',', '.', $priceRange['maximum']);
+            }
+            $formattedPaymentProductPriceRanges[$priceRange['currency']] = $formattedPriceRange;
+        }
+        return $formattedPaymentProductPriceRanges;
+    }
+
+    public function getPaymentProductCountryRestrictions(string $paymentProductId, ?int $storeId = null): array
+    {
+        if (!array_key_exists($paymentProductId, self::CONFIGURABLE_COUNTRY_BLACKLIST_PAYMENT_PRODUCTS)) {
+            return [];
+        }
+        return $this->formatPaymentProductCountryRestrictions($paymentProductId, $storeId);
+    }
+
+    public function isPaymentProductCountryRestricted(
+        string $countryCode,
+        string $paymentProductId,
+        ?int $storeId = null
+    ): bool {
+        if (!array_key_exists($paymentProductId, self::CONFIGURABLE_COUNTRY_BLACKLIST_PAYMENT_PRODUCTS)) {
+            return false;
+        }
+        $countryRestrictions = $this->formatPaymentProductCountryRestrictions($paymentProductId, $storeId);
+        return in_array($countryCode, $countryRestrictions);
+    }
+
+    private function formatPaymentProductCountryRestrictions(string $paymentProductId, ?int $storeId = null): array
+    {
+        $countryRestrictionsString = $this->getValue(
+            self::CONFIGURABLE_COUNTRY_BLACKLIST_PAYMENT_PRODUCTS[$paymentProductId],
+            $storeId
+        );
+        if ($countryRestrictionsString === null) {
+            return [];
+        }
+        return explode(',', $countryRestrictionsString);
+    }
+
+    /**
      * @param int|null $storeId
      * @return string
      */
     public function getCheckoutType($storeId = null)
     {
-        return $this->getValue(self::CONFIG_INGENICO_CHECKOUT_TYPE, $storeId);
+        return $this->getValue(self::CONFIG_INGENICO_CHECKOUT_TYPE, $storeId) ===
+        self::CONFIG_INGENICO_CHECKOUT_TYPE_HOSTED_CHECKOUT ?
+            self::CONFIG_INGENICO_CHECKOUT_TYPE_HOSTED_CHECKOUT :
+            self::CONFIG_INGENICO_CHECKOUT_TYPE_OPTIMIZED_FLOW;
     }
 
     /**

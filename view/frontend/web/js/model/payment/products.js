@@ -6,8 +6,9 @@ define([
     'Ingenico_Connect/js/action/get-payment-product',
     'Ingenico_Connect/js/action/get-card-payment-group',
     'Ingenico_Connect/js/model/payment/config',
-    'ko'
-], function (fetchPaymentProducts, fetchPaymentProduct, fetchCardPaymentGroup, config, ko) {
+    'ko',
+    'Magento_Checkout/js/model/quote'
+], function (fetchPaymentProducts, fetchPaymentProduct, fetchCardPaymentGroup, config, ko, quote) {
     'use strict';
 
     let basicPaymentProducts = ko.observableArray([]).extend({
@@ -25,12 +26,6 @@ define([
         return a.displayHints.sortOrder - b.displayHints.sortOrder
     };
 
-    // These product ID's are not allowed in RPP:
-    let disallowedProductIds = [302, 320, 770, 730, 705, 201];
-    let disallowProductByIdFilter = function (paymentProduct) {
-        return disallowedProductIds.indexOf(paymentProduct.id) === -1;
-    };
-
     return {
         isLoading: isLoading,
         basicPaymentProducts: basicPaymentProducts,
@@ -45,14 +40,6 @@ define([
             isLoading(true);
             Promise.all([fetchPaymentProducts(), fetchCardPaymentGroup()]).then(responses => {
                 const paymentProductsResponse = responses[0];
-
-                if (!config.useInlinePayments()) {
-                    paymentProductsResponse.basicPaymentProducts = paymentProductsResponse.basicPaymentProducts.filter(disallowProductByIdFilter);
-                    disallowedProductIds.forEach(function (id) {
-                        delete paymentProductsResponse.basicPaymentProductById[id];
-                    });
-                }
-
                 if (config.groupCardPaymentMethods()) {
                     const cardPaymentMethodIds = [];
                     paymentProductsResponse.basicPaymentProducts.forEach(function (paymentProduct) {
@@ -78,7 +65,17 @@ define([
 
                 cardGroupPaymentMethod(responses[1]);
                 productsResponse(paymentProductsResponse);
-                accountsOnFile(paymentProductsResponse.accountsOnFile);
+                let cardsPaymentProduct = {id:'cards'};
+                if (config.isPaymentProductEnabled(cardsPaymentProduct) &&
+                    config.isPriceWithinPaymentProductPriceRange(
+                        cardsPaymentProduct,
+                        Math.round(parseFloat(quote.getTotals()()['base_grand_total']).toFixed(2) * 100) / 100,
+                        quote.getTotals()()['base_currency_code']
+                    ) &&
+                    !config.isPaymentProductCountryRestricted(cardsPaymentProduct, quote.billingAddress().countryId)
+                ) {
+                    accountsOnFile(paymentProductsResponse.accountsOnFile);
+                }
                 basicPaymentProducts(paymentProductsResponse.basicPaymentProducts.sort(sortFunction));
 
                 isLoading(false);

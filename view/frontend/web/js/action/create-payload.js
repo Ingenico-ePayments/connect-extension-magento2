@@ -21,12 +21,6 @@ define([
             window.checkoutConfig.isPaymentAccountOnFile = true;
             delete data['accountOnFile'];
         }
-        /**
-         * If there is no special payload data, don't create a payload.
-         */
-        if (Object.keys(data).length === 0) {
-            return Promise.resolve(false);
-        }
         for (let key in data) {
             request.setValue(key, data[key]);
         }

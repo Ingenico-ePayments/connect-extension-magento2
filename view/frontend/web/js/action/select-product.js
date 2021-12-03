@@ -12,14 +12,15 @@ define([
     let activeFieldsCollection = {};
     let activeTooltipsCollection = {};
 
-    let updatePaymentProduct = function () {
+    let updatePaymentProduct = async function () {
         if (activeFieldsCollection.product.id === 'cards') {
             paymentData.setCurrentPaymentProduct(activeFieldsCollection.product);
             return;
         }
 
-        fetchProduct(activeFieldsCollection.product.id).then(function (fullProduct) {
+        await fetchProduct(activeFieldsCollection.product.id).then(function (fullProduct) {
             paymentData.setCurrentPaymentProduct(fullProduct);
+            hideActiveFieldsCollection();
         });
     };
 
@@ -52,15 +53,20 @@ define([
         }
     };
 
-    let toggleActiveFieldsCollection = function () {
+    let hideActiveFieldsCollection = function () {
         let fieldsCollections = registry.filter(
             'component = ' + fieldsComponentName
         );
         for (let fieldsCollection of fieldsCollections) {
             fieldsCollection.fieldsVisiblity(false);
         }
+    }
 
-        activeFieldsCollection.initFields();
+    let toggleActiveFieldsCollection = function () {
+        hideActiveFieldsCollection();
+        if (activeFieldsCollection) {
+            activeFieldsCollection.initFields();
+        }
     };
 
     let toggleActiveTooltipsCollection = function () {
@@ -70,17 +76,18 @@ define([
         for (let tooltipsCollection of tooltipsCollections) {
             tooltipsCollection.fieldsVisiblity(false);
         }
-
-        activeTooltipsCollection.initTooltips();
+        if (activeTooltipsCollection) {
+            activeTooltipsCollection.initTooltips();
+        }
     };
 
-    return function (productIdentifier) {
+    return async function (productIdentifier) {
         activeFieldsCollection = registry.get(
             'component = ' + fieldsComponentName + ',' +
             'uid = ' + productIdentifier
         );
-        updatePaymentProduct();
-        if (config.useInlinePayments()) {
+        await updatePaymentProduct();
+        if (config.useInlinePayments(paymentData.getCurrentPaymentProduct())) {
             updatePaymentData();
             toggleActiveFieldsCollection();
         } else {

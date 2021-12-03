@@ -45,6 +45,20 @@ interface ConfigInterface
     public function getApiEndpoint($storeId = null);
 
     /**
+     * @param string $configPath
+     * @param int|null $storeId
+     * @return string
+     */
+    public function getPaymentProductCheckoutType(string $configPath, ?int $storeId = null);
+
+    /**
+     * @param string $paymentProductId
+     * @param int|null $storeId
+     * @return string
+     */
+    public function isPaymentProductEnabled(string $paymentProductId, ?int $storeId = null);
+
+    /**
      * @param int|null $storeId
      * @return string
      */
@@ -210,4 +224,21 @@ interface ConfigInterface
      * @return bool
      */
     public function allowOfflineRefunds(): bool;
+
+    public function getPaymentProductPriceRanges(string $paymentProductId, ?int $storeId = null): array;
+
+    public function isPriceInPaymentProductPriceRange(
+        float $orderPrice,
+        string $currencyCode,
+        string $paymentProductId,
+        ?int $storeId = null
+    ): bool;
+
+    public function getPaymentProductCountryRestrictions(string $paymentProductId, ?int $storeId = null): array;
+
+    public function isPaymentProductCountryRestricted(
+        string $countryCode,
+        string $paymentProductId,
+        ?int $storeId = null
+    ): bool;
 }

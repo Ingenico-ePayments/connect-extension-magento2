@@ -19,10 +19,6 @@ define([
          * Regenerate product groups according to the global product list
          */
         reload: function () {
-            if (productList.basicPaymentProducts().length === 0) {
-                return;
-            }
-
             productList.isLoading(true);
 
             let groupsMap = new Map();
@@ -30,7 +26,7 @@ define([
             /**
              * Add token group
              */
-            if (config.useInlinePayments() && productList.accountsOnFile().length > 0) {
+            if (!config.useFullRedirect() && productList.accountsOnFile().length > 0) {
                 groupsMap.set('token', {
                     'id': 'token',
                     'products': [],

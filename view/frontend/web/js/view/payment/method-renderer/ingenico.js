@@ -88,7 +88,7 @@ define(
 
                     id = currentPaymentMethodProduct.id;
                     label = currentPaymentMethodProduct.displayHints.label;
-                    paymentMethod = currentPaymentMethodProduct.paymentMethod;
+                    paymentMethod = (id === 'cards') ? 'card' : currentPaymentMethodProduct.paymentMethod;
                 }
 
                 return {
@@ -119,8 +119,7 @@ define(
                 if (!this.validate()) {
                     return false;
                 }
-
-                if (config.useInlinePayments()) {
+                if (this.config.useInlinePayments(paymentData.getCurrentPaymentProduct())) {
                     this.createPayload().then(function () {
                         parentMethod(data, event);
                     }, function (error) {

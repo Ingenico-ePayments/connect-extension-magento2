@@ -48,7 +48,7 @@ class RequestBuilder
         $request = $this->requestBuilder->create($request, $order);
 
         $payload = $order->getPayment()->getAdditionalInformation(Config::CLIENT_PAYLOAD_KEY);
-        $request->encryptedCustomerInput = $payload;
+        $request->encryptedCustomerInput = $payload !== '1' ? $payload : null;
         $request->fraudFields = new FraudFields();
         $request->fraudFields->customerIpAddress = $order->getRemoteIp();
 

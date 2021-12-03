@@ -14,10 +14,13 @@ define([
         let requestId;
         try {
             let sdkClient = client.initialize();
+            let totalAmount = Math.round(parseFloat(quote.getTotals()()['base_grand_total']) * 100).toFixed(0)
+            let countryCode = quote.billingAddress().countryId;
+            let currencyCode = quote.getTotals()()['base_currency_code'];
             let payload = {
-                totalAmount: Math.round(parseFloat(quote.getTotals()()['base_grand_total']) * 100).toFixed(0),
-                countryCode: quote.billingAddress().countryId,
-                currency: quote.getTotals()()['base_currency_code'],
+                totalAmount: totalAmount,
+                countryCode: countryCode,
+                currency: currencyCode,
                 isRecurring: false,
                 locale: localeResolver.getBaseLocale(config.getLocale())
             };
@@ -25,6 +28,13 @@ define([
             requestId = logger.logRequest('getPaymentProduct', payload);
             let response = sdkClient.getBasicPaymentProducts(payload);
             response.then((result) => {
+                result.basicPaymentProducts = result.basicPaymentProducts.filter(
+                    function (paymentProduct) {
+                        return config.isPaymentProductEnabled(paymentProduct) &&
+                            config.isPriceWithinPaymentProductPriceRange(paymentProduct, totalAmount / 100, currencyCode) &&
+                            !config.isPaymentProductCountryRestricted(paymentProduct, countryCode)
+                    }
+                );
                 logger.logResponse(requestId, result);
             })
             return response;

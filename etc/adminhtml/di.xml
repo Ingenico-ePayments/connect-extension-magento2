@@ -26,4 +26,11 @@
         <plugin name="update_order_for_capture_requested"
                 type="Ingenico\Connect\Plugin\Magento\Sales\Controller\Adminhtml\Order\View"/>
     </type>
+    <type name="Magento\Vault\Model\Ui\Adminhtml\TokensConfigProvider">
+        <arguments>
+            <argument name="tokenUiComponentProviders" xsi:type="array">
+                <item name="ingenico" xsi:type="object">Ingenico\Connect\TokenProvider\TokenUiComponentProvider</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

@@ -7,6 +7,9 @@
                 <model>IngenicoFacade</model>
                 <title>Ingenico</title>
             </ingenico>
+            <ingenico_cc_vault>
+                <model>IngenicoCreditCardVaultFacade</model>
+            </ingenico_cc_vault>
         </payment>
         <ingenico_epayments>
             <model>Ingenico\Connect\Model\Payment\Ingenico</model>
@@ -38,8 +41,34 @@
                 <capture_mode>authorize</capture_mode>
             </captures>
             <credit_cards>
+                <toggle>1</toggle>
+                <payment_flow_type>1</payment_flow_type>
                 <group_card_payment_methods>1</group_card_payment_methods>
             </credit_cards>
+            <ideal>
+                <toggle>1</toggle>
+                <payment_flow_type>1</payment_flow_type>
+            </ideal>
+            <paypal>
+                <toggle>1</toggle>
+            </paypal>
+            <sofort>
+                <toggle>1</toggle>
+            </sofort>
+            <trustly>
+                <toggle>1</toggle>
+                <payment_flow_type>1</payment_flow_type>
+            </trustly>
+            <giropay>
+                <toggle>1</toggle>
+                <payment_flow_type>1</payment_flow_type>
+            </giropay>
+            <open_banking>
+                <toggle>1</toggle>
+            </open_banking>
+            <paysafecard>
+                <toggle>1</toggle>
+            </paysafecard>
             <payment_method_groups>
                 <TOKEN>Saved payment options</TOKEN>
                 <BANKTRANSFER>Bank transfer</BANKTRANSFER>
@@ -86,5 +115,14 @@
                 <days>3</days>
             </pending_orders_cancellation>
         </ingenico_epayments>
+        <ingenico_cc_vault>
+            <general>
+                <title>Ingenico Stored Cards</title>
+                <active>1</active>
+                <can_authorize_vault>1</can_authorize_vault>
+                <can_use_internal>1</can_use_internal>
+                <can_initialize>0</can_initialize>
+            </general>
+        </ingenico_cc_vault>
     </default>
 </config>

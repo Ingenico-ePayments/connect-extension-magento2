@@ -2,8 +2,11 @@
 
 namespace Ingenico\Connect\Model\Ingenico\Token;
 
+use Ingenico\Connect\Model\Ingenico\Token\TokenFactory;
 use Ingenico\Connect\Model\ResourceModel\Token as TokenResource;
 use Ingenico\Connect\Model\ResourceModel\Token\CollectionFactory as TokenCollectionFactory;
+use Magento\Vault\Api\Data\PaymentTokenInterface;
+use Magento\Vault\Api\PaymentTokenManagementInterface;
 
 class TokenService implements TokenServiceInterface
 {
@@ -23,6 +26,11 @@ class TokenService implements TokenServiceInterface
     private $tokenCollectionFactory;
 
     /**
+     * @var PaymentTokenManagementInterface
+     */
+    private $paymentTokenManagement;
+
+    /**
      * TokenService constructor.
      *
      * @param TokenFactory $tokenFactory
@@ -32,11 +40,13 @@ class TokenService implements TokenServiceInterface
     public function __construct(
         TokenFactory $tokenFactory,
         TokenCollectionFactory $tokenCollectionFactory,
-        TokenResource $tokenResource
+        TokenResource $tokenResource,
+        PaymentTokenManagementInterface $paymentTokenManagement
     ) {
         $this->tokenFactory = $tokenFactory;
         $this->tokenResource = $tokenResource;
         $this->tokenCollectionFactory = $tokenCollectionFactory;
+        $this->paymentTokenManagement = $paymentTokenManagement;
     }
 
     /**
@@ -68,7 +78,17 @@ class TokenService implements TokenServiceInterface
 
         $tokenValues = $tokenCollection->getColumnValues('token');
 
-        return array_values(array_filter($tokenValues));
+        $tokens = array_values(array_filter($tokenValues));
+
+        /** @var PaymentTokenInterface[] $paymentTokens */
+        $paymentTokens = $this->paymentTokenManagement->getListByCustomerId($customerId);
+        foreach ($paymentTokens as $paymentToken) {
+            if ($paymentToken->getIsActive() && $paymentToken->getIsVisible()) {
+                $tokens[] = $paymentToken->getGatewayToken();
+            }
+        }
+
+        return array_unique($tokens);
     }
 
     /**
