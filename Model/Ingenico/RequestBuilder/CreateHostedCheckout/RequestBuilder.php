@@ -132,10 +132,7 @@ class RequestBuilder
             return null;
         }
 
-        $tokens = implode(',', $this->tokenService->find(
-            $order->getCustomerId(),
-            $order->getPayment()->getAdditionalInformation(Config::PRODUCT_ID_KEY)
-        ));
+        $tokens = implode(',', $this->tokenService->find($order->getCustomerId()));
 
         return $tokens === '' ? null : $tokens;
     }

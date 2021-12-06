@@ -2,8 +2,14 @@
 
 namespace Ingenico\Connect\Model\Ingenico\Action;
 
+use Ingenico\Connect\Helper\Token as TokenHelper;
+use Ingenico\Connect\Model\Config;
+use Ingenico\Connect\Model\ConfigInterface;
+use Ingenico\Connect\Model\ConfigProvider;
 use Ingenico\Connect\Model\Ingenico\Action\HostedCheckout\StatusManagement;
-use Ingenico\Connect\Model\Ingenico\Action\HostedCheckout\TokenManagement;
+use Ingenico\Connect\Model\Ingenico\Status\Payment\ResolverInterface;
+use Ingenico\Connect\Model\Order\OrderServiceInterface;
+use Ingenico\Connect\Model\StatusResponseManagerInterface;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\GetHostedCheckoutResponse;
 use Magento\Framework\App\Request\Http;
 use Magento\Framework\Exception\LocalizedException;
@@ -12,12 +18,13 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\OrderRepository;
-use Ingenico\Connect\Model\Config;
-use Ingenico\Connect\Model\ConfigInterface;
-use Ingenico\Connect\Model\Ingenico\Status\Payment\ResolverInterface;
-use Ingenico\Connect\Model\Order\OrderServiceInterface;
-use Ingenico\Connect\Model\StatusResponseManagerInterface;
+use Magento\Vault\Api\PaymentTokenManagementInterface;
+use Magento\Vault\Model\PaymentTokenFactory;
+use Magento\Vault\Model\Ui\VaultConfigProvider;
 use Psr\Log\LoggerInterface;
+
+use function array_filter;
+use function explode;
 
 /**
  * Uses to update Magento Order state/status after payment creation via HostedCheckout Payment method.
@@ -75,14 +82,19 @@ class GetHostedCheckoutStatus implements ActionInterface
     private $statusResponseManager;
 
     /**
-     * @var TokenManagement
-     */
-    private $tokenManagement;
-
-    /**
      * @var StatusManagement
      */
     private $statusManagement;
+
+    /**
+     * @var PaymentTokenManagementInterface
+     */
+    private $paymentTokenManagement;
+
+    /**
+     * @var TokenHelper
+     */
+    private $tokenHelper;
 
     public function __construct(
         LoggerInterface $logger,
@@ -93,8 +105,9 @@ class GetHostedCheckoutStatus implements ActionInterface
         OrderRepository $orderRepository,
         OrderServiceInterface $orderService,
         StatusResponseManagerInterface $statusResponseManager,
-        TokenManagement $tokenManagement,
-        StatusManagement $statusManagement
+        StatusManagement $statusManagement,
+        PaymentTokenManagementInterface $paymentTokenManagement,
+        TokenHelper $tokenHelper
     ) {
         $this->logger = $logger;
         $this->ePaymentsConfig = $ePaymentsConfig;
@@ -104,8 +117,9 @@ class GetHostedCheckoutStatus implements ActionInterface
         $this->orderRepository = $orderRepository;
         $this->orderService = $orderService;
         $this->statusResponseManager = $statusResponseManager;
-        $this->tokenManagement = $tokenManagement;
         $this->statusManagement = $statusManagement;
+        $this->paymentTokenManagement = $paymentTokenManagement;
+        $this->tokenHelper = $tokenHelper;
     }
 
     /**
@@ -129,7 +143,6 @@ class GetHostedCheckoutStatus implements ActionInterface
             if ($statusResponse->status === self::PAYMENT_CREATED) {
                 $this->checkReturnmac($order);
                 $this->processOrder($order, $statusResponse);
-                $this->tokenManagement->processTokens($order, $statusResponse);
                 try {
                     $this->orderSender->send($order);
                 } catch (\Exception $e) {
@@ -239,6 +252,8 @@ class GetHostedCheckoutStatus implements ActionInterface
         $payment->setAdditionalInformation(Config::PAYMENT_ID_KEY, $ingenicoPaymentId);
         $payment->setAdditionalInformation(Config::PAYMENT_STATUS_KEY, $ingenicoPaymentStatus);
         $payment->setAdditionalInformation(Config::PAYMENT_STATUS_CODE_KEY, $ingenicoPaymentStatusCode);
+
+        $this->processToken($statusResponse, $order);
     }
 
     /**
@@ -257,5 +272,44 @@ class GetHostedCheckoutStatus implements ActionInterface
         }
 
         return $order;
+    }
+
+    /**
+     * @param GetHostedCheckoutResponse $statusResponse
+     * @param OrderInterface $order
+     */
+    private function processToken(GetHostedCheckoutResponse $statusResponse, OrderInterface $order): void
+    {
+        $paymentOutput = $statusResponse->createdPaymentOutput->payment->paymentOutput;
+        if ($paymentOutput === null) {
+            return;
+        }
+
+        $cardPaymentMethodSpecificOutput = $paymentOutput->cardPaymentMethodSpecificOutput;
+        if ($cardPaymentMethodSpecificOutput === null) {
+            return;
+        }
+
+        $customerId = $order->getCustomerId();
+        if ($customerId && $statusResponse->createdPaymentOutput->tokens) {
+            $tokens = array_filter(explode(',', $statusResponse->createdPaymentOutput->tokens));
+            foreach ($tokens as $token) {
+                $paymentToken = $this->paymentTokenManagement->getByGatewayToken(
+                    $token,
+                    ConfigProvider::CODE,
+                    $customerId
+                );
+                if ($paymentToken !== null) {
+                    continue;
+                }
+
+                $orderPayment = $order->getPayment();
+                $orderPayment->setAdditionalInformation(VaultConfigProvider::IS_ACTIVE_CODE, 1);
+                $orderPayment->getExtensionAttributes()->setVaultPaymentToken($this->tokenHelper->buildPaymentToken(
+                    $cardPaymentMethodSpecificOutput,
+                    $token
+                ));
+            }
+        }
     }
 }
