@@ -11,6 +11,9 @@ use Ingenico\Connect\Sdk\Domain\Payment\Definitions\CardPaymentMethodSpecificInp
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\CardRecurrenceDetailsFactory;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\OrderInterface;
+use function array_key_exists;
+use function is_array;
+use function json_decode;
 
 /**
  * Class CardDecorator
@@ -75,11 +78,8 @@ class CardDecorator implements DecoratorInterface
             $captureMode === Config::CONFIG_INGENICO_CAPTURES_MODE_AUTHORIZE
         );
 
-        if (!$order->getCustomerIsGuest() && $order->getCustomerId()) {
-            $input->tokenize = (int) $order->getPayment()->getAdditionalInformation(Config::PRODUCT_TOKENIZE_KEY) === 1;
-        } else {
-            $input->tokenize = false;
-        }
+        $input->tokenize = false;
+
         try {
             $input->unscheduledCardOnFileSequenceIndicator =
                 $this->getUnscheduledCardOnFileSequenceIndicator($order);
@@ -97,6 +97,10 @@ class CardDecorator implements DecoratorInterface
                 $request->cardPaymentMethodSpecificInput->token = $token->getGatewayToken();
                 if (!$order->getRemoteIp()) {
                     $request->cardPaymentMethodSpecificInput->unscheduledCardOnFileRequestor = 'merchantInitiated';
+                    $tokenDetails = json_decode($token->getTokenDetails() ?: '{}');
+                    if (is_array($tokenDetails) && array_key_exists('transactionId', $tokenDetails)) {
+                        $request->cardPaymentMethodSpecificInput->initialSchemeTransactionId = $tokenDetails['transactionId'];
+                    }
                 }
             }
         }

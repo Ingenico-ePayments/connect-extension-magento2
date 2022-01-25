@@ -2,6 +2,9 @@
 
 namespace Ingenico\Connect\Model\Ingenico\Token;
 
+use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
+use Magento\Sales\Model\Order;
+
 interface TokenServiceInterface
 {
     /**
@@ -18,4 +21,11 @@ interface TokenServiceInterface
      * @return void
      */
     public function deleteAll($customerId, $tokens = []);
+
+    /**
+     * @param Order $order
+     * @param Payment $payment
+     * @return void
+     */
+    public function createByOrderAndPayment(Order $order, Payment $payment);
 }

@@ -2,8 +2,8 @@
 
 namespace Ingenico\Connect\Model\Ingenico\RequestBuilder\Common\Order\Customer;
 
+use Ingenico\Connect\Helper\Format;
 use Ingenico\Connect\Model\Ingenico\RequestBuilder\Common\Order\AbstractAddressBuilder;
-use Ingenico\Connect\Model\Ingenico\RequestBuilder\Common\Order\Shipping\Address\NameBuilder;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\AddressPersonal;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\AddressPersonalFactory;
 use Magento\Framework\Exception\LocalizedException;
@@ -17,8 +17,10 @@ class AddressBuilder extends AbstractAddressBuilder
      */
     private $addressPersonalFactory;
 
-    public function __construct(AddressPersonalFactory $addressPersonalFactory)
+    public function __construct(Format $format, AddressPersonalFactory $addressPersonalFactory)
     {
+        parent::__construct($format);
+
         $this->addressPersonalFactory = $addressPersonalFactory;
     }
 

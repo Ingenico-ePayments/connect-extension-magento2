@@ -2,6 +2,7 @@
 
 namespace Ingenico\Connect\Model\Ingenico\RequestBuilder\Common\Order;
 
+use Ingenico\Connect\Helper\Format;
 use Ingenico\Connect\Model\Ingenico\RequestBuilder\Common\Order\Customer\AccountBuilder;
 use Ingenico\Connect\Model\Ingenico\RequestBuilder\Common\Order\Customer\AddressBuilder;
 use Ingenico\Connect\Model\Ingenico\RequestBuilder\Common\Order\Customer\CompanyInformationBuilder;
@@ -82,6 +83,11 @@ class CustomerBuilder
      */
     private $addressBuilder;
 
+    /**
+     * @var Format
+     */
+    private $format;
+
     public function __construct(
         CustomerFactory $customerFactory,
         PersonalInformationFactory $personalInformationFactory,
@@ -93,7 +99,8 @@ class CustomerBuilder
         AccountBuilder $accountBuilder,
         DeviceBuilder $deviceBuilder,
         CompanyInformationBuilder $companyInformationBuilder,
-        TimezoneInterface $timezone
+        TimezoneInterface $timezone,
+        Format $format
     ) {
         $this->customerFactory = $customerFactory;
         $this->personalInformationFactory = $personalInformationFactory;
@@ -106,6 +113,7 @@ class CustomerBuilder
         $this->timezone = $timezone;
         $this->companyInformationBuilder = $companyInformationBuilder;
         $this->addressBuilder = $addressBuilder;
+        $this->format = $format;
     }
 
     /**
@@ -118,7 +126,10 @@ class CustomerBuilder
 
         $ingenicoCustomer->personalInformation = $this->getPersonalInformation($order);
         // create dummy customer id
-        $ingenicoCustomer->merchantCustomerId = $order->getCustomerId() ?: rand(100000, 999999);
+        $ingenicoCustomer->merchantCustomerId = $this->format->limit(
+            $order->getCustomerId() ?: rand(100000, 999999),
+            15
+        );
 
         $billing = $order->getBillingAddress();
         if (!empty($billing)) {
@@ -148,9 +159,9 @@ class CustomerBuilder
 
         $personalName = $this->personalNameFactory->create();
         $personalName->title = $order->getCustomerPrefix();
-        $personalName->firstName = $order->getCustomerFirstname();
+        $personalName->firstName = $this->format->limit($order->getCustomerFirstname(), 15);
         $personalName->surnamePrefix = $order->getCustomerMiddlename();
-        $personalName->surname = $order->getCustomerLastname();
+        $personalName->surname = $this->format->limit($order->getCustomerLastname(), 35);
 
         $personalInformation->name = $personalName;
         $personalInformation->gender = $this->getCustomerGender($order);
@@ -204,7 +215,7 @@ class CustomerBuilder
         Order\Address $billing
     ) {
         $contactDetails = $this->contactDetailsFactory->create();
-        $contactDetails->emailAddress = $order->getCustomerEmail();
+        $contactDetails->emailAddress = $this->format->limit($order->getCustomerEmail(), 70);
         $contactDetails->emailMessageType = self::EMAIL_MESSAGE_TYPE;
         $contactDetails->phoneNumber = $billing->getTelephone();
         $contactDetails->faxNumber = $billing->getFax();

@@ -5,6 +5,7 @@ namespace Ingenico\Connect\Model\Ingenico\Api;
 use Ingenico\Connect\Sdk\CallContext;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\CreateHostedCheckoutRequest;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\CreateHostedCheckoutResponse;
+use Ingenico\Connect\Sdk\Domain\Hostedcheckout\GetHostedCheckoutResponse;
 use Ingenico\Connect\Sdk\Domain\Payment\ApprovePaymentRequest;
 use Ingenico\Connect\Sdk\Domain\Payment\CancelApprovalPaymentResponse;
 use Ingenico\Connect\Sdk\Domain\Payment\CancelPaymentResponse;
@@ -19,6 +20,8 @@ use Ingenico\Connect\Sdk\Domain\Refund\RefundRequest;
 use Ingenico\Connect\Sdk\Domain\Refund\RefundResponse;
 use Ingenico\Connect\Sdk\Domain\Sessions\SessionRequest;
 use Ingenico\Connect\Sdk\Domain\Sessions\SessionResponse;
+use Ingenico\Connect\Sdk\Domain\Token\CreateTokenResponse;
+use Ingenico\Connect\Sdk\Domain\Token\TokenResponse;
 use Ingenico\Connect\Sdk\ResponseException;
 use Magento\Framework\Exception\LocalizedException;
 
@@ -203,4 +206,18 @@ interface ClientInterface
      * @throws ResponseException
      */
     public function ingenicoTestAccount($scopeId, $data = []);
+
+    /**
+     * @param string $ingenicoPaymentId
+     * @param null $scopeId
+     * @return CreateTokenResponse
+     */
+    public function ingenicoPaymentTokenize($ingenicoPaymentId, $scopeId = null);
+
+    /**
+     * @param string $hostedCheckoutId
+     * @param $scopeId
+     * @return GetHostedCheckoutResponse
+     */
+    public function getHostedCheckout(string $hostedCheckoutId, $scopeId = null);
 }

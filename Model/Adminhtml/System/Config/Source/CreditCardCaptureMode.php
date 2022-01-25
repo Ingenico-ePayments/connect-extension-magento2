@@ -24,11 +24,11 @@ class CreditCardCaptureMode
         return [
             [
                 'value' => $this->authorize,
-                'label' => __('Delayed Capture')
+                'label' => __('Captured')
             ],
             [
                 'value' => $this->direct,
-                'label' => __('Direct Capture')
+                'label' => __('Authorized')
             ],
         ];
     }

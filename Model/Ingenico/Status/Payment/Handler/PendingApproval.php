@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Ingenico\Connect\Model\Ingenico\Status\Payment\Handler;
 
 use Ingenico\Connect\Model\Ingenico\Status\Payment\HandlerInterface;
+use Ingenico\Connect\Model\Ingenico\Token\TokenService;
 use Ingenico\Connect\Plugin\Magento\Sales\Model\Order\Payment\State\AbstractCommand;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
+use Magento\Framework\Event\ManagerInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Sales\Model\Order;
@@ -15,6 +17,18 @@ use Ingenico\Connect\Helper\Data;
 class PendingApproval extends AbstractHandler implements HandlerInterface
 {
     protected const EVENT_STATUS = 'pending_approval';
+
+    /**
+     * @var TokenService
+     */
+    private $tokenService;
+
+    public function __construct(ManagerInterface $eventManager, TokenService $tokenService)
+    {
+        parent::__construct($eventManager);
+
+        $this->tokenService = $tokenService;
+    }
 
     /**
      * {@inheritDoc}
@@ -36,5 +50,9 @@ class PendingApproval extends AbstractHandler implements HandlerInterface
         }
 
         $this->dispatchEvent($order, $ingenicoStatus);
+
+        if ($order instanceof Order) {
+            $this->tokenService->createByOrderAndPayment($order, $ingenicoStatus);
+        }
     }
 }

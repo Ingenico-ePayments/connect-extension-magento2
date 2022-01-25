@@ -3,6 +3,7 @@
 namespace Ingenico\Connect\Model\Ingenico\RequestBuilder\Common;
 
 use Ingenico\Connect\Helper\Data as DataHelper;
+use Ingenico\Connect\Helper\Format;
 use Ingenico\Connect\Model\ConfigInterface;
 use Ingenico\Connect\Model\Ingenico\MerchantReference;
 use Ingenico\Connect\Model\Ingenico\RequestBuilder\Common\Order\AdditionalInputBuilder;
@@ -64,6 +65,11 @@ class OrderBuilder
     private $additionalInputBuilder;
 
     /**
+     * @var Format
+     */
+    private $format;
+
+    /**
      * OrderBuilder constructor.
      *
      * @param ConfigInterface $ePaymentsConfig
@@ -75,6 +81,7 @@ class OrderBuilder
      * @param AdditionalInputBuilder $additionalInputBuilder
      * @param ShippingBuilder $shippingBuilder
      * @param MerchantReference $merchantReference
+     * @param Format $format
      */
     public function __construct(
         ConfigInterface $ePaymentsConfig,
@@ -85,7 +92,8 @@ class OrderBuilder
         OrderReferencesFactory $orderReferencesFactory,
         AdditionalInputBuilder $additionalInputBuilder,
         ShippingBuilder $shippingBuilder,
-        MerchantReference $merchantReference
+        MerchantReference $merchantReference,
+        Format $format
     ) {
         $this->ePaymentsConfig = $ePaymentsConfig;
         $this->customerBuilder = $customerBuilder;
@@ -96,6 +104,7 @@ class OrderBuilder
         $this->merchantReference = $merchantReference;
         $this->shippingBuilder = $shippingBuilder;
         $this->additionalInputBuilder = $additionalInputBuilder;
+        $this->format = $format;
     }
 
     /**
@@ -137,7 +146,10 @@ class OrderBuilder
     private function getReferences(Order $order)
     {
         $references = $this->orderReferencesFactory->create();
-        $references->merchantReference = $this->merchantReference->generateMerchantReferenceForOrder($order);
+        $references->merchantReference = $this->format->limit(
+            $this->merchantReference->generateMerchantReferenceForOrder($order),
+            30
+        );
         $references->descriptor = $this->ePaymentsConfig->getDescriptor();
 
         return $references;

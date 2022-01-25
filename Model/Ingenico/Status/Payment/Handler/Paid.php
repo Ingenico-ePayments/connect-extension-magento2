@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Ingenico\Connect\Model\Ingenico\Status\Payment\Handler;
 
 use Ingenico\Connect\Helper\Data;
+use Ingenico\Connect\Model\ConfigInterface;
 use Ingenico\Connect\Model\Ingenico\Status\Payment\HandlerInterface;
+use Ingenico\Connect\Model\Ingenico\StatusInterface;
+use Ingenico\Connect\Model\StatusResponseManager;
 use Ingenico\Connect\Sdk\Domain\Capture\Definitions\Capture as IngenicoCapture;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment as IngenicoPayment;
@@ -13,9 +16,6 @@ use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
-use Ingenico\Connect\Model\ConfigInterface;
-use Ingenico\Connect\Model\Ingenico\StatusInterface;
-use Ingenico\Connect\Model\StatusResponseManager;
 use Magento\Sales\Model\Order\Config;
 
 class Paid extends AbstractHandler implements HandlerInterface

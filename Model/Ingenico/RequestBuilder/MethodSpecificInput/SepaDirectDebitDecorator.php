@@ -36,8 +36,7 @@ class SepaDirectDebitDecorator implements DecoratorInterface
         $input = $this->specificInputFactory->create();
         $input->paymentProductId = $order->getPayment()->getAdditionalInformation(Config::PRODUCT_ID_KEY);
 
-        $tokenize = $order->getPayment()->getAdditionalInformation(Config::PRODUCT_TOKENIZE_KEY);
-        $input->tokenize = ($tokenize === '1');
+        $input->tokenize = false;
 
         $request->sepaDirectDebitPaymentMethodSpecificInput = $input;
 

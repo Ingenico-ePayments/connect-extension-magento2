@@ -31,6 +31,7 @@
                 <hosted_checkout_subdomain>https://payment.</hosted_checkout_subdomain>
                 <log_all_requests>0</log_all_requests>
                 <log_all_requests_file>ingenico_epayments.log</log_all_requests_file>
+                <limit_api_field_length>0</limit_api_field_length>
             </settings>
             <checkout>
                 <inline_payments>0</inline_payments>
@@ -42,12 +43,13 @@
             </captures>
             <credit_cards>
                 <toggle>1</toggle>
+                <save_for_later_visible>1</save_for_later_visible>
                 <payment_flow_type>1</payment_flow_type>
                 <group_card_payment_methods>1</group_card_payment_methods>
             </credit_cards>
             <ideal>
                 <toggle>1</toggle>
-                <payment_flow_type>1</payment_flow_type>
+                <payment_flow_type>0</payment_flow_type>
             </ideal>
             <paypal>
                 <toggle>1</toggle>
@@ -57,11 +59,11 @@
             </sofort>
             <trustly>
                 <toggle>1</toggle>
-                <payment_flow_type>1</payment_flow_type>
+                <payment_flow_type>0</payment_flow_type>
             </trustly>
             <giropay>
                 <toggle>1</toggle>
-                <payment_flow_type>1</payment_flow_type>
+                <payment_flow_type>0</payment_flow_type>
             </giropay>
             <open_banking>
                 <toggle>1</toggle>

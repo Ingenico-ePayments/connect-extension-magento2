@@ -61,8 +61,7 @@ class RedirectDecorator implements DecoratorInterface
             $input->returnUrl = $this->urlBuilder->getUrl(RequestBuilder::HOSTED_CHECKOUT_RETURN_URL);
         }
 
-        $tokenize = $order->getPayment()->getAdditionalInformation(Config::PRODUCT_TOKENIZE_KEY);
-        $input->tokenize = ($tokenize === '1');
+        $input->tokenize = false;
 
         $captureMode = $this->config->getCaptureMode($order->getStoreId());
         $input->requiresApproval = ($captureMode === Config::CONFIG_INGENICO_CAPTURES_MODE_AUTHORIZE);

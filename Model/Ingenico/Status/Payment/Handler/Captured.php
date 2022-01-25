@@ -6,6 +6,7 @@ namespace Ingenico\Connect\Model\Ingenico\Status\Payment\Handler;
 
 use Ingenico\Connect\Helper\Data;
 use Ingenico\Connect\Model\Ingenico\Status\Payment\HandlerInterface;
+use Ingenico\Connect\Model\Ingenico\Token\TokenService;
 use Ingenico\Connect\Sdk\Domain\Capture\Definitions\Capture as IngenicoCapture;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment as IngenicoPayment;

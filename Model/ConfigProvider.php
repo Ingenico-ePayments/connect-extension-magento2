@@ -117,16 +117,17 @@ class ConfigProvider implements ConfigProviderInterface
                     'hostedCheckoutPageUrl' => $this->urlBuilder->getUrl('epayments/hostedCheckoutPage'),
                     'inlineSuccessUrl' => $this->urlBuilder->getUrl('epayments/inlinePayment'),
                     'locale' => $this->resolver->getLocale(),
-                    'groupCardPaymentMethods' => $this->config->getGroupCardPaymentMethods(),
+                    'groupCardPaymentMethods' => $this->config->getGroupCardPaymentMethods($storeId),
                     'useFullRedirect' => $checkoutType === Config::CONFIG_INGENICO_CHECKOUT_TYPE_HOSTED_CHECKOUT,
                     'loaderImage' => $this->assetRepo->getUrlWithParams('images/loader-2.gif', []),
                     'isCustomerLoggedIn' => $this->customerSession->isLoggedIn(),
                     'connectSession' => $this->connectSession->getSectionData(),
-                    'logFrontendRequests' => $this->config->getLogFrontendRequests(),
-                    'inlinePaymentProducts' => $this->getInlinePaymentProducts(),
-                    'disabledPaymentProducts' => $this->getDisabledPaymentProducts(),
+                    'logFrontendRequests' => $this->config->getLogFrontendRequests($storeId),
+                    'inlinePaymentProducts' => $this->getInlinePaymentProducts($storeId),
+                    'disabledPaymentProducts' => $this->getDisabledPaymentProducts($storeId),
                     'priceRangedPaymentProducts' => $this->getPriceRangedPaymentProducts($storeId),
                     'countryRestrictedPaymentProducts' => $this->getCountryRestrictedPaymentProducts($storeId),
+                    'saveForLaterVisible' => $this->config->getSaveForLaterVisible($storeId),
                 ],
             ],
         ];
@@ -135,11 +136,11 @@ class ConfigProvider implements ConfigProviderInterface
     /**
      * @return array<string>
      */
-    private function getDisabledPaymentProducts()
+    private function getDisabledPaymentProducts(?int $storeId)
     {
         $disabledPaymentProducts = [];
         foreach (Config::CONFIGURABLE_TOGGLE_PAYMENT_PRODUCTS as $productId => $configPath) {
-            if ($this->config->isPaymentProductEnabled((string) $productId) ===
+            if ($this->config->isPaymentProductEnabled((string) $productId, $storeId) ===
                 Config::CONFIG_INGENICO_PAYMENT_PRODUCT_DISABLED
             ) {
                 $disabledPaymentProducts[] = (string) $productId;
@@ -151,11 +152,11 @@ class ConfigProvider implements ConfigProviderInterface
     /**
      * @return array<string>
      */
-    private function getInlinePaymentProducts()
+    private function getInlinePaymentProducts(?int $storeId)
     {
         $inlinePaymentProducts = self::LOCKED_INLINE_PAYMENT_PRODUCTS;
         foreach (self::CONFIGURABLE_INLINE_PAYMENT_PRODUCTS as $productId => $configPath) {
-            if ($this->config->getPaymentProductCheckoutType($configPath) ===
+            if ($this->config->getPaymentProductCheckoutType($configPath, $storeId) ===
                 Config::CONFIG_INGENICO_CHECKOUT_TYPE_INLINE
             ) {
                 $inlinePaymentProducts[] = (string) $productId;
@@ -167,7 +168,7 @@ class ConfigProvider implements ConfigProviderInterface
     /**
      * @return array
      */
-    private function getPriceRangedPaymentProducts($storeId)
+    private function getPriceRangedPaymentProducts(?int $storeId)
     {
         $priceRangedPaymentProducts = [];
         foreach (Config::CONFIGURABLE_PRICE_RANGE_PAYMENT_PRODUCTS as $productId => $configPath) {
@@ -177,7 +178,7 @@ class ConfigProvider implements ConfigProviderInterface
         return $priceRangedPaymentProducts;
     }
 
-    private function getCountryRestrictedPaymentProducts(int $storeId)
+    private function getCountryRestrictedPaymentProducts(?int $storeId)
     {
         $countryRestrictedPaymentProducts = [];
         foreach (Config::CONFIGURABLE_COUNTRY_BLACKLIST_PAYMENT_PRODUCTS as $productId => $configPath) {

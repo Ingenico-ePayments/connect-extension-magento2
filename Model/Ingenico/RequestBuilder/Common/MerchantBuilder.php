@@ -2,6 +2,7 @@
 
 namespace Ingenico\Connect\Model\Ingenico\RequestBuilder\Common;
 
+use Ingenico\Connect\Helper\Format;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Merchant;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\MerchantFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -33,16 +34,23 @@ class MerchantBuilder
      */
     private $moduleManager;
 
+    /**
+     * @var Format
+     */
+    private $format;
+
     public function __construct(
         MerchantFactory $merchantFactory,
         StoreManagerInterface $storeManager,
         ScopeConfigInterface $config,
-        Manager $moduleManager
+        Manager $moduleManager,
+        Format $format
     ) {
         $this->merchantFactory = $merchantFactory;
         $this->storeManager = $storeManager;
         $this->config = $config;
         $this->moduleManager = $moduleManager;
+        $this->format = $format;
     }
 
     public function create(OrderInterface $order): Merchant
@@ -52,7 +60,7 @@ class MerchantBuilder
         try {
             $store = $this->storeManager->getStore($order->getStoreId());
             if ($store instanceof Store) {
-                $merchant->websiteUrl = $store->getBaseUrl();
+                $merchant->websiteUrl = $this->format->limit($store->getBaseUrl(), 60);
                 if ($this->isContactModuleEnabled()) {
                     $merchant->contactWebsiteUrl = $store->getUrl('contact');
                 }

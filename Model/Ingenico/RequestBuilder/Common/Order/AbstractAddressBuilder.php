@@ -2,6 +2,7 @@
 
 namespace Ingenico\Connect\Model\Ingenico\RequestBuilder\Common\Order;
 
+use Ingenico\Connect\Helper\Format;
 use Ingenico\Connect\Sdk\DataObject;
 use Ingenico\Connect\Sdk\Domain\Definitions\Address;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\AddressPersonal;
@@ -15,6 +16,19 @@ abstract class AbstractAddressBuilder
     const STREET = 'street';
 
     /**
+     * @var Format
+     */
+    private $format;
+
+    /**
+     * @param Format $config
+     */
+    public function __construct(Format $format)
+    {
+        $this->format = $format;
+    }
+
+    /**
      * @param DataObject|Address|AddressPersonal $dataObject
      * @param OrderAddressInterface $orderAddress
      * @throws LocalizedException
@@ -25,7 +39,7 @@ abstract class AbstractAddressBuilder
             throw new LocalizedException(__('Data Objects needs to be an instance of Address or AddressPersonal'));
         }
 
-        $dataObject->city = $orderAddress->getCity();
+        $dataObject->city = $this->format->limit($orderAddress->getCity(), 40);
         $dataObject->countryCode = $orderAddress->getCountryId();
         $dataObject->state = $orderAddress->getRegion();
         $regionCode = $this->getRegionCodeFromOrderAddress($orderAddress);
@@ -36,9 +50,9 @@ abstract class AbstractAddressBuilder
         $street = $orderAddress->getStreet();
         if ($street !== null) {
             $addressArray = $this->getHouseNumberFromAddress($street);
-            $dataObject->street = $addressArray[self::STREET];
-            $dataObject->houseNumber = $addressArray[self::HOUSE_NUMBER];
-            $dataObject->additionalInfo = $addressArray[self::ADDITIONAL_INFO];
+            $dataObject->street = $this->format->limit($addressArray[self::STREET], 50);
+            $dataObject->houseNumber = $this->format->limit($addressArray[self::HOUSE_NUMBER], 15);
+            $dataObject->additionalInfo = $this->format->limit($addressArray[self::ADDITIONAL_INFO], 50);
         }
     }
 

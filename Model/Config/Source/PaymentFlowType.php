@@ -17,11 +17,11 @@ class PaymentFlowType implements OptionSourceInterface
         return [
             [
                 'value' => Config::CONFIG_INGENICO_CHECKOUT_TYPE_HOSTED_CHECKOUT,
-                'label' => __('Hosted Payment Page'),
+                'label' => __('Hosted Checkout - All steps for payments are hosted by Ingenico'),
             ],
             [
                 'value' => Config::CONFIG_INGENICO_CHECKOUT_TYPE_OPTIMIZED_FLOW,
-                'label' => __('Payment Optimized Flow'),
+                'label' => __('Optimized Flow - Optimized configurable steps per payment product'),
             ],
         ];
     }

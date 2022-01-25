@@ -2,28 +2,18 @@
 
 namespace Ingenico\Connect\Model\Ingenico\Action;
 
-use DateTime;
-use Ingenico\Connect\Helper\Token as TokenHelper;
 use Ingenico\Connect\Model\Config;
-use Ingenico\Connect\Model\ConfigInterface;
-use Ingenico\Connect\Model\ConfigProvider;
 use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
 use Ingenico\Connect\Model\Ingenico\RequestBuilder\CreatePayment\RequestBuilder;
 use Ingenico\Connect\Model\Ingenico\Status\Payment\ResolverInterface;
-use Ingenico\Connect\Sdk\Domain\Payment\CreatePaymentResponse;
+use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment as PaymentDefinition;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Magento\Vault\Model\PaymentTokenFactory;
-use Magento\Vault\Model\Ui\VaultConfigProvider;
 use Psr\Log\LoggerInterface;
-
-use function array_filter;
-use function explode;
-use function json_encode;
-use function substr;
 
 /**
  * The CreatePayment action is used for orders that have an encrypted client payload
@@ -67,19 +57,6 @@ class CreatePayment implements ActionInterface
      * @var LoggerInterface
      */
     private $logger;
-    /**
-     * @var PaymentTokenFactory
-     */
-    private $paymentTokenFactory;
-    /**
-     * @var PaymentTokenManagementInterface
-     */
-    private $paymentTokenManagement;
-
-    /**
-     * @var TokenHelper
-     */
-    private $tokenHelper;
 
     /**
      * CreatePayment constructor.
@@ -88,7 +65,8 @@ class CreatePayment implements ActionInterface
      * @param RequestBuilder $requestBuilder
      * @param ResolverInterface $resolver
      * @param MerchantAction $merchantAction
-     * @param ConfigInterface $config
+     * @param PaymentTokenFactory $paymentTokenFactory
+     * @param PaymentTokenManagementInterface $paymentTokenManagement
      * @param OrderRepositoryInterface $orderRepository
      * @param Order\Email\Sender\OrderSender $orderSender
      * @param LoggerInterface $logger
@@ -102,19 +80,15 @@ class CreatePayment implements ActionInterface
         PaymentTokenManagementInterface $paymentTokenManagement,
         OrderRepositoryInterface $orderRepository,
         Order\Email\Sender\OrderSender $orderSender,
-        LoggerInterface $logger,
-        TokenHelper $tokenHelper
+        LoggerInterface $logger
     ) {
         $this->client = $client;
         $this->requestBuilder = $requestBuilder;
         $this->statusResolver = $resolver;
         $this->merchantAction = $merchantAction;
-        $this->paymentTokenFactory = $paymentTokenFactory;
-        $this->paymentTokenManagement = $paymentTokenManagement;
         $this->orderRepository = $orderRepository;
         $this->orderSender = $orderSender;
         $this->logger = $logger;
-        $this->tokenHelper = $tokenHelper;
     }
 
     /**
@@ -132,79 +106,30 @@ class CreatePayment implements ActionInterface
             );
         }
 
-        $paymentResponse = $response->payment;
-
-        $this->processToken($order, $response);
-
         if ($response->merchantAction && $response->merchantAction->actionType) {
             $this->merchantAction->handle($order, $response->merchantAction);
         }
 
+        $paymentResponse = $response->payment;
+        if ($paymentResponse === null) {
+            return;
+        }
+
         $this->statusResolver->resolve($order, $paymentResponse);
 
-        $this->handleSuccessfulPayment($order, $response);
+        $this->processOrder($paymentResponse, $order);
     }
 
     /**
+     * @param PaymentDefinition $payment
      * @param Order $order
-     * @param CreatePaymentResponse $response
+     * @throws LocalizedException
      */
-    private function processToken(
-        Order $order,
-        CreatePaymentResponse $response
-    ) {
-        $payment = $response->payment;
-        if ($payment === null) {
-            return;
-        }
-
-        $paymentOutput = $payment->paymentOutput;
-        if ($paymentOutput === null) {
-            return;
-        }
-
-        $cardPaymentMethodSpecificOutput = $paymentOutput->cardPaymentMethodSpecificOutput;
-        if ($cardPaymentMethodSpecificOutput === null) {
-            return;
-        }
-
-        $customerId = $order->getCustomerId();
-        if ($customerId && $response->creationOutput && $response->creationOutput->token) {
-            $tokens = array_filter(explode(',', $response->creationOutput->token));
-            foreach ($tokens as $token) {
-                $paymentToken = $this->paymentTokenManagement->getByGatewayToken(
-                    $token,
-                    ConfigProvider::CODE,
-                    $customerId
-                );
-                if ($paymentToken !== null) {
-                    continue;
-                }
-
-                $paymentToken = $this->tokenHelper->buildPaymentToken($cardPaymentMethodSpecificOutput, $token);
-                if ($paymentToken === null) {
-                    continue;
-                }
-
-                $orderPayment = $order->getPayment();
-
-                $orderPayment->setAdditionalInformation(VaultConfigProvider::IS_ACTIVE_CODE, 1);
-                $orderPayment->getExtensionAttributes()->setVaultPaymentToken($paymentToken);
-            }
-        }
-    }
-
-    /**
-     * @param Order $order
-     * @param CreatePaymentResponse $statusResponse
-     */
-    private function handleSuccessfulPayment(
-        Order $order,
-        CreatePaymentResponse $statusResponse
-    ) {
-        $paymentId = $statusResponse->payment->id;
-        $paymentStatus = $statusResponse->payment->status;
-        $paymentStatusCode = $statusResponse->payment->statusOutput->statusCode;
+    private function processOrder(PaymentDefinition $payment, Order $order)
+    {
+        $paymentId = $payment->id;
+        $paymentStatus = $payment->status;
+        $paymentStatusCode = $payment->statusOutput->statusCode;
 
         /** @var Payment $payment */
         $payment = $order->getPayment();

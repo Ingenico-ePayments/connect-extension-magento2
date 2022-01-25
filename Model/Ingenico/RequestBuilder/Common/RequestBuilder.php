@@ -123,18 +123,19 @@ class RequestBuilder
      */
     private function validateOrderPaymentProductRestrictions(Order $order)
     {
+        $storeId = $order->getStoreId();
         $paymentProductId = $this->getPaymentProductIdFromOrder($order);
-        $this->checkIfPaymentProductEnabled($paymentProductId);
-        $this->checkIfOrderWithinPaymentProductPriceRange($order, $paymentProductId);
-        $this->checkIfBillingCountryRestrictedForPaymentProduct($order, $paymentProductId);
+        $this->checkIfPaymentProductEnabled($paymentProductId, $storeId);
+        $this->checkIfOrderWithinPaymentProductPriceRange($order, $paymentProductId, $storeId);
+        $this->checkIfBillingCountryRestrictedForPaymentProduct($order, $paymentProductId, $storeId);
     }
 
     /**
      * @throws InvalidArgumentException
      */
-    private function checkIfPaymentProductEnabled(string $paymentProductId)
+    private function checkIfPaymentProductEnabled(string $paymentProductId, int $storeId)
     {
-        if (!$this->config->isPaymentProductEnabled($paymentProductId)) {
+        if (!$this->config->isPaymentProductEnabled($paymentProductId, $storeId)) {
             throw new InvalidArgumentException(sprintf(
                 'Payment creation failed. Payment product with id "%s" is disabled.',
                 $paymentProductId
@@ -145,11 +146,16 @@ class RequestBuilder
     /**
      * @throws InvalidArgumentException
      */
-    private function checkIfOrderWithinPaymentProductPriceRange(Order $order, string $paymentProductId)
+    private function checkIfOrderWithinPaymentProductPriceRange(Order $order, string $paymentProductId, int $storeId)
     {
         $orderPrice = $order->getGrandTotal();
         $currencyCode = $order->getBaseCurrencyCode();
-        if (!$this->config->isPriceInPaymentProductPriceRange($orderPrice, $currencyCode, $paymentProductId)) {
+        if (!$this->config->isPriceInPaymentProductPriceRange(
+            $orderPrice,
+            $currencyCode,
+            $paymentProductId,
+            $storeId
+        )) {
             throw new InvalidArgumentException(sprintf(
                 'Payment creation failed. Grand total of "%s %s" is not within the price ranges of payment 
                 product with id "%s".',
@@ -164,14 +170,17 @@ class RequestBuilder
      * @throws LogicException
      * @throws InvalidArgumentException
      */
-    private function checkIfBillingCountryRestrictedForPaymentProduct(Order $order, string $paymentProductId)
-    {
+    private function checkIfBillingCountryRestrictedForPaymentProduct(
+        Order $order,
+        string $paymentProductId,
+        int $orderId
+    ) {
         $billingAddress = $order->getBillingAddress();
         if ($billingAddress === null) {
             throw new LogicException('Order should have Billing Address.');
         }
         $countryId = $billingAddress->getCountryId();
-        if ($this->config->isPaymentProductCountryRestricted($countryId, $paymentProductId)) {
+        if ($this->config->isPaymentProductCountryRestricted($countryId, $paymentProductId, $orderId)) {
             throw new InvalidArgumentException(sprintf(
                 'Payment creation failed. Payment product with id "%s" is disabled for country id "%s."',
                 $paymentProductId,

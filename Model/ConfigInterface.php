@@ -225,6 +225,8 @@ interface ConfigInterface
      */
     public function allowOfflineRefunds(): bool;
 
+    public function getLimitAPIFieldLength(): bool;
+
     public function getPaymentProductPriceRanges(string $paymentProductId, ?int $storeId = null): array;
 
     public function isPriceInPaymentProductPriceRange(
@@ -241,4 +243,6 @@ interface ConfigInterface
         string $paymentProductId,
         ?int $storeId = null
     ): bool;
+
+    public function getSaveForLaterVisible(int $storeId): bool;
 }

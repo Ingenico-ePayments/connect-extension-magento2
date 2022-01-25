@@ -5,15 +5,18 @@ namespace Ingenico\Connect\Model\Ingenico;
 use Ingenico\Connect\Model\Ingenico\Client\Communicator\ConfigurationBuilder;
 use Ingenico\Connect\Sdk\DefaultConnectionFactory;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\CreateHostedCheckoutRequest;
+use Ingenico\Connect\Sdk\Domain\Hostedcheckout\GetHostedCheckoutResponse;
 use Ingenico\Connect\Sdk\Domain\Payment\ApprovePaymentRequest;
 use Ingenico\Connect\Sdk\Domain\Payment\CapturePaymentRequest;
 use Ingenico\Connect\Sdk\Domain\Payment\CreatePaymentRequest;
 use Ingenico\Connect\Sdk\Domain\Payment\CreatePaymentResponse;
+use Ingenico\Connect\Sdk\Domain\Payment\TokenizePaymentRequest;
 use Ingenico\Connect\Sdk\Domain\Product\PaymentProductResponse;
 use Ingenico\Connect\Sdk\Domain\Refund\ApproveRefundRequest;
 use Ingenico\Connect\Sdk\Domain\Refund\RefundRequest;
 use Ingenico\Connect\Sdk\Domain\Sessions\SessionRequest;
 use Ingenico\Connect\Sdk\Domain\Sessions\SessionResponse;
+use Ingenico\Connect\Sdk\Domain\Token\CreateTokenResponse;
 use Ingenico\Connect\Sdk\Merchant\Products\GetProductParams;
 use Ingenico\Connect\Sdk\Merchant\Products\GetProductParamsFactory;
 use Magento\Framework\App\Request\Http;
@@ -396,6 +399,31 @@ class Client implements ClientInterface
             ->testconnection();
 
         return $response;
+    }
+
+    /**
+     * @return CreateTokenResponse
+     */
+    public function ingenicoPaymentTokenize($ingenicoPaymentId, $scopeId = null)
+    {
+        $response = $this
+            ->getIngenicoClient($scopeId)
+            ->merchant($this->ePaymentsConfig->getMerchantId($scopeId))
+            ->payments()
+            ->tokenize($ingenicoPaymentId, new TokenizePaymentRequest());
+
+        return $response;
+    }
+
+    /**
+     * @return GetHostedCheckoutResponse
+     */
+    public function getHostedCheckout(string $hostedCheckoutId, $scopeId = null)
+    {
+        return $this->getIngenicoClient()
+            ->merchant($this->ePaymentsConfig->getMerchantId($scopeId))
+            ->hostedcheckouts()
+            ->get($hostedCheckoutId);
     }
 
     /**

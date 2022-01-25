@@ -65,7 +65,7 @@ define([
             for (let field of product.paymentProductFields) {
                 layouts.push(this.getProductFieldLayout(field, product));
             }
-            if (!this.account && this.product.allowsTokenization && !this.product.autoTokenized && config.isCustomerLoggedIn()) {
+            if (!this.account && this.product.allowsTokenization && !this.product.autoTokenized && config.isCustomerLoggedIn() && config.saveForLaterVisible()) {
                 layouts.push(this.getTokenizeCheckboxLayout());
             }
             if (product.paymentProductFields.length === 0) {

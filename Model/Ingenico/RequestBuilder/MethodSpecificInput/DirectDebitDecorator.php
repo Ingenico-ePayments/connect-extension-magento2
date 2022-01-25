@@ -44,8 +44,7 @@ class DirectDebitDecorator implements DecoratorInterface
         $input = $this->specificInputFactory->create();
         $input->paymentProductId = $this->getProductId($order);
         $input->directDebitText = $order->getIncrementId();
-        $tokenize = $order->getPayment()->getAdditionalInformation(Config::PRODUCT_TOKENIZE_KEY);
-        $input->tokenize = ($tokenize === '1');
+        $input->tokenize = false;
 
         $request->directDebitPaymentMethodSpecificInput = $input;
 

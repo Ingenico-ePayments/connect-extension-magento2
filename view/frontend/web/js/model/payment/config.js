@@ -177,6 +177,10 @@ define([],
             return config.countryRestrictedPaymentProducts;
         }
 
+        let saveForLaterVisible = function () {
+            return config.saveForLaterVisible;
+        }
+
         return {
             init: init,
             getHostedCheckoutUrl: getHostedCheckoutUrl,
@@ -195,7 +199,8 @@ define([],
             inlinePaymentProducts: inlinePaymentProducts,
             disabledPaymentProducts: disabledPaymentProducts,
             priceRangedPaymentProducts: priceRangedPaymentProducts,
-            countryRestrictedPaymentProducts: countryRestrictedPaymentProducts
+            countryRestrictedPaymentProducts: countryRestrictedPaymentProducts,
+            saveForLaterVisible: saveForLaterVisible,
         };
     }
 );

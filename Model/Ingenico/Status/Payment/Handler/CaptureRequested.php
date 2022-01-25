@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ingenico\Connect\Model\Ingenico\Status\Payment\Handler;
 
 use Ingenico\Connect\Model\Ingenico\Status\Payment\HandlerInterface;
+use Ingenico\Connect\Model\Ingenico\Token\TokenService;
 use Ingenico\Connect\Sdk\Domain\Capture\Definitions\Capture as IngenicoCapture;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment as IngenicoPayment;
@@ -24,12 +25,19 @@ class CaptureRequested extends AbstractHandler implements HandlerInterface
      */
     private $orderConfig;
 
+    /**
+     * @var TokenService
+     */
+    private $tokenService;
+
     public function __construct(
         ManagerInterface $eventManager,
-        Config $orderConfig
+        Config $orderConfig,
+        TokenService $tokenService
     ) {
         parent::__construct($eventManager);
         $this->orderConfig = $orderConfig;
+        $this->tokenService = $tokenService;
     }
 
     /**
@@ -55,5 +63,9 @@ class CaptureRequested extends AbstractHandler implements HandlerInterface
         $payment->registerCaptureNotification(Data::reformatMagentoAmount($amount));
 
         $this->dispatchEvent($order, $ingenicoStatus);
+
+        if ($order instanceof Order) {
+            $this->tokenService->createByOrderAndPayment($order, $ingenicoStatus);
+        }
     }
 }

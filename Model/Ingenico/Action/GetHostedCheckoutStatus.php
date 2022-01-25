@@ -2,14 +2,12 @@
 
 namespace Ingenico\Connect\Model\Ingenico\Action;
 
-use Ingenico\Connect\Helper\Token as TokenHelper;
 use Ingenico\Connect\Model\Config;
 use Ingenico\Connect\Model\ConfigInterface;
-use Ingenico\Connect\Model\ConfigProvider;
 use Ingenico\Connect\Model\Ingenico\Action\HostedCheckout\StatusManagement;
+use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
 use Ingenico\Connect\Model\Ingenico\Status\Payment\ResolverInterface;
 use Ingenico\Connect\Model\Order\OrderServiceInterface;
-use Ingenico\Connect\Model\StatusResponseManagerInterface;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\GetHostedCheckoutResponse;
 use Magento\Framework\App\Request\Http;
 use Magento\Framework\Exception\LocalizedException;
@@ -18,13 +16,7 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\OrderRepository;
-use Magento\Vault\Api\PaymentTokenManagementInterface;
-use Magento\Vault\Model\PaymentTokenFactory;
-use Magento\Vault\Model\Ui\VaultConfigProvider;
 use Psr\Log\LoggerInterface;
-
-use function array_filter;
-use function explode;
 
 /**
  * Uses to update Magento Order state/status after payment creation via HostedCheckout Payment method.
@@ -45,6 +37,11 @@ class GetHostedCheckoutStatus implements ActionInterface
      * @var LoggerInterface
      */
     private $logger;
+
+    /**
+     * @var ClientInterface
+     */
+    private $client;
 
     /**
      * @var ConfigInterface
@@ -77,49 +74,33 @@ class GetHostedCheckoutStatus implements ActionInterface
     private $orderService;
 
     /**
-     * @var StatusResponseManagerInterface
+     * @param LoggerInterface $logger
+     * @param ClientInterface $client
+     * @param ConfigInterface $ePaymentsConfig
+     * @param Http $request
+     * @param OrderSender $orderSender
+     * @param ResolverInterface $statusResolver
+     * @param OrderRepository $orderRepository
+     * @param OrderServiceInterface $orderService
      */
-    private $statusResponseManager;
-
-    /**
-     * @var StatusManagement
-     */
-    private $statusManagement;
-
-    /**
-     * @var PaymentTokenManagementInterface
-     */
-    private $paymentTokenManagement;
-
-    /**
-     * @var TokenHelper
-     */
-    private $tokenHelper;
-
     public function __construct(
         LoggerInterface $logger,
+        ClientInterface $client,
         ConfigInterface $ePaymentsConfig,
         Http $request,
         OrderSender $orderSender,
         ResolverInterface $statusResolver,
         OrderRepository $orderRepository,
-        OrderServiceInterface $orderService,
-        StatusResponseManagerInterface $statusResponseManager,
-        StatusManagement $statusManagement,
-        PaymentTokenManagementInterface $paymentTokenManagement,
-        TokenHelper $tokenHelper
+        OrderServiceInterface $orderService
     ) {
         $this->logger = $logger;
+        $this->client = $client;
         $this->ePaymentsConfig = $ePaymentsConfig;
         $this->request = $request;
         $this->orderSender = $orderSender;
         $this->statusResolver = $statusResolver;
         $this->orderRepository = $orderRepository;
         $this->orderService = $orderService;
-        $this->statusResponseManager = $statusResponseManager;
-        $this->statusManagement = $statusManagement;
-        $this->paymentTokenManagement = $paymentTokenManagement;
-        $this->tokenHelper = $tokenHelper;
     }
 
     /**
@@ -132,7 +113,7 @@ class GetHostedCheckoutStatus implements ActionInterface
     public function process(string $hostedCheckoutId)
     {
         $order = $this->getOrder($hostedCheckoutId);
-        $statusResponse = $this->statusManagement->getStatus($hostedCheckoutId);
+        $statusResponse = $this->client->getHostedCheckout($hostedCheckoutId);
 
         if ($statusResponse->status === self::CANCELLED_BY_CONSUMER) {
             $order->cancel();
@@ -142,7 +123,7 @@ class GetHostedCheckoutStatus implements ActionInterface
 
             if ($statusResponse->status === self::PAYMENT_CREATED) {
                 $this->checkReturnmac($order);
-                $this->processOrder($order, $statusResponse);
+                $this->processOrder($statusResponse, $order);
                 try {
                     $this->orderSender->send($order);
                 } catch (\Exception $e) {
@@ -223,13 +204,13 @@ class GetHostedCheckoutStatus implements ActionInterface
     /**
      * Process order
      *
-     * @param OrderInterface $order
+     * @param Order $order
      * @param GetHostedCheckoutResponse $statusResponse
      * @throws LocalizedException
      */
     private function processOrder(
-        OrderInterface $order,
-        GetHostedCheckoutResponse $statusResponse
+        GetHostedCheckoutResponse $statusResponse,
+        Order $order
     ) {
         $ingenicoPaymentId = $statusResponse->createdPaymentOutput->payment->id;
         $ingenicoPaymentStatus = $statusResponse->createdPaymentOutput->payment->status;
@@ -252,18 +233,17 @@ class GetHostedCheckoutStatus implements ActionInterface
         $payment->setAdditionalInformation(Config::PAYMENT_ID_KEY, $ingenicoPaymentId);
         $payment->setAdditionalInformation(Config::PAYMENT_STATUS_KEY, $ingenicoPaymentStatus);
         $payment->setAdditionalInformation(Config::PAYMENT_STATUS_CODE_KEY, $ingenicoPaymentStatusCode);
-
-        $this->processToken($statusResponse, $order);
     }
 
     /**
      * @param string $hostedCheckoutId
-     * @return OrderInterface
+     * @return Order
      * @throws LocalizedException
      */
-    private function getOrder(string $hostedCheckoutId): OrderInterface
+    private function getOrder(string $hostedCheckoutId): Order
     {
         try {
+            /** @var Order $order */
             $order = $this->orderService->getByHostedCheckoutId($hostedCheckoutId);
         } catch (NoSuchEntityException $exception) {
             throw new LocalizedException(
@@ -272,44 +252,5 @@ class GetHostedCheckoutStatus implements ActionInterface
         }
 
         return $order;
-    }
-
-    /**
-     * @param GetHostedCheckoutResponse $statusResponse
-     * @param OrderInterface $order
-     */
-    private function processToken(GetHostedCheckoutResponse $statusResponse, OrderInterface $order): void
-    {
-        $paymentOutput = $statusResponse->createdPaymentOutput->payment->paymentOutput;
-        if ($paymentOutput === null) {
-            return;
-        }
-
-        $cardPaymentMethodSpecificOutput = $paymentOutput->cardPaymentMethodSpecificOutput;
-        if ($cardPaymentMethodSpecificOutput === null) {
-            return;
-        }
-
-        $customerId = $order->getCustomerId();
-        if ($customerId && $statusResponse->createdPaymentOutput->tokens) {
-            $tokens = array_filter(explode(',', $statusResponse->createdPaymentOutput->tokens));
-            foreach ($tokens as $token) {
-                $paymentToken = $this->paymentTokenManagement->getByGatewayToken(
-                    $token,
-                    ConfigProvider::CODE,
-                    $customerId
-                );
-                if ($paymentToken !== null) {
-                    continue;
-                }
-
-                $orderPayment = $order->getPayment();
-                $orderPayment->setAdditionalInformation(VaultConfigProvider::IS_ACTIVE_CODE, 1);
-                $orderPayment->getExtensionAttributes()->setVaultPaymentToken($this->tokenHelper->buildPaymentToken(
-                    $cardPaymentMethodSpecificOutput,
-                    $token
-                ));
-            }
-        }
     }
 }

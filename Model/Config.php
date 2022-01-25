@@ -4,12 +4,15 @@ namespace Ingenico\Connect\Model;
 
 use JsonException;
 use Ingenico\Connect\Helper\MetaData;
+use LogicException;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Store\Model\ScopeInterface;
 
 use function json_decode;
+use function sprintf;
+use function substr;
 
 class Config implements ConfigInterface
 {
@@ -18,6 +21,8 @@ class Config implements ConfigInterface
     const CONFIG_INGENICO_PAYMENT_PRODUCT_DISABLED = '0';
     const CONFIG_INGENICO_PAYMENT_PRODUCT_ENABLED = '1';
     const CONFIG_INGENICO_CREDIT_CARDS_TOGGLE = 'ingenico_epayments/credit_cards/toggle';
+    const CONFIG_INGENICO_CREDIT_CARDS_SAVE_FOR_LATER_VISIBLE =
+        'ingenico_epayments/credit_cards/save_for_later_visible';
     const CONFIG_INGENICO_IDEAL_TOGGLE = 'ingenico_epayments/ideal/toggle';
     const CONFIG_INGENICO_PAYPAL_TOGGLE = 'ingenico_epayments/paypal/toggle';
     const CONFIG_INGENICO_SOFORT_TOGGLE = 'ingenico_epayments/sofort/toggle';
@@ -53,17 +58,31 @@ class Config implements ConfigInterface
     const CONFIG_INGENICO_PAYSAFECARD_COUNTRY_BLACKLIST = 'ingenico_epayments/paysafecard/country_blacklist';
 
     const CONFIG_INGENICO_API_ENDPOINT = 'ingenico_epayments/settings/api_endpoint';
-    const CONFIG_INGENICO_WEBHOOKS_KEY_ID = 'ingenico_epayments/webhook/webhooks_key_id';
-    const CONFIG_INGENICO_WEBHOOKS_SECRET_KEY = 'ingenico_epayments/webhook/webhooks_secret_key';
-    const CONFIG_INGENICO_API_KEY = 'ingenico_epayments/settings/api_key';
-    const CONFIG_INGENICO_API_SECRET = 'ingenico_epayments/settings/api_secret';
-    const CONFIG_INGENICO_MERCHANT_ID = 'ingenico_epayments/settings/merchant_id';
+    const CONFIG_INGENICO_API_ENDPOINT_SANDBOX = 'https://eu.sandbox.api-ingenico.com';
+    const CONFIG_INGENICO_API_ENDPOINT_PRE_PROD = 'https://world.preprod.api-ingenico.com';
+    const CONFIG_INGENICO_API_ENDPOINT_PROD = 'https://world.api-ingenico.com';
+    const CONFIG_INGENICO_WEBHOOKS_KEY_ID_SANDBOX = 'ingenico_epayments/webhook/webhooks_key_id_sandbox';
+    const CONFIG_INGENICO_WEBHOOKS_KEY_ID_PRE_PROD = 'ingenico_epayments/webhook/webhooks_key_id_pre_prod';
+    const CONFIG_INGENICO_WEBHOOKS_KEY_ID_PROD = 'ingenico_epayments/webhook/webhooks_key_id_prod';
+    const CONFIG_INGENICO_WEBHOOKS_SECRET_KEY_SANDBOX = 'ingenico_epayments/webhook/webhooks_secret_key_sandbox';
+    const CONFIG_INGENICO_WEBHOOKS_SECRET_KEY_PRE_PROD = 'ingenico_epayments/webhook/webhooks_secret_key_pre_prod';
+    const CONFIG_INGENICO_WEBHOOKS_SECRET_KEY_PROD = 'ingenico_epayments/webhook/webhooks_secret_key_prod';
+    const CONFIG_INGENICO_API_KEY_SANDBOX = 'ingenico_epayments/settings/api_key_sandbox';
+    const CONFIG_INGENICO_API_KEY_PRE_PROD = 'ingenico_epayments/settings/api_key_pre_prod';
+    const CONFIG_INGENICO_API_KEY_PROD = 'ingenico_epayments/settings/api_key_prod';
+    const CONFIG_INGENICO_API_SECRET_SANDBOX = 'ingenico_epayments/settings/api_secret_sandbox';
+    const CONFIG_INGENICO_API_SECRET_PRE_PROD = 'ingenico_epayments/settings/api_secret_pre_prod';
+    const CONFIG_INGENICO_API_SECRET_PROD = 'ingenico_epayments/settings/api_secret_prod';
+    const CONFIG_INGENICO_MERCHANT_ID_SANDBOX = 'ingenico_epayments/settings/merchant_id_sandbox';
+    const CONFIG_INGENICO_MERCHANT_ID_PRE_PROD = 'ingenico_epayments/settings/merchant_id_pre_prod';
+    const CONFIG_INGENICO_MERCHANT_ID_PROD = 'ingenico_epayments/settings/merchant_id_prod';
     const CONFIG_INGENICO_FIXED_DESCRIPTOR = 'ingenico_epayments/settings/descriptor';
     const CONFIG_INGENICO_HOSTED_CHECKOUT_SUBDOMAIN = 'ingenico_epayments/settings/hosted_checkout_subdomain';
     // NON-EXISTANT
     const CONFIG_INGENICO_LOG_ALL_REQUESTS = 'ingenico_epayments/settings/log_all_requests';
     const CONFIG_INGENICO_LOG_ALL_REQUESTS_FILE = 'ingenico_epayments/settings/log_all_requests_file'; // NON-EXISTANT
     const CONFIG_INGENICO_LOG_FRONTEND_REQUESTS = 'ingenico_epayments/settings/log_frontend_requests';
+    const CONFIG_INGENICO_LIMIT_API_FIELD_LENGTH = 'ingenico_epayments/settings/limit_api_field_length';
     const CONFIG_INGENICO_FRAUD_MANAGER_EMAIL = 'ingenico_epayments/fraud/manager_email';
     const CONFIG_INGENICO_FRAUD_EMAIL_TEMPLATE = 'ingenico_epayments/fraud/email_template'; // NON-EXISTANT
     // phpcs:ignore Generic.Files.LineLength.TooLong
@@ -186,7 +205,24 @@ class Config implements ConfigInterface
      */
     public function getApiKey($storeId = null)
     {
-        return $this->encryptor->decrypt($this->getValue(self::CONFIG_INGENICO_API_KEY, $storeId));
+        $apiEndpoint = $this->getApiEndpoint($storeId);
+        switch ($apiEndpoint) {
+            case self::CONFIG_INGENICO_API_ENDPOINT_SANDBOX:
+                return $this->encryptor->decrypt(
+                    $this->getValue(self::CONFIG_INGENICO_API_KEY_SANDBOX, $storeId)
+                );
+            case self::CONFIG_INGENICO_API_ENDPOINT_PRE_PROD:
+                return $this->encryptor->decrypt(
+                    $this->getValue(self::CONFIG_INGENICO_API_KEY_PRE_PROD, $storeId)
+                );
+            case self::CONFIG_INGENICO_API_ENDPOINT_PROD:
+                return $this->encryptor->decrypt(
+                    $this->getValue(self::CONFIG_INGENICO_API_KEY_PROD, $storeId)
+                );
+        }
+        throw new LogicException(
+            sprintf('No Api Key could be found for API Endpoint "%s".', $apiEndpoint)
+        );
     }
 
     /**
@@ -194,7 +230,24 @@ class Config implements ConfigInterface
      */
     public function getApiSecret($storeId = null)
     {
-        return $this->encryptor->decrypt($this->getValue(self::CONFIG_INGENICO_API_SECRET, $storeId));
+        $apiEndpoint = $this->getApiEndpoint($storeId);
+        switch ($apiEndpoint) {
+            case self::CONFIG_INGENICO_API_ENDPOINT_SANDBOX:
+                return $this->encryptor->decrypt(
+                    $this->getValue(self::CONFIG_INGENICO_API_SECRET_SANDBOX, $storeId)
+                );
+            case self::CONFIG_INGENICO_API_ENDPOINT_PRE_PROD:
+                return $this->encryptor->decrypt(
+                    $this->getValue(self::CONFIG_INGENICO_API_SECRET_PRE_PROD, $storeId)
+                );
+            case self::CONFIG_INGENICO_API_ENDPOINT_PROD:
+                return $this->encryptor->decrypt(
+                    $this->getValue(self::CONFIG_INGENICO_API_SECRET_PROD, $storeId)
+                );
+        }
+        throw new LogicException(
+            sprintf('No Api Secret could be found for API Endpoint "%s".', $apiEndpoint)
+        );
     }
 
     /**
@@ -202,7 +255,18 @@ class Config implements ConfigInterface
      */
     public function getMerchantId($storeId = null)
     {
-        return $this->getValue(self::CONFIG_INGENICO_MERCHANT_ID, $storeId);
+        $apiEndpoint = $this->getApiEndpoint($storeId);
+        switch ($apiEndpoint) {
+            case self::CONFIG_INGENICO_API_ENDPOINT_SANDBOX:
+                return $this->getValue(self::CONFIG_INGENICO_MERCHANT_ID_SANDBOX, $storeId);
+            case self::CONFIG_INGENICO_API_ENDPOINT_PRE_PROD:
+                return $this->getValue(self::CONFIG_INGENICO_MERCHANT_ID_PRE_PROD, $storeId);
+            case self::CONFIG_INGENICO_API_ENDPOINT_PROD:
+                return $this->getValue(self::CONFIG_INGENICO_MERCHANT_ID_PROD, $storeId);
+        }
+        throw new LogicException(
+            sprintf('No Merchant ID could be found for API Endpoint "%s".', $apiEndpoint)
+        );
     }
 
     /**
@@ -330,6 +394,11 @@ class Config implements ConfigInterface
         return in_array($countryCode, $countryRestrictions);
     }
 
+    public function getSaveForLaterVisible(int $storeId): bool
+    {
+        return (bool) $this->getValue(self::CONFIG_INGENICO_CREDIT_CARDS_SAVE_FOR_LATER_VISIBLE);
+    }
+
     private function formatPaymentProductCountryRestrictions(string $paymentProductId, ?int $storeId = null): array
     {
         $countryRestrictionsString = $this->getValue(
@@ -367,7 +436,24 @@ class Config implements ConfigInterface
      */
     public function getWebHooksKeyId($storeId = null)
     {
-        return $this->encryptor->decrypt($this->getValue(self::CONFIG_INGENICO_WEBHOOKS_KEY_ID, $storeId));
+        $apiEndpoint = $this->getApiEndpoint($storeId);
+        switch ($apiEndpoint) {
+            case self::CONFIG_INGENICO_API_ENDPOINT_SANDBOX:
+                return $this->encryptor->decrypt(
+                    $this->getValue(self::CONFIG_INGENICO_WEBHOOKS_KEY_ID_SANDBOX, $storeId)
+                );
+            case self::CONFIG_INGENICO_API_ENDPOINT_PRE_PROD:
+                return $this->encryptor->decrypt(
+                    $this->getValue(self::CONFIG_INGENICO_WEBHOOKS_KEY_ID_PRE_PROD, $storeId)
+                );
+            case self::CONFIG_INGENICO_API_ENDPOINT_PROD:
+                return $this->encryptor->decrypt(
+                    $this->getValue(self::CONFIG_INGENICO_WEBHOOKS_KEY_ID_PROD, $storeId)
+                );
+        }
+        throw new LogicException(
+            sprintf('No Webhooks Key ID could be found for API Endpoint "%s".', $apiEndpoint)
+        );
     }
 
     /**
@@ -375,7 +461,24 @@ class Config implements ConfigInterface
      */
     public function getWebHooksSecretKey($storeId = null)
     {
-        return $this->encryptor->decrypt($this->getValue(self::CONFIG_INGENICO_WEBHOOKS_SECRET_KEY, $storeId));
+        $apiEndpoint = $this->getApiEndpoint($storeId);
+        switch ($apiEndpoint) {
+            case self::CONFIG_INGENICO_API_ENDPOINT_SANDBOX:
+                return $this->encryptor->decrypt(
+                    $this->getValue(self::CONFIG_INGENICO_WEBHOOKS_SECRET_KEY_SANDBOX, $storeId)
+                );
+            case self::CONFIG_INGENICO_API_ENDPOINT_PRE_PROD:
+                return $this->encryptor->decrypt(
+                    $this->getValue(self::CONFIG_INGENICO_WEBHOOKS_SECRET_KEY_PRE_PROD, $storeId)
+                );
+            case self::CONFIG_INGENICO_API_ENDPOINT_PROD:
+                return $this->encryptor->decrypt(
+                    $this->getValue(self::CONFIG_INGENICO_WEBHOOKS_SECRET_KEY_PROD, $storeId)
+                );
+        }
+        throw new LogicException(
+            sprintf('No Webhooks Secret Key could be found for API Endpoint "%s".', $apiEndpoint)
+        );
     }
 
     /**
@@ -535,5 +638,13 @@ class Config implements ConfigInterface
     public function allowOfflineRefunds(): bool
     {
         return (int) $this->scopeConfig->getValue(self::CONFIG_ALLOW_OFFLINE_REFUNDS) === 1;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getLimitAPIFieldLength(): bool
+    {
+        return $this->scopeConfig->isSetFlag(self::CONFIG_INGENICO_LIMIT_API_FIELD_LENGTH);
     }
 }

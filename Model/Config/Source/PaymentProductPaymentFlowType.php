@@ -17,11 +17,11 @@ class PaymentProductPaymentFlowType implements OptionSourceInterface
         return [
             [
                 'value' => Config::CONFIG_INGENICO_CHECKOUT_TYPE_INLINE,
-                'label' => __('Inline Checkout'),
+                'label' => __('Customer enters details in Magento Checkout'),
             ],
             [
                 'value' => Config::CONFIG_INGENICO_CHECKOUT_TYPE_REDIRECT,
-                'label' => __('Hosted Payment Page'),
+                'label' => __('Customer enters details on hosted page by Ingenico'),
             ],
         ];
     }

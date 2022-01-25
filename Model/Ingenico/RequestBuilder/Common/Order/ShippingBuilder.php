@@ -2,6 +2,7 @@
 
 namespace Ingenico\Connect\Model\Ingenico\RequestBuilder\Common\Order;
 
+use Ingenico\Connect\Helper\Format;
 use Ingenico\Connect\Model\Ingenico\RequestBuilder\Common\Order\Shipping\AddressBuilder;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Shipping;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\ShippingFactory;
@@ -42,16 +43,23 @@ class ShippingBuilder
      */
     private $addressBuilder;
 
+    /**
+     * @var Format
+     */
+    private $format;
+
     public function __construct(
         ShippingFactory $shippingFactory,
         CollectionFactory $addressCollectionFactory,
         DateTimeFactory $dateTimeFactory,
-        AddressBuilder $addressBuilder
+        AddressBuilder $addressBuilder,
+        Format $format
     ) {
         $this->shippingFactory = $shippingFactory;
         $this->addressCollectionFactory = $addressCollectionFactory;
         $this->dateTimeFactory = $dateTimeFactory;
         $this->addressBuilder = $addressBuilder;
+        $this->format = $format;
     }
 
     public function create(OrderInterface $order): Shipping
@@ -64,7 +72,7 @@ class ShippingBuilder
             $shipping->addressIndicator = $this->getAddressIndicator($order);
 
             if ($billingAddress = $order->getBillingAddress()) {
-                $shipping->emailAddress = $this->getEmailAddress($billingAddress);
+                $shipping->emailAddress = $this->format->limit($this->getEmailAddress($billingAddress), 70);
             }
 
             if ($shippingAddress !== null && !$order->getCustomerIsGuest()) {

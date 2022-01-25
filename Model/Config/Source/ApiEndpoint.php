@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ingenico\Connect\Model\Config\Source;
 
+use Ingenico\Connect\Model\Config;
 use Magento\Framework\Data\OptionSourceInterface;
 
 class ApiEndpoint implements OptionSourceInterface
@@ -16,15 +17,15 @@ class ApiEndpoint implements OptionSourceInterface
         return [
             [
                 'label' => __('Sandbox'),
-                'value' => 'https://eu.sandbox.api-ingenico.com',
+                'value' => Config::CONFIG_INGENICO_API_ENDPOINT_SANDBOX,
             ],
             [
                 'label' => __('Pre-Production'),
-                'value' => 'https://world.preprod.api-ingenico.com',
+                'value' => Config::CONFIG_INGENICO_API_ENDPOINT_PRE_PROD,
             ],
             [
                 'label' => __('Production'),
-                'value' => 'https://world.api-ingenico.com',
+                'value' => Config::CONFIG_INGENICO_API_ENDPOINT_PROD,
             ],
         ];
     }
