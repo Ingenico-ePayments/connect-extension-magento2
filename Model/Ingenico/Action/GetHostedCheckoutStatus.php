@@ -228,6 +228,11 @@ class GetHostedCheckoutStatus implements ActionInterface
             );
         }
 
+        $payment->setAdditionalInformation(
+            Config::PRODUCT_TOKENIZE_KEY,
+            $statusResponse->createdPaymentOutput->tokens !== null ? '1' : '0'
+        );
+
         $this->statusResolver->resolve($order, $statusResponse->createdPaymentOutput->payment);
 
         $payment->setAdditionalInformation(Config::PAYMENT_ID_KEY, $ingenicoPaymentId);

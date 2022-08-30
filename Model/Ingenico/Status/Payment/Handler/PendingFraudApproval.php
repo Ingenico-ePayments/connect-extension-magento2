@@ -7,6 +7,8 @@ namespace Ingenico\Connect\Model\Ingenico\Status\Payment\Handler;
 use Ingenico\Connect\Model\Ingenico\Status\Payment\HandlerInterface;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment as IngenicoPayment;
 use Magento\Framework\Event\ManagerInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order\Payment;
 use Ingenico\Connect\Helper\Data;
@@ -76,23 +78,24 @@ class PendingFraudApproval extends AbstractHandler implements HandlerInterface
      */
     private function registerPaymentNotification(OrderInterface $order, $amount)
     {
-        $storeId = $order->getStoreId();
         /** @var Payment $payment */
         $payment = $order->getPayment();
-        $captureMode = $this->config->getCaptureMode($storeId);
-
-        if (!$payment->getAdditionalInformation(Config::CLIENT_PAYLOAD_KEY)) {
-            /**
-             * Only register something, if we have some sort of hosted checkout, otherwise we are in inline flow
-             * and Magento will handle the workflow itself.
-             *
-             * @see Payment::place()
-             */
-            if ($captureMode === Config::CONFIG_INGENICO_CAPTURES_MODE_DIRECT) {
-                $payment->registerCaptureNotification($amount);
-            } else {
-                $payment->registerAuthorizationNotification($amount);
+        try {
+            if (!$payment->getAdditionalInformation(Config::CLIENT_PAYLOAD_KEY)) {
+                /**
+                 * Only register something, if we have some sort of hosted checkout, otherwise we are in inline flow
+                 * and Magento will handle the workflow itself.
+                 *
+                 * @see Payment::place()
+                 */
+                if ($payment->getMethodInstance()->getConfigPaymentAction() === AbstractMethod::ACTION_AUTHORIZE) {
+                    $payment->registerCaptureNotification($amount);
+                } else {
+                    $payment->registerAuthorizationNotification($amount);
+                }
             }
+        // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+        } catch (LocalizedException $e) {
         }
     }
 }

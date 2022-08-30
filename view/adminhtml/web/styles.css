@@ -1,0 +1,4 @@
+.ingenico-section .ingenico-payment-logo {background: url("https://cdn.klarna.com/1.0/shared/image/generic/badge/en_us/pay_later/descriptive/pink.svg?width=965")  no-repeat 0 0% / 18rem auto;
+    height: 100px; width: auto; padding-left: 20rem; display:inline-block; vertical-align: middle;}
+.ingenico-section .button-container {float: right;}
+.ingenico-section .ingenico-payment-text { display: inline-block; vertical-align: middle; width: 50%}

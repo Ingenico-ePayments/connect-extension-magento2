@@ -68,6 +68,7 @@ define([
 
                 if (trimmedValue.length < 6) {
                     cardPayment.clearCardType();
+                    this.lastValue = null;
                 } else {
                     if (trimmedValue !== this.lastValue) {
                         cardPayment.updateCardType(value);

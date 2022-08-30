@@ -28,13 +28,14 @@ define([
             requestId = logger.logRequest('getPaymentProduct', payload);
             let response = sdkClient.getBasicPaymentProducts(payload);
             response.then((result) => {
-                result.basicPaymentProducts = result.basicPaymentProducts.filter(
-                    function (paymentProduct) {
-                        return config.isPaymentProductEnabled(paymentProduct) &&
-                            config.isPriceWithinPaymentProductPriceRange(paymentProduct, totalAmount / 100, currencyCode) &&
-                            !config.isPaymentProductCountryRestricted(paymentProduct, countryCode)
-                    }
-                );
+                result.basicPaymentProducts = result.basicPaymentProducts;
+                // .filter(
+                //     function (paymentProduct) {
+                //         return config.isPaymentProductEnabled(paymentProduct) &&
+                //             config.isPriceWithinPaymentProductPriceRange(paymentProduct, totalAmount / 100, currencyCode) &&
+                //             !config.isPaymentProductCountryRestricted(paymentProduct, countryCode)
+                //     }
+                // );
                 logger.logResponse(requestId, result);
             })
             return response;

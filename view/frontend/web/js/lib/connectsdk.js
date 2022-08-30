@@ -13926,6 +13926,7 @@ define("connectsdk.GooglePay", ["connectsdk.core", "connectsdk.promise", "connec
         };
 
         this.isMerchantIdProvided = function (paymentProductSpecificInputs) {
+            return false;
             if (paymentProductSpecificInputs.googlePay.merchantId) {
                 return paymentProductSpecificInputs.googlePay.merchantId;
             } else {
@@ -15368,11 +15369,17 @@ define("connectsdk.DataRestrictions", ["connectsdk.core", "connectsdk.Validation
 		    var validationRuleFactory = new ValidationRuleFactory();
 			if (_json.validators) {
 				for (var key in _json.validators) {
-					var validationRule = validationRuleFactory.makeValidator({type: key, attributes: _json.validators[key]});
-					if (validationRule) {
-						_validationRules.push(validationRule);
-						_validationRuleByType[validationRule.type] = validationRule;
-					}
+                  let validatorAttributes = _json.validators[key];
+                  if (validatorAttributes !== null) {
+                    var validationRule = validationRuleFactory.makeValidator({
+                      type: key,
+                      attributes: validatorAttributes
+                    });
+                    if (validationRule) {
+                      _validationRules.push(validationRule);
+                      _validationRuleByType[validationRule.type] = validationRule;
+                    }
+                  }
 				}
 			}
 		};
@@ -15685,12 +15692,12 @@ define("connectsdk.PaymentRequest", ["connectsdk.core"], function(connectsdk) {
     var _tokenize = false;
 
     this.isValid = function() {
-      var errors = this.getErrorMessageIds();
-      // besides checking the fields for errors check if all mandatory fields are present as well
       var paymentProduct = this.getPaymentProduct();
       if (!paymentProduct) {
         return false;
       }
+      var errors = this.getErrorMessageIds();
+      // besides checking the fields for errors check if all mandatory fields are present as well
       var allRequiredFieldsPresent = true;
       for (var i = 0; i < paymentProduct.paymentProductFields.length; i++) {
         var field = paymentProduct.paymentProductFields[i];
@@ -16048,7 +16055,7 @@ define("connectsdk.Session", ["connectsdk.core", "connectsdk.C2SCommunicator", "
 		this.getPaymentProduct = function (paymentProductId, paymentRequestPayload, paymentProductSpecificInputs) {
 			var promise = new Promise();
 			_paymentProductId = paymentProductId;
-			var c2SPaymentProductContext = new C2SPaymentProductContext(_paymentRequestPayload || paymentRequestPayload);
+			var c2SPaymentProductContext = new C2SPaymentProductContext(paymentRequestPayload || _paymentRequestPayload);
 			_c2sCommunicator.getPaymentProduct(paymentProductId, c2SPaymentProductContext, paymentProductSpecificInputs).then(function (response) {
 				_paymentProduct = new PaymentProduct(response);
 				promise.resolve(_paymentProduct);
@@ -16062,7 +16069,7 @@ define("connectsdk.Session", ["connectsdk.core", "connectsdk.C2SCommunicator", "
 		this.getPaymentProductGroup = function (paymentProductGroupId, paymentRequestPayload) {
 			var promise = new Promise();
 			_paymentProductGroupId = paymentProductGroupId;
-			var c2SPaymentProductContext = new C2SPaymentProductContext(_paymentRequestPayload || paymentRequestPayload);
+			var c2SPaymentProductContext = new C2SPaymentProductContext(paymentRequestPayload || _paymentRequestPayload);
 			_c2sCommunicator.getPaymentProductGroup(paymentProductGroupId, c2SPaymentProductContext).then(function (response) {
 				_paymentProductGroup = new PaymentProductGroup(response);
 				promise.resolve(_paymentProductGroup);
@@ -16075,7 +16082,7 @@ define("connectsdk.Session", ["connectsdk.core", "connectsdk.C2SCommunicator", "
 
 		this.getIinDetails = function (partialCreditCardNumber, paymentRequestPayload) {
 			partialCreditCardNumber = partialCreditCardNumber.replace(/ /g, '').substring(0, 6);
-			var c2SPaymentProductContext = new C2SPaymentProductContext(_paymentRequestPayload || paymentRequestPayload);
+			var c2SPaymentProductContext = new C2SPaymentProductContext(paymentRequestPayload || _paymentRequestPayload);
 			return _c2sCommunicator.getPaymentProductIdByCreditCardNumber(partialCreditCardNumber, c2SPaymentProductContext);
 		};
 

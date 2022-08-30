@@ -14,8 +14,8 @@ interface ResolverInterface
      * Pulls the responsible StatusInterface implementation for the status and lets them handle the order transition
      *
      * @param OrderInterface $order
-     * @param Payment $status
+     * @param Payment $payment
      * @throws LocalizedException
      */
-    public function resolve(OrderInterface $order, Payment $status);
+    public function resolve(OrderInterface $order, Payment $payment);
 }

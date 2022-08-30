@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ingenico\Connect\Model\Ingenico\Status\Payment\Handler;
 
+use Ingenico\Connect\Helper\Data;
 use Ingenico\Connect\Model\Ingenico\Status\Payment\HandlerInterface;
 use Ingenico\Connect\Model\Ingenico\Token\TokenService;
 use Ingenico\Connect\Sdk\Domain\Capture\Definitions\Capture as IngenicoCapture;
@@ -13,7 +14,6 @@ use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
-use Ingenico\Connect\Helper\Data;
 use Magento\Sales\Model\Order\Config;
 
 class CaptureRequested extends AbstractHandler implements HandlerInterface

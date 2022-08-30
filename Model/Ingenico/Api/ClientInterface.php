@@ -51,6 +51,8 @@ interface ClientInterface
      */
     public function getAvailablePaymentProducts($amount, $currencyCode, $countryCode, $locale, $scopeId);
 
+    public function getPaymentProductGroups($amount, $currencyCode, $countryCode, $locale, $scopeId);
+
     /**
      * Return selected payment product
      *

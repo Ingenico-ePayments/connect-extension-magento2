@@ -2,7 +2,11 @@
 
 namespace Ingenico\Connect\Model\Ingenico;
 
+use Ingenico\Connect\Model\ConfigInterface;
+use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
 use Ingenico\Connect\Model\Ingenico\Client\Communicator\ConfigurationBuilder;
+use Ingenico\Connect\Model\Ingenico\Client\CommunicatorFactory;
+use Ingenico\Connect\Model\Ingenico\Client\CommunicatorLoggerFactory;
 use Ingenico\Connect\Sdk\DefaultConnectionFactory;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\CreateHostedCheckoutRequest;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\GetHostedCheckoutResponse;
@@ -17,16 +21,13 @@ use Ingenico\Connect\Sdk\Domain\Refund\RefundRequest;
 use Ingenico\Connect\Sdk\Domain\Sessions\SessionRequest;
 use Ingenico\Connect\Sdk\Domain\Sessions\SessionResponse;
 use Ingenico\Connect\Sdk\Domain\Token\CreateTokenResponse;
+use Ingenico\Connect\Sdk\Merchant\Productgroups\FindProductgroupsParamsFactory;
 use Ingenico\Connect\Sdk\Merchant\Products\GetProductParams;
 use Ingenico\Connect\Sdk\Merchant\Products\GetProductParamsFactory;
 use Magento\Framework\App\Request\Http;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Store\Model\StoreManagerInterface;
-use Ingenico\Connect\Model\ConfigInterface;
-use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
-use Ingenico\Connect\Model\Ingenico\Client\CommunicatorFactory;
-use Ingenico\Connect\Model\Ingenico\Client\CommunicatorLoggerFactory;
 
 class Client implements ClientInterface
 {
@@ -63,7 +64,12 @@ class Client implements ClientInterface
     /**
      * @var FindProductsParamsFactory
      */
-    private $findProductParamsFactory;
+    private $findProductsParamsFactory;
+
+    /**
+     * @var FindProductgroupsParamsFactory
+     */
+    private $findGroupsParamsFactory;
 
     /**
      * @var StoreManagerInterface
@@ -89,7 +95,8 @@ class Client implements ClientInterface
      * @param CommunicatorFactory $communicatorFactory
      * @param ClientFactory $clientFactory
      * @param DefaultConnectionFactory $defaultConnectionFactory
-     * @param GetProductParamsFactory $getProductParamsFactory
+     * @param FindProductgroupsParamsFactory $findGroupsParamsFactory
+     * @param FindProductsParamsFactory $findProductsParamsFactory
      * @param StoreManagerInterface $storeManager
      * @param RequestInterface $request
      */
@@ -100,7 +107,8 @@ class Client implements ClientInterface
         CommunicatorFactory $communicatorFactory,
         ClientFactory $clientFactory,
         DefaultConnectionFactory $defaultConnectionFactory,
-        GetProductParamsFactory $getProductParamsFactory,
+        FindProductgroupsParamsFactory $findGroupsParamsFactory,
+        FindProductsParamsFactory $findProductsParamsFactory,
         StoreManagerInterface $storeManager,
         RequestInterface $request
     ) {
@@ -108,8 +116,9 @@ class Client implements ClientInterface
         $this->communicatorLoggerFactory = $communicatorLoggerFactory;
         $this->communicatorFactory = $communicatorFactory;
         $this->clientFactory = $clientFactory;
-        $this->findProductParamsFactory = $getProductParamsFactory;
         $this->defaultConnectionFactory = $defaultConnectionFactory;
+        $this->findGroupsParamsFactory = $findGroupsParamsFactory;
+        $this->findProductsParamsFactory = $findProductsParamsFactory;
         $this->storeManager = $storeManager;
         $this->request = $request;
         $this->configurationBuilder = $configurationBuilder;
@@ -146,18 +155,33 @@ class Client implements ClientInterface
      */
     public function getAvailablePaymentProducts($amount, $currencyCode, $countryCode, $locale, $scopeId)
     {
-        $findParams = $this->findProductParamsFactory->create();
+        $findParams = $this->findProductsParamsFactory->create();
         $findParams->amount = $amount;
         $findParams->currencyCode = $currencyCode;
         $findParams->countryCode = $countryCode;
         $findParams->locale = $locale;
-        $findParams->hide = 'fields';
 
         $this->initialize($scopeId);
 
         return $this->ingenicoClient[$scopeId]
             ->merchant($this->ePaymentsConfig->getMerchantId($scopeId))
             ->products()
+            ->find($findParams);
+    }
+
+    public function getPaymentProductGroups($amount, $currencyCode, $countryCode, $locale, $scopeId)
+    {
+        $findParams = $this->findGroupsParamsFactory->create();
+        $findParams->amount = $amount;
+        $findParams->currencyCode = $currencyCode;
+        $findParams->countryCode = $countryCode;
+        $findParams->locale = $locale;
+
+        $this->initialize($scopeId);
+
+        return $this->ingenicoClient[$scopeId]
+            ->merchant($this->ePaymentsConfig->getMerchantId($scopeId))
+            ->productgroups()
             ->find($findParams);
     }
 
@@ -177,7 +201,6 @@ class Client implements ClientInterface
         $getParams->currencyCode = $currencyCode;
         $getParams->countryCode = $countryCode;
         $getParams->locale = $locale;
-        $getParams->hide = 'fields';
 
         /** @var PaymentProductResponse $paymentProduct */
         $paymentProduct = $this
@@ -404,13 +427,18 @@ class Client implements ClientInterface
     /**
      * @return CreateTokenResponse
      */
-    public function ingenicoPaymentTokenize($ingenicoPaymentId, $scopeId = null)
+    public function ingenicoPaymentTokenize($ingenicoPaymentId, $scopeId = null, $alias = null)
     {
+        $tokenizePaymentRequest = new TokenizePaymentRequest();
+        if ($alias !== null) {
+            $tokenizePaymentRequest->alias = $alias;
+        }
+
         $response = $this
             ->getIngenicoClient($scopeId)
             ->merchant($this->ePaymentsConfig->getMerchantId($scopeId))
             ->payments()
-            ->tokenize($ingenicoPaymentId, new TokenizePaymentRequest());
+            ->tokenize($ingenicoPaymentId, $tokenizePaymentRequest);
 
         return $response;
     }

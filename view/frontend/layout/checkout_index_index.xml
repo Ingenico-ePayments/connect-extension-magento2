@@ -35,6 +35,23 @@
                                                                         </item>
                                                                     </item>
                                                                 </item>
+                                                                <item name="ingenico" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Ingenico_Connect/js/view/payment/ingenico</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                        <item name="ingenico_1" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">false</item>
+                                                                        </item>
+                                                                        <item name="ingenico_2" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">false</item>
+                                                                        </item>
+                                                                        <item name="ingenico_809" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">false</item>
+                                                                        </item>
+                                                                        <item name="ingenico_hpp" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">false</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
                                                             </item>
                                                         </item>
                                                     </item>

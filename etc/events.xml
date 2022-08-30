@@ -3,6 +3,12 @@
     <event name="payment_method_assign_data_ingenico">
         <observer name="ingenico_data_assign" instance="Ingenico\Connect\Observer\DataAssignObserver"/>
     </event>
+    <event name="payment_method_assign_data">
+        <observer name="ingenico_data_assign" instance="Ingenico\Connect\Observer\AdditionalDataAssignObserver"/>
+    </event>
+    <event name="payment_method_assign_data_ingenico_visa">
+        <observer name="ingenico_data_assign" instance="Ingenico\Connect\Observer\DataAssignObserver"/>
+    </event>
     <event name="sales_order_invoice_pay">
         <observer name="send_invoice_email" instance="Ingenico\Connect\Observer\SendInvoiceMailObserver"/>
     </event>

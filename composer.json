@@ -23,10 +23,6 @@
         "squizlabs/php_codesniffer": "3.*",
         "symfony/console": "4.*"
     },
-    "conflict": {
-        "nrepayments/module-epayments-m2": "*",
-        "ingenico/module-epayments-m2": "*"
-    },
     "type": "magento2-module",
     "autoload": {
         "files": [

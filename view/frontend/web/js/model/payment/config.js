@@ -24,6 +24,14 @@ define([],
         };
 
         /**
+         * Get hostedCheckout index url
+         * @returns {string}
+         */
+        let getHostedCheckoutTitle = function () {
+            return config.hostedCheckoutTitle;
+        };
+
+        /**
          * Get Url that redirects to the success page url
          * @returns {string}
          */
@@ -184,6 +192,7 @@ define([],
         return {
             init: init,
             getHostedCheckoutUrl: getHostedCheckoutUrl,
+            getHostedCheckoutTitle: getHostedCheckoutTitle,
             getInlineSuccessUrl: getInlineSuccessUrl,
             getLocale: getLocale,
             useInlinePayments: useInlinePayments,

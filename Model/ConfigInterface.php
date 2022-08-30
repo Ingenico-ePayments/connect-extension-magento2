@@ -143,6 +143,12 @@ interface ConfigInterface
     public function getHostedCheckoutGuestVariant($storeId = null);
 
     /**
+     * @param null|int $storeId
+     * @return string
+     */
+    public function getHostedCheckoutTitle($storeId = null);
+
+    /**
      * Returns period after which pending orders will be canceled
      *
      * @param int|null $storeId

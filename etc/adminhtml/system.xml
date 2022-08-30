@@ -1,6 +1,50 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
+        <section id="payment">
+            <group id="ingenico_epayments" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                <comment><![CDATA[<div class="ingenico-payment-logo"></div><div class="ingenico-payment-text">Lorem Ipsum. <br/>Lorem Ipsum. <br/>Lorem Ipsum.</div>]]></comment>
+                <fieldset_css>complex ingenico-section</fieldset_css>
+                <frontend_model>Magento\Paypal\Block\Adminhtml\System\Config\Fieldset\Payment</frontend_model>
+                <include path="Ingenico_Connect::methods/settings.xml"/>
+                <include path="Ingenico_Connect::methods/hpp.xml"/>
+                <group id="card" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Card payment methods</label>
+                    <include path="Ingenico_Connect::methods/cards.xml"/>
+                    <include path="Ingenico_Connect::methods/vault.xml"/>
+                    <include path="Ingenico_Connect::methods/card/american_express.xml"/>
+                    <include path="Ingenico_Connect::methods/card/carte_bancaire.xml"/>
+                    <include path="Ingenico_Connect::methods/card/mastercard.xml"/>
+                    <include path="Ingenico_Connect::methods/card/visa.xml"/>
+                </group>
+                <group id="redirect" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Redirect payment methods</label>
+                    <include path="Ingenico_Connect::methods/redirect/giropay.xml"/>
+                    <include path="Ingenico_Connect::methods/redirect/ideal.xml"/>
+                    <include path="Ingenico_Connect::methods/redirect/open_banking.xml"/>
+                    <include path="Ingenico_Connect::methods/redirect/paypal.xml"/>
+                    <include path="Ingenico_Connect::methods/redirect/paysafecard.xml"/>
+                    <include path="Ingenico_Connect::methods/redirect/sofort.xml"/>
+                    <include path="Ingenico_Connect::methods/redirect/trustly.xml"/>
+                </group>
+                <group id="instant_purchase" translate="label" type="text" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Instant purchase payment methods</label>
+                        <!-- Add payment product configurations here -->
+                </group>
+                <group id="advanced" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Debugging and logging</label>
+                    <field id="log_frontend_requests" translate="label" type="Ingenico\Connect\Data\Form\Element\Toggle" sortOrder="10" showInDefault="1">
+                        <label>Log client side API communication</label>
+                        <config_path>ingenico_epayments/settings/log_frontend_requests</config_path>
+                    </field>
+                    <field id="log_all_requests" translate="label" type="Ingenico\Connect\Data\Form\Element\Toggle" sortOrder="20" showInDefault="1">
+                        <label>Log all server side webhooks and API communication</label>
+                        <frontend_model>Ingenico\Connect\Block\Adminhtml\System\Config\Field\LogAllRequests</frontend_model>
+                        <config_path>ingenico_epayments/settings/log_all_requests</config_path>
+                    </field>
+                </group>
+            </group>
+        </section>
         <section id="ingenico_epayments" translate="label" type="text" sortOrder="500" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Ingenico ePayments</label>
             <tab>sales</tab>

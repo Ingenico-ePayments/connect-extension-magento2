@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 2.7.1 - 2022-08-30
+
+- Remove conlict entries from composer.json as they are implicitly defined by replace
+
 ## 2.7.0 - 2022-01-25
 
 - Adds environment specific configuration fields for merchant ID, API key ID, API secret, webhooks key ID and webhooks secret key.

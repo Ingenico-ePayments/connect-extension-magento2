@@ -3,9 +3,9 @@
 namespace Ingenico\Connect\Model\Ingenico\Token;
 
 use DateTime;
-use Ingenico\Connect\Model\Config;
 use Ingenico\Connect\Model\ConfigProvider;
 use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
+use Ingenico\Connect\Sdk\Domain\Definitions\CardEssentials;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\CardPaymentMethodSpecificOutput;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
 use Magento\Sales\Model\Order;
@@ -19,6 +19,7 @@ use Magento\Vault\Model\Ui\VaultConfigProvider;
 use function in_array;
 use function json_encode;
 use function substr;
+use function uniqid;
 
 class TokenService implements TokenServiceInterface
 {
@@ -107,7 +108,7 @@ class TokenService implements TokenServiceInterface
 
     public function createByOrderAndPayment(Order $order, Payment $payment)
     {
-        if (!$order->getPayment()->getAdditionalInformation(Config::PRODUCT_TOKENIZE_KEY)) {
+        if (!$order->getPayment()->getAdditionalInformation('tokenize')) {
             return;
         }
 
@@ -126,7 +127,13 @@ class TokenService implements TokenServiceInterface
             return;
         }
 
-        $tokenResponse = $this->client->ingenicoPaymentTokenize($payment->id);
+        $card = $paymentOutput->cardPaymentMethodSpecificOutput->card;
+        $alias = $card->cardNumber;
+        $tokenResponse = $this->client->ingenicoPaymentTokenize(
+            $payment->id,
+            null,
+            $alias
+        );
         $token = $tokenResponse->token;
         if ($token === null) {
             return;
@@ -140,26 +147,32 @@ class TokenService implements TokenServiceInterface
         $orderPayment = $order->getPayment();
         $orderPayment->setAdditionalInformation(VaultConfigProvider::IS_ACTIVE_CODE, 1);
         $orderPayment->getExtensionAttributes()->setVaultPaymentToken(
-            $this->buildPaymentToken($cardPaymentMethodSpecificOutput, $token)
+            $this->buildPaymentToken($cardPaymentMethodSpecificOutput, $card, $token, $alias)
         );
     }
 
     /**
      * @param CardPaymentMethodSpecificOutput $cardPaymentMethodSpecificOutput
+     * @param CardEssentials $card
      * @param $token
+     * @param $alias
      * @return \Magento\Vault\Api\Data\PaymentTokenInterface
      */
-    public function buildPaymentToken(CardPaymentMethodSpecificOutput $cardPaymentMethodSpecificOutput, $token)
-    {
+    public function buildPaymentToken(
+        CardPaymentMethodSpecificOutput $cardPaymentMethodSpecificOutput,
+        CardEssentials $card,
+        $token,
+        $alias
+    ) {
         $paymentProductId = $cardPaymentMethodSpecificOutput->paymentProductId;
-        $card = $cardPaymentMethodSpecificOutput->card;
         $schemeTransactionId = $cardPaymentMethodSpecificOutput->schemeTransactionId;
 
         $paymentToken = $this->paymentTokenFactory->create(PaymentTokenFactoryInterface::TOKEN_TYPE_CREDIT_CARD);
         $paymentToken->setExpiresAt((DateTime::createFromFormat('my', $card->expiryDate))->format('Y-m-1 00:00:00'));
         $paymentToken->setGatewayToken($token);
         $paymentToken->setTokenDetails(json_encode([
-            'card' => substr($card->cardNumber, -4),
+            'alias' => $alias,
+            'card' => $card->cardNumber,
             'expiry' => (DateTime::createFromFormat('my', $card->expiryDate))->format('m/y'),
             'type' => self::MAP[$paymentProductId] ?: null,
             'transactionId' => $schemeTransactionId,

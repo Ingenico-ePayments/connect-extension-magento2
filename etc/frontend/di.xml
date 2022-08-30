@@ -27,4 +27,47 @@
             <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
         </arguments>
     </type>
+
+    <type name="Magento\Vault\Model\Ui\TokensConfigProvider">
+        <arguments>
+            <argument name="tokenUiComponentProviders" xsi:type="array">
+                <item name="ingenico_cards" xsi:type="object">Ingenico\Connect\Model\Ui\CardsTokenUiComponentProvider</item>
+                <item name="ingenico_americanexpress" xsi:type="object">Ingenico\Connect\Model\Ui\AmericanExpressTokenUiComponentProvider</item>
+                <item name="ingenico_cartebancaire" xsi:type="object">Ingenico\Connect\Model\Ui\CarteBancaireTokenUiComponentProvider</item>
+                <item name="ingenico_mastercard" xsi:type="object">Ingenico\Connect\Model\Ui\MastercardTokenUiComponentProvider</item>
+                <item name="ingenico_visa" xsi:type="object">Ingenico\Connect\Model\Ui\VisaTokenUiComponentProvider</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Ingenico\Connect\Model\Ui\CardsTokenUiComponentProvider" type="Ingenico\Connect\Model\Ui\TokenUiComponentProvider">
+        <arguments>
+            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::CARDS_VAULT</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Ingenico\Connect\Model\Ui\AmericanExpressTokenUiComponentProvider" type="Ingenico\Connect\Model\Ui\TokenUiComponentProvider">
+        <arguments>
+            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::AMERICAN_EXPRESS_VAULT</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Ingenico\Connect\Model\Ui\CarteBancaireTokenUiComponentProvider" type="Ingenico\Connect\Model\Ui\TokenUiComponentProvider">
+        <arguments>
+            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::CARTE_BANCAIRE_VAULT</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Ingenico\Connect\Model\Ui\MastercardTokenUiComponentProvider" type="Ingenico\Connect\Model\Ui\TokenUiComponentProvider">
+        <arguments>
+            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::MASTERCARD_VAULT</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Ingenico\Connect\Model\Ui\VisaTokenUiComponentProvider" type="Ingenico\Connect\Model\Ui\TokenUiComponentProvider">
+        <arguments>
+            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::VISA_VAULT</argument>
+        </arguments>
+    </virtualType>
+
 </config>

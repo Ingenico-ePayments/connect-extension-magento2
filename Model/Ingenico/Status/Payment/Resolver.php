@@ -32,29 +32,29 @@ class Resolver extends AbstractResolver implements ResolverInterface
 
     /**
      * @param OrderInterface $order
-     * @param Payment $status
+     * @param Payment $payment
      * @throws LocalizedException
      * @throws NotFoundException
      */
-    public function resolve(OrderInterface $order, Payment $status)
+    public function resolve(OrderInterface $order, Payment $payment)
     {
-        if (!$this->isStatusNewerThanPreviousStatus($order, $status)) {
+        if (!$this->isStatusNewerThanPreviousStatus($order, $payment)) {
             return;
         }
 
-        $this->preparePayment($order->getPayment(), $status);
+        $this->preparePayment($order->getPayment(), $payment);
 
         // Only run the resolver on an actual status change, otherwise
         // only update the meta-data:
         $additionalInformation = $order->getPayment()->getAdditionalInformation();
         $currentStatus = $additionalInformation[self::KEY_STATUS] ?? null;
-        if ($status->status !== $currentStatus) {
-            $statusHandler = $this->statusHandlerPool->get($status->status);
-            $statusHandler->resolveStatus($order, $status);
+        if ($payment->status !== $currentStatus) {
+            $statusHandler = $this->statusHandlerPool->get($payment->status);
+            $statusHandler->resolveStatus($order, $payment);
         }
 
-        $this->updateStatusCodeChangeDate($order, $status);
-        $this->updateStatus($order, $status);
-        $this->updatePayment($order->getPayment(), $status);
+        $this->updateStatusCodeChangeDate($order, $payment);
+        $this->updateStatus($order, $payment);
+        $this->updatePayment($order->getPayment(), $payment);
     }
 }

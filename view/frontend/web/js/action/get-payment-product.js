@@ -17,7 +17,7 @@ define([
             let sdkClient = client.initialize();
             let payload = {
                 totalAmount: Math.round(parseFloat(quote.getTotals()()['base_grand_total']).toFixed(2) * 100),
-                countryCode: quote.billingAddress().countryId,
+                countryCode: quote.billingAddress() ? quote.billingAddress().countryId : '',
                 currency: quote.getTotals()()['base_currency_code'],
                 isRecurring: false,
                 locale: localeResolver.getBaseLocale(config.getLocale())

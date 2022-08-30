@@ -3,11 +3,13 @@
 namespace Ingenico\Connect\Model;
 
 use Ingenico\Connect\CustomerData\ConnectSession;
+use Ingenico\Connect\PaymentMethod\PaymentMethods;
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Customer\Model\Session;
 use Magento\Framework\Locale\Resolver;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Asset\Repository;
+use Magento\Payment\Helper\Data;
 use Magento\Store\Model\StoreManagerInterface;
 
 class ConfigProvider implements ConfigProviderInterface
@@ -76,6 +78,11 @@ class ConfigProvider implements ConfigProviderInterface
     private $connectSession;
 
     /**
+     * @var Data
+     */
+    private $paymentHelper;
+
+    /**
      * ConfigProvider constructor.
      *
      * @param UrlInterface $urlBuilder
@@ -83,8 +90,8 @@ class ConfigProvider implements ConfigProviderInterface
      * @param Resolver $resolver
      * @param Repository $assetRepo
      * @param StoreManagerInterface $storeManager
-     * @param Session $customerSession
      * @param ConnectSession $connectSession
+     * @param Session $customerSession
      */
     public function __construct(
         UrlInterface $urlBuilder,
@@ -93,7 +100,8 @@ class ConfigProvider implements ConfigProviderInterface
         Repository $assetRepo,
         StoreManagerInterface $storeManager,
         ConnectSession $connectSession,
-        Session $customerSession
+        Session $customerSession,
+        Data $paymentHelper
     ) {
         $this->urlBuilder = $urlBuilder;
         $this->config = $config;
@@ -102,6 +110,7 @@ class ConfigProvider implements ConfigProviderInterface
         $this->storeManager = $storeManager;
         $this->connectSession = $connectSession;
         $this->customerSession = $customerSession;
+        $this->paymentHelper = $paymentHelper;
     }
 
     /**
@@ -111,10 +120,20 @@ class ConfigProvider implements ConfigProviderInterface
     {
         $storeId = $this->storeManager->getStore()->getId();
         $checkoutType = $this->config->getCheckoutType($storeId);
+
+        $products = [];
+        foreach (PaymentMethods::MAP as $paymentMethodCode => $productId) {
+            $products[$paymentMethodCode] = [
+                'id' => $productId,
+                'hosted' => $this->paymentHelper->getMethodInstance($paymentMethodCode)->isInitializeNeeded(),
+            ];
+        }
+
         return [
             'payment' => [
                 'ingenico' => [
                     'hostedCheckoutPageUrl' => $this->urlBuilder->getUrl('epayments/hostedCheckoutPage'),
+                    'hostedCheckoutTitle' => $this->config->getHostedCheckoutTitle($storeId),
                     'inlineSuccessUrl' => $this->urlBuilder->getUrl('epayments/inlinePayment'),
                     'locale' => $this->resolver->getLocale(),
                     'groupCardPaymentMethods' => $this->config->getGroupCardPaymentMethods($storeId),
@@ -128,6 +147,7 @@ class ConfigProvider implements ConfigProviderInterface
                     'priceRangedPaymentProducts' => $this->getPriceRangedPaymentProducts($storeId),
                     'countryRestrictedPaymentProducts' => $this->getCountryRestrictedPaymentProducts($storeId),
                     'saveForLaterVisible' => $this->config->getSaveForLaterVisible($storeId),
+                    'products' => $products,
                 ],
             ],
         ];

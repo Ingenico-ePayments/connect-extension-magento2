@@ -12,6 +12,10 @@ define([
         let encryptor = sdkClient.getEncryptor();
         let request = sdkClient.getPaymentRequest();
 
+        for (let key in data) {
+            request.setValue(key, data[key]);
+        }
+
         if (data['paymentProduct']) {
             request.setPaymentProduct(data['paymentProduct']);
             delete data['paymentProduct'];
@@ -21,9 +25,7 @@ define([
             window.checkoutConfig.isPaymentAccountOnFile = true;
             delete data['accountOnFile'];
         }
-        for (let key in data) {
-            request.setValue(key, data[key]);
-        }
+
         if (!request.isValid()) {
             return Promise.reject('Error creating payment request, data not valid.');
         }

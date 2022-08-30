@@ -64,9 +64,7 @@ abstract class AbstractResolver
 
     private function updateAdditionalInformation(OrderInterface $order, string $key, string $value)
     {
-        $additionalInformation = $order->getPayment()->getAdditionalInformation();
-        $additionalInformation[$key] = $value;
-        $order->getPayment()->setAdditionalInformation($additionalInformation);
+        $order->getPayment()->setAdditionalInformation($key, $value);
     }
 
     /**

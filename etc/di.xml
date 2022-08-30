@@ -1,5 +1,757 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <virtualType name="IngenicoCardsCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="capture" xsi:type="string">Ingenico\Connect\PaymentMethod\Card</item>
+                <item name="authorize" xsi:type="string">Ingenico\Connect\PaymentMethod\Card</item>
+                <item name="initialize" xsi:type="string">Ingenico\Connect\PaymentMethod\HostedPaymentPage</item>
+                <item name="void" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoCancelCommand</item>
+                <item name="cancel" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoCancelCommand</item>
+                <item name="refund" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoRefundCommand</item>
+                <item name="deny_payment" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoDenyPaymentCommand</item>
+                <item name="vault_authorize" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoVaultAuthorizeCommand</item>
+                <item name="vault_sale" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoVaultSaleCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoRedirectCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="capture" xsi:type="string">Ingenico\Connect\PaymentMethod\Redirect</item>
+                <item name="authorize" xsi:type="string">Ingenico\Connect\PaymentMethod\Redirect</item>
+                <item name="initialize" xsi:type="string">Ingenico\Connect\PaymentMethod\HostedPaymentPage</item>
+                <item name="void" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoCancelCommand</item>
+                <item name="cancel" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoCancelCommand</item>
+                <item name="refund" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoRefundCommand</item>
+                <item name="deny_payment" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoDenyPaymentCommand</item>
+                <item name="vault_authorize" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoVaultAuthorizeCommand</item>
+                <item name="vault_sale" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoVaultSaleCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magento\Payment\Model\MethodList">
+        <arguments>
+            <argument name="additionalChecks" xsi:type="array">
+                <item name="is_available_in_api" xsi:type="string">is_available_in_api</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Payment\Model\Checks\SpecificationFactory">
+        <arguments>
+            <argument name="mapping" xsi:type="array">
+                <item name="is_available_in_api" xsi:type="object">Ingenico\Connect\Model\Checks\IsAvailableInApi</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Cards -->
+    <virtualType name="Ingenico\Connect\PaymentMethod\Cards" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::CARDS</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Ingenico\Connect\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">IngenicoCardsValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">IngenicoCardsCommandPool</argument>
+            <argument name="validatorPool" xsi:type="object">IngenicoCardsValidatorPool</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoCardsValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">IngenicoCardsCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoCardsCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">IngenicoCardsConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoCardsValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">IngenicoCardsConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoCardsConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">IngenicoCardsConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoCardsConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::CARDS</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- American Express -->
+    <virtualType name="Ingenico\Connect\PaymentMethod\AmericanExpress" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::AMERICAN_EXPRESS</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Ingenico\Connect\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">IngenicoAmericanExpressValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">IngenicoCardsCommandPool</argument>
+            <argument name="validatorPool" xsi:type="object">IngenicoAmericanExpressValidatorPool</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoAmericanExpressValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">IngenicoAmericanExpressCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoAmericanExpressCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">IngenicoAmericanExpressConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoAmericanExpressValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">IngenicoAmericanExpressConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoAmericanExpressConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">IngenicoAmericanExpressConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoAmericanExpressConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::AMERICAN_EXPRESS</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Carte Bancaire -->
+    <virtualType name="Ingenico\Connect\PaymentMethod\CarteBancaire" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::CARTE_BANCAIRE</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Ingenico\Connect\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">IngenicoCarteBancaireValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">IngenicoCardsCommandPool</argument>
+            <argument name="validatorPool" xsi:type="object">IngenicoCarteBancaireValidatorPool</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoCarteBancaireValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">IngenicoCarteBancaireCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoCarteBancaireCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">IngenicoCarteBancaireConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoCarteBancaireValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">IngenicoCarteBancaireConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoCarteBancaireConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">IngenicoCarteBancaireConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoCarteBancaireConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::CARTE_BANCAIRE</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Mastercard -->
+    <virtualType name="Ingenico\Connect\PaymentMethod\Mastercard" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::MASTERCARD</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Ingenico\Connect\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">IngenicoMastercardValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">IngenicoCardsCommandPool</argument>
+            <argument name="validatorPool" xsi:type="object">IngenicoMastercardValidatorPool</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoMastercardValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">IngenicoMastercardCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoMastercardCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">IngenicoMastercardConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoMastercardValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">IngenicoMastercardConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoMastercardConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">IngenicoMastercardConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoMastercardConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::MASTERCARD</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Visa -->
+    <virtualType name="Ingenico\Connect\PaymentMethod\Visa" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::VISA</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Ingenico\Connect\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">IngenicoVisaValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">IngenicoCardsCommandPool</argument>
+            <argument name="validatorPool" xsi:type="object">IngenicoVisaValidatorPool</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoVisaValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">IngenicoVisaCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoVisaCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">IngenicoVisaConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoVisaValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">IngenicoVisaConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoVisaConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">IngenicoVisaConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoVisaConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::VISA</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Giropay -->
+    <virtualType name="Ingenico\Connect\PaymentMethod\Giropay" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::GIROPAY</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Ingenico\Connect\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">IngenicoGiropayValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">IngenicoRedirectCommandPool</argument>
+            <argument name="validatorPool" xsi:type="object">IngenicoGiropayValidatorPool</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoGiropayValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">IngenicoGiropayCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoGiropayCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">IngenicoGiropayConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoGiropayValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">IngenicoGiropayConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoGiropayConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">IngenicoGiropayConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoGiropayConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::GIROPAY</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- iDeal -->
+    <virtualType name="Ingenico\Connect\PaymentMethod\iDeal" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::IDEAL</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Ingenico\Connect\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">IngenicoIDealValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">IngenicoRedirectCommandPool</argument>
+            <argument name="validatorPool" xsi:type="object">IngenicoIDealValidatorPool</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoIDealValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">IngenicoIDealCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoIDealCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">IngenicoIDealConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoIDealValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">IngenicoIDealConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoIDealConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">IngenicoIDealConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoIDealConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::IDEAL</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Open Banking -->
+    <virtualType name="Ingenico\Connect\PaymentMethod\OpenBanking" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::OPEN_BANKING</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Ingenico\Connect\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">IngenicoOpenBankingValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">IngenicoRedirectCommandPool</argument>
+            <argument name="validatorPool" xsi:type="object">IngenicoOpenBankingValidatorPool</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoOpenBankingValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">IngenicoOpenBankingCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoOpenBankingCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">IngenicoOpenBankingConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoOpenBankingValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">IngenicoOpenBankingConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoOpenBankingConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">IngenicoOpenBankingConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoOpenBankingConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::OPEN_BANKING</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- PayPal -->
+    <virtualType name="Ingenico\Connect\PaymentMethod\PayPal" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::PAYPAL</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Ingenico\Connect\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">IngenicoPayPalValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">IngenicoRedirectCommandPool</argument>
+            <argument name="validatorPool" xsi:type="object">IngenicoPayPalValidatorPool</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoPayPalValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">IngenicoPayPalCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoPayPalCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">IngenicoPayPalConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoPayPalValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">IngenicoPayPalConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoPayPalConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">IngenicoPayPalConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoPayPalConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::PAYPAL</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Paysafecard -->
+    <virtualType name="Ingenico\Connect\PaymentMethod\Paysafecard" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::PAYSAFECARD</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Ingenico\Connect\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">IngenicoPaysafecardValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">IngenicoRedirectCommandPool</argument>
+            <argument name="validatorPool" xsi:type="object">IngenicoPaysafecardValidatorPool</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoPaysafecardValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">IngenicoPaysafecardCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoPaysafecardCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">IngenicoPaysafecardConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoPaysafecardValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">IngenicoPaysafecardConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoPaysafecardConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">IngenicoPaysafecardConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoPaysafecardConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::PAYSAFECARD</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Sofort -->
+    <virtualType name="Ingenico\Connect\PaymentMethod\Sofort" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::SOFORT</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Ingenico\Connect\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">IngenicoSofortValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">IngenicoRedirectCommandPool</argument>
+            <argument name="validatorPool" xsi:type="object">IngenicoSofortValidatorPool</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoSofortValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">IngenicoSofortCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoSofortCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">IngenicoSofortConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoSofortValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">IngenicoSofortConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoSofortConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">IngenicoSofortConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoSofortConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::SOFORT</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Trustly -->
+    <virtualType name="Ingenico\Connect\PaymentMethod\Trustly" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::TRUSTLY</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Ingenico\Connect\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">IngenicoTrustlyValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">IngenicoRedirectCommandPool</argument>
+            <argument name="validatorPool" xsi:type="object">IngenicoTrustlyValidatorPool</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoTrustlyValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">IngenicoTrustlyCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoTrustlyCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">IngenicoTrustlyConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoTrustlyValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">IngenicoTrustlyConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoTrustlyConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">IngenicoTrustlyConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoTrustlyConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::TRUSTLY</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- HPP -->
+    <virtualType name="Ingenico\Connect\PaymentMethod\Hpp" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::HOSTED</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Ingenico\Connect\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">IngenicoHppValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">IngenicoHppCommandPool</argument>
+            <argument name="validatorPool" xsi:type="object">IngenicoHppValidatorPool</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoHppValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">IngenicoHppCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoHppCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">IngenicoHppConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoHppValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">IngenicoHppConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoHppConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">IngenicoHppConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoHppConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::HOSTED</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoHppCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">Ingenico\Connect\PaymentMethod\HostedPaymentPage</item>
+                <item name="void" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoCancelCommand</item>
+                <item name="cancel" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoCancelCommand</item>
+                <item name="refund" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoRefundCommand</item>
+                <item name="deny_payment" xsi:type="string">Ingenico\Connect\Gateway\Command\IngenicoDenyPaymentCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Vault -->
+    <virtualType name="Ingenico\Connect\PaymentMethod\Vault" type="Magento\Vault\Model\Method\Vault">
+        <arguments>
+            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::CARDS_VAULT</argument>
+            <argument name="config" xsi:type="object">IngenicoVaultConfig</argument>
+            <argument name="valueHandlerPool" xsi:type="object">IngenicoVaultValueHandlerPool</argument>
+            <argument name="vaultProvider" xsi:type="object">Ingenico\Connect\PaymentMethod\Cards</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Ingenico\Connect\PaymentMethod\AmericanExpressVault" type="Magento\Vault\Model\Method\Vault">
+        <arguments>
+            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::AMERICAN_EXPRESS_VAULT</argument>
+            <argument name="config" xsi:type="object">IngenicoVaultConfig</argument>
+            <argument name="valueHandlerPool" xsi:type="object">IngenicoVaultValueHandlerPool</argument>
+            <argument name="vaultProvider" xsi:type="object">Ingenico\Connect\PaymentMethod\AmericanExpress</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Ingenico\Connect\PaymentMethod\CarteBancaireVault" type="Magento\Vault\Model\Method\Vault">
+        <arguments>
+            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::CARTE_BANCAIRE_VAULT</argument>
+            <argument name="config" xsi:type="object">IngenicoVaultConfig</argument>
+            <argument name="valueHandlerPool" xsi:type="object">IngenicoVaultValueHandlerPool</argument>
+            <argument name="vaultProvider" xsi:type="object">Ingenico\Connect\PaymentMethod\CarteBancaire</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Ingenico\Connect\PaymentMethod\MastercardVault" type="Magento\Vault\Model\Method\Vault">
+        <arguments>
+            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::MASTERCARD_VAULT</argument>
+            <argument name="config" xsi:type="object">IngenicoVaultConfig</argument>
+            <argument name="valueHandlerPool" xsi:type="object">IngenicoVaultValueHandlerPool</argument>
+            <argument name="vaultProvider" xsi:type="object">Ingenico\Connect\PaymentMethod\Mastercard</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Ingenico\Connect\PaymentMethod\VisaVault" type="Magento\Vault\Model\Method\Vault">
+        <arguments>
+            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::VISA_VAULT</argument>
+            <argument name="config" xsi:type="object">IngenicoVaultConfig</argument>
+            <argument name="valueHandlerPool" xsi:type="object">IngenicoVaultValueHandlerPool</argument>
+            <argument name="vaultProvider" xsi:type="object">Ingenico\Connect\PaymentMethod\Visa</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoVaultValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">IngenicoVaultConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoVaultConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">IngenicoVaultConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoVaultConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::CARDS_VAULT</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoVaultCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="vault_authorize" xsi:type="string">Ingenico\Connect\PaymentMethod\Card</item>
+                <item name="vault_sale" xsi:type="string">Ingenico\Connect\PaymentMethod\Card</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IngenicoVaultCommandManager" type="Magento\Payment\Gateway\Command\CommandManager">
+        <arguments>
+            <argument name="commandPool" xsi:type="object">IngenicoVaultCommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magento\Payment\Gateway\Command\CommandManagerPool">
+        <arguments>
+            <argument name="executors" xsi:type="array">
+                <item name="ingenico_cards" xsi:type="string">IngenicoVaultCommandManager</item>
+                <item name="ingenico_americanexpress" xsi:type="string">IngenicoVaultCommandManager</item>
+                <item name="ingenico_cartebancaire" xsi:type="string">IngenicoVaultCommandManager</item>
+                <item name="ingenico_mastercard" xsi:type="string">IngenicoVaultCommandManager</item>
+                <item name="ingenico_visa" xsi:type="string">IngenicoVaultCommandManager</item>
+            </argument>
+        </arguments>
+    </type>
+
     <preference for="Ingenico\Connect\Model\ConfigInterface" type="Ingenico\Connect\Model\Config"/>
     <preference for="Ingenico\Connect\Model\Ingenico\Token\TokenServiceInterface" type="Ingenico\Connect\Model\Ingenico\Token\TokenService"/>
     <preference for="Ingenico\Connect\Model\Ingenico\Api\ClientInterface" type="Ingenico\Connect\Model\Ingenico\Client"/>
@@ -67,6 +819,17 @@
             <argument name="validatorPool" xsi:type="object">IngenicoValidatorPool</argument>
         </arguments>
     </virtualType>
+
+<!--    <virtualType name="Visa" type="Magento\Payment\Model\Method\Adapter">-->
+<!--        <arguments>-->
+<!--            <argument name="code" xsi:type="string">ingenico_cc</argument>-->
+<!--            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>-->
+<!--            <argument name="infoBlockType" xsi:type="string">Ingenico\Connect\Block\Info</argument>-->
+<!--            <argument name="valueHandlerPool" xsi:type="object">IngenicoValueHandlerPool</argument>-->
+<!--            <argument name="commandPool" xsi:type="object">IngenicoCommandPool</argument>-->
+<!--            <argument name="validatorPool" xsi:type="object">IngenicoValidatorPool</argument>-->
+<!--        </arguments>-->
+<!--    </virtualType>-->
 
     <!-- Payment value handlers set up -->
     <virtualType name="IngenicoValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">

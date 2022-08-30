@@ -100,6 +100,7 @@ class Config implements ConfigInterface
     const CONFIG_INGENICO_CAPTURES_MODE_AUTHORIZE = 'authorize';
     const CONFIG_INGENICO_HOSTED_CHECKOUT_VARIANT = 'ingenico_epayments/checkout/hosted_checkout_variant';
     const CONFIG_INGENICO_HOSTED_CHECKOUT_GUEST_VARIANT = 'ingenico_epayments/checkout/hosted_checkout_guest_variant';
+    const CONFIG_INGENICO_HOSTED_CHECKOUT_TITLE = 'payment/ingenico_hpp/title';
 
     /** AdditionalInformation keys */
     const PAYMENT_ID_KEY = 'ingenico_payment_id';
@@ -535,6 +536,11 @@ class Config implements ConfigInterface
     public function getHostedCheckoutGuestVariant($storeId = null)
     {
         return $this->getValue(self::CONFIG_INGENICO_HOSTED_CHECKOUT_GUEST_VARIANT, $storeId);
+    }
+
+    public function getHostedCheckoutTitle($storeId = null)
+    {
+        return $this->getValue(self::CONFIG_INGENICO_HOSTED_CHECKOUT_TITLE, $storeId);
     }
 
     /**

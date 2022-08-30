@@ -88,22 +88,23 @@ class CardDecorator implements DecoratorInterface
         }
         $input->unscheduledCardOnFileRequestor =
             $this->getUnscheduledCardOnFileRequestor($input->unscheduledCardOnFileSequenceIndicator);
-        $request->cardPaymentMethodSpecificInput = $input;
 
         $extensionAttributes = $order->getPayment()->getExtensionAttributes();
         if ($extensionAttributes !== null) {
             $token = $extensionAttributes->getVaultPaymentToken();
             if ($token !== null) {
-                $request->cardPaymentMethodSpecificInput->token = $token->getGatewayToken();
+                $input->token = $token->getGatewayToken();
                 if (!$order->getRemoteIp()) {
-                    $request->cardPaymentMethodSpecificInput->unscheduledCardOnFileRequestor = 'merchantInitiated';
+                    $input->unscheduledCardOnFileRequestor = 'merchantInitiated';
                     $tokenDetails = json_decode($token->getTokenDetails() ?: '{}');
                     if (is_array($tokenDetails) && array_key_exists('transactionId', $tokenDetails)) {
-                        $request->cardPaymentMethodSpecificInput->initialSchemeTransactionId = $tokenDetails['transactionId'];
+                        $input->initialSchemeTransactionId = $tokenDetails['transactionId'];
                     }
                 }
             }
         }
+
+        $request->cardPaymentMethodSpecificInput = $input;
 
         return $request;
     }
