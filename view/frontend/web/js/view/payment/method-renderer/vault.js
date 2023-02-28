@@ -7,13 +7,15 @@ define([
     'jquery',
     'Magento_Vault/js/view/payment/method-renderer/vault',
     'Magento_Checkout/js/model/quote',
-    'Ingenico_Connect/js/action/get-payment-product',
-    'Ingenico_Connect/js/model/payment/payment-data',
-    'Ingenico_Connect/js/action/create-payload',
+    'Worldline_Connect/js/action/get-payment-product',
+    'Worldline_Connect/js/model/payment/payment-data',
+    'Worldline_Connect/js/action/create-payload',
     'uiLayout',
     'uiRegistry',
-    'ko'
-], function ($, VaultComponent, quote, getPaymentProduct, paymentData, createPayload, layout, registry, ko) {
+    'ko',
+    'Magento_Checkout/js/action/redirect-on-success',
+    'Worldline_Connect/js/model/payment/config'
+], function ($, VaultComponent, quote, getPaymentProduct, paymentData, createPayload, layout, registry, ko, redirectOnSuccessAction, config) {
     'use strict';
 
     return VaultComponent.extend({
@@ -24,7 +26,7 @@ define([
             currentCountry: '',
             product: null,
             maskedCard: null,
-            template: 'Ingenico_Connect/payment/form'
+            template: 'Worldline_Connect/payment/form'
         },
 
         initialize: function () {
@@ -60,12 +62,13 @@ define([
 
                 me.currentCountry = billingCountry;
 
-                let product = window.checkoutConfig.payment.ingenico.products[code];
+                let products = window.checkoutConfig.payment.worldline.products;
+                let product = products[code];
                 if (!product) {
                     return;
                 }
 
-                getPaymentProduct(product.id).then(function(productResponse) {
+                getPaymentProduct(me.details.paymentProductId).then(function(productResponse) {
                     me.title(productResponse.displayHints.label);
                     me.logo(productResponse.displayHints.logo);
 
@@ -81,20 +84,20 @@ define([
 
                     if (product.hosted) {
                         layout([{
-                            component: 'Ingenico_Connect/js/view/payment/component/collection/hosted',
-                            uid: 'ingenico-' + code + '-fields',
-                            displayArea: 'ingenico-cc-fields',
+                            component: 'Worldline_Connect/js/view/payment/component/collection/hosted',
+                            uid: 'worldline-' + code + '-fields',
+                            displayArea: 'worldline-cc-fields',
                             parent: name,
-                            template: 'Ingenico_Connect/payment/product/field-collection',
+                            template: 'Worldline_Connect/payment/product/field-collection',
                             account: me.account
                         }]);
                     } else {
                         layout([{
-                            component: 'Ingenico_Connect/js/view/payment/component/collection/fields-inline',
-                            uid: 'ingenico-' + code + '-fields',
-                            displayArea: 'ingenico-cc-fields',
+                            component: 'Worldline_Connect/js/view/payment/component/collection/fields-inline',
+                            uid: 'worldline-' + code + '-fields',
+                            displayArea: 'worldline-cc-fields',
                             parent: name,
-                            template: 'Ingenico_Connect/payment/product/field-collection',
+                            template: 'Worldline_Connect/payment/product/field-collection',
                             product: productResponse,
                             account: me.account
                         }]);
@@ -132,13 +135,13 @@ define([
         validate: function () {
             paymentData.fieldData = {};
 
-            let product = window.checkoutConfig.payment.ingenico.products[this.code];
+            let product = window.checkoutConfig.payment.worldline.products[this.code];
             if (product.hosted) {
                 return true;
             }
 
             let fieldsValid = true;
-            let activeFieldsCollection = registry.get('uid = ingenico-' + this.code + '-fields');
+            let activeFieldsCollection = registry.get('uid = worldline-' + this.code + '-fields');
             for (let fieldComponent of activeFieldsCollection.elems()) {
                 if (fieldComponent.field) {
                     paymentData.fieldData[fieldComponent.field.id] = fieldComponent.value();
@@ -151,13 +154,13 @@ define([
         },
 
         getData: function () {
-            let product = window.checkoutConfig.payment.ingenico.products[this.code];
+            let product = window.checkoutConfig.payment.worldline.products[this.code];
             return {
                 'method': this.item.method,
                 'additional_data': {
                     'public_hash': this.getToken(),
                     'input': paymentData.getCurrentPayload(),
-                    'product': product.id,
+                    'product': this.details.paymentProductId,
                     'tokenize': paymentData.tokenize().indexOf(product.id) !== -1,
                 }
             };
@@ -171,7 +174,7 @@ define([
             if (!this.validate()) {
                 return false;
             }
-            let product = window.checkoutConfig.payment.ingenico.products[this.code];
+            let product = window.checkoutConfig.payment.worldline.products[this.code];
             if (product.hosted) {
                 parentMethod(data, event);
             } else {
@@ -182,6 +185,15 @@ define([
                     alert('Payment error: ' + error);
                 });
             }
+        },
+
+        afterPlaceOrder: function () {
+            if (paymentData.getCurrentPayload()) {
+                redirectOnSuccessAction.redirectUrl = config.getInlineSuccessUrl();
+            } else {
+                redirectOnSuccessAction.redirectUrl = config.getHostedCheckoutUrl();
+            }
+            this.redirectAfterPlaceOrder = true;
         },
 
         /**

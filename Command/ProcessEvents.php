@@ -1,28 +1,30 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
-namespace Ingenico\Connect\Command;
+namespace Worldline\Connect\Command;
 
 use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
 use Magento\Framework\Exception\LocalizedException;
-use Ingenico\Connect\Model\Event\Processor;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Worldline\Connect\Model\Event\Processor;
 
 class ProcessEvents extends Command
 {
-    const AMOUNT_OPTION = 'amount';
+    public const AMOUNT_OPTION = 'amount';
 
     /**
      * @var Processor
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $processor;
 
     /**
      * @var State
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $appState;
 
     /**
@@ -42,7 +44,7 @@ class ProcessEvents extends Command
 
     protected function configure()
     {
-        $this->setName('ingenico:process-events');
+        $this->setName('worldline:process-events');
         $this->setDescription('Batch processes webhook events');
         $this->setDefinition(
             [

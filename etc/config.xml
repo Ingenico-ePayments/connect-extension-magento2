@@ -3,22 +3,21 @@
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
         <payment>
-            <ingenico>
-                <model>IngenicoFacade</model>
-                <title>Ingenico</title>
-            </ingenico>
-            <!-- Cards -->
-            <ingenico_cards>
-                <model>Ingenico\Connect\PaymentMethod\Cards</model>
-                <title>Ingenico Cards</title>
+            <!-- Groups -->
+            <worldline_cards>
+                <model>Worldline\Connect\PaymentMethod\Cards</model>
+                <title>Worldline Cards</title>
                 <active>1</active>
                 <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
                 <can_capture_vault>1</can_capture_vault>
-                <can_refund>0</can_refund>
+                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
                 <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
                 <can_deny_payment>1</can_deny_payment>
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
@@ -26,243 +25,621 @@
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize_capture</payment_action>
-                <sort_order>5</sort_order>
-            </ingenico_cards>
-            <ingenico_americanexpress>
-                <model>Ingenico\Connect\PaymentMethod\AmericanExpress</model>
-                <title>Ingenico American Express</title>
+                <sort_order>0</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_group>cards</product_group>
+            </worldline_cards>
+            <!-- Cards -->
+            <worldline_americanexpress>
+                <model>Worldline\Connect\PaymentMethod\AmericanExpress</model>
+                <title>Worldline American Express</title>
                 <active>1</active>
-                <can_initialize>0</can_initialize>
+                <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
                 <can_capture_vault>1</can_capture_vault>
-                <can_refund>0</can_refund>
+                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
                 <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
                 <can_deny_payment>1</can_deny_payment>
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize_capture</payment_action>
-                <sort_order>10</sort_order>
-            </ingenico_americanexpress>
-            <ingenico_cartebancaire>
-                <model>Ingenico\Connect\PaymentMethod\CarteBancaire</model>
-                <title>Ingenico Carte Bancaire</title>
+                <sort_order>2</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>2</product_id>
+            </worldline_americanexpress>
+            <worldline_bc_card>
+                <model>Worldline\Connect\PaymentMethod\BCCard</model>
+                <title>Worldline BC Card</title>
                 <active>1</active>
-                <can_initialize>0</can_initialize>
+                <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
                 <can_capture_vault>1</can_capture_vault>
-                <can_refund>0</can_refund>
+                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
                 <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
                 <can_deny_payment>1</can_deny_payment>
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize_capture</payment_action>
-                <sort_order>15</sort_order>
-            </ingenico_cartebancaire>
-            <ingenico_mastercard>
-                <model>Ingenico\Connect\PaymentMethod\Mastercard</model>
-                <title>Ingenico Mastercard</title>
+                <sort_order>180</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>180</product_id>
+            </worldline_bc_card>
+            <worldline_cartebancaire>
+                <model>Worldline\Connect\PaymentMethod\CarteBancaire</model>
+                <title>Worldline Carte Bancaire</title>
                 <active>1</active>
-                <can_initialize>0</can_initialize>
+                <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
                 <can_capture_vault>1</can_capture_vault>
-                <can_refund>0</can_refund>
+                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
                 <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
                 <can_deny_payment>1</can_deny_payment>
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize_capture</payment_action>
-                <sort_order>20</sort_order>
-            </ingenico_mastercard>
-            <ingenico_visa>
-                <model>Ingenico\Connect\PaymentMethod\Visa</model>
-                <title>Ingenico Visa</title>
+                <sort_order>130</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>130</product_id>
+            </worldline_cartebancaire>
+            <worldline_dinersclub>
+                <model>Worldline\Connect\PaymentMethod\DinersClub</model>
+                <title>Worldline Diners Club</title>
                 <active>1</active>
-                <can_initialize>0</can_initialize>
+                <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
                 <can_capture_vault>1</can_capture_vault>
-                <can_refund>0</can_refund>
+                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
                 <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
                 <can_deny_payment>1</can_deny_payment>
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize_capture</payment_action>
-                <sort_order>25</sort_order>
-            </ingenico_visa>
+                <sort_order>132</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>132</product_id>
+            </worldline_dinersclub>
+            <worldline_discover>
+                <model>Worldline\Connect\PaymentMethod\Discover</model>
+                <title>Worldline Discover</title>
+                <active>1</active>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_capture_vault>1</can_capture_vault>
+                <can_refund>1</can_refund>
+                <can_capture_partial>1</can_capture_partial>
+                <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_internal>0</can_use_internal>
+                <can_authorize>1</can_authorize>
+                <can_cancel>1</can_cancel>
+                <is_gateway>1</is_gateway>
+                <payment_action>authorize_capture</payment_action>
+                <sort_order>128</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>128</product_id>
+            </worldline_discover>
+            <worldline_hyundai_card>
+                <model>Worldline\Connect\PaymentMethod\HyundaiCard</model>
+                <title>Worldline Hyundai Card</title>
+                <active>1</active>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_capture_vault>1</can_capture_vault>
+                <can_refund>1</can_refund>
+                <can_capture_partial>1</can_capture_partial>
+                <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_internal>0</can_use_internal>
+                <can_authorize>1</can_authorize>
+                <can_cancel>1</can_cancel>
+                <is_gateway>1</is_gateway>
+                <payment_action>authorize_capture</payment_action>
+                <sort_order>182</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>182</product_id>
+            </worldline_hyundai_card>
+            <worldline_jcb>
+                <model>Worldline\Connect\PaymentMethod\JCB</model>
+                <title>Worldline JCB</title>
+                <active>1</active>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_capture_vault>1</can_capture_vault>
+                <can_refund>1</can_refund>
+                <can_capture_partial>1</can_capture_partial>
+                <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_internal>0</can_use_internal>
+                <can_authorize>1</can_authorize>
+                <can_cancel>1</can_cancel>
+                <is_gateway>1</is_gateway>
+                <payment_action>authorize_capture</payment_action>
+                <sort_order>125</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>125</product_id>
+            </worldline_jcb>
+            <worldline_kb_kookmin_card>
+                <model>Worldline\Connect\PaymentMethod\KBKookminCard</model>
+                <title>Worldline KB Kookmin Card</title>
+                <active>1</active>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_capture_vault>1</can_capture_vault>
+                <can_refund>1</can_refund>
+                <can_capture_partial>1</can_capture_partial>
+                <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_internal>0</can_use_internal>
+                <can_authorize>1</can_authorize>
+                <can_cancel>1</can_cancel>
+                <is_gateway>1</is_gateway>
+                <payment_action>authorize_capture</payment_action>
+                <sort_order>183</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>183</product_id>
+            </worldline_kb_kookmin_card>
+            <worldline_keb_hana_card>
+                <model>Worldline\Connect\PaymentMethod\KEBHanaCard</model>
+                <title>Worldline KEB Hana Card</title>
+                <active>1</active>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_capture_vault>1</can_capture_vault>
+                <can_refund>1</can_refund>
+                <can_capture_partial>1</can_capture_partial>
+                <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_internal>0</can_use_internal>
+                <can_authorize>1</can_authorize>
+                <can_cancel>1</can_cancel>
+                <is_gateway>1</is_gateway>
+                <payment_action>authorize_capture</payment_action>
+                <sort_order>181</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>181</product_id>
+            </worldline_keb_hana_card>
+            <worldline_lotte_card>
+                <model>Worldline\Connect\PaymentMethod\LotteCard</model>
+                <title>Worldline Lotte Card</title>
+                <active>1</active>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_capture_vault>1</can_capture_vault>
+                <can_refund>1</can_refund>
+                <can_capture_partial>1</can_capture_partial>
+                <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_internal>0</can_use_internal>
+                <can_authorize>1</can_authorize>
+                <can_cancel>1</can_cancel>
+                <is_gateway>1</is_gateway>
+                <payment_action>authorize_capture</payment_action>
+                <sort_order>184</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <payment_flow>184</payment_flow>
+            </worldline_lotte_card>
+            <worldline_mastercard>
+                <model>Worldline\Connect\PaymentMethod\Mastercard</model>
+                <title>Worldline Mastercard</title>
+                <active>1</active>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_capture_vault>1</can_capture_vault>
+                <can_refund>1</can_refund>
+                <can_capture_partial>1</can_capture_partial>
+                <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_internal>0</can_use_internal>
+                <can_authorize>1</can_authorize>
+                <can_cancel>1</can_cancel>
+                <is_gateway>1</is_gateway>
+                <payment_action>authorize_capture</payment_action>
+                <sort_order>3</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>3</product_id>
+            </worldline_mastercard>
+            <worldline_nh_card>
+                <model>Worldline\Connect\PaymentMethod\NHCard</model>
+                <title>Worldline NH Card</title>
+                <active>1</active>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_capture_vault>1</can_capture_vault>
+                <can_refund>1</can_refund>
+                <can_capture_partial>1</can_capture_partial>
+                <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_internal>0</can_use_internal>
+                <can_authorize>1</can_authorize>
+                <can_cancel>1</can_cancel>
+                <is_gateway>1</is_gateway>
+                <payment_action>authorize_capture</payment_action>
+                <sort_order>185</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>185</product_id>
+            </worldline_nh_card>
+            <worldline_samsung_card>
+                <model>Worldline\Connect\PaymentMethod\SamsungCard</model>
+                <title>Worldline Samsung Card</title>
+                <active>1</active>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_capture_vault>1</can_capture_vault>
+                <can_refund>1</can_refund>
+                <can_capture_partial>1</can_capture_partial>
+                <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_internal>0</can_use_internal>
+                <can_authorize>1</can_authorize>
+                <can_cancel>1</can_cancel>
+                <is_gateway>1</is_gateway>
+                <payment_action>authorize_capture</payment_action>
+                <sort_order>186</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>186</product_id>
+            </worldline_samsung_card>
+            <worldline_shinhan_card>
+                <model>Worldline\Connect\PaymentMethod\ShinhanCard</model>
+                <title>Worldline Shinhan Card</title>
+                <active>1</active>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_capture_vault>1</can_capture_vault>
+                <can_refund>1</can_refund>
+                <can_capture_partial>1</can_capture_partial>
+                <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_internal>0</can_use_internal>
+                <can_authorize>1</can_authorize>
+                <can_cancel>1</can_cancel>
+                <is_gateway>1</is_gateway>
+                <payment_action>authorize_capture</payment_action>
+                <sort_order>187</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>187</product_id>
+            </worldline_shinhan_card>
+            <worldline_unionpay_expresspay>
+                <model>Worldline\Connect\PaymentMethod\UnionPayExpressPay</model>
+                <title>Worldline UnionPay ExpressPay</title>
+                <active>1</active>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_capture_vault>1</can_capture_vault>
+                <can_refund>1</can_refund>
+                <can_capture_partial>1</can_capture_partial>
+                <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_internal>0</can_use_internal>
+                <can_authorize>1</can_authorize>
+                <can_cancel>1</can_cancel>
+                <is_gateway>1</is_gateway>
+                <payment_action>authorize_capture</payment_action>
+                <sort_order>56</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>56</product_id>
+            </worldline_unionpay_expresspay>
+            <worldline_visa>
+                <model>Worldline\Connect\PaymentMethod\Visa</model>
+                <title>Worldline Visa</title>
+                <active>1</active>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_capture_vault>1</can_capture_vault>
+                <can_refund>1</can_refund>
+                <can_capture_partial>1</can_capture_partial>
+                <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_internal>0</can_use_internal>
+                <can_authorize>1</can_authorize>
+                <can_cancel>1</can_cancel>
+                <is_gateway>1</is_gateway>
+                <payment_action>authorize_capture</payment_action>
+                <sort_order>1</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>1</product_id>
+            </worldline_visa>
             <!-- Redirect -->
-            <ingenico_giropay>
-                <model>Ingenico\Connect\PaymentMethod\Giropay</model>
-                <title>Ingenico Giropay</title>
+            <worldline_giropay>
+                <model>Worldline\Connect\PaymentMethod\Giropay</model>
+                <title>Worldline Giropay</title>
                 <active>1</active>
-                <can_initialize>0</can_initialize>
+                <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>0</can_refund>
+                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
                 <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
                 <can_deny_payment>1</can_deny_payment>
                 <can_use_internal>0</can_use_internal>
-                <can_authorize>1</can_authorize>
+                <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize_capture</payment_action>
-                <sort_order>30</sort_order>
-            </ingenico_giropay>
-            <ingenico_ideal>
-                <model>Ingenico\Connect\PaymentMethod\iDeal</model>
-                <title>Ingenico iDeal</title>
+                <sort_order>816</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>816</product_id>
+            </worldline_giropay>
+            <worldline_ideal>
+                <model>Worldline\Connect\PaymentMethod\iDeal</model>
+                <title>Worldline iDeal</title>
                 <active>1</active>
-                <can_initialize>0</can_initialize>
+                <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>0</can_refund>
+                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
                 <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
                 <can_deny_payment>1</can_deny_payment>
                 <can_use_internal>0</can_use_internal>
-                <can_authorize>1</can_authorize>
+                <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize_capture</payment_action>
-                <sort_order>35</sort_order>
-            </ingenico_ideal>
-            <ingenico_open_banking>
-                <model>Ingenico\Connect\PaymentMethod\OpenBanking</model>
-                <title>Ingenico Open Banking</title>
+                <sort_order>809</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>809</product_id>
+            </worldline_ideal>
+            <worldline_open_banking>
+                <model>Worldline\Connect\PaymentMethod\OpenBanking</model>
+                <title>Worldline Open Banking</title>
                 <active>1</active>
-                <can_initialize>0</can_initialize>
+                <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>0</can_refund>
+                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
                 <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
                 <can_deny_payment>1</can_deny_payment>
                 <can_use_internal>0</can_use_internal>
-                <can_authorize>1</can_authorize>
+                <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize_capture</payment_action>
-                <sort_order>40</sort_order>
-            </ingenico_open_banking>
-            <ingenico_paypal>
-                <model>Ingenico\Connect\PaymentMethod\PayPal</model>
-                <title>Ingenico PayPal</title>
+                <sort_order>865</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>865</product_id>
+            </worldline_open_banking>
+            <worldline_paypal>
+                <model>Worldline\Connect\PaymentMethod\PayPal</model>
+                <title>Worldline PayPal</title>
                 <active>1</active>
-                <can_initialize>0</can_initialize>
+                <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>0</can_refund>
+                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
                 <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
                 <can_deny_payment>1</can_deny_payment>
                 <can_use_internal>0</can_use_internal>
-                <can_authorize>1</can_authorize>
+                <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize_capture</payment_action>
-                <sort_order>45</sort_order>
-            </ingenico_paypal>
-            <ingenico_paysafecard>
-                <model>Ingenico\Connect\PaymentMethod\Paysafecard</model>
-                <title>Ingenico Paysafecard</title>
+                <sort_order>840</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>840</product_id>
+            </worldline_paypal>
+            <worldline_paysafecard>
+                <model>Worldline\Connect\PaymentMethod\Paysafecard</model>
+                <title>Worldline Paysafecard</title>
                 <active>1</active>
-                <can_initialize>0</can_initialize>
+                <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>0</can_refund>
+                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
                 <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
                 <can_deny_payment>1</can_deny_payment>
                 <can_use_internal>0</can_use_internal>
-                <can_authorize>1</can_authorize>
+                <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize_capture</payment_action>
-                <sort_order>50</sort_order>
-            </ingenico_paysafecard>
-            <ingenico_sofort>
-                <model>Ingenico\Connect\PaymentMethod\Sofort</model>
-                <title>Ingenico Sofort</title>
+                <sort_order>830</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>830</product_id>
+            </worldline_paysafecard>
+            <worldline_sofort>
+                <model>Worldline\Connect\PaymentMethod\Sofort</model>
+                <title>Worldline Sofort</title>
                 <active>1</active>
-                <can_initialize>0</can_initialize>
+                <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>0</can_refund>
+                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
                 <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
                 <can_deny_payment>1</can_deny_payment>
                 <can_use_internal>0</can_use_internal>
-                <can_authorize>1</can_authorize>
+                <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize_capture</payment_action>
-                <sort_order>55</sort_order>
-            </ingenico_sofort>
-            <ingenico_trustly>
-                <model>Ingenico\Connect\PaymentMethod\Trustly</model>
-                <title>Ingenico Trustly</title>
+                <sort_order>836</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>836</product_id>
+            </worldline_sofort>
+            <worldline_trustly>
+                <model>Worldline\Connect\PaymentMethod\Trustly</model>
+                <title>Worldline Trustly</title>
                 <active>1</active>
-                <can_initialize>0</can_initialize>
+                <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>0</can_refund>
+                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
                 <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
                 <can_deny_payment>1</can_deny_payment>
                 <can_use_internal>0</can_use_internal>
-                <can_authorize>1</can_authorize>
+                <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize_capture</payment_action>
-                <sort_order>60</sort_order>
-            </ingenico_trustly>
+                <sort_order>806</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>806</product_id>
+            </worldline_trustly>
             <!-- Hpp -->
-            <ingenico_hpp>
-                <model>Ingenico\Connect\PaymentMethod\Hpp</model>
+            <worldline_hpp>
+                <model>Worldline\Connect\PaymentMethod\Hpp</model>
                 <title>Other payment methods</title>
                 <active>1</active>
                 <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>0</can_refund>
+                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
                 <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
                 <can_deny_payment>1</can_deny_payment>
                 <can_use_internal>0</can_use_internal>
-                <can_authorize>1</can_authorize>
+                <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize_capture</payment_action>
-                <sort_order>65</sort_order>
-            </ingenico_hpp>
+                <sort_order>1000000</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+            </worldline_hpp>
             <!-- Vault -->
-            <ingenico_vault>
-                <model>Ingenico\Connect\PaymentMethod\Vault</model>
-                <title>Ingenico Vault</title>
+            <worldline_vault>
+                <model>Worldline\Connect\PaymentMethod\Vault</model>
+                <title>Worldline Vault</title>
                 <active>1</active>
-                <can_initialize>0</can_initialize>
+                <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>0</can_refund>
+                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
                 <can_authorize_vault>1</can_authorize_vault>
                 <can_capture_vault>1</can_capture_vault>
                 <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
                 <can_deny_payment>1</can_deny_payment>
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
@@ -270,19 +647,24 @@
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize_capture</payment_action>
                 <sort_order>100</sort_order>
-            </ingenico_vault>
-            <ingenico_americanexpress_vault>
-                <model>Ingenico\Connect\PaymentMethod\AmericanExpressVault</model>
-                <title>Ingenico Vault</title>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+            </worldline_vault>
+            <worldline_americanexpress_vault>
+                <model>Worldline\Connect\PaymentMethod\AmericanExpressVault</model>
+                <title>Worldline Vault</title>
                 <active>1</active>
-                <can_initialize>0</can_initialize>
+                <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>0</can_refund>
+                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
                 <can_authorize_vault>1</can_authorize_vault>
                 <can_capture_vault>1</can_capture_vault>
                 <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
                 <can_deny_payment>1</can_deny_payment>
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
@@ -290,19 +672,25 @@
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize_capture</payment_action>
                 <sort_order>100</sort_order>
-            </ingenico_americanexpress_vault>
-            <ingenico_cartebancaire_vault>
-                <model>Ingenico\Connect\PaymentMethod\CarteBancaireVault</model>
-                <title>Ingenico Vault</title>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>2</product_id>
+            </worldline_americanexpress_vault>
+            <worldline_cartebancaire_vault>
+                <model>Worldline\Connect\PaymentMethod\CarteBancaireVault</model>
+                <title>Worldline Vault</title>
                 <active>1</active>
-                <can_initialize>0</can_initialize>
+                <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>0</can_refund>
+                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
                 <can_authorize_vault>1</can_authorize_vault>
                 <can_capture_vault>1</can_capture_vault>
                 <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
                 <can_deny_payment>1</can_deny_payment>
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
@@ -310,19 +698,25 @@
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize_capture</payment_action>
                 <sort_order>100</sort_order>
-            </ingenico_cartebancaire_vault>
-            <ingenico_mastercard_vault>
-                <model>Ingenico\Connect\PaymentMethod\MastercardVault</model>
-                <title>Ingenico Vault</title>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>130</product_id>
+            </worldline_cartebancaire_vault>
+            <worldline_discover_vault>
+                <model>Worldline\Connect\PaymentMethod\DiscoverVault</model>
+                <title>Worldline Vault</title>
                 <active>1</active>
-                <can_initialize>0</can_initialize>
+                <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>0</can_refund>
+                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
                 <can_authorize_vault>1</can_authorize_vault>
                 <can_capture_vault>1</can_capture_vault>
                 <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
                 <can_deny_payment>1</can_deny_payment>
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
@@ -330,19 +724,25 @@
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize_capture</payment_action>
                 <sort_order>100</sort_order>
-            </ingenico_mastercard_vault>
-            <ingenico_visa_vault>
-                <model>Ingenico\Connect\PaymentMethod\VisaVault</model>
-                <title>Ingenico Vault</title>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>130</product_id>
+            </worldline_discover_vault>
+            <worldline_mastercard_vault>
+                <model>Worldline\Connect\PaymentMethod\MastercardVault</model>
+                <title>Worldline Vault</title>
                 <active>1</active>
-                <can_initialize>0</can_initialize>
+                <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>0</can_refund>
+                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
                 <can_authorize_vault>1</can_authorize_vault>
                 <can_capture_vault>1</can_capture_vault>
                 <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
                 <can_deny_payment>1</can_deny_payment>
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
@@ -350,20 +750,47 @@
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize_capture</payment_action>
                 <sort_order>100</sort_order>
-            </ingenico_visa_vault>
-            <ingenico_cc_vault>
-                <model>IngenicoCreditCardVaultFacade</model>
-            </ingenico_cc_vault>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+            </worldline_mastercard_vault>
+            <worldline_visa_vault>
+                <model>Worldline\Connect\PaymentMethod\VisaVault</model>
+                <title>Worldline Vault</title>
+                <active>1</active>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_capture_partial>1</can_capture_partial>
+                <can_authorize_vault>1</can_authorize_vault>
+                <can_capture_vault>1</can_capture_vault>
+                <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_internal>0</can_use_internal>
+                <can_authorize>1</can_authorize>
+                <can_cancel>1</can_cancel>
+                <is_gateway>1</is_gateway>
+                <payment_action>authorize_capture</payment_action>
+                <sort_order>100</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+            </worldline_visa_vault>
         </payment>
-        <ingenico_epayments>
-            <model>Ingenico\Connect\Model\Payment\Ingenico</model>
-            <title>Ingenico Connect</title>
+        <worldline_connect>
+            <model>Worldline\Connect\Model\Payment\Worldline</model>
+            <title>Worldline Connect</title>
             <general>
                 <payment_action>authorize</payment_action>
                 <sort_order>500</sort_order>
                 <can_initialize>1</can_initialize>
                 <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
                 <can_deny_payment>1</can_deny_payment>
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
@@ -374,7 +801,7 @@
             <settings>
                 <hosted_checkout_subdomain>https://payment.</hosted_checkout_subdomain>
                 <log_all_requests>0</log_all_requests>
-                <log_all_requests_file>ingenico_epayments.log</log_all_requests_file>
+                <log_all_requests_file>worldline_connect.log</log_all_requests_file>
                 <limit_api_field_length>0</limit_api_field_length>
             </settings>
             <checkout>
@@ -433,7 +860,7 @@
                 <pending_payment><![CDATA[Instructions have been provided and we are now waiting for the money to come in]]></pending_payment>
                 <pending_capture><![CDATA[The transaction is waiting for you to request one or more captures of the funds]]></pending_capture>
                 <pending_fraud_approval><![CDATA[The transaction has been marked for manual review after an automatic fraud screening]]></pending_fraud_approval>
-                <pending_approval><![CDATA[The transaction is awaiting approval from you to proceed with the capturing of the funds]]></pending_approval>
+                <pending_approval><![CDATA[The transaction is awaiting approval to proceed with the capturing of the funds]]></pending_approval>
                 <rejected><![CDATA[The transaction has been rejected]]></rejected>
                 <authorization_requested><![CDATA[We have requested an authorization against an asynchronous system and is awaiting its response]]></authorization_requested>
                 <capture_requested><![CDATA[The transaction is in the queue to be captured]]></capture_requested>
@@ -460,15 +887,15 @@
             <pending_orders_cancellation>
                 <days>3</days>
             </pending_orders_cancellation>
-        </ingenico_epayments>
-        <ingenico_cc_vault>
+        </worldline_connect>
+        <worldline_cc_vault>
             <general>
-                <title>Ingenico Stored Cards</title>
+                <title>Worldline Stored Cards</title>
                 <active>1</active>
                 <can_authorize_vault>1</can_authorize_vault>
                 <can_use_internal>1</can_use_internal>
                 <can_initialize>0</can_initialize>
             </general>
-        </ingenico_cc_vault>
+        </worldline_cc_vault>
     </default>
 </config>

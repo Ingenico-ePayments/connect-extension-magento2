@@ -1,41 +1,37 @@
 <?php
 
-namespace Ingenico\Connect\Block\Adminhtml\System\Config\Field;
+declare(strict_types=1);
+
+namespace Worldline\Connect\Block\Adminhtml\System\Config\Field;
 
 use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Framework\Filesystem\Driver\File;
-use Ingenico\Connect\Model\ConfigInterface;
+use Magento\Framework\Phrase;
+use Worldline\Connect\Model\ConfigInterface;
+
+use function __;
+use function sprintf;
 
 class LogAllRequests extends Field
 {
-    /** @var ConfigInterface */
-    private $config;
-
-    /** @var File */
-    private $fileDriver;
-
     /**
      * @param Context $context
      * @param ConfigInterface $config
      * @param File $fileDriver
      * @param array $data
      */
-    public function __construct(Context $context, ConfigInterface $config, File $fileDriver, array $data = [])
-    {
+    public function __construct(
+        private readonly ConfigInterface $config,
+        private readonly File $fileDriver,
+        Context $context,
+        array $data = []
+    ) {
         parent::__construct($context, $data);
-        $this->config = $config;
-        $this->fileDriver = $fileDriver;
     }
 
-    /**
-     * Displays link to download logging file
-     *
-     * @param AbstractElement $element
-     * @return string
-     */
-    public function render(AbstractElement $element)
+    public function render(AbstractElement $element): string
     {
         $logFile = $this->config->getLogAllRequestsFile();
         if ($this->fileDriver->isExists($logFile)) {
@@ -43,26 +39,16 @@ class LogAllRequests extends Field
             $element->setComment($this->getPhrase($downloadLink));
         }
 
-        return parent::render($element);
+        return (string) parent::render($element);
     }
 
-    /**
-     * Builds a link to download logging file
-     *
-     * @return string
-     */
-    private function getLinkToDownloadLogFile()
+    private function getLinkToDownloadLogFile(): string
     {
-        return $this->getUrl('epayments/downloadLogFile/index');
+        return (string) $this->getUrl('epayments/downloadLogFile/index');
     }
 
-    /**
-     * Constructs translatable phrase to provide download link
-     *
-     * @param $downloadLink
-     * @return \Magento\Framework\Phrase
-     */
-    private function getPhrase($downloadLink)
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingAnyTypeHint
+    private function getPhrase($downloadLink): Phrase
     {
         return __(sprintf('Download %s', '<a href="' . $downloadLink . '">log file</a>'));
     }

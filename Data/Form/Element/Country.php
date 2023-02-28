@@ -1,9 +1,11 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
-namespace Ingenico\Connect\Data\Form\Element;
+namespace Worldline\Connect\Data\Form\Element;
 
+use function __;
 use function array_unshift;
 
+// phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
 class Country extends \Magento\Directory\Model\Config\Source\Country
 {
     /**

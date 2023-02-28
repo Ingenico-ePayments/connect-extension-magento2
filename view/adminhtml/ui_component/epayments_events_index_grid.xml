@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">epayments_events_index_grid.epayments_events_index_grid_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <spinner>epayments_events_index_columns</spinner>
+        <deps>
+            <dep>epayments_events_index_grid.epayments_events_index_grid_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="epayments_events_index_grid_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="cacheRequests" xsi:type="boolean">false</param>
+                <param name="indexField" xsi:type="string">id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource>Worldline_Connect::epayments_config</aclResource>
+        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="epayments_events_index_grid_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <exportButton name="export_button"/>
+        <filterSearch name="fulltext"/>
+        <filters name="listing_filters"/>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+    <columns name="epayments_events_index_columns">
+        <column name="id">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">ID</label>
+            </settings>
+        </column>
+        <column name="event_id">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Event ID</label>
+            </settings>
+        </column>
+        <column name="order_increment_id">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Order Increment ID</label>
+            </settings>
+        </column>
+        <column name="payload">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Payload</label>
+            </settings>
+        </column>
+        <column name="created_at">
+            <settings>
+                <filter>dateRange</filter>
+                <dataType>date</dataType>
+                <label translate="true">Created At</label>
+            </settings>
+        </column>
+        <column name="status" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <filter>select</filter>
+                <options class="Worldline\Connect\Ui\Component\Listing\Column\Event\State\Options"/>
+                <dataType>select</dataType>
+                <label translate="true">Status</label>
+            </settings>
+        </column>
+    </columns>
+</listing>

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Controller\InlinePayment;
+namespace Worldline\Connect\Controller\InlinePayment;
 
 use Exception;
 use Magento\Checkout\Model\Session;
@@ -13,32 +13,36 @@ use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NotFoundException;
-use Ingenico\Connect\Model\Config;
-use Ingenico\Connect\Model\ConfigInterface;
-use Ingenico\Connect\Model\Ingenico\Action\GetInlinePaymentStatus;
-use Ingenico\Connect\Model\Ingenico\StatusInterface;
 use Psr\Log\LoggerInterface;
+use Worldline\Connect\Model\Config;
+use Worldline\Connect\Model\ConfigInterface;
+use Worldline\Connect\Model\Worldline\Action\GetInlinePaymentStatus;
+use Worldline\Connect\Model\Worldline\StatusInterface;
 
 class ProcessReturn extends Action
 {
     /**
      * @var Session
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $checkoutSession;
 
     /**
      * @var ConfigInterface
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $ePaymentsConfig;
 
     /**
      * @var LoggerInterface
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $logger;
 
     /**
      * @var GetInlinePaymentStatus
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $inlinePaymentStatus;
 
     /**
@@ -74,15 +78,20 @@ class ProcessReturn extends Action
     {
         try {
             $paymentRefId = $this->retrievePaymentRefId();
+
             $order = $this->inlinePaymentStatus->process($paymentRefId);
-            /** @var string $ingenicoPaymentStatus */
-            $ingenicoPaymentStatus = $order->getPayment()->getAdditionalInformation(Config::PAYMENT_STATUS_KEY);
+
+            /** @var string $worldlinePaymentStatus */
+            $worldlinePaymentStatus = $order->getPayment()->getAdditionalInformation(Config::PAYMENT_STATUS_KEY);
 
             /** @var string $info */
-            $info = $this->ePaymentsConfig->getPaymentStatusInfo(mb_strtolower($ingenicoPaymentStatus));
-            if ($ingenicoPaymentStatus === StatusInterface::REJECTED) {
+            // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
+            $info = $this->ePaymentsConfig->getPaymentStatusInfo(mb_strtolower($worldlinePaymentStatus));
+            if ($worldlinePaymentStatus === StatusInterface::REJECTED) {
+                // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
                 throw new LocalizedException($info ? __($info) : __('Unknown status'));
             }
+            // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
             $this->messageManager->addSuccessMessage(__('Payment status:') . ' ' . ($info ?: 'Unknown status'));
 
             return $this->redirect('checkout/onepage/success');
@@ -123,6 +132,7 @@ class ProcessReturn extends Action
                 ->getAdditionalInformation(Config::PAYMENT_ID_KEY);
         }
         if (!$paymentRefId) {
+            // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
             throw new NotFoundException(__('Could not retrieve payment status.'));
         }
 

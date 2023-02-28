@@ -4,9 +4,9 @@
 define([
     'ko',
     'Magento_Checkout/js/model/quote',
-    'Ingenico_Connect/js/model/client',
-    'Ingenico_Connect/js/action/logger',
-    'Ingenico_Connect/js/model/payment/config'
+    'Worldline_Connect/js/model/client',
+    'Worldline_Connect/js/action/logger',
+    'Worldline_Connect/js/model/payment/config'
 ], function (ko, quote, client, logger, config) {
     'use strict';
 

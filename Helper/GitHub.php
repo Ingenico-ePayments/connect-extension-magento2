@@ -2,13 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Helper;
+namespace Worldline\Connect\Helper;
 
-use function array_key_exists;
-use Exception;
-use Ingenico\Connect\Model\ConfigInterface;
-use Magento\Framework\HTTP\ClientInterfaceFactory;
-use Psr\Log\LoggerInterface;
 use function sprintf;
 
 class GitHub
@@ -17,14 +12,14 @@ class GitHub
     {
         return sprintf('https://github.com/%s', $this->getRepositoryName());
     }
-    
+
     public function getApiUrl(): string
     {
         return sprintf('https://api.github.com/repos/%s', $this->getRepositoryName());
     }
-    
+
     public function getRepositoryName(): string
     {
-        return 'Ingenico-ePayments/connect-extension-magento2';
+        return 'Worldline-ePayments/connect-extension-magento2';
     }
 }

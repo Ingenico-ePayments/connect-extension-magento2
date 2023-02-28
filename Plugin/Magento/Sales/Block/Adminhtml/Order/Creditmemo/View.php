@@ -2,24 +2,25 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Plugin\Magento\Sales\Block\Adminhtml\Order\Creditmemo;
+namespace Worldline\Connect\Plugin\Magento\Sales\Block\Adminhtml\Order\Creditmemo;
 
 use Magento\Framework\UrlInterface;
-use Ingenico\Connect\Model\ConfigProvider;
-use Ingenico\Connect\Model\Ingenico\StatusInterface;
-use Ingenico\Connect\Model\StatusResponseManager;
 use Magento\Sales\Block\Adminhtml\Order\Creditmemo\View as BaseView;
+use Worldline\Connect\Model\StatusResponseManager;
+use Worldline\Connect\Model\Worldline\StatusInterface;
 
 class View
 {
     /**
      * @var UrlInterface
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $urlBuilder;
 
     /**
      * @var StatusResponseManager
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $statusResponseManager;
 
     /**
@@ -45,13 +46,6 @@ class View
     {
         $creditmemo = $view->getCreditmemo();
         $payment = $creditmemo->getOrder()->getPayment();
-        $paymentMethod = $payment->getMethodInstance();
-        $isHostedCheckout = $paymentMethod->getCode() == ConfigProvider::CODE;
-
-        if (!$isHostedCheckout) {
-            return;
-        }
-
         $status = $this->statusResponseManager->get($payment, $creditmemo->getTransactionId());
 
         if (!$status) {
@@ -84,6 +78,7 @@ class View
         $view->updateButton(
             'cancel',
             'onclick',
+            // phpcs:ignore Squiz.Strings.DoubleQuoteUsage.ContainsVar
             "confirmSetLocation('Are you sure you want to cancel the refund?', '$urlRefundCancel')"
         );
     }
@@ -100,8 +95,10 @@ class View
         $view->addButton(
             'accept_refund',
             [
+                // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
                 'label' => __('Accept'),
                 'class' => 'accept_refund_custom',
+                // phpcs:ignore Squiz.Strings.DoubleQuoteUsage.ContainsVar
                 'onclick' => "confirmSetLocation('Are you sure you want to accept the refund?', '$urlRefundAccept')",
             ]
         );

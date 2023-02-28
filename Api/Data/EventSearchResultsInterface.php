@@ -1,27 +1,31 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
-namespace Ingenico\Connect\Api\Data;
+namespace Worldline\Connect\Api\Data;
 
 /**
  * Interface EventSearchResultsInterface
  *
- * @package Ingenico\Connect\Api\Data
+ * @package Worldline\Connect\Api\Data
  */
+// phpcs:ignore SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming.SuperfluousSuffix, SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
 interface EventSearchResultsInterface extends \Magento\Framework\Api\SearchResultsInterface
 {
-
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName, SlevomatCodingStandard.TypeHints.DisallowArrayTypeHintSyntax.DisallowedArrayTypeHintSyntax
     /**
      * Get Event list.
      *
-     * @return \Ingenico\Connect\Api\Data\EventInterface[]
+     * @return \Worldline\Connect\Api\Data\EventInterface[]
      */
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName, SlevomatCodingStandard.TypeHints.DisallowArrayTypeHintSyntax.DisallowedArrayTypeHintSyntax
     public function getItems();
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName, SlevomatCodingStandard.TypeHints.DisallowArrayTypeHintSyntax.DisallowedArrayTypeHintSyntax
     /**
      * Set event_id list.
      *
-     * @param \Ingenico\Connect\Api\Data\EventInterface[] $items
+     * @param \Worldline\Connect\Api\Data\EventInterface[] $items
      * @return $this
      */
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName, SlevomatCodingStandard.TypeHints.DisallowArrayTypeHintSyntax.DisallowedArrayTypeHintSyntax
     public function setItems(array $items);
 }

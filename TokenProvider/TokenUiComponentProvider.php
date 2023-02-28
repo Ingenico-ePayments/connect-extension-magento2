@@ -1,29 +1,21 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
-namespace Ingenico\Connect\TokenProvider;
+namespace Worldline\Connect\TokenProvider;
 
-use Ingenico\Connect\Model\ConfigProvider;
 use Magento\Framework\View\Element\Template;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Model\Ui\TokenUiComponentInterface;
 use Magento\Vault\Model\Ui\TokenUiComponentInterfaceFactory;
 use Magento\Vault\Model\Ui\TokenUiComponentProviderInterface;
+use Worldline\Connect\Model\ConfigProvider;
 
 use function json_decode;
 
 class TokenUiComponentProvider implements TokenUiComponentProviderInterface
 {
-    /**
-     * @var TokenUiComponentInterfaceFactory
-     */
-    private $componentFactory;
-
-    /**
-     * @param TokenUiComponentInterfaceFactory $componentFactory
-     */
-    public function __construct(TokenUiComponentInterfaceFactory $componentFactory)
-    {
-        $this->componentFactory = $componentFactory;
+    public function __construct(
+        private readonly TokenUiComponentInterfaceFactory $componentFactory
+    ) {
     }
 
     /**
@@ -43,9 +35,9 @@ class TokenUiComponentProvider implements TokenUiComponentProviderInterface
                         true
                     ),
                     TokenUiComponentProviderInterface::COMPONENT_PUBLIC_HASH => $paymentToken->getPublicHash(),
-                    'template' => 'Ingenico_Connect::form/vault-item.phtml'
+                    'template' => 'Worldline_Connect::form/vault-item.phtml',
                 ],
-                'name' => Template::class
+                'name' => Template::class,
             ]
         );
     }

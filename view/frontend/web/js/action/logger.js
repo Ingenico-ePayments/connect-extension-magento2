@@ -1,6 +1,6 @@
 define([
     'jquery',
-    'Ingenico_Connect/js/model/payment/config'
+    'Worldline_Connect/js/model/payment/config'
 ], function ($, config) {
     "use strict";
 
@@ -21,7 +21,7 @@ define([
             }
 
             $.ajax(
-                '/rest/default/V1/ingenico-connect/log-request',
+                '/rest/default/V1/worldline-connect/log-request',
                 {
                     method: 'POST',
                     contentType: 'application/json',
@@ -42,7 +42,7 @@ define([
             }
 
             $.ajax(
-                '/rest/default/V1/ingenico-connect/log-response',
+                '/rest/default/V1/worldline-connect/log-response',
                 {
                     method: 'POST',
                     contentType: 'application/json',

@@ -2,31 +2,34 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Block\Adminhtml\System\Config\Field;
+namespace Worldline\Connect\Block\Adminhtml\System\Config\Field;
 
+use Magento\Backend\Block\Widget\Button;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
-use Magento\Backend\Block\Widget\Button;
 use Magento\Framework\Exception\LocalizedException;
 
-class TestApiConnection extends Field
-{
-    /** @var string */
-    protected $_template = 'Ingenico_Connect::system/config/test_api_connection.phtml';
+use function __;
 
-    /**
-     * @param  AbstractElement $element
-     * @return string
-     */
+abstract class TestApiConnection extends Field
+{
+    // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+    protected function _construct()
+    {
+        parent::_construct();
+
+        $this->setTemplate('Worldline_Connect::system/config/test_api_connection.phtml');
+    }
+
+    // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     protected function _getElementHtml(AbstractElement $element): string
     {
         return $this->_toHtml();
     }
 
-    public function getAjaxUrl(): string
-    {
-        return $this->getUrl('epayments/Api/TestConnection');
-    }
+    abstract public function getAjaxUrl(): string;
+
+    abstract public function getId(): string;
 
     /**
      * @return string
@@ -34,14 +37,10 @@ class TestApiConnection extends Field
      */
     public function getButtonHtml(): string
     {
-        $button = $this->getLayout()->createBlock(
-            Button::class
-        )->setData(
-            [
-                'id' => 'test_api_connection_button',
-                'label' => __('Test API Connection'),
-            ]
-        );
+        $button = $this->getLayout()->createBlock(Button::class)->setData([
+            'id' => $this->getId(),
+            'label' => __('Test API Connection'),
+        ]);
 
         return $button->toHtml();
     }

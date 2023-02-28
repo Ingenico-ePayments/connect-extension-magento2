@@ -2,21 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Logger;
+namespace Worldline\Connect\Logger;
 
-use Ingenico\Connect\Api\FrontendLoggerInterface;
 use Psr\Log\LoggerInterface;
+use Worldline\Connect\Api\FrontendLoggerInterface;
+
+use function json_decode;
+use function sprintf;
 
 class FrontendLogger implements FrontendLoggerInterface
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
+    public function __construct(
+        private readonly LoggerInterface $logger
+    ) {
     }
 
     public function logRequest(string $type, string $jsonData, ?string $requestId): bool

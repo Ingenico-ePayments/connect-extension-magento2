@@ -1,9 +1,9 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
-namespace Ingenico\Connect\Model;
+namespace Worldline\Connect\Model;
 
 use Ingenico\Connect\Sdk\Domain\Definitions\AbstractOrderStatus;
-use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment as IngenicoPayment;
+use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment as WorldlinePayment;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\Order\Payment;
@@ -12,19 +12,20 @@ use Magento\Sales\Model\Order\Payment\Transaction;
 /**
  * Interface StatusResponseManagerInterface
  *
- * @package Ingenico\Connect\Model
+ * @package Worldline\Connect\Model
  */
+// phpcs:ignore SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming.SuperfluousSuffix
 interface StatusResponseManagerInterface
 {
     /**
      * @deprecated Use those of the TransactionManager instead
      */
-    const TRANSACTION_INFO_KEY = 'gc_response_object';
+    public const TRANSACTION_INFO_KEY = 'gc_response_object';
 
     /**
      * @deprecated Use those of the TransactionManager instead
      */
-    const TRANSACTION_CLASS_KEY = 'gc_response_class';
+    public const TRANSACTION_CLASS_KEY = 'gc_response_class';
 
     /**
      * Retrieve last PaymentResponse object stored in transaction additionalInformation. It contains canonical
@@ -32,7 +33,7 @@ interface StatusResponseManagerInterface
      *
      * @param InfoInterface|Payment $payment
      * @param string $transactionId
-     * @return IngenicoPayment|false
+     * @return WorldlinePayment|false
      * @deprecated
      */
     public function get(InfoInterface $payment, $transactionId);
@@ -46,6 +47,7 @@ interface StatusResponseManagerInterface
      * @throws LocalizedException
      * @deprecated
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingAnyTypeHint
     public function set(InfoInterface $payment, $transactionId, AbstractOrderStatus $orderStatus);
 
     /**
@@ -58,6 +60,7 @@ interface StatusResponseManagerInterface
      */
     public function setResponseDataOnTransaction(AbstractOrderStatus $responseData, Transaction $transaction);
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
      * If the transaction is not found, this will return an empty transaction object or null.
      *
@@ -65,6 +68,8 @@ interface StatusResponseManagerInterface
      * @return \Magento\Sales\Api\Data\TransactionInterface|null
      * @deprecated
      */
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
+    // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     public function getTransactionBy($transactionId, \Magento\Payment\Model\InfoInterface $payment);
 
     /**
@@ -75,6 +80,7 @@ interface StatusResponseManagerInterface
      */
     public function formatInfo($info);
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
      * Persists the transaction
      *
@@ -82,5 +88,7 @@ interface StatusResponseManagerInterface
      * @return void
      * @deprecated
      */
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
+    // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     public function save(\Magento\Sales\Api\Data\TransactionInterface $transaction);
 }

@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Data\Form\Element;
+namespace Worldline\Connect\Data\Form\Element;
 
-use Ingenico\Connect\Data\Form\Element\Checkbox;
+use function __;
+use function sprintf;
 
 class Toggle extends Checkbox
 {
@@ -33,8 +34,8 @@ class Toggle extends Checkbox
         return sprintf(
             $html,
             $this->getHtmlId(),
-            $this->getButtonLabel() ? : __('Yes'),
-            $this->getButtonLabel() ? : __('No')
+            $this->getButtonLabel() ?: __('Yes'),
+            $this->getButtonLabel() ?: __('No')
         );
     }
 }

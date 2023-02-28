@@ -3,7 +3,7 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
     <router id="admin">
         <route id="epayments" frontName="epayments">
-            <module name="Ingenico_Connect" before="Magento_Adminhtml"/>
+            <module name="Worldline_Connect" before="Magento_Adminhtml"/>
         </route>
     </router>
 </config>

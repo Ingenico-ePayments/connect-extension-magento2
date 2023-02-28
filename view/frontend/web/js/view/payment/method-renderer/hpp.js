@@ -5,7 +5,7 @@ define(
   [
       'Magento_Checkout/js/view/payment/default',
       'Magento_Checkout/js/action/redirect-on-success',
-      'Ingenico_Connect/js/model/payment/config'
+      'Worldline_Connect/js/model/payment/config'
   ],
   function (Component, redirectOnSuccessAction, config) {
       'use strict';
@@ -14,7 +14,7 @@ define(
           config: {},
 
           defaults: {
-              template: 'Ingenico_Connect/payment/hpp',
+              template: 'Worldline_Connect/payment/hpp',
               code: ''
           },
 

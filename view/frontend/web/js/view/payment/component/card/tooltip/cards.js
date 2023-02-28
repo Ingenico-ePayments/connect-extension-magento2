@@ -1,8 +1,8 @@
 define([
     'Magento_Ui/js/form/element/abstract',
-    'Ingenico_Connect/js/model/payment/payment-data',
-    'Ingenico_Connect/js/model/payment-method/card',
-    'Ingenico_Connect/js/action/get-payment-products',
+    'Worldline_Connect/js/model/payment/payment-data',
+    'Worldline_Connect/js/model/payment-method/card',
+    'Worldline_Connect/js/action/get-payment-products',
     'ko'
 ], function (Abstract, paymentData, cardPayment, getPaymentProducts, ko) {
     'use strict';
@@ -25,7 +25,7 @@ define([
 
         defaults: {
             creditCardLogos: '',
-            template: 'Ingenico_Connect/payment/product/card/tooltip/cards',
+            template: 'Worldline_Connect/payment/product/card/tooltip/cards',
         },
 
         initialize: function () {
@@ -38,7 +38,7 @@ define([
         },
 
         getTemplateForType: function (type) {
-            return 'Ingenico_Connect/payment/product/card/tooltip/cards';
+            return 'Worldline_Connect/payment/product/card/tooltip/cards';
         },
 
         fetchCreditCardLogos: function () {

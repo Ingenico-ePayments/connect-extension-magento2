@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Controller\Webhooks;
+namespace Worldline\Connect\Controller\Webhooks;
 
 /**
  * Class Payment
  *
- * @package Ingenico\Connect\Controller\Webhooks
+ * @package Worldline\Connect\Controller\Webhooks
  * @deprecated Only the core webhook endpoint is needed
  */
 class Payment extends Deprecated
 {
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
     public function execute()
     {
         $this->addDeprecationNotice();

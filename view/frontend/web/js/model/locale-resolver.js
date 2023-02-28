@@ -3,7 +3,7 @@ define([], function () {
 
     return {
         /**
-         * Port of \Ingenico\Connect\Locale\Resolver::getBaseLocale() to
+         * Port of \Worldline\Connect\Locale\Resolver::getBaseLocale() to
          * reflect to locale changing functionality
          *
          * @param {String} locale

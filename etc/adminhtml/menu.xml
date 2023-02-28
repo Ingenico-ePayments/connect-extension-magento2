@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Worldline_Connect::epayments_config" title="Events" translate="title" module="Magento_Sales" sortOrder="10" parent="Magento_Sales::sales_operation" action="epayments/events/index" resource="Worldline_Connect::epayments_config"/>
+    </menu>
+</config>

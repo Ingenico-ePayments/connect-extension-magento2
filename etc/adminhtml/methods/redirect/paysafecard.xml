@@ -2,23 +2,23 @@
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
     <group id="paysafecard" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Paysafecard</label>
-        <field id="active" translate="label comment" type="Ingenico\Connect\Data\Form\Element\Toggle" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="active" translate="label comment" type="Worldline\Connect\Data\Form\Element\Toggle" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Enabled</label>
-            <config_path>payment/ingenico_paysafecard/active</config_path>
+            <config_path>payment/worldline_paysafecard/active</config_path>
         </field>
         <field id="sort_order" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Sort Order</label>
-            <config_path>payment/ingenico_paysafecard/sort_order</config_path>
+            <config_path>payment/worldline_paysafecard/sort_order</config_path>
         </field>
         <field id="allowspecific" translate="label comment" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Allowed Countries</label>
-            <config_path>payment/ingenico_paysafecard/allowspecific</config_path>
+            <config_path>payment/worldline_paysafecard/allowspecific</config_path>
             <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
             <comment>If set to specific, guest customers will not have a billing country and may not be able to checkout.</comment>
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Payment from Specific countries</label>
-            <config_path>payment/ingenico_paysafecard/specificcountry</config_path>
+            <config_path>payment/worldline_paysafecard/specificcountry</config_path>
             <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
             <depends>
                 <field id="allowspecific">1</field>
@@ -27,17 +27,17 @@
         <field id="min_order_total" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1">
             <label>Minimum Order Total</label>
             <validate>validate-number validate-zero-or-greater</validate>
-            <config_path>payment/ingenico_paysafecard/min_order_total</config_path>
+            <config_path>payment/worldline_paysafecard/min_order_total</config_path>
         </field>
         <field id="max_order_total" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1">
             <label>Maximum Order Total</label>
             <validate>validate-number validate-zero-or-greater</validate>
-            <config_path>payment/ingenico_paysafecard/max_order_total</config_path>
+            <config_path>payment/worldline_paysafecard/max_order_total</config_path>
         </field>
-        <field id="can_initialize" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="payment_flow" translate="label" type="select" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Payment flow type</label>
-            <source_model>Ingenico\Connect\Model\Config\Source\CanInitialize</source_model>
-            <config_path>payment/ingenico_paysafecard/can_initialize</config_path>
+            <source_model>Worldline\Connect\Model\Config\Source\PaymentFlowType</source_model>
+            <config_path>payment/worldline_paysafecard/payment_flow</config_path>
         </field>
     </group>
 </include>

@@ -2,27 +2,29 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Controller\Webhooks;
+namespace Worldline\Connect\Controller\Webhooks;
 
 // phpcs:disable Generic.Files.LineLength.TooLong
 
-use Ingenico\Connect\Block\Adminhtml\System\Config\Field\WebhookEndpoint;
-use Ingenico\Connect\Model\Ingenico\Webhook\Handler;
-use Ingenico\Connect\Model\Ingenico\Webhook\Unmarshaller;
 use Magento\AdminNotification\Model\Inbox;
 use Magento\Framework\App\Action\Context;
 use Psr\Log\LoggerInterface;
+use Worldline\Connect\Block\Adminhtml\System\Config\Field\WebhookEndpoint;
+use Worldline\Connect\Model\Worldline\Webhook\Handler;
+use Worldline\Connect\Model\Worldline\Webhook\Unmarshaller;
 
 class Deprecated extends Index
 {
     /**
      * @var Inbox
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $inbox;
 
     /**
      * @var WebhookEndpoint
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $webhookEndpoint;
 
     public function __construct(
@@ -42,9 +44,12 @@ class Deprecated extends Index
     protected function addDeprecationNotice(): void
     {
         $this->inbox->addMajor(
-            __('You need to update your webhook endpoints in the Ingenico Configuration Center.'),
+            // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
+            __('You need to update your webhook endpoints in the Worldline Configuration Center.'),
+            // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
             __(
-                'Your webhook endpoints in the Ingenico Configuration Center are configured on the two separate payment- and refund webhooks endpoints. These endpoints might become deprecated in the near future. That\'s why it\'s important to update this. Please remove the two separate endpoints and replace them with: %1. Make sure to check all checkboxes for "payment" and "refund". If you have any further questions, please contact Merchant Support.',
+                // phpcs:ignore SlevomatCodingStandard.Files.LineLength.LineTooLong
+                'Your webhook endpoints in the Worldline Configuration Center are configured on the two separate payment- and refund webhooks endpoints. These endpoints might become deprecated in the near future. That\'s why it\'s important to update this. Please remove the two separate endpoints and replace them with: %1. Make sure to check all checkboxes for "payment" and "refund". If you have any further questions, please contact Merchant Support.',
                 $this->webhookEndpoint->getWebhookUrl()
             ),
             '',

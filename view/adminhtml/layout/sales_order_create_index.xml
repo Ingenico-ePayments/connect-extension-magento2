@@ -2,8 +2,8 @@
     <body>
         <referenceBlock name="order_create_billing_form">
             <action method="setMethodFormTemplate">
-                <argument name="method" xsi:type="string">ingenico_cc_vault</argument>
-                <argument name="template" xsi:type="string">Ingenico_Connect::form/vault.phtml</argument>
+                <argument name="method" xsi:type="string">worldline_cc_vault</argument>
+                <argument name="template" xsi:type="string">Worldline_Connect::form/vault.phtml</argument>
             </action>
         </referenceBlock>
     </body>

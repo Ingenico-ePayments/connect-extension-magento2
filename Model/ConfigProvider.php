@@ -1,9 +1,7 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
-namespace Ingenico\Connect\Model;
+namespace Worldline\Connect\Model;
 
-use Ingenico\Connect\CustomerData\ConnectSession;
-use Ingenico\Connect\PaymentMethod\PaymentMethods;
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Customer\Model\Session;
 use Magento\Framework\Locale\Resolver;
@@ -11,6 +9,12 @@ use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Asset\Repository;
 use Magento\Payment\Helper\Data;
 use Magento\Store\Model\StoreManagerInterface;
+use Worldline\Connect\CustomerData\ConnectSession;
+use Worldline\Connect\PaymentMethod\PaymentMethods;
+
+// phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
+// phpcs:ignore PSR12.Files.FileHeader.SpacingAfterBlock
+// phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 
 class ConfigProvider implements ConfigProviderInterface
 {
@@ -35,52 +39,65 @@ class ConfigProvider implements ConfigProviderInterface
     /**
      * Payment Method code which Magento uses as an identifier for particular payment method
      */
-    const CODE = 'ingenico';
+    public const CODE = 'worldline';
 
-    const CODE_CC_VAULT = 'ingenico_cc_vault';
+    public const CODE_CC_VAULT = 'worldline_cc_vault';
 
     /**
      * Pattern which is used by payment configuration to fetch data like: title, is_available, sort_order etc
      */
-    const PATH_PATTERN = '%s_epayments/general/%s';
+    public const PATH_PATTERN = '%s_epayments/general/%s';
 
     /**
      * @var UrlInterface
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $urlBuilder;
 
     /**
      * @var ConfigInterface
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $config;
 
     /**
      * @var Resolver
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $resolver;
 
     /**
      * @var Repository
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $assetRepo;
 
     /** @var Session */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $customerSession;
 
     /**
      * @var StoreManagerInterface
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $storeManager;
 
     /**
      * @var ConnectSession
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $connectSession;
 
     /**
      * @var Data
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $paymentHelper;
+    /**
+     * @var PaymentMethods
+     */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
+    private $paymentMethods;
 
     /**
      * ConfigProvider constructor.
@@ -101,7 +118,8 @@ class ConfigProvider implements ConfigProviderInterface
         StoreManagerInterface $storeManager,
         ConnectSession $connectSession,
         Session $customerSession,
-        Data $paymentHelper
+        Data $paymentHelper,
+        PaymentMethods $paymentMethods
     ) {
         $this->urlBuilder = $urlBuilder;
         $this->config = $config;
@@ -111,105 +129,54 @@ class ConfigProvider implements ConfigProviderInterface
         $this->connectSession = $connectSession;
         $this->customerSession = $customerSession;
         $this->paymentHelper = $paymentHelper;
+        $this->paymentMethods = $paymentMethods;
     }
 
     /**
      * {@inheritdoc}
      */
+    // phpcs:ignore SlevomatCodingStandard.Functions.FunctionLength.FunctionLength
     public function getConfig()
     {
-        $storeId = $this->storeManager->getStore()->getId();
-        $checkoutType = $this->config->getCheckoutType($storeId);
+        $storeId = (int) $this->storeManager->getStore()->getId();
 
         $products = [];
-        foreach (PaymentMethods::MAP as $paymentMethodCode => $productId) {
-            $products[$paymentMethodCode] = [
-                'id' => $productId,
-                'hosted' => $this->paymentHelper->getMethodInstance($paymentMethodCode)->isInitializeNeeded(),
-            ];
+
+        foreach ($this->paymentMethods->getPaymentMethods($storeId) as $methodInstance) {
+            $productId = $methodInstance->getConfigData('product_id');
+            $paymentFlow = $methodInstance->getConfigData('payment_flow');
+            $hostedCheckout = $paymentFlow === Config::CONFIG_INGENICO_CHECKOUT_TYPE_HOSTED_CHECKOUT;
+            if ($productId) {
+                $products[$methodInstance->getCode()] = [
+                    'id' => (int) $methodInstance->getConfigData('product_id'),
+                    'hosted' => $hostedCheckout,
+                ];
+            }
+
+            $productId = $methodInstance->getConfigData('product_group');
+            if ($productId) {
+                $products[$methodInstance->getCode()] = [
+                    'id' => $productId,
+                    'hosted' => $hostedCheckout,
+                ];
+            }
         }
 
         return [
             'payment' => [
-                'ingenico' => [
-                    'hostedCheckoutPageUrl' => $this->urlBuilder->getUrl('epayments/hostedCheckoutPage'),
+                'worldline' => [
                     'hostedCheckoutTitle' => $this->config->getHostedCheckoutTitle($storeId),
+                    'hostedCheckoutPageUrl' => $this->urlBuilder->getUrl('epayments/hostedCheckoutPage'),
                     'inlineSuccessUrl' => $this->urlBuilder->getUrl('epayments/inlinePayment'),
                     'locale' => $this->resolver->getLocale(),
-                    'groupCardPaymentMethods' => $this->config->getGroupCardPaymentMethods($storeId),
-                    'useFullRedirect' => $checkoutType === Config::CONFIG_INGENICO_CHECKOUT_TYPE_HOSTED_CHECKOUT,
                     'loaderImage' => $this->assetRepo->getUrlWithParams('images/loader-2.gif', []),
                     'isCustomerLoggedIn' => $this->customerSession->isLoggedIn(),
                     'connectSession' => $this->connectSession->getSectionData(),
                     'logFrontendRequests' => $this->config->getLogFrontendRequests($storeId),
-                    'inlinePaymentProducts' => $this->getInlinePaymentProducts($storeId),
-                    'disabledPaymentProducts' => $this->getDisabledPaymentProducts($storeId),
-                    'priceRangedPaymentProducts' => $this->getPriceRangedPaymentProducts($storeId),
-                    'countryRestrictedPaymentProducts' => $this->getCountryRestrictedPaymentProducts($storeId),
                     'saveForLaterVisible' => $this->config->getSaveForLaterVisible($storeId),
                     'products' => $products,
                 ],
             ],
         ];
-    }
-
-    /**
-     * @return array<string>
-     */
-    private function getDisabledPaymentProducts(?int $storeId)
-    {
-        $disabledPaymentProducts = [];
-        foreach (Config::CONFIGURABLE_TOGGLE_PAYMENT_PRODUCTS as $productId => $configPath) {
-            if ($this->config->isPaymentProductEnabled((string) $productId, $storeId) ===
-                Config::CONFIG_INGENICO_PAYMENT_PRODUCT_DISABLED
-            ) {
-                $disabledPaymentProducts[] = (string) $productId;
-            }
-        }
-        return $disabledPaymentProducts;
-    }
-
-    /**
-     * @return array<string>
-     */
-    private function getInlinePaymentProducts(?int $storeId)
-    {
-        $inlinePaymentProducts = self::LOCKED_INLINE_PAYMENT_PRODUCTS;
-        foreach (self::CONFIGURABLE_INLINE_PAYMENT_PRODUCTS as $productId => $configPath) {
-            if ($this->config->getPaymentProductCheckoutType($configPath, $storeId) ===
-                Config::CONFIG_INGENICO_CHECKOUT_TYPE_INLINE
-            ) {
-                $inlinePaymentProducts[] = (string) $productId;
-            }
-        }
-        return $inlinePaymentProducts;
-    }
-
-    /**
-     * @return array
-     */
-    private function getPriceRangedPaymentProducts(?int $storeId)
-    {
-        $priceRangedPaymentProducts = [];
-        foreach (Config::CONFIGURABLE_PRICE_RANGE_PAYMENT_PRODUCTS as $productId => $configPath) {
-            $priceRangedPaymentProducts[(string) $productId] =
-                $this->config->getPaymentProductPriceRanges((string) $productId, $storeId);
-        }
-        return $priceRangedPaymentProducts;
-    }
-
-    private function getCountryRestrictedPaymentProducts(?int $storeId)
-    {
-        $countryRestrictedPaymentProducts = [];
-        foreach (Config::CONFIGURABLE_COUNTRY_BLACKLIST_PAYMENT_PRODUCTS as $productId => $configPath) {
-            $countryRestrictionsArray = $this->config->getPaymentProductCountryRestrictions(
-                (string) $productId,
-                $storeId
-            );
-            if (!empty($countryRestrictionsArray)) {
-                $countryRestrictedPaymentProducts[(string) $productId] = $countryRestrictionsArray;
-            }
-        }
-        return $countryRestrictedPaymentProducts;
     }
 }

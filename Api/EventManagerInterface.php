@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Api;
+namespace Worldline\Connect\Api;
 
+// phpcs:ignore SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming.SuperfluousSuffix
 interface EventManagerInterface
 {
     /**
@@ -11,24 +12,31 @@ interface EventManagerInterface
      * @return Data\EventSearchResultsInterface
      */
     public function getHostedCheckoutEvents(
-        int $status = \Ingenico\Connect\Api\Data\EventInterface::STATUS_NEW
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
+        int $status = \Worldline\Connect\Api\Data\EventInterface::STATUS_NEW
     );
 
+    // phpcs:disable SlevomatCodingStandard.TypeHints.DisallowArrayTypeHintSyntax.DisallowedArrayTypeHintSyntax
     /**
      * @param int $eventStatus
      * @return string[]
      */
+    // phpcs:enable SlevomatCodingStandard.TypeHints.DisallowArrayTypeHintSyntax.DisallowedArrayTypeHintSyntax
     public function findHostedCheckoutIdsInEvents(
-        int $eventStatus = \Ingenico\Connect\Api\Data\EventInterface::STATUS_NEW
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
+        int $eventStatus = \Worldline\Connect\Api\Data\EventInterface::STATUS_NEW
     ): array;
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
      * @param string $hostedCheckoutId
      * @param int $status
-     * @return \Ingenico\Connect\Api\Data\EventSearchResultsInterface
+     * @return \Worldline\Connect\Api\Data\EventSearchResultsInterface
      */
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     public function getEventsByHostedCheckoutId(
         string $hostedCheckoutId,
-        int $status = \Ingenico\Connect\Api\Data\EventInterface::STATUS_NEW
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
+        int $status = \Worldline\Connect\Api\Data\EventInterface::STATUS_NEW
     );
 }

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Data\Form\Element;
+namespace Worldline\Connect\Data\Form\Element;
 
 use Magento\Framework\Data\Form\Element\Checkbox as CoreCheckbox;
 
 class Checkbox extends CoreCheckbox
 {
-    const PSEUDO_POSTFIX = '_pseudo'; // used to create the hidden input id.
+    public const PSEUDO_POSTFIX = '_pseudo'; // used to create the hidden input id.
 
     /**
      * @return string
@@ -34,6 +34,7 @@ class Checkbox extends CoreCheckbox
      *
      * @return string
      */
+    // phpcs:ignore SlevomatCodingStandard.Functions.FunctionLength.FunctionLength
     protected function getJsHtml(): string
     {
         $html = '<input type="hidden" id="%s" value="%s"/>
@@ -56,6 +57,7 @@ class Checkbox extends CoreCheckbox
             })();   
         </script>';
 
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
         return sprintf(
             $html,
             $this->getHtmlId() . self::PSEUDO_POSTFIX,
@@ -72,9 +74,11 @@ class Checkbox extends CoreCheckbox
     {
         $html = '<label for="%s" class="admin__field-label">%s</label>';
 
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
         return sprintf(
             $html,
             $this->getHtmlId(),
+            // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
             __($this->getButtonLabel())
         );
     }

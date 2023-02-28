@@ -7,7 +7,7 @@
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
-        <link src="Ingenico_Connect::js/lib/connectsdk.js"/>
+        <link src="Worldline_Connect::js/lib/connectsdk.js"/>
     </head>
     <update handle="multishipping_checkout"/>
     <update handle="checkout_cart_item_renderers"/>

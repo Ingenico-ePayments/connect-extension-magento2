@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Api;
+namespace Worldline\Connect\Api;
 
+// phpcs:ignore SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming.SuperfluousSuffix
 interface FrontendLoggerInterface
 {
     /**

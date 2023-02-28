@@ -1,16 +1,17 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
-namespace Ingenico\Connect\Model\Event;
+namespace Worldline\Connect\Model\Event;
 
-use Ingenico\Connect\Api\Data\EventInterface;
+use Worldline\Connect\Api\Data\EventInterface;
 
 /**
  * Class DataModel
  *
  * public data representation of a database event
  *
- * @package Ingenico\Connect\Model\Event
+ * @package Worldline\Connect\Model\Event
  */
+// phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
 class DataModel extends \Magento\Framework\Api\AbstractSimpleObject implements EventInterface
 {
     /**

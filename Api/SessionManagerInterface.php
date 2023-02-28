@@ -1,23 +1,28 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
-namespace Ingenico\Connect\Api;
+namespace Worldline\Connect\Api;
 
-use Ingenico\Connect\Api\Data\SessionInterface;
+use Worldline\Connect\Api\Data\SessionInterface;
 
+// phpcs:ignore SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming.SuperfluousSuffix
 interface SessionManagerInterface
 {
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
      * @api
      *
      * @param int $customerId
-     * @return \Ingenico\Connect\Api\Data\SessionInterface
+     * @return \Worldline\Connect\Api\Data\SessionInterface
      */
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     public function createCustomerSession($customerId): SessionInterface;
-    
+
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
      * @api
      *
-     * @return \Ingenico\Connect\Api\Data\SessionInterface
+     * @return \Worldline\Connect\Api\Data\SessionInterface
      */
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     public function createAnonymousSession(): SessionInterface;
 }

@@ -1,8 +1,8 @@
 define([
-    'Ingenico_Connect/js/view/payment/component/field',
-    'Ingenico_Connect/js/model/payment/payment-data',
-    'Ingenico_Connect/js/model/payment-method/card',
-    'Ingenico_Connect/js/action/get-payment-products',
+    'Worldline_Connect/js/view/payment/component/field',
+    'Worldline_Connect/js/model/payment/payment-data',
+    'Worldline_Connect/js/model/payment-method/card',
+    'Worldline_Connect/js/action/get-payment-products',
     'ko',
     'uiRegistry'
 ], function (Field, paymentData, cardPayment, getPaymentProducts, ko, registry) {
@@ -47,11 +47,11 @@ define([
 
         getTemplateForType: function (type) {
             if (this.field.id === 'cardNumber') {
-                return 'Ingenico_Connect/payment/product/card/field/cardnumber';
+                return 'Worldline_Connect/payment/product/card/field/cardnumber';
             }
 
             let templates = {
-                text: 'Ingenico_Connect/payment/product/field/input',
+                text: 'Worldline_Connect/payment/product/field/input',
                 checkbox: 'ui/form/element/single-checkbox',
                 list: 'ui/form/element/select',
             };

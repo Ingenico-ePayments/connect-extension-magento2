@@ -11,7 +11,7 @@
                name="payment[method]"
                class="radio"
                data-bind="attr: {'id': getId()}, value: getId(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
-        <img data-bind="attr: {src: logo(), alt: title()}" class="ingenico-payment-icon" />
+        <img data-bind="attr: {src: logo(), alt: title()}" class="worldline-payment-icon" />
         <label data-bind="attr: {'for': getId()}" class="label">
             <span data-bind="text: title()"></span>
             <span text="getMaskedCard()"></span>
@@ -20,8 +20,8 @@
     </div>
     <div class="payment-method-content">
         <each args="getRegion('messages')" render=""></each>
-        <div id="ingenico_fields" class="ingenico-fields">
-            <!-- ko foreach: getRegion('ingenico-cc-fields') -->
+        <div id="worldline_fields" class="worldline-fields">
+            <!-- ko foreach: getRegion('worldline-cc-fields') -->
             <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->
         </div>

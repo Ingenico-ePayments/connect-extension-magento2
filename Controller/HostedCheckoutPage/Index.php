@@ -1,6 +1,6 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
-namespace Ingenico\Connect\Controller\HostedCheckoutPage;
+namespace Worldline\Connect\Controller\HostedCheckoutPage;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
@@ -8,13 +8,14 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\Order;
-use Ingenico\Connect\Model\Config;
+use Worldline\Connect\Model\Config;
 
 class Index extends Action
 {
     /**
      * @var Session
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $checkoutSession;
 
     /**
@@ -31,11 +32,13 @@ class Index extends Action
         $this->checkoutSession = $checkoutSession;
     }
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
      * Get redirect url from last order and initiates redirect process
      *
      * @return \Magento\Framework\Controller\ResultInterface
      */
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     public function execute()
     {
         /** @var Order $order */
@@ -43,11 +46,12 @@ class Index extends Action
 
         /** @var InfoInterface $payment */
         $payment = $order->getPayment();
-        $ingenicoRedirectUrl = $payment->getAdditionalInformation(Config::REDIRECT_URL_KEY);
+        $worldlineRedirectUrl = $payment->getAdditionalInformation(Config::REDIRECT_URL_KEY);
 
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
         /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-        $resultRedirect->setUrl($ingenicoRedirectUrl);
+        $resultRedirect->setUrl($worldlineRedirectUrl);
 
         return $resultRedirect;
     }

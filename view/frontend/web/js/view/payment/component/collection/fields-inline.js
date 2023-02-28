@@ -2,9 +2,9 @@ define([
     'jquery',
     'uiCollection',
     'uiLayout',
-    'Ingenico_Connect/js/action/get-payment-product',
-    'Ingenico_Connect/js/model/payment/config',
-    'Ingenico_Connect/js/model/payment/payment-data',
+    'Worldline_Connect/js/action/get-payment-product',
+    'Worldline_Connect/js/model/payment/config',
+    'Worldline_Connect/js/model/payment/payment-data',
     'mage/translate',
     'uiRegistry',
     'ko'
@@ -69,7 +69,7 @@ define([
 
             return {
                 parent: this.name,
-                component: 'Ingenico_Connect/js/view/payment/component/field',
+                component: 'Worldline_Connect/js/view/payment/component/field',
                 field: field,
                 account: this.account,
             }
@@ -79,7 +79,7 @@ define([
             if (product.id === 'cards' && field.id === 'cardNumber') {
                 return {
                     parent: this.name,
-                    component: 'Ingenico_Connect/js/view/payment/component/card/field/cardnumber',
+                    component: 'Worldline_Connect/js/view/payment/component/card/field/cardnumber',
                     field: field,
                     account: this.account,
                 }
@@ -97,7 +97,7 @@ define([
             return {
                 parent: this.name,
                 component: 'Magento_Ui/js/form/element/single-checkbox',
-                elementTmpl: 'Ingenico_Connect/payment/product/field/token-checkbox',
+                elementTmpl: 'Worldline_Connect/payment/product/field/token-checkbox',
                 checkedValue: this.product.id,
                 cardAllowsTokenization: cardAllowsTokenization,
                 value: paymentData.tokenize,
@@ -111,7 +111,7 @@ define([
             return {
                 parent: this.name,
                 component: 'Magento_Ui/js/lib/core/element/element',
-                template: 'Ingenico_Connect/payment/product/field/info',
+                template: 'Worldline_Connect/payment/product/field/info',
                 text: $t('You will be redirected to enter your payment details.'),
             }
         },

@@ -2,24 +2,26 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Model\Event;
+namespace Worldline\Connect\Model\Event;
 
-use Ingenico\Connect\Api\Data\EventInterface;
-use Ingenico\Connect\Api\EventManagerInterface;
-use Ingenico\Connect\Api\EventRepositoryInterface;
-use Ingenico\Connect\Model\Event\Processor\SecondAttempts;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Worldline\Connect\Api\Data\EventInterface;
+use Worldline\Connect\Api\EventManagerInterface;
+use Worldline\Connect\Api\EventRepositoryInterface;
+use Worldline\Connect\Model\Event\Processor\SecondAttempts;
 
 class EventManager implements EventManagerInterface
 {
     /**
      * @var EventRepositoryInterface
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $eventRepository;
 
     /**
      * @var SearchCriteriaBuilder
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $searchCriteriaBuilder;
 
     /**
@@ -64,6 +66,7 @@ class EventManager implements EventManagerInterface
         foreach ($this->getHostedCheckoutEvents($eventStatus)->getItems() as $event) {
             if ($json = SecondAttempts::getValidatedPayload($event)) {
                 $hostedCheckoutId = $json['payment']['hostedCheckoutSpecificOutput']['hostedCheckoutId'];
+                // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
                 if (!in_array($hostedCheckoutId, $hostedCheckoutIds)) {
                     $hostedCheckoutIds[] = $hostedCheckoutId;
                 }
@@ -85,6 +88,7 @@ class EventManager implements EventManagerInterface
                 ->addFilter(EventInterface::STATUS, $status)
                 ->addFilter(
                     EventInterface::PAYLOAD,
+                    // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
                     sprintf('%%"hostedCheckoutId":"%1$s"%%', $hostedCheckoutId),
                     'like'
                 )

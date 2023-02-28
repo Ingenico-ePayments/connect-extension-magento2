@@ -1,32 +1,26 @@
 <?php
 
-namespace Ingenico\Connect\Block\Adminhtml\System\Config\Field;
+declare(strict_types=1);
 
-use Ingenico\Connect\Helper\MetaData;
-use Ingenico\Connect\Model\System\Message\UpdateAvailable;
+namespace Worldline\Connect\Block\Adminhtml\System\Config\Field;
+
 use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
+use Worldline\Connect\Helper\MetaData;
+use Worldline\Connect\Model\System\Message\UpdateAvailable;
+
+use function __;
 
 class Version extends Field
 {
-    /**
-     * @var UpdateAvailable
-     */
-    private $updateAvailable;
-    
-    /** @var MetaData */
-    private $metaDataHelper;
-    
     public function __construct(
-        UpdateAvailable $updateAvailable,
+        private readonly UpdateAvailable $updateAvailable,
+        private readonly MetaData $metaDataHelper,
         Context $context,
-        MetaData $metaDataHelper,
         array $data = []
     ) {
         parent::__construct($context, $data);
-        $this->updateAvailable = $updateAvailable;
-        $this->metaDataHelper = $metaDataHelper;
     }
 
     /**

@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Api;
+namespace Worldline\Connect\Api;
 
 use Magento\Sales\Api\Data\InvoiceInterface;
 
+// phpcs:ignore SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming.SuperfluousSuffix
 interface PaymentManagementInterface
 {
     /**

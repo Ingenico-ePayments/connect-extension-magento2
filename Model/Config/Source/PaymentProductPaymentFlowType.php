@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Model\Config\Source;
+namespace Worldline\Connect\Model\Config\Source;
 
-use Ingenico\Connect\Model\Config;
 use Magento\Framework\Data\OptionSourceInterface;
+use Worldline\Connect\Model\Config;
 
 class PaymentProductPaymentFlowType implements OptionSourceInterface
 {
@@ -17,11 +17,13 @@ class PaymentProductPaymentFlowType implements OptionSourceInterface
         return [
             [
                 'value' => Config::CONFIG_INGENICO_CHECKOUT_TYPE_INLINE,
+                // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
                 'label' => __('Customer enters details in Magento Checkout'),
             ],
             [
                 'value' => Config::CONFIG_INGENICO_CHECKOUT_TYPE_REDIRECT,
-                'label' => __('Customer enters details on hosted page by Ingenico'),
+                // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
+                'label' => __('Customer enters details on hosted page by Worldline'),
             ],
         ];
     }

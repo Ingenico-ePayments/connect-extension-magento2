@@ -2,8 +2,8 @@ define([
     'jquery',
     'uiCollection',
     'uiLayout',
-    'Ingenico_Connect/js/action/get-payment-product',
-    'Ingenico_Connect/js/model/payment/config',
+    'Worldline_Connect/js/action/get-payment-product',
+    'Worldline_Connect/js/model/payment/config',
 ], function ($, Collection, layout, fetchProduct, config) {
     'use strict';
 
@@ -60,7 +60,7 @@ define([
         getTooltipComponents: function (productId) {
             switch (productId) {
                 case 'cards':
-                    return ['Ingenico_Connect/js/view/payment/component/card/tooltip/cards'];
+                    return ['Worldline_Connect/js/view/payment/component/card/tooltip/cards'];
                 default:
                     return [];
             }

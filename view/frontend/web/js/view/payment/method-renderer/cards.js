@@ -9,11 +9,11 @@ define(
       'Magento_Checkout/js/view/payment/default',
       'uiLayout',
       'uiRegistry',
-      'Ingenico_Connect/js/model/payment/payment-data',
-      'Ingenico_Connect/js/action/create-payload',
+      'Worldline_Connect/js/model/payment/payment-data',
+      'Worldline_Connect/js/action/create-payload',
       'Magento_Checkout/js/action/redirect-on-success',
-      'Ingenico_Connect/js/model/payment/config',
-      'Ingenico_Connect/js/action/get-card-payment-group',
+      'Worldline_Connect/js/model/payment/config',
+      'Worldline_Connect/js/action/get-card-payment-group',
       'ko',
       'Magento_Checkout/js/model/quote'
   ],
@@ -29,7 +29,7 @@ define(
               logo: null,
               currentCountry: '',
               product: null,
-              template: 'Ingenico_Connect/payment/method'
+              template: 'Worldline_Connect/payment/method'
           },
 
           initialize: function () {
@@ -65,25 +65,28 @@ define(
 
                   me.currentCountry = billingCountry;
 
-                  let product = window.checkoutConfig.payment.ingenico.products[code];
+                  let product = window.checkoutConfig.payment.worldline.products[code];
                   getCardPaymentGroup().then(function(productResponse) {
+
+                      productResponse.allowsTokenization = true;
+
                       me.title(productResponse.displayHints.label);
                       me.logo(productResponse.displayHints.logo);
                       if (product.hosted) {
                           layout([{
-                              component: 'Ingenico_Connect/js/view/payment/component/collection/hosted',
-                              uid: 'ingenico-' + code + '-fields',
-                              displayArea: 'ingenico-cc-fields',
+                              component: 'Worldline_Connect/js/view/payment/component/collection/hosted',
+                              uid: 'worldline-' + code + '-fields',
+                              displayArea: 'worldline-cc-fields',
                               parent: name,
-                              template: 'Ingenico_Connect/payment/product/field-collection'
+                              template: 'Worldline_Connect/payment/product/field-collection'
                           }]);
                       } else {
                           layout([{
-                              component: 'Ingenico_Connect/js/view/payment/component/collection/fields-inline',
-                              uid: 'ingenico-' + code + '-fields',
-                              displayArea: 'ingenico-cc-fields',
+                              component: 'Worldline_Connect/js/view/payment/component/collection/fields-inline',
+                              uid: 'worldline-' + code + '-fields',
+                              displayArea: 'worldline-cc-fields',
                               parent: name,
-                              template: 'Ingenico_Connect/payment/product/field-collection',
+                              template: 'Worldline_Connect/payment/product/field-collection',
                               product: productResponse
                           }]);
                       }
@@ -123,15 +126,17 @@ define(
           validate: function () {
               paymentData.fieldData = {};
 
-              let product = window.checkoutConfig.payment.ingenico.products[this.code];
+              let product = window.checkoutConfig.payment.worldline.products[this.code];
               if (product.hosted) {
                   return true;
               }
 
               let fieldsValid = true;
-              let activeFieldsCollection = registry.get('uid = ingenico-' + this.code + '-fields');
+              let activeFieldsCollection = registry.get('uid = worldline-' + this.code + '-fields');
               for (let fieldComponent of activeFieldsCollection.elems()) {
-                  if (fieldComponent.field) {
+                  if (fieldComponent.cardAllowsTokenization) {
+                      paymentData.fieldData['tokenize'] = fieldComponent.value().length === 1;
+                  } else if (fieldComponent.field) {
                       paymentData.fieldData[fieldComponent.field.id] = fieldComponent.value();
                       if (!fieldComponent.validate().valid) {
                           fieldsValid = false;
@@ -147,7 +152,8 @@ define(
                   'method': this.item.method,
                   'additional_data': {
                       'input': paymentData.getCurrentPayload(),
-                      'product': paymentData.getCurrentCardPaymentProduct().id
+                      'product': paymentData.getCurrentCardPaymentProduct().id,
+                      'tokenize': paymentData.fieldData['tokenize']
                   }
               };
           },
@@ -158,7 +164,7 @@ define(
               if (!this.validate()) {
                   return false;
               }
-              let product = window.checkoutConfig.payment.ingenico.products[this.code];
+              let product = window.checkoutConfig.payment.worldline.products[this.code];
               if (product.hosted) {
                   parentMethod(data, event);
               } else {

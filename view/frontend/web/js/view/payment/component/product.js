@@ -5,7 +5,7 @@ define([
 
     return Abstract.extend({
         defaults: {
-            elementTmpl: 'Ingenico_Connect/payment/product/radio',
+            elementTmpl: 'Worldline_Connect/payment/product/radio',
             input_type: 'radio',
             logo: '',
             checked: '',

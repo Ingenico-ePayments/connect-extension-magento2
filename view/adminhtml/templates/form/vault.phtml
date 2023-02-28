@@ -1,22 +1,23 @@
 <?php
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
 
-use Magento\Vault\Model\Ui\TokenUiComponentProviderInterface;
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Helper\SecureHtmlRenderer;
+use Magento\Vault\Block\Form;
 
 /**
- * @var Magento\Vault\Block\Form $block
- * @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer
+ * @var Escaper $escaper
+ * @var Form $block
+ * @var SecureHtmlRenderer $secureRenderer
  */
 $code = $block->escapeHtml($block->getMethodCode());
 ?>
 <fieldset class="admin__fieldset payment-method" id="payment_form_<?= /* @noEscape */ $code ?>">
-    <?php if ($options = $block->getChildHtml()): ?>
-        <select name="payment[public_hash]" id="<?= /* @noEscape */ $code ?>_public_hash"><?= $options ?></select>
+    <?php if ($options = $block->getChildHtml()) : ?>
+        <select name="payment[public_hash]" id="<?= /* @noEscape */ $code ?>_public_hash"><?= /* @noEscape */ $options ?></select>
     <?php else : ?>
-        <i><?= __('Not available') ?></i>
+        <i><?= $escaper->escapeHtml(__('Not available')) ?></i>
     <?php endif; ?>
 </fieldset>
 <?= /* @noEscape */ $secureRenderer->renderStyleAsTag(

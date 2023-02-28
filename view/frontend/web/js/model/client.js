@@ -2,7 +2,7 @@
 /*global define*/
 
 define([
-    'Ingenico_Connect/js/action/get-session',
+    'Worldline_Connect/js/action/get-session',
     'connect-sdk'
 ], function (getSessionAction, sdk) {
     'use strict';

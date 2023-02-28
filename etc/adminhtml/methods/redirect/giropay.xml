@@ -2,28 +2,28 @@
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
     <group id="giropay" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Giropay</label>
-        <field id="active" translate="label comment" type="Ingenico\Connect\Data\Form\Element\Toggle" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="active" translate="label comment" type="Worldline\Connect\Data\Form\Element\Toggle" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Enabled</label>
-            <config_path>payment/ingenico_giropay/active</config_path>
+            <config_path>payment/worldline_giropay/active</config_path>
         </field>
         <field id="sort_order" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Sort Order</label>
-            <config_path>payment/ingenico_giropay/sort_order</config_path>
+            <config_path>payment/worldline_giropay/sort_order</config_path>
         </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1">
             <label>Minimum Order Total</label>
             <validate>validate-number validate-zero-or-greater</validate>
-            <config_path>payment/ingenico_giropay/min_order_total</config_path>
+            <config_path>payment/worldline_giropay/min_order_total</config_path>
         </field>
         <field id="max_order_total" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1">
             <label>Maximum Order Total</label>
             <validate>validate-number validate-zero-or-greater</validate>
-            <config_path>payment/ingenico_giropay/max_order_total</config_path>
+            <config_path>payment/worldline_giropay/max_order_total</config_path>
         </field>
-        <field id="can_initialize" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="payment_flow" translate="label" type="select" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Payment flow type</label>
-            <source_model>Ingenico\Connect\Model\Config\Source\CanInitialize</source_model>
-            <config_path>payment/ingenico_giropay/can_initialize</config_path>
+            <source_model>Worldline\Connect\Model\Config\Source\PaymentFlowType</source_model>
+            <config_path>payment/worldline_giropay/payment_flow</config_path>
         </field>
     </group>
 </include>

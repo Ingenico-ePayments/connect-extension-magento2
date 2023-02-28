@@ -1,7 +1,7 @@
 var config = {
     map: {
         '*': {
-            'connect-sdk': 'Ingenico_Connect/js/model/connect-sdk'
+            'connect-sdk': 'Worldline_Connect/js/model/connect-sdk'
         }
     }
 };

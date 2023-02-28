@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Helper;
+namespace Worldline\Connect\Helper;
 
 use DateTime;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\CardPaymentMethodSpecificOutput;
@@ -11,6 +11,8 @@ use Magento\Vault\Model\PaymentTokenFactory;
 
 use function json_encode;
 use function substr;
+
+// phpcs:ignore PSR12.Files.FileHeader.SpacingAfterBlock
 
 class Token
 {
@@ -32,6 +34,7 @@ class Token
     /**
      * @var PaymentTokenFactory
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $paymentTokenFactory;
 
     public function __construct(PaymentTokenFactory $paymentTokenFactory)
@@ -39,11 +42,14 @@ class Token
         $this->paymentTokenFactory = $paymentTokenFactory;
     }
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
      * @param CardPaymentMethodSpecificOutput $cardPaymentMethodSpecificOutput
      * @param $token
      * @return \Magento\Vault\Api\Data\PaymentTokenInterface
      */
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingAnyTypeHint
     public function buildPaymentToken(CardPaymentMethodSpecificOutput $cardPaymentMethodSpecificOutput, $token)
     {
         $paymentProductId = $cardPaymentMethodSpecificOutput->paymentProductId;

@@ -1,25 +1,27 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
-namespace Ingenico\Connect\Controller\InlinePayment;
+namespace Worldline\Connect\Controller\InlinePayment;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Payment\Model\InfoInterface;
-use Ingenico\Connect\Model\Config;
-use Ingenico\Connect\Model\ConfigInterface;
+use Worldline\Connect\Model\Config;
+use Worldline\Connect\Model\ConfigInterface;
 
 class Index extends Action
 {
     /**
      * @var Session
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $checkoutSession;
 
     /**
      * @var ConfigInterface
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $config;
 
     /**
@@ -39,20 +41,24 @@ class Index extends Action
         $this->config = $config;
     }
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
      * Add payment status message and redirect to success page.
      *
      * @return \Magento\Framework\Controller\ResultInterface
      */
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     public function execute()
     {
         /** @var InfoInterface $payment */
         $payment = $this->checkoutSession->getLastRealOrder()->getPayment();
 
-        $ingenicoPaymentStatus = $payment->getAdditionalInformation(Config::PAYMENT_STATUS_KEY);
-        $message = $this->config->getPaymentStatusInfo(mb_strtolower($ingenicoPaymentStatus));
+        $worldlinePaymentStatus = $payment->getAdditionalInformation(Config::PAYMENT_STATUS_KEY);
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
+        $message = $this->config->getPaymentStatusInfo(mb_strtolower($worldlinePaymentStatus));
         $resultsMessage = $payment->getAdditionalInformation(Config::TRANSACTION_RESULTS_KEY);
 
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
         /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         $redirectUrl = $payment->getAdditionalInformation(Config::REDIRECT_URL_KEY);
@@ -63,6 +69,7 @@ class Index extends Action
             $resultRedirect->setPath('checkout/onepage/success');
 
             if ($message) {
+                // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName, Squiz.Strings.DoubleQuoteUsage.ContainsVar
                 $this->messageManager->addSuccessMessage(__('Payment status:') . " $message");
             }
             if ($resultsMessage) {

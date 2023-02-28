@@ -1,9 +1,10 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
 use Magento\Framework\Component\ComponentRegistrar;
 
 ComponentRegistrar::register(
     ComponentRegistrar::MODULE,
-    'Ingenico_Connect',
-    __DIR__
+    'Worldline_Connect',
+    // phpcs:ignore Generic.PHP.ForbiddenFunctions.Found
+    isset($file) ? dirname($file) : __DIR__
 );

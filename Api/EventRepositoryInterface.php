@@ -1,6 +1,6 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
-namespace Ingenico\Connect\Api;
+namespace Worldline\Connect\Api;
 
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
@@ -9,54 +9,68 @@ use Magento\Framework\Exception\NoSuchEntityException;
 /**
  * Interface EventRepositoryInterface
  *
- * @package Ingenico\Connect\Api
+ * @package Worldline\Connect\Api
  */
+// phpcs:ignore SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming.SuperfluousSuffix
 interface EventRepositoryInterface
 {
-
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
      * Save Event
      *
-     * @param \Ingenico\Connect\Api\Data\EventInterface $event
-     * @return \Ingenico\Connect\Api\Data\EventInterface
+     * @param \Worldline\Connect\Api\Data\EventInterface $event
+     * @return \Worldline\Connect\Api\Data\EventInterface
      * @throws CouldNotSaveException
      */
-    public function save(\Ingenico\Connect\Api\Data\EventInterface $event);
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
+    // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
+    public function save(\Worldline\Connect\Api\Data\EventInterface $event);
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
      * Retrieve Event
      *
      * @param string $eventId
-     * @return \Ingenico\Connect\Api\Data\EventInterface
+     * @return \Worldline\Connect\Api\Data\EventInterface
      * @throws NoSuchEntityException
      */
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     public function getByEventId($eventId);
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
      * Retrieve Event
      *
      * @param string $orderIncrementId
-     * @return \Ingenico\Connect\Api\Data\EventSearchResultsInterface
+     * @return \Worldline\Connect\Api\Data\EventSearchResultsInterface
      */
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     public function getListByOrderIncrementId($orderIncrementId);
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
      * Retrieve Event matching the specified criteria.
      *
      * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
-     * @return \Ingenico\Connect\Api\Data\EventSearchResultsInterface
+     * @return \Worldline\Connect\Api\Data\EventSearchResultsInterface
      */
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
+    // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria);
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
      * Delete Event
      *
-     * @param \Ingenico\Connect\Api\Data\EventInterface $event
+     * @param \Worldline\Connect\Api\Data\EventInterface $event
      * @return bool true on success
      * @throws CouldNotDeleteException
      */
-    public function delete(\Ingenico\Connect\Api\Data\EventInterface $event);
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
+    // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
+    public function delete(\Worldline\Connect\Api\Data\EventInterface $event);
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
      * Delete Event by ID
      *
@@ -65,5 +79,6 @@ interface EventRepositoryInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws CouldNotDeleteException
      */
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     public function deleteById($eventId);
 }

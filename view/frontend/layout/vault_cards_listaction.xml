@@ -9,7 +9,7 @@
     <body>
         <referenceContainer name="content">
             <referenceBlock name="vault.cards.list">
-                <block class="Ingenico\Connect\Block\Customer\Vault\IngenicoTokenRenderer" name="ingenico_admin_token_payment.token.renderer" template="Magento_Vault::customer_account/credit_card.phtml"/>
+                <block class="Worldline\Connect\Block\Customer\Vault\WorldlineTokenRenderer" name="worldline_admin_token_payment.token.renderer" template="Magento_Vault::customer_account/credit_card.phtml"/>
             </referenceBlock>
         </referenceContainer>
     </body>

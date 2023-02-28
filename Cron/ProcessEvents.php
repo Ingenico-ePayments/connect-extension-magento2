@@ -2,52 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Cron;
+namespace Worldline\Connect\Cron;
 
-use Ingenico\Connect\Api\EventManagerInterface;
-use Ingenico\Connect\Model\Event\Processor;
-use Ingenico\Connect\Model\Event\Processor\SecondAttempts;
 use Magento\Framework\Exception\LocalizedException;
+use Worldline\Connect\Api\EventManagerInterface;
+use Worldline\Connect\Model\Event\Processor;
+use Worldline\Connect\Model\Event\Processor\SecondAttempts;
 
-/**
- * Class ProcessEvents
- *
- * Cron entry point to process events from the queue
- *
- * @package Ingenico\Connect\Cron
- */
 class ProcessEvents
 {
-    /**
-     * @var Processor
-     */
-    private $processor;
-
-    /**
-     * @var SecondAttempts
-     */
-    private $secondAttemptsProcessor;
-
-    /**
-     * @var EventManagerInterface
-     */
-    private $eventManager;
-
-    /**
-     * ProcessEvents constructor.
-     *
-     * @param Processor $processor
-     * @param SecondAttempts $secondAttemptsProcessor
-     * @param EventManagerInterface $eventManager
-     */
     public function __construct(
-        Processor $processor,
-        SecondAttempts $secondAttemptsProcessor,
-        EventManagerInterface $eventManager
+        private readonly Processor $processor,
+        private readonly SecondAttempts $secondAttemptsProcessor,
+        private readonly EventManagerInterface $eventManager
     ) {
-        $this->processor = $processor;
-        $this->secondAttemptsProcessor = $secondAttemptsProcessor;
-        $this->eventManager = $eventManager;
     }
 
     /**

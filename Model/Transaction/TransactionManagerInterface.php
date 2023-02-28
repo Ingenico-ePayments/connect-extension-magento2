@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Model\Transaction;
+namespace Worldline\Connect\Model\Transaction;
 
 use Magento\Sales\Api\Data\TransactionInterface;
 
+// phpcs:ignore SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming.SuperfluousSuffix
 interface TransactionManagerInterface
 {
     /**

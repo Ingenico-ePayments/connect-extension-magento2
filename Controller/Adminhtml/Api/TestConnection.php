@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Controller\Adminhtml\Api;
+namespace Worldline\Connect\Controller\Adminhtml\Api;
 
-use Ingenico\Connect\Model\Config;
-use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
 use Ingenico\Connect\Sdk\ResponseException;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
@@ -13,61 +11,76 @@ use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\StoreManager;
+use Worldline\Connect\Model\Config;
+use Worldline\Connect\Model\Worldline\Api\ClientInterface;
+
 use function array_pop;
 use function sprintf;
+
+// phpcs:ignore PSR12.Files.FileHeader.SpacingAfterBlock
 
 class TestConnection extends Action
 {
     /** @var Config */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $epaymentsConfig;
 
     /** @var StoreManager */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $storeManager;
 
     /** @var JsonFactory */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $jsonFactory;
 
     /** @var ClientInterface */
-    protected $ingenicoClient;
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
+    protected $worldlineClient;
 
     /**
      * @param Context $context
      * @param Config $epaymentsConfig
      * @param StoreManager $storeManager
      * @param JsonFactory $jsonFactory
-     * @param ClientInterface $ingenicoClient
+     * @param ClientInterface $worldlineClient
      */
     public function __construct(
         Context $context,
         Config $epaymentsConfig,
         StoreManager $storeManager,
         JsonFactory $jsonFactory,
-        ClientInterface $ingenicoClient
+        ClientInterface $worldlineClient
     ) {
         parent::__construct($context);
         $this->epaymentsConfig = $epaymentsConfig;
         $this->storeManager = $storeManager;
         $this->jsonFactory = $jsonFactory;
-        $this->ingenicoClient = $ingenicoClient;
+        $this->worldlineClient = $worldlineClient;
     }
 
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
     public function execute()
     {
         try {
             $scopeId = $this->storeManager->getStore()->getId();
+            $environment = $this->getRequest()->getParam('environment');
         } catch (NoSuchEntityException $noSuchEntityException) {
             return $this->getFailureResult();
         }
 
-        $configData = [
-            'api_key' => $this->epaymentsConfig->getApiKey($scopeId),
-            'api_secret' => $this->epaymentsConfig->getApiSecret($scopeId),
-            'merchant_id' => $this->epaymentsConfig->getMerchantId($scopeId),
-            'api_endpoint' => $this->epaymentsConfig->getApiEndpoint($scopeId),
-        ];
+        $apiEndpoint = $this->epaymentsConfig->getApiEndpointByEnvironment($environment);
 
         try {
-            $this->ingenicoClient->ingenicoTestAccount($scopeId, $configData);
+            $this->worldlineClient->worldlineTestAccount(
+                $scopeId,
+                $this->worldlineClient->buildFromConfiguration($scopeId, [
+                    'api_key' => $this->epaymentsConfig->getApiKey($scopeId, $apiEndpoint),
+                    'api_secret' => $this->epaymentsConfig->getApiSecret($scopeId, $apiEndpoint),
+                    'merchant_id' => $this->epaymentsConfig->getMerchantId($scopeId, $apiEndpoint),
+                    'api_endpoint' => $apiEndpoint,
+                ])
+            );
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
         } catch (\Exception $exception) {
             if ($exception instanceof ResponseException) {
                 $errors = $exception->getErrors();
@@ -83,18 +96,22 @@ class TestConnection extends Action
     {
         $result = $this->jsonFactory->create();
         $result->setStatusHeader(200);
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
         $result->setData(__(
-            'Connection to the Ingenico Connect platform could successfully be established.'
+            'Connection to the Worldline Connect platform could successfully be established.'
         ));
         return $result;
     }
 
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingAnyTypeHint
     private function getFailureResult($message = null): Json
     {
         $result = $this->jsonFactory->create();
         $result->setStatusHeader(422);
-        $responseMessage = __('Could not establish connection to Ingenico Connect platform.');
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
+        $responseMessage = __('Could not establish connection to Worldline Connect platform.');
         if ($message !== null) {
+            // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
             $responseMessage = sprintf('%s %s %s', $responseMessage, __('Error message:'), $message);
         }
         $result->setData($responseMessage);

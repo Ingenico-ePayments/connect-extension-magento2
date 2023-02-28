@@ -1,7 +1,6 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
-
-namespace Ingenico\Connect\Model\Order;
+namespace Worldline\Connect\Model\Order;
 
 use Magento\Framework\App\Area;
 use Magento\Framework\Mail\Template\TransportBuilder;
@@ -10,9 +9,11 @@ use Magento\Framework\Translate\Inline\StateInterface;
 class EmailProcessor
 {
     /** @var TransportBuilder */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $transportBuilder;
 
     /** @var StateInterface */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $inlineTranslation;
 
     /**
@@ -27,6 +28,7 @@ class EmailProcessor
         $this->inlineTranslation = $inlineTranslation;
     }
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
      * Initiate send email process
      *
@@ -37,6 +39,7 @@ class EmailProcessor
      * @param array $emailTemplateVariables
      * @throws \Magento\Framework\Exception\MailException
      */
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     public function processEmail($storeId, $templateId, $emailTo, $emailFrom, array $emailTemplateVariables)
     {
         $this->inlineTranslation->suspend();

@@ -2,22 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Block\Adminhtml\System\Config\Field\TechnicalPartner;
+namespace Worldline\Connect\Block\Adminhtml\System\Config\Field\TechnicalPartner;
 
-use Ingenico\Connect\Helper\MetaData;
 use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
+use Worldline\Connect\Helper\MetaData;
 
 class Link extends Field
 {
-    /** @var MetaData */
-    private $metaDataHelper;
-    
-    public function __construct(Context $context, MetaData $metaDataHelper, array $data = [])
-    {
+    public function __construct(
+        private readonly MetaData $metaDataHelper,
+        Context $context,
+        array $data = []
+    ) {
         parent::__construct($context, $data);
-        $this->metaDataHelper = $metaDataHelper;
     }
 
     /**

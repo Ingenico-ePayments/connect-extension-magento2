@@ -1,70 +1,17 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
-    <event name="payment_method_assign_data_ingenico">
-        <observer name="ingenico_data_assign" instance="Ingenico\Connect\Observer\DataAssignObserver"/>
+    <event name="payment_method_assign_data_worldline">
+        <observer name="worldline_data_assign" instance="Worldline\Connect\Observer\DataAssignObserver"/>
     </event>
     <event name="payment_method_assign_data">
-        <observer name="ingenico_data_assign" instance="Ingenico\Connect\Observer\AdditionalDataAssignObserver"/>
+        <observer name="worldline_data_assign" instance="Worldline\Connect\Observer\AdditionalDataAssignObserver"/>
     </event>
-    <event name="payment_method_assign_data_ingenico_visa">
-        <observer name="ingenico_data_assign" instance="Ingenico\Connect\Observer\DataAssignObserver"/>
-    </event>
-    <event name="sales_order_invoice_pay">
-        <observer name="send_invoice_email" instance="Ingenico\Connect\Observer\SendInvoiceMailObserver"/>
+    <event name="payment_method_assign_data_worldline_visa">
+        <observer name="worldline_data_assign" instance="Worldline\Connect\Observer\DataAssignObserver"/>
     </event>
     <!--
         Default events for adding the default comment to the order, sending e-mail, etc.:
     -->
-    <event name="ingenico_connect_payment_authorization_requested">
-        <observer name="add_order_comment" instance="Ingenico\Connect\Observer\Payment\AddOrderCommentObserver"/>
-    </event>
-    <event name="ingenico_connect_payment_cancelled">
-        <observer name="add_order_comment" instance="Ingenico\Connect\Observer\Payment\AddOrderCommentObserver"/>
-    </event>
-    <event name="ingenico_connect_payment_captured">
-        <observer name="add_order_comment" instance="Ingenico\Connect\Observer\Payment\AddOrderCommentObserver"/>
-    </event>
-    <event name="ingenico_connect_payment_capture_requested">
-        <observer name="add_order_comment" instance="Ingenico\Connect\Observer\Payment\AddOrderCommentObserver"/>
-    </event>
-    <event name="ingenico_connect_payment_paid">
-        <observer name="add_order_comment" instance="Ingenico\Connect\Observer\Payment\AddOrderCommentObserver"/>
-    </event>
-    <event name="ingenico_connect_payment_pending_approval">
-        <observer name="add_order_comment" instance="Ingenico\Connect\Observer\Payment\AddOrderCommentObserver"/>
-    </event>
-    <event name="ingenico_connect_payment_pending_capture">
-        <observer name="add_order_comment" instance="Ingenico\Connect\Observer\Payment\AddOrderCommentObserver"/>
-    </event>
-    <event name="ingenico_connect_payment_pending_fraud_approval">
-        <observer name="add_order_comment" instance="Ingenico\Connect\Observer\Payment\AddOrderCommentObserver"/>
-        <observer name="send_fraud_email" instance="Ingenico\Connect\Observer\Payment\PendingFraudApprovalObserver"/>
-    </event>
-    <event name="ingenico_connect_payment_pending_payment">
-        <observer name="add_order_comment" instance="Ingenico\Connect\Observer\Payment\AddOrderCommentObserver"/>
-    </event>
-    <event name="ingenico_connect_payment_redirected">
-        <observer name="add_order_comment" instance="Ingenico\Connect\Observer\Payment\AddOrderCommentObserver"/>
-    </event>
-    <event name="ingenico_connect_payment_rejected">
-        <observer name="add_order_comment" instance="Ingenico\Connect\Observer\Payment\AddOrderCommentObserver"/>
-    </event>
-    <event name="ingenico_connect_payment_rejected_capture">
-        <observer name="add_order_comment" instance="Ingenico\Connect\Observer\Payment\AddOrderCommentObserver"/>
-    </event>
-    <event name="ingenico_connect_refund_cancelled">
-        <observer name="add_order_comment" instance="Ingenico\Connect\Observer\Refund\AddOrderCommentObserver"/>
-    </event>
-    <event name="ingenico_connect_refund_pending_approval">
-        <observer name="add_order_comment" instance="Ingenico\Connect\Observer\Refund\AddOrderCommentObserver"/>
-        <observer name="add_notice_message" instance="Ingenico\Connect\Observer\Refund\PendingApprovalObserver"/>
-    </event>
-    <event name="ingenico_connect_refund_refunded">
-        <observer name="add_order_comment" instance="Ingenico\Connect\Observer\Refund\AddOrderCommentObserver"/>
-    </event>
-    <event name="ingenico_connect_refund_refund_requested">
-        <observer name="add_order_comment" instance="Ingenico\Connect\Observer\Refund\AddOrderCommentObserver"/>
-    </event>
     <event name="restore_quote">
         <observer name="magento_customerbalance" disabled="true"/>
     </event>

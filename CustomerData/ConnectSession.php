@@ -1,57 +1,37 @@
 <?php
 
-namespace Ingenico\Connect\CustomerData;
+declare(strict_types=1);
+
+namespace Worldline\Connect\CustomerData;
 
 use Exception;
-use Ingenico\Connect\Api\SessionManagerInterface;
 use Magento\Checkout\Model\Session;
 use Magento\Customer\CustomerData\SectionSourceInterface;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
+use Worldline\Connect\Api\SessionManagerInterface;
 
-/**
- * Class ConnectSession
- * @package Ingenico\Connect\CustomerData
- */
 class ConnectSession implements SectionSourceInterface
 {
-    /** @var Session */
-    private $checkoutSession;
-    
-    /** @var SessionManagerInterface */
-    private $sessionManager;
-    
-    /**
-     * @param Session $checkoutSession
-     * @param SessionManagerInterface $sessionManager
-     */
-    public function __construct(Session $checkoutSession, SessionManagerInterface $sessionManager)
-    {
-        $this->checkoutSession = $checkoutSession;
-        $this->sessionManager = $sessionManager;
+    public function __construct(
+        private readonly Session $checkoutSession,
+        private readonly SessionManagerInterface $sessionManager
+    ) {
     }
-    
+
     /**
-     * Get Session data for customer
-     *
-     * @return string[]
+     * @return array<string>
      */
-    public function getSectionData()
+    public function getSectionData(): array
     {
         try {
             $customerId = $this->checkoutSession->getQuote()->getCustomerId();
-            if ($customerId === null) {
-                return [
-                    'data' => $this->sessionManager->createAnonymousSession()
-                ];
-            }
-            
             return [
-                'data' => $this->sessionManager->createCustomerSession($customerId)
+                'data' => $customerId !== null ?
+                    $this->sessionManager->createCustomerSession($customerId) :
+                    $this->sessionManager->createAnonymousSession(),
             ];
         } catch (Exception $e) {
             return [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ];
         }
     }

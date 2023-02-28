@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
-    <route url="/V1/ingenico-connect/create-session" method="GET">
-        <service class="Ingenico\Connect\Api\SessionManagerInterface" method="createAnonymousSession"/>
+    <route url="/V1/worldline-connect/create-session" method="GET">
+        <service class="Worldline\Connect\Api\SessionManagerInterface" method="createAnonymousSession"/>
         <resources>
             <resource ref="anonymous"/>
         </resources>
     </route>
-    <route url="/V1/ingenico-connect/me/create-session" method="GET">
-        <service class="Ingenico\Connect\Api\SessionManagerInterface" method="createCustomerSession"/>
+    <route url="/V1/worldline-connect/me/create-session" method="GET">
+        <service class="Worldline\Connect\Api\SessionManagerInterface" method="createCustomerSession"/>
         <resources>
             <resource ref="self"/>
         </resources>
@@ -16,14 +16,14 @@
             <parameter name="customerId" force="true">%customer_id%</parameter>
         </data>
     </route>
-    <route url="/V1/ingenico-connect/log-request" method="POST">
-        <service class="Ingenico\Connect\Api\FrontendLoggerInterface" method="logRequest"/>
+    <route url="/V1/worldline-connect/log-request" method="POST">
+        <service class="Worldline\Connect\Api\FrontendLoggerInterface" method="logRequest"/>
         <resources>
             <resource ref="anonymous"/>
         </resources>
     </route>
-    <route url="/V1/ingenico-connect/log-response" method="POST">
-        <service class="Ingenico\Connect\Api\FrontendLoggerInterface" method="logResponse"/>
+    <route url="/V1/worldline-connect/log-response" method="POST">
+        <service class="Worldline\Connect\Api\FrontendLoggerInterface" method="logResponse"/>
         <resources>
             <resource ref="anonymous"/>
         </resources>

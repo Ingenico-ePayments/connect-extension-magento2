@@ -6,8 +6,8 @@
                 <resource id="Magento_Backend::stores">
                     <resource id="Magento_Backend::stores_settings">
                         <resource id="Magento_Config::config">
-                            <resource id="Ingenico_Connect::epayments_config" title="Ingenico ePayments configuration">
-                                <resource id="Ingenico_Connect::download_logfile" title="Download API communication log"/>
+                            <resource id="Worldline_Connect::epayments_config" title="Worldline ePayments configuration">
+                                <resource id="Worldline_Connect::download_logfile" title="Download API communication log"/>
                             </resource>
                         </resource>
                     </resource>

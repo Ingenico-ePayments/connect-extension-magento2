@@ -1,8 +1,8 @@
 define([
     'uiCollection',
     'uiLayout',
-    'Ingenico_Connect/js/action/select-product',
-    'Ingenico_Connect/js/model/payment/payment-data',
+    'Worldline_Connect/js/action/select-product',
+    'Worldline_Connect/js/model/payment/payment-data',
 ], function (Collection, layout, selectProduct, paymentData) {
     'use strict';
 
@@ -32,7 +32,7 @@ define([
             const cardLayout = {
                 name: 'group-card',
                 parent: this.name,
-                component: 'Ingenico_Connect/js/view/payment/component/card/method',
+                component: 'Worldline_Connect/js/view/payment/component/card/method',
                 isTokenGroup: false,
                 additionalClasses: 'group-card',
                 product: cardGroupPaymentMethod

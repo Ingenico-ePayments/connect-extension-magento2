@@ -1,13 +1,13 @@
 define([
-    'Ingenico_Connect/js/model/payment/payment-data',
-    'Ingenico_Connect/js/action/get-payment-product',
-    'Ingenico_Connect/js/model/payment/config',
+    'Worldline_Connect/js/model/payment/payment-data',
+    'Worldline_Connect/js/action/get-payment-product',
+    'Worldline_Connect/js/model/payment/config',
     'uiRegistry',
 ], function (paymentData, fetchProduct, config, registry) {
     'use strict';
 
-    let fieldsComponentName = 'Ingenico_Connect/js/view/payment/component/collection/fields';
-    const tooltipsComponentName = 'Ingenico_Connect/js/view/payment/component/collection/tooltips';
+    let fieldsComponentName = 'Worldline_Connect/js/view/payment/component/collection/fields';
+    const tooltipsComponentName = 'Worldline_Connect/js/view/payment/component/collection/tooltips';
 
     let activeFieldsCollection = {};
     let activeTooltipsCollection = {};

@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Helper;
+namespace Worldline\Connect\Helper;
 
-use Ingenico\Connect\Model\ConfigInterface;
+use Worldline\Connect\Model\ConfigInterface;
 
 class Format
 {
     /**
      * @var ConfigInterface
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $config;
 
     /**
@@ -23,6 +24,7 @@ class Format
 
     public function limit(?string $value, int $limit): ?string
     {
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
         return $this->config->getLimitAPIFieldLength() && $value !== null ? mb_substr($value, 0, $limit) : $value;
     }
 }

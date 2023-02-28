@@ -1,6 +1,6 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
-namespace Ingenico\Connect\Controller\Adminhtml\OrderProcess;
+namespace Worldline\Connect\Controller\Adminhtml\OrderProcess;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
@@ -9,26 +9,29 @@ use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
-use Ingenico\Connect\Model\Ingenico\Action\ApproveChallengedPayment;
 use Psr\Log\LoggerInterface;
+use Worldline\Connect\Model\Worldline\Action\ApproveChallengedPayment;
 
 class ApprovePayment extends Action
 {
-    const ADMIN_RESOURCE = 'Magento_Sales::review_payment';
+    public const ADMIN_RESOURCE = 'Magento_Sales::review_payment';
 
     /**
      * @var OrderRepositoryInterface
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $orderRepository;
 
     /**
      * @var ApproveChallengedPayment
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $approveChallengedPayment;
 
     /**
      * @var LoggerInterface
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $logger;
 
     /**
@@ -65,8 +68,12 @@ class ApprovePayment extends Action
 
         try {
             $this->approveChallengedPayment->process($order);
+            // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
             $this->messageManager->addSuccessMessage(__('Approved the payment online.'));
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
         } catch (\Exception $e) {
+            throw $e;
+            // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
             $this->messageManager->addErrorMessage(__('Unable to approve the order.'));
             $this->logger->error($e->getMessage());
         }

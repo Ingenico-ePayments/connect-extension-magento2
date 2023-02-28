@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Controller\CsrfAware;
+namespace Worldline\Connect\Controller\CsrfAware;
 
 use Magento\Framework\App\Action\Action as CoreAction;
 use Magento\Framework\App\CsrfAwareActionInterface;

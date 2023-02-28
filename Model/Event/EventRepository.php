@@ -1,6 +1,6 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
-namespace Ingenico\Connect\Model\Event;
+namespace Worldline\Connect\Model\Event;
 
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
@@ -11,52 +11,57 @@ use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Reflection\DataObjectProcessor;
-use Ingenico\Connect\Api\Data\EventInterface;
-use Ingenico\Connect\Api\Data\EventSearchResultsInterface;
-use Ingenico\Connect\Api\Data\EventSearchResultsInterfaceFactory;
-use Ingenico\Connect\Api\EventRepositoryInterface;
-use Ingenico\Connect\Model\Event;
-use Ingenico\Connect\Model\EventFactory;
-use Ingenico\Connect\Model\ResourceModel\Event as ResourceEvent;
-use Ingenico\Connect\Model\ResourceModel\Event\CollectionFactory as EventCollectionFactory;
-use Ingenico\Connect\Model\ResourceModel\Event\Collection;
+use Worldline\Connect\Api\Data\EventInterface;
+use Worldline\Connect\Api\Data\EventSearchResultsInterface;
+use Worldline\Connect\Api\Data\EventSearchResultsInterfaceFactory;
+use Worldline\Connect\Api\EventRepositoryInterface;
+use Worldline\Connect\Model\Event;
+use Worldline\Connect\Model\EventFactory;
+use Worldline\Connect\Model\ResourceModel\Event as ResourceEvent;
+use Worldline\Connect\Model\ResourceModel\Event\Collection;
+use Worldline\Connect\Model\ResourceModel\Event\CollectionFactory as EventCollectionFactory;
 
 /**
  * Class EventRepository
  *
- * @package Ingenico\Connect\Model\Event
+ * @package Worldline\Connect\Model\Event
  */
 class EventRepository implements EventRepositoryInterface
 {
-
     /**
      * @var ResourceEvent
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $resource;
 
     /**
      * @var EventFactory
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $eventFactory;
 
     /**
      * @var EventCollectionFactory
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $eventCollectionFactory;
 
     /**
      * @var EventSearchResultsInterfaceFactory
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $searchResultsFactory;
 
     /**
      * @var DataObjectProcessor
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $dataObjectProcessor;
 
     /**
      * @var SearchCriteriaBuilder
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $criteriaBuilder;
 
     /**
@@ -102,8 +107,10 @@ class EventRepository implements EventRepositoryInterface
 
         try {
             $this->resource->save($eventModel);
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
         } catch (\Exception $exception) {
             throw new CouldNotSaveException(
+                // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
                 __(
                     'Could not save the event: %1',
                     $exception->getMessage()
@@ -145,6 +152,7 @@ class EventRepository implements EventRepositoryInterface
             $field = $sortOrder->getField();
             $collection->addOrder(
                 $field,
+                // phpcs:ignore SlevomatCodingStandard.Operators.DisallowEqualOperators.DisallowedEqualOperator
                 ($sortOrder->getDirection() == SortOrder::SORT_ASC) ? 'ASC' : 'DESC'
             );
         }
@@ -168,11 +176,13 @@ class EventRepository implements EventRepositoryInterface
         return $searchResults;
     }
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
      * @param string $eventId
      * @return bool
      * @throws \Magento\Framework\Exception\LocalizedException
      */
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     public function deleteById($eventId)
     {
         return $this->delete($this->getByEventId($eventId));
@@ -189,8 +199,10 @@ class EventRepository implements EventRepositoryInterface
             $eventModel = $this->eventFactory->create();
             $this->resource->load($eventModel, $event->getEventId(), EventInterface::EVENT_ID);
             $this->resource->delete($eventModel);
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
         } catch (\Exception $exception) {
             throw new CouldNotDeleteException(
+                // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
                 __(
                     'Could not delete the Event: %1',
                     $exception->getMessage()
@@ -212,19 +224,23 @@ class EventRepository implements EventRepositoryInterface
         $event = $this->eventFactory->create();
         $this->resource->load($event, $eventId, EventInterface::EVENT_ID);
         if (!$event->getId()) {
+            // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
             throw new NoSuchEntityException(__('Event with id "%1" does not exist.', $eventId));
         }
 
         return $event->getDataModel();
     }
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
      * Helper function that adds a FilterGroup to the collection.
      *
      * @param \Magento\Framework\Api\Search\FilterGroup $filterGroup
      * @param Collection $collection
      */
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     private function addFilterGroupToCollection(
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
         \Magento\Framework\Api\Search\FilterGroup $filterGroup,
         Collection $collection
     ) {

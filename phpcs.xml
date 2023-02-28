@@ -1,58 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ruleset name="Ingenico Connect">
-    <description>PHP CodeSniffer ruleset for development for Ingenico Connect</description>
-
-    <exclude-pattern>*\.js</exclude-pattern>
-
-    <!-- Run against the PHPCompatibility ruleset -->
-    <rule ref="PHPCompatibility"/>
-    <config name="testVersion" value="7.3"/>
-
+<ruleset>
+    <file>.</file>
     <!-- Arguments -->
     <arg value="sp"/>
     <arg name="colors"/>
 
-    <!-- PSR2 standard -->
-    <rule ref="PSR2">
-        <!-- Exclude some Magento specifics: -->
-        <!-- Allow parameters like $_something -->
-        <exclude name="PSR2.Classes.PropertyDeclaration.Underscore"/>
-        <!-- Allow methods like _construct() -->
-        <exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>
-        <!-- Allow extends and implement to start on a new line: -->
-        <exclude name="PSR2.Classes.ClassDeclaration.ExtendsLine"/>
-        <exclude name="PSR2.Classes.ClassDeclaration.ImplementsLine"/>
+    <!-- PSR12 standard -->
+    <rule ref="PSR12">
+        <exclude name="Generic.Files.LineLength" />
     </rule>
 
-    <!-- Rules -->
+    <!-- PHP compatibility -->
+    <rule ref="PHPCompatibility"/>
+
+    <!-- This block should be ordered alphabetically -->
+    <!-- Extra rules -->
     <rule ref="Generic.Arrays.ArrayIndent"/>
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
-    <!--rule ref="Generic.PHP.ForbiddenFunctions">
-        <properties>
-            <property name="forbiddenFunctions" type="array" value="empty=>null,isset=>null,is_null=>null"/>
-        </properties>
-    </rule-->
-    <rule ref="Generic.PHP.Syntax"/>
     <rule ref="Generic.Classes.DuplicateClassName"/>
-    <rule ref="MySource.PHP.GetRequestData"/>
-    <!--<rule ref="Generic.Commenting.Fixme"/>-->
-    <!--<rule ref="Generic.Commenting.Todo"/>-->
     <rule ref="Generic.CodeAnalysis.EmptyStatement"/>
-    <rule ref="Generic.CodeAnalysis.EmptyStatement.DetectedCatch">
-        <exclude-pattern>ThreeDSecure/*Decorator\.php</exclude-pattern>
-        <exclude-pattern>DecoratorPool\.php</exclude-pattern>
-        <exclude-pattern>RequestBuilder\/Common\/*\.php</exclude-pattern>
-        <exclude-pattern>MethodSpecificInput\/*\.php</exclude-pattern>
-    </rule>
     <rule ref="Generic.CodeAnalysis.ForLoopShouldBeWhileLoop"/>
     <rule ref="Generic.CodeAnalysis.ForLoopWithTestFunctionCall"/>
     <rule ref="Generic.CodeAnalysis.JumbledIncrementer"/>
     <rule ref="Generic.CodeAnalysis.UnconditionalIfStatement"/>
     <rule ref="Generic.CodeAnalysis.UnnecessaryFinalModifier"/>
-    <rule ref="Generic.CodeAnalysis.UselessOverridingMethod"/>
+    <rule ref="Generic.Commenting.Fixme"/>
+    <rule ref="Generic.Commenting.Todo"/>
+    <rule ref="Generic.Formatting.MultipleStatementAlignment">
+        <properties>
+            <property name="maxPadding" value="1" />
+        </properties>
+    </rule>
     <rule ref="Generic.Formatting.SpaceAfterCast">
         <properties>
             <property name="spacing" value="1"/>
+        </properties>
+    </rule>
+    <rule ref="Generic.Formatting.SpaceAfterNot">
+        <properties>
+            <property name="spacing" value="0"/>
         </properties>
     </rule>
     <rule ref="Generic.Metrics.CyclomaticComplexity">
@@ -61,10 +47,123 @@
             <property name="absoluteComplexity" value="20"/>
         </properties>
     </rule>
-    <rule ref="PSR12.Operators.OperatorSpacing"/>
-    <rule ref="Generic.Formatting.MultipleStatementAlignment">
+    <rule ref="Generic.Metrics.NestingLevel">
         <properties>
-            <property name="maxPadding" value="1"/>
+            <property name="nestingLevel" value="3"/>
+            <property name="absoluteNestingLevel" value="3"/>
         </properties>
     </rule>
+    <rule ref="Generic.PHP.BacktickOperator"/>
+    <rule ref="Generic.PHP.ForbiddenFunctions">
+        <properties>
+            <property name="forbiddenFunctions" type="array">
+                <element key="empty" value="null"/>
+                <element key="isset" value="null"/>
+                <element key="is_null" value="null"/>
+                <element key="eval" value="null"/>
+                <element key="serialize" value="json_encode"/>
+                <element key="unserialize" value="json_decode"/>
+                <element key="shell_exec" value="null"/>
+                <element key="exec" value="null"/>
+                <element key="passthru" value="null" />
+                <element key="system" value="null" />
+                <element key="assert" value="null"/>
+            </property>
+        </properties>
+    </rule>
+    <rule ref="Generic.PHP.Syntax"/>
+
+    <!-- This block should be ordered alphabetically -->
+    <!-- 3rd party -->
+    <rule ref="SlevomatCodingStandard.Arrays.TrailingArrayComma"/>
+    <rule ref="SlevomatCodingStandard.Classes.EmptyLinesAroundClassBraces">
+        <properties>
+            <property name="linesCountAfterOpeningBrace" value="0"/>
+            <property name="linesCountBeforeClosingBrace" value="0"/>
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Classes.ModernClassNameReference"/>
+    <rule ref="SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming"/>
+    <rule ref="SlevomatCodingStandard.ControlStructures.DisallowYodaComparison"/>
+    <rule ref="SlevomatCodingStandard.ControlStructures.RequireShortTernaryOperator"/>
+    <rule ref="SlevomatCodingStandard.Functions.FunctionLength">
+        <properties>
+            <property name="maxLinesLength" value="25"/>
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Files.LineLength">
+        <properties>
+            <property name="lineLengthLimit" value="120"/>
+            <property name="ignoreComments" value="false"/>
+            <property name="ignoreImports" value="true"/>
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Functions.StaticClosure"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.DisallowGroupUse"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly">
+        <properties>
+            <property name="allowFallbackGlobalFunctions" value="false"/>
+            <property name="allowFallbackGlobalConstants" value="false"/>
+            <property name="searchAnnotations" value="true"/>
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses">
+        <properties>
+            <property name="searchAnnotations" value="true"/>
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Namespaces.UseFromSameNamespace"/>
+    <rule ref="SlevomatCodingStandard.Operators.DisallowEqualOperators"/>
+    <rule ref="SlevomatCodingStandard.PHP.ReferenceSpacing">
+        <properties>
+            <property name="spacesCountAfterReference" value="0"/>
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.PHP.TypeCast"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
+        <properties>
+            <property name="linesCountBeforeDeclare" value="1"/>
+            <property name="spacesCountAroundEqualsSign" value="0"/>
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.TypeHints.DisallowArrayTypeHintSyntax"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHintSpacing"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingAnyTypeHint"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint"/>
+    <rule ref="SlevomatCodingStandard.Variables.UnusedVariable">
+        <properties>
+            <property name="ignoreUnusedValuesWhenOnlyKeysAreUsedInForeach" value="true"/>
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.TypeHints.UselessConstantTypeHint"/>
+    <rule ref="SlevomatCodingStandard.Variables.DisallowSuperGlobalVariable"/>
+    <rule ref="Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps"/>
+    <rule ref="Squiz.NamingConventions.ValidVariableName.NotCamelCaps"/>
+    <rule ref="Squiz.Strings.DoubleQuoteUsage.ContainsVar"/>
+    <rule ref="Squiz.Strings.DoubleQuoteUsage.NotRequired"/>
+    <rule ref="Squiz.WhiteSpace.FunctionSpacing">
+        <properties>
+            <property name="spacing" value="1"/>
+            <property name="spacingBeforeFirst" value="0"/>
+            <property name="spacingAfterLast" value="0"/>
+        </properties>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.ObjectOperatorSpacing">
+        <properties>
+            <property name="ignoreNewlines" value="true" />
+        </properties>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Files.LineLength.LineTooLong">
+        <exclude-pattern>view/*</exclude-pattern>
+    </rule>
+    <rule ref="Magento2.Security.XssTemplate"/>
+    <config name="php_version" value="80100"/>
+    <config name="testVersion" value="8.1"/>
+    <arg name="extensions" value="php,phtml"/>
+    <arg name="cache"/>
 </ruleset>

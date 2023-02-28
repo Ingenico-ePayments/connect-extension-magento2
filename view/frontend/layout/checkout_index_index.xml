@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
-        <link src="Ingenico_Connect::js/lib/connectsdk.js"/>
+        <link src="Worldline_Connect::js/lib/connectsdk.js"/>
     </head>
     <body>
         <referenceContainer name="content.top">
             <block class="Magento\Cms\Block\Block" name="Promo" before="-">
                 <arguments>
-                    <argument name="block_id" xsi:type="string">ingenico_banner_checkout</argument>
+                    <argument name="block_id" xsi:type="string">worldline_banner_checkout</argument>
                 </arguments>
             </block>
         </referenceContainer>
@@ -27,27 +27,19 @@
                                                         <item name="renders" xsi:type="array">
                                                             <!-- merge payment method renders here -->
                                                             <item name="children" xsi:type="array">
-                                                                <item name="ingenico_connect" xsi:type="array">
-                                                                    <item name="component" xsi:type="string">Ingenico_Connect/js/view/payment/ingenico-connect</item>
+                                                                <item name="worldline" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Worldline_Connect/js/view/payment/method</item>
                                                                     <item name="methods" xsi:type="array">
-                                                                        <item name="ingenico" xsi:type="array">
-                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
-                                                                        </item>
-                                                                    </item>
-                                                                </item>
-                                                                <item name="ingenico" xsi:type="array">
-                                                                    <item name="component" xsi:type="string">Ingenico_Connect/js/view/payment/ingenico</item>
-                                                                    <item name="methods" xsi:type="array">
-                                                                        <item name="ingenico_1" xsi:type="array">
+                                                                        <item name="worldline_1" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">false</item>
                                                                         </item>
-                                                                        <item name="ingenico_2" xsi:type="array">
+                                                                        <item name="worldline_2" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">false</item>
                                                                         </item>
-                                                                        <item name="ingenico_809" xsi:type="array">
+                                                                        <item name="worldline_809" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">false</item>
                                                                         </item>
-                                                                        <item name="ingenico_hpp" xsi:type="array">
+                                                                        <item name="worldline_hpp" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">false</item>
                                                                         </item>
                                                                     </item>

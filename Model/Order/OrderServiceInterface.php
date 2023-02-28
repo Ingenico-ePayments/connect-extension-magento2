@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Model\Order;
+namespace Worldline\Connect\Model\Order;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\OrderInterface;
 
+// phpcs:ignore SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming.SuperfluousSuffix
 interface OrderServiceInterface
 {
     /**

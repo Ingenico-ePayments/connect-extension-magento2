@@ -1,8 +1,8 @@
 define([
     'underscore',
     'Magento_Ui/js/form/components/group',
-    'Ingenico_Connect/js/model/payment/payment-data',
-    'Ingenico_Connect/js/model/payment/config',
+    'Worldline_Connect/js/model/payment/payment-data',
+    'Worldline_Connect/js/model/payment/config',
     'uiLayout',
 ], function (_, Group, paymentData, config, layout) {
     'use strict';
@@ -12,7 +12,7 @@ define([
             parent: this.name,
             name: identifier,
             additionalClasses: identifier,
-            component: 'Ingenico_Connect/js/view/payment/component/product',
+            component: 'Worldline_Connect/js/view/payment/component/product',
             description: description,
             checked: paymentData.currentProductIdentifier,
             product: product,
@@ -24,8 +24,8 @@ define([
         return {
             parent: this.name,
             name: identifier + '-fields',
-            component: 'Ingenico_Connect/js/view/payment/component/collection/fields',
-            template: 'Ingenico_Connect/payment/product/field-collection',
+            component: 'Worldline_Connect/js/view/payment/component/collection/fields',
+            template: 'Worldline_Connect/payment/product/field-collection',
             uid: identifier,
             product: product,
             account: account,
@@ -36,8 +36,8 @@ define([
         return {
             parent: this.name,
             name: identifier + '-tooltips',
-            component: 'Ingenico_Connect/js/view/payment/component/collection/tooltips',
-            template: 'Ingenico_Connect/payment/product/field-collection',
+            component: 'Worldline_Connect/js/view/payment/component/collection/tooltips',
+            template: 'Worldline_Connect/payment/product/field-collection',
             uid: identifier,
             product: product,
         }
@@ -46,7 +46,7 @@ define([
     return Group.extend({
 
         defaults: {
-            template: 'Ingenico_Connect/payment/product/group',
+            template: 'Worldline_Connect/payment/product/group',
             isTokenGroup: false,
         },
 

@@ -1,10 +1,8 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
-namespace Ingenico\Connect\Controller\Webhooks;
+namespace Worldline\Connect\Controller\Webhooks;
 
 use Exception;
-use Ingenico\Connect\Model\Ingenico\Webhook\Handler;
-use Ingenico\Connect\Model\Ingenico\Webhook\Unmarshaller;
 use Ingenico\Connect\Sdk\Domain\Webhooks\WebhooksEvent;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Request\Http;
@@ -12,10 +10,12 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\Raw;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\ResultInterface;
-use Ingenico\Connect\Controller\CsrfAware\Action;
 use Magento\Framework\Webapi\Exception as WebApiException;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
+use Worldline\Connect\Controller\CsrfAware\Action;
+use Worldline\Connect\Model\Worldline\Webhook\Handler;
+use Worldline\Connect\Model\Worldline\Webhook\Unmarshaller;
 
 /**
  * Webhook class encapsulating general request validation functionality for webhooks
@@ -25,16 +25,19 @@ class Index extends Action
     /**
      * @var Unmarshaller
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $unmarshaller;
 
     /**
      * @var Handler
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $handler;
 
     /**
      * @var LoggerInterface
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $logger;
 
     public function __construct(
@@ -49,6 +52,7 @@ class Index extends Action
         $this->logger = $logger;
     }
 
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
     public function execute()
     {
         if ($response = $this->checkVerification()) {
@@ -90,7 +94,7 @@ class Index extends Action
     }
 
     /**
-     * Detects Ingenico Webhook test request.
+     * Detects Worldline Webhook test request.
      * When a request is an endpoint test, it should not be processed.
      *
      * @param WebhooksEvent $event
@@ -98,7 +102,8 @@ class Index extends Action
      */
     private function checkEndpointTest(WebhooksEvent $event): bool
     {
-        return strpos($event->id, 'TEST') === 0;
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
+        return strpos((string) $event->id, 'TEST') === 0;
     }
 
     private function getSecuritySignature(): string
@@ -129,7 +134,7 @@ class Index extends Action
      *
      * @param RequestInterface $request
      * @return Raw|ResultInterface
-     * @see \Ingenico\Connect\Controller\Webhooks\Index::proxyValidateForCsrf
+     * @see \Worldline\Connect\Controller\Webhooks\Index::proxyValidateForCsrf
      */
     protected function getCsrfExceptionResponse(RequestInterface $request)
     {
@@ -137,6 +142,7 @@ class Index extends Action
         $response = $this->resultFactory->create(ResultFactory::TYPE_RAW);
         $response->setHttpResponseCode(500);
         $response->setHeader('Content-type', 'text/plain');
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
         $response->setContents(__('Action is not allowed.'));
 
         return $response;
@@ -165,6 +171,7 @@ class Index extends Action
     private function logException(Exception $exception)
     {
         $this->logger->warning(
+            // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
             sprintf(
                 'Exception occurred when attempting to handle webhook: %1$s',
                 $exception->getMessage()

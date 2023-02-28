@@ -4,7 +4,7 @@
         <referenceContainer name="top.container">
             <block class="Magento\Cms\Block\Block" name="Promo" before="-">
                 <arguments>
-                    <argument name="block_id" xsi:type="string">ingenico_banner_cart</argument>
+                    <argument name="block_id" xsi:type="string">worldline_banner_cart</argument>
                 </arguments>
             </block>
         </referenceContainer>

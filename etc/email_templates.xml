@@ -2,7 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
     <template id="payment_update" label="Payment update" file="payment_update.html"
-              type="html" module="Ingenico_Connect" area="frontend"/>
+              type="html" module="Worldline_Connect" area="frontend"/>
     <template id="fraud_email" label="Fraud email" file="fraud_email.html"
-              type="html" module="Ingenico_Connect" area="frontend"/>
+              type="html" module="Worldline_Connect" area="frontend"/>
 </config>

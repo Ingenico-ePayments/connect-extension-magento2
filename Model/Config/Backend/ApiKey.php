@@ -1,5 +1,6 @@
-<?php
-namespace Ingenico\Connect\Model\Config\Backend;
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
+
+namespace Worldline\Connect\Model\Config\Backend;
 
 use Magento\Framework\App\Cache\TypeListInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -15,6 +16,7 @@ class ApiKey extends Value
     /**
      * @var EncryptorInterface
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $encryptor;
 
     public function __construct(
@@ -22,7 +24,9 @@ class ApiKey extends Value
         Registry $registry,
         ScopeConfigInterface $config,
         TypeListInterface $cacheTypeList,
+        // phpcs:ignore SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue.NullabilityTypeMissing
         AbstractResource $resource = null,
+        // phpcs:ignore SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue.NullabilityTypeMissing
         AbstractDb $resourceCollection = null,
         EncryptorInterface $encryptor,
         array $data = []
@@ -35,6 +39,7 @@ class ApiKey extends Value
     /**
      * @return Value
      */
+    // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     protected function _afterLoad()
     {
         $value = $this->encryptor->decrypt($this->getValue());
@@ -50,6 +55,7 @@ class ApiKey extends Value
     {
         $value = $this->getValue();
 
+        // phpcs:ignore Generic.PHP.ForbiddenFunctions.Found
         if (!empty($value)) {
             $value = $this->encryptor->encrypt($value);
             $this->setValue($value);

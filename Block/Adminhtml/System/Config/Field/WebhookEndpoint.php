@@ -2,23 +2,25 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Block\Adminhtml\System\Config\Field;
+namespace Worldline\Connect\Block\Adminhtml\System\Config\Field;
 
 use Magento\Backend\Block\Template\Context;
-use Magento\Framework\Url;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
+use Magento\Framework\Url;
 
 class WebhookEndpoint extends Field
 {
     /**
      * @var string
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $routePath;
 
     /**
      * @var Url
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $url;
 
     public function __construct(

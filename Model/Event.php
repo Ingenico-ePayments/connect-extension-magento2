@@ -1,36 +1,40 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
-namespace Ingenico\Connect\Model;
+namespace Worldline\Connect\Model;
 
 use Magento\Framework\Api\DataObjectHelper;
-use Ingenico\Connect\Api\Data\EventInterface;
-use Ingenico\Connect\Api\Data\EventInterfaceFactory;
-use Ingenico\Connect\Model\Event\DataModel;
-use Ingenico\Connect\Model\ResourceModel\Event as EventResource;
-use Ingenico\Connect\Model\ResourceModel\Event\Collection;
+use Worldline\Connect\Api\Data\EventInterface;
+use Worldline\Connect\Api\Data\EventInterfaceFactory;
+use Worldline\Connect\Model\Event\DataModel;
+use Worldline\Connect\Model\ResourceModel\Event as EventResource;
+use Worldline\Connect\Model\ResourceModel\Event\Collection;
 
 /**
  * Class Event
  *
  * database representation of an event
  *
- * @package Ingenico\Connect\Model
+ * @package Worldline\Connect\Model
  */
+// phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
 class Event extends \Magento\Framework\Model\AbstractModel
 {
-
-    protected $_eventPrefix = 'ingenico_epayments_event';
+    // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore, SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint
+    protected $_eventPrefix = 'worldline_connect_event';
 
     /**
      * @var EventInterfaceFactory
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $eventDataFactory;
 
     /**
      * @var DataObjectHelper
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $dataObjectHelper;
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
      * @param \Magento\Framework\Model\Context $context
      * @param \Magento\Framework\Registry $registry
@@ -40,8 +44,11 @@ class Event extends \Magento\Framework\Model\AbstractModel
      * @param Collection $resourceCollection
      * @param array $data
      */
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     public function __construct(
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
         \Magento\Framework\Model\Context $context,
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
         \Magento\Framework\Registry $registry,
         EventInterfaceFactory $eventDataFactory,
         DataObjectHelper $dataObjectHelper,

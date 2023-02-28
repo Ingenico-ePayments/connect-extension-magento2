@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Api;
+namespace Worldline\Connect\Api;
 
 use DateTime;
 use LogicException;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
 
+// phpcs:ignore SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming.SuperfluousSuffix
 interface OrderPaymentManagementInterface
 {
     /**
-     * Get last known payment status received from the Ingenico API.
+     * Get last known payment status received from the Worldline API.
      * This is the information that is stored in the order payment object
      * and does not do a new API call.
      *
@@ -20,10 +21,10 @@ interface OrderPaymentManagementInterface
      * @throws LogicException
      * @api
      */
-    public function getIngenicoPaymentStatus(OrderPaymentInterface $payment): string;
+    public function getWorldlinePaymentStatus(OrderPaymentInterface $payment): string;
 
     /**
-     * Get last known refund status received from the Ingenico API.
+     * Get last known refund status received from the Worldline API.
      * This is the information that is stored in the order payment object
      * and does not do a new API call.
      *
@@ -32,7 +33,7 @@ interface OrderPaymentManagementInterface
      * @throws LogicException
      * @api
      */
-    public function getIngenicoRefundStatus(OrderPaymentInterface $payment): string;
+    public function getWorldlineRefundStatus(OrderPaymentInterface $payment): string;
 
     /**
      * Get last known payment status code change datetime.
@@ -42,7 +43,7 @@ interface OrderPaymentManagementInterface
      * @throws LogicException
      * @api
      */
-    public function getIngenicoPaymentStatusCodeChangeDate(OrderPaymentInterface $payment): DateTime;
+    public function getWorldlinePaymentStatusCodeChangeDate(OrderPaymentInterface $payment): DateTime;
 
     /**
      * Get last known refund status code change datetime.
@@ -52,5 +53,5 @@ interface OrderPaymentManagementInterface
      * @throws LogicException
      * @api
      */
-    public function getIngenicoRefundStatusCodeChangeDate(OrderPaymentInterface $payment): DateTime;
+    public function getWorldlineRefundStatusCodeChangeDate(OrderPaymentInterface $payment): DateTime;
 }

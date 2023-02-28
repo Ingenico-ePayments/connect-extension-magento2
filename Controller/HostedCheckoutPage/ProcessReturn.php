@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Controller\HostedCheckoutPage;
+namespace Worldline\Connect\Controller\HostedCheckoutPage;
 
 use Exception;
 use Magento\Checkout\Model\Session;
@@ -14,31 +14,35 @@ use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\NotFoundException;
 use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Sales\Model\Order;
-use Ingenico\Connect\Model\Config;
-use Ingenico\Connect\Model\ConfigInterface;
-use Ingenico\Connect\Model\Ingenico\Action\GetHostedCheckoutStatus;
 use Psr\Log\LoggerInterface;
+use Worldline\Connect\Model\Config;
+use Worldline\Connect\Model\ConfigInterface;
+use Worldline\Connect\Model\Worldline\Action\GetHostedCheckoutStatus;
 
 class ProcessReturn extends Action
 {
     /**
      * @var SessionManagerInterface|Session
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $checkoutSession;
 
     /**
      * @var GetHostedCheckoutStatus
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $checkoutStatus;
 
     /**
      * @var ConfigInterface
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $ePaymentsConfig;
 
     /**
      * @var LoggerInterface
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $logger;
 
     /**
@@ -79,6 +83,7 @@ class ProcessReturn extends Action
             // Handle order cancellation:
             if ($order->getState() === Order::STATE_CANCELED) {
                 $this->messageManager->addNoticeMessage(
+                    // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
                     __('You cancelled the payment. Please select a different payment option and place your order again')
                 );
                 $this->checkoutSession->restoreQuote();
@@ -86,10 +91,12 @@ class ProcessReturn extends Action
             }
 
             /** @var string $transactionStatus */
+            // phpcs:ignore SlevomatCodingStandard.Variables.UnusedVariable.UnusedVariable
             $transactionStatus = $order->getPayment()->getAdditionalInformation(Config::PAYMENT_STATUS_KEY);
-            /** @var string $info */
-            $info = $this->ePaymentsConfig->getPaymentStatusInfo(mb_strtolower($transactionStatus));
-            $this->messageManager->addSuccessMessage(__('Payment status:') . ' ' . ($info ?: 'Unknown status'));
+//            /** @var string $info */
+//            $info = $this->ePaymentsConfig->getPaymentStatusInfo(mb_strtolower($transactionStatus));
+
+//            $this->messageManager->addSuccessMessage(__('Payment status:') . ' ' . ($info ?: 'Unknown status'));
 
             return $this->redirect('checkout/onepage/success');
         } catch (Exception $e) {
@@ -107,6 +114,7 @@ class ProcessReturn extends Action
      * @param $url
      * @return ResultInterface
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingAnyTypeHint
     private function redirect($url)
     {
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
@@ -134,6 +142,7 @@ class ProcessReturn extends Action
 
         // $hostedCheckoutId can be false or null in error case
         if (!$hostedCheckoutId) {
+            // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
             throw new NotFoundException(__('Could not retrieve payment status.'));
         }
 

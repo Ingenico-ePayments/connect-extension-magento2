@@ -2,13 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Plugin\Magento\Sales\Model\Order;
+namespace Worldline\Connect\Plugin\Magento\Sales\Model\Order;
 
 use Magento\Sales\Model\Order\Creditmemo;
 
 class Payment
 {
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingAnyTypeHint, SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
     public function aroundAddTransaction(
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
         \Magento\Sales\Model\Order\Payment $subject,
         callable $proceed,
         $type,

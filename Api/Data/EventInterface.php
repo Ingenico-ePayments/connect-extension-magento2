@@ -1,28 +1,28 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
-namespace Ingenico\Connect\Api\Data;
+namespace Worldline\Connect\Api\Data;
 
 /**
- * Ingenico Webhooks Event Interface
+ * Worldline Webhooks Event Interface
  *
- * @package Ingenico\Connect\Api\Data
+ * @package Worldline\Connect\Api\Data
  */
+// phpcs:ignore SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming.SuperfluousSuffix
 interface EventInterface
 {
+    public const ID = 'id';
+    public const EVENT_ID = 'event_id';
+    public const ORDER_INCREMENT_ID = 'order_increment_id';
+    public const CREATED_TIMESTAMP = 'created_at';
+    public const PAYLOAD = 'payload';
+    public const STATUS = 'status';
 
-    const ID = 'id';
-    const EVENT_ID = 'event_id';
-    const ORDER_INCREMENT_ID = 'order_increment_id';
-    const CREATED_TIMESTAMP = 'created_at';
-    const PAYLOAD = 'payload';
-    const STATUS = 'status';
-
-    const STATUS_NEW = 0;
+    public const STATUS_NEW = 0;
     /** @deprecated */
-    const STATUS_PROCESSING = 1;
-    const STATUS_SUCCESS = 2;
-    const STATUS_FAILED = 3;
-    const STATUS_IGNORED = 4;
+    public const STATUS_PROCESSING = 1;
+    public const STATUS_SUCCESS = 2;
+    public const STATUS_FAILED = 3;
+    public const STATUS_IGNORED = 4;
 
     /**
      * Get event_id
@@ -31,12 +31,14 @@ interface EventInterface
      */
     public function getEventId();
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
      * Set event_id
      *
      * @param string $eventId
-     * @return \Ingenico\Connect\Api\Data\EventInterface
+     * @return \Worldline\Connect\Api\Data\EventInterface
      */
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     public function setEventId($eventId);
 
     /**
@@ -46,12 +48,14 @@ interface EventInterface
      */
     public function getOrderIncrementId();
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
      * Set order increment id
      *
      * @param string $orderIncrementId
-     * @return \Ingenico\Connect\Api\Data\EventInterface
+     * @return \Worldline\Connect\Api\Data\EventInterface
      */
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     public function setOrderIncrementId($orderIncrementId);
 
     /**
@@ -61,12 +65,14 @@ interface EventInterface
      */
     public function getPayload();
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
      * Set payload
      *
      * @param string $payload
-     * @return \Ingenico\Connect\Api\Data\EventInterface
+     * @return \Worldline\Connect\Api\Data\EventInterface
      */
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     public function setPayload($payload);
 
     /**
@@ -76,20 +82,24 @@ interface EventInterface
      */
     public function getStatus();
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
      * Set status
      *
      * @param int $status
-     * @return \Ingenico\Connect\Api\Data\EventInterface
+     * @return \Worldline\Connect\Api\Data\EventInterface
      */
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     public function setStatus($status);
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
      * Set creation timestamp
      *
      * @param string $timestamp
-     * @return \Ingenico\Connect\Api\Data\EventInterface
+     * @return \Worldline\Connect\Api\Data\EventInterface
      */
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     public function setCreatedAt($timestamp);
 
     /**

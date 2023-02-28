@@ -2,15 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Setup;
+namespace Worldline\Connect\Setup;
 
-use Ingenico\Connect\Model\Config;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\UpgradeDataInterface;
+use Worldline\Connect\Model\Config;
 
 use function version_compare;
+
+// phpcs:ignore PSR12.Files.FileHeader.SpacingAfterBlock
 
 class UpgradeData implements UpgradeDataInterface
 {
@@ -20,6 +22,7 @@ class UpgradeData implements UpgradeDataInterface
     /**
      * @var ScopeConfigInterface
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $scopeConfig;
 
     public function __construct(ScopeConfigInterface $scopeConfig)
@@ -60,6 +63,7 @@ class UpgradeData implements UpgradeDataInterface
         if ($checkoutType === self::CONFIG_INGENICO_CHECKOUT_TYPE_INLINE) {
             $connection->insert($setup->getTable('core_config_data'), [
                 'path' => Config::CONFIG_INGENICO_CREDIT_CARDS_PAYMENT_FLOW_TYPE,
+                // phpcs:ignore SlevomatCodingStandard.Arrays.TrailingArrayComma.MissingTrailingComma
                 'value' => Config::CONFIG_INGENICO_CREDIT_CARDS_CHECKOUT_TYPE_INLINE
             ]);
         }
@@ -69,6 +73,7 @@ class UpgradeData implements UpgradeDataInterface
             ['value' => Config::CONFIG_INGENICO_CHECKOUT_TYPE_OPTIMIZED_FLOW],
             [
                 $connection->quoteInto('path = ?', Config::CONFIG_INGENICO_CHECKOUT_TYPE),
+                // phpcs:ignore SlevomatCodingStandard.Arrays.TrailingArrayComma.MissingTrailingComma
                 $connection->quoteInto('value = ?', self::CONFIG_INGENICO_CHECKOUT_TYPE_REDIRECT)
             ]
         );

@@ -1,17 +1,18 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
-namespace Ingenico\Connect\Block\Adminhtml\System\Config\Field\GitHub;
+namespace Worldline\Connect\Block\Adminhtml\System\Config\Field\GitHub;
 
-use Ingenico\Connect\Helper\GitHub;
 use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
+use Worldline\Connect\Helper\GitHub;
 
 class Link extends Field
 {
     /** @var GitHub */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     protected $gitHubHelper;
-    
+
     /**
      * @param Context $context
      * @param GitHub $gitHubHelper

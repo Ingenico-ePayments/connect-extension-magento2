@@ -2,27 +2,27 @@
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
     <group id="hpp" translate="label" type="text" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Hosted Payment Pages</label>
-        <field id="active" translate="label comment" type="Ingenico\Connect\Data\Form\Element\Toggle" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="active" translate="label comment" type="Worldline\Connect\Data\Form\Element\Toggle" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Enabled</label>
-            <config_path>payment/ingenico_hpp/active</config_path>
+            <config_path>payment/worldline_hpp/active</config_path>
         </field>
         <field id="sort_order" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Sort Order</label>
-            <config_path>payment/ingenico_hpp/sort_order</config_path>
+            <config_path>payment/worldline_hpp/sort_order</config_path>
         </field>
         <field id="title" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Title</label>
-            <config_path>payment/ingenico_hpp/title</config_path>
+            <config_path>payment/worldline_hpp/title</config_path>
         </field>
         <field id="allowspecific" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Allowed Countries</label>
-            <config_path>payment/ingenico_hpp/allowspecific</config_path>
+            <config_path>payment/worldline_hpp/allowspecific</config_path>
             <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
             <comment>If set to specific, guest customers will not have a billing country and may not be able to checkout.</comment>
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Payment from Specific countries</label>
-            <config_path>payment/ingenico_hpp/specificcountry</config_path>
+            <config_path>payment/worldline_hpp/specificcountry</config_path>
             <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
             <depends>
                 <field id="allowspecific">1</field>
@@ -31,25 +31,25 @@
         <field id="min_order_total" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1">
             <label>Minimum Order Total</label>
             <validate>validate-number validate-zero-or-greater</validate>
-            <config_path>payment/ingenico_hpp/min_order_total</config_path>
+            <config_path>payment/worldline_hpp/min_order_total</config_path>
         </field>
         <field id="max_order_total" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1">
             <label>Maximum Order Total</label>
             <validate>validate-number validate-zero-or-greater</validate>
-            <config_path>payment/ingenico_hpp/max_order_total</config_path>
+            <config_path>payment/worldline_hpp/max_order_total</config_path>
         </field>
         <field id="payment_action" translate="label" type="select" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Payment Action</label>
-            <source_model>Ingenico\Connect\Model\Config\Source\PaymentAction</source_model>
-            <config_path>payment/ingenico_hpp/payment_action</config_path>
+            <source_model>Worldline\Connect\Model\Config\Source\PaymentAction</source_model>
+            <config_path>payment/worldline_hpp/payment_action</config_path>
         </field>
         <field id="hosted_checkout_guest_variant" translate="label comment tooltip" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Variant ID Guest Flow</label>
-            <config_path>ingenico_epayments/checkout/hosted_checkout_guest_variant</config_path>
+            <config_path>worldline_connect/checkout/hosted_checkout_guest_variant</config_path>
         </field>
         <field id="hosted_checkout_variant" translate="label comment tooltip" type="text" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Variant ID Registered flow</label>
-            <config_path>ingenico_epayments/checkout/hosted_checkout_variant</config_path>
+            <config_path>worldline_connect/checkout/hosted_checkout_variant</config_path>
         </field>
     </group>
 </include>

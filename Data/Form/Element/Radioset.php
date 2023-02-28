@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Data\Form\Element;
+namespace Worldline\Connect\Data\Form\Element;
 
 use Magento\Framework\Data\Form\Element\Radios;
+
+use function sprintf;
 
 class Radioset extends Radios
 {
@@ -34,6 +36,7 @@ class Radioset extends Radios
      *
      * @return string
      */
+    // phpcs:ignore SlevomatCodingStandard.Functions.FunctionLength.FunctionLength
     private function getJsHtml()
     {
         $disabledAttr = $this->getData('disabled') ? 'disabled' : '';

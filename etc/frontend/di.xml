@@ -3,7 +3,7 @@
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
             <argument name="configProviders" xsi:type="array">
-                <item name="ingenico_config_provider" xsi:type="object">Ingenico\Connect\Model\ConfigProvider</item>
+                <item name="worldline_config_provider" xsi:type="object">Worldline\Connect\Model\ConfigProvider</item>
             </argument>
         </arguments>
     </type>
@@ -17,12 +17,12 @@
     <type name="Magento\Customer\CustomerData\SectionPoolInterface">
         <arguments>
             <argument name="sectionSourceMap" xsi:type="array">
-                <item name="connect_session" xsi:type="string">Ingenico\Connect\CustomerData\ConnectSession</item>
+                <item name="connect_session" xsi:type="string">Worldline\Connect\CustomerData\ConnectSession</item>
             </argument>
         </arguments>
     </type>
 
-    <type name="Ingenico\Connect\CustomerData\ConnectSession">
+    <type name="Worldline\Connect\CustomerData\ConnectSession">
         <arguments>
             <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
         </arguments>
@@ -31,42 +31,49 @@
     <type name="Magento\Vault\Model\Ui\TokensConfigProvider">
         <arguments>
             <argument name="tokenUiComponentProviders" xsi:type="array">
-                <item name="ingenico_cards" xsi:type="object">Ingenico\Connect\Model\Ui\CardsTokenUiComponentProvider</item>
-                <item name="ingenico_americanexpress" xsi:type="object">Ingenico\Connect\Model\Ui\AmericanExpressTokenUiComponentProvider</item>
-                <item name="ingenico_cartebancaire" xsi:type="object">Ingenico\Connect\Model\Ui\CarteBancaireTokenUiComponentProvider</item>
-                <item name="ingenico_mastercard" xsi:type="object">Ingenico\Connect\Model\Ui\MastercardTokenUiComponentProvider</item>
-                <item name="ingenico_visa" xsi:type="object">Ingenico\Connect\Model\Ui\VisaTokenUiComponentProvider</item>
+                <item name="worldline_cards" xsi:type="object">Worldline\Connect\Model\Ui\CardsTokenUiComponentProvider</item>
+                <item name="worldline_americanexpress" xsi:type="object">Worldline\Connect\Model\Ui\AmericanExpressTokenUiComponentProvider</item>
+                <item name="worldline_cartebancaire" xsi:type="object">Worldline\Connect\Model\Ui\CarteBancaireTokenUiComponentProvider</item>
+                <item name="worldline_discover" xsi:type="object">Worldline\Connect\Model\Ui\DiscoverTokenUiComponentProvider</item>
+                <item name="worldline_mastercard" xsi:type="object">Worldline\Connect\Model\Ui\MastercardTokenUiComponentProvider</item>
+                <item name="worldline_visa" xsi:type="object">Worldline\Connect\Model\Ui\VisaTokenUiComponentProvider</item>
             </argument>
         </arguments>
     </type>
 
-    <virtualType name="Ingenico\Connect\Model\Ui\CardsTokenUiComponentProvider" type="Ingenico\Connect\Model\Ui\TokenUiComponentProvider">
+    <virtualType name="Worldline\Connect\Model\Ui\CardsTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
         <arguments>
-            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::CARDS_VAULT</argument>
+            <argument name="code" xsi:type="const">Worldline\Connect\PaymentMethod\PaymentMethods::CARDS_VAULT</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="Ingenico\Connect\Model\Ui\AmericanExpressTokenUiComponentProvider" type="Ingenico\Connect\Model\Ui\TokenUiComponentProvider">
+    <virtualType name="Worldline\Connect\Model\Ui\AmericanExpressTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
         <arguments>
-            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::AMERICAN_EXPRESS_VAULT</argument>
+            <argument name="code" xsi:type="const">Worldline\Connect\PaymentMethod\PaymentMethods::AMERICAN_EXPRESS_VAULT</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="Ingenico\Connect\Model\Ui\CarteBancaireTokenUiComponentProvider" type="Ingenico\Connect\Model\Ui\TokenUiComponentProvider">
+    <virtualType name="Worldline\Connect\Model\Ui\CarteBancaireTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
         <arguments>
-            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::CARTE_BANCAIRE_VAULT</argument>
+            <argument name="code" xsi:type="const">Worldline\Connect\PaymentMethod\PaymentMethods::CARTE_BANCAIRE_VAULT</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="Ingenico\Connect\Model\Ui\MastercardTokenUiComponentProvider" type="Ingenico\Connect\Model\Ui\TokenUiComponentProvider">
+    <virtualType name="Worldline\Connect\Model\Ui\DiscoverTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
         <arguments>
-            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::MASTERCARD_VAULT</argument>
+            <argument name="code" xsi:type="const">Worldline\Connect\PaymentMethod\PaymentMethods::DISCOVER_VAULT</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="Ingenico\Connect\Model\Ui\VisaTokenUiComponentProvider" type="Ingenico\Connect\Model\Ui\TokenUiComponentProvider">
+    <virtualType name="Worldline\Connect\Model\Ui\MastercardTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
         <arguments>
-            <argument name="code" xsi:type="const">Ingenico\Connect\PaymentMethod\PaymentMethods::VISA_VAULT</argument>
+            <argument name="code" xsi:type="const">Worldline\Connect\PaymentMethod\PaymentMethods::MASTERCARD_VAULT</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Worldline\Connect\Model\Ui\VisaTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
+        <arguments>
+            <argument name="code" xsi:type="const">Worldline\Connect\PaymentMethod\PaymentMethods::VISA_VAULT</argument>
         </arguments>
     </virtualType>
 

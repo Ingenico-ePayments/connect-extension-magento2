@@ -2,9 +2,9 @@
 /*global define*/
 
 define([
-    'Ingenico_Connect/js/model/payment/products',
-    'Ingenico_Connect/js/action/get-payment-product',
-    'Ingenico_Connect/js/model/payment/config',
+    'Worldline_Connect/js/model/payment/products',
+    'Worldline_Connect/js/action/get-payment-product',
+    'Worldline_Connect/js/model/payment/config',
     'ko'
 ], function (productList, fetchProduct, config, ko) {
     'use strict';

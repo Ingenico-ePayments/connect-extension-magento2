@@ -1,7 +1,8 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
-namespace Ingenico\Connect\Model;
+namespace Worldline\Connect\Model;
 
+// phpcs:ignore SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming.SuperfluousSuffix
 interface ConfigInterface
 {
     /**
@@ -16,25 +17,28 @@ interface ConfigInterface
      * Returns Api Key
      *
      * @param int|null $storeId
+     * @param int|null $apiEndpoint
      * @return string
      */
-    public function getApiKey($storeId = null);
+    public function getApiKey($storeId = null, $apiEndpoint = null);
 
     /**
      * Returns Api Secret
      *
      * @param int|null $storeId
+     * @param int|null $apiEndpoint
      * @return string
      */
-    public function getApiSecret($storeId = null);
+    public function getApiSecret($storeId = null, $apiEndpoint = null);
 
     /**
      * Returns Merchant Id
      *
      * @param int|null $storeId
+     * @param int|null $apiEndpoint
      * @return string
      */
-    public function getMerchantId($storeId = null);
+    public function getMerchantId($storeId = null, $apiEndpoint = null);
 
     /**
      * Returns Api Endpoint
@@ -43,13 +47,6 @@ interface ConfigInterface
      * @return string
      */
     public function getApiEndpoint($storeId = null);
-
-    /**
-     * @param string $configPath
-     * @param int|null $storeId
-     * @return string
-     */
-    public function getPaymentProductCheckoutType(string $configPath, ?int $storeId = null);
 
     /**
      * @param string $paymentProductId
@@ -149,14 +146,6 @@ interface ConfigInterface
     public function getHostedCheckoutTitle($storeId = null);
 
     /**
-     * Returns period after which pending orders will be canceled
-     *
-     * @param int|null $storeId
-     * @return string
-     */
-    public function getPendingOrdersCancellationPeriod($storeId = null);
-
-    /**
      * Returns flag (enable/disable) to log all requests
      *
      * @param int|null $storeId
@@ -181,29 +170,13 @@ interface ConfigInterface
     public function getLogAllRequestsFile($storeId = null);
 
     /**
-     * Returns Email Sender to be used for update notification emails
-     *
-     * @param int|null $storeId
-     * @return string
-     */
-    public function getUpdateEmailSender($storeId = null);
-
-    /**
-     * Returns flag whether update notification enabled for specific status
-     *
-     * @param $code
-     * @param string $storeId
-     * @return bool
-     */
-    public function getUpdateEmailEnabled($code, $storeId = null);
-
-    /**
      * Returns payment status info
      *
      * @param int|null $storeId
      * @param $status
      * @return string
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingAnyTypeHint
     public function getPaymentStatusInfo($status, $storeId = null);
 
     /**
@@ -213,42 +186,10 @@ interface ConfigInterface
      * @param null $storeId
      * @return mixed
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingAnyTypeHint
     public function getRefundStatusInfo($status, $storeId = null);
 
-    /**
-     * @return string
-     */
-    public function getReferencePrefix();
-
-    /**
-     * @param int|null $storeId
-     * @return bool
-     */
-    public function getGroupCardPaymentMethods($storeId = null);
-
-    /**
-     * @return bool
-     */
-    public function allowOfflineRefunds(): bool;
-
     public function getLimitAPIFieldLength(): bool;
-
-    public function getPaymentProductPriceRanges(string $paymentProductId, ?int $storeId = null): array;
-
-    public function isPriceInPaymentProductPriceRange(
-        float $orderPrice,
-        string $currencyCode,
-        string $paymentProductId,
-        ?int $storeId = null
-    ): bool;
-
-    public function getPaymentProductCountryRestrictions(string $paymentProductId, ?int $storeId = null): array;
-
-    public function isPaymentProductCountryRestricted(
-        string $countryCode,
-        string $paymentProductId,
-        ?int $storeId = null
-    ): bool;
 
     public function getSaveForLaterVisible(int $storeId): bool;
 }

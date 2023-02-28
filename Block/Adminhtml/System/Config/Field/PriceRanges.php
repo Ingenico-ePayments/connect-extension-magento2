@@ -2,12 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Block\Adminhtml\System\Config\Field;
+namespace Worldline\Connect\Block\Adminhtml\System\Config\Field;
 
 use Magento\Config\Block\System\Config\Form\Field\FieldArray\AbstractFieldArray;
 
+use function __;
+
 class PriceRanges extends AbstractFieldArray
 {
+    // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     protected function _prepareToRender()
     {
         $this->addColumn('currency', ['label' => __('Currency'), 'class' => 'required-entry']);

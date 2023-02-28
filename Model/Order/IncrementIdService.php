@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Model\Order;
+namespace Worldline\Connect\Model\Order;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\SalesSequence\Model\Profile;
@@ -16,21 +16,25 @@ class IncrementIdService
     /**
      * @var Sequence
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $sequence;
 
     /**
      * @var StoreRepositoryInterface
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $storeRepository;
 
     /**
      * @var MetaResource
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $metaResource;
 
     /**
      * @var ProfileResource
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $profileResource;
 
     public function __construct(
@@ -55,6 +59,7 @@ class IncrementIdService
 
         foreach ($this->storeRepository->getList() as $store) {
             $incrementId = $this->getDummyIncrementIdByStore((string) $store->getId());
+            // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
             $maxLength = max($maxLength, strlen($incrementId));
         }
 
@@ -75,6 +80,7 @@ class IncrementIdService
         };
         $pattern = $getPattern->call($this->sequence);
 
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
         return sprintf(
             $pattern,
             $sequenceProfile->getData('prefix'),

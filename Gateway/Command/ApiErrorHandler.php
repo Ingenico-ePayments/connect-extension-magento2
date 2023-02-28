@@ -1,6 +1,8 @@
 <?php
 
-namespace Ingenico\Connect\Gateway\Command;
+declare(strict_types=1);
+
+namespace Worldline\Connect\Gateway\Command;
 
 use Ingenico\Connect\Sdk\Domain\Errors\Definitions\APIError;
 use Ingenico\Connect\Sdk\ResponseException;
@@ -8,35 +10,19 @@ use Magento\Framework\Message\ManagerInterface;
 use Magento\Payment\Gateway\Command\CommandException;
 use Psr\Log\LoggerInterface;
 
+use function __;
+use function array_reduce;
+use function sprintf;
+
 class ApiErrorHandler
 {
-    /**
-     * @var ManagerInterface
-     */
-    private $messageManager;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * IngenicoRefundCommand constructor.
-     *
-     * @param ManagerInterface $manager
-     * @param LoggerInterface $logger
-     */
     public function __construct(
-        ManagerInterface $manager,
-        LoggerInterface $logger
+        private readonly ManagerInterface $manager,
+        private readonly LoggerInterface $logger
     ) {
-        $this->messageManager = $manager;
-        $this->logger = $logger;
     }
 
     /**
-     * Log and process Ingenico API exceptions and convert them to CommandException for bubbling up.
-     *
      * @param ResponseException $e
      * @throws CommandException
      */
@@ -45,7 +31,7 @@ class ApiErrorHandler
         $errors = $e->getErrors();
         $message = array_reduce(
             $errors,
-            function (
+            static function (
                 $message,
                 APIError $error
             ) {

@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 3.0.0 - 2023-02-22
+
+- Rebrand Ingenico to Worldline
+- Replaces single payment method with native payment methods, thereby simplifying and improving integration with Magento
+- Adds support for Magento's Vault
+- Drops support for older PHP versions, now supports PHP ~8.1
+- Drops support for older Magento versions, now supports Magento 2.4.5-p1
+
 ## 2.7.1 - 2022-08-30
 
 - Remove conlict entries from composer.json as they are implicitly defined by replace
@@ -27,11 +35,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 2.5.0 - 2021-08-26
 
-- Fixes issue where non-valid state codes where sent to the Ingenico API.
+- Fixes issue where non-valid state codes where sent to the Worldline API.
 - Optimizes admin configuration
 - Fixes issue where a delayed settlement with PayPal could result in a "payment review" state.
-- Fixes issue where an order that was not paid with Ingenico could not be offline refunded.
-- Added a single webhook endpoint that can replace the other 2 webhook endpoints. Previously, you had to configure 2 separate webhook endpoints in the Ingenico Configuration Center, but now you only need to configure one. The webhook URL can be found in the administration section of the module (`Admin > Stores > Configuration > Sales > Ingenico ePayments > Settings`).
+- Fixes issue where an order that was not paid with Worldline could not be offline refunded.
+- Added a single webhook endpoint that can replace the other 2 webhook endpoints. Previously, you had to configure 2 separate webhook endpoints in the Worldline Configuration Center, but now you only need to configure one. The webhook URL can be found in the administration section of the module (`Admin > Stores > Configuration > Sales > Worldline ePayments > Settings`).
 - Added composer suggestion to install the connect-extension-magento2-refund-queue module.
 
 ## 2.4.6 - 2021-01-27
@@ -62,9 +70,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add a new service contract to get meta data from order payments.
 - Add a new service contract for frontend logging
 - The following classes have been removed:
-    - `Ingenico\Connect\Gateway\Command\IngenicoVoidCommand`
-    - `Ingenico\Connect\Model\Ingenico\Action\UndoCapturePaymentRequest`
-    - `Ingenico\Connect\Observer\UndoCapturePaymentObserver`
+    - `Worldline\Connect\Gateway\Command\WorldlineVoidCommand`
+    - `Worldline\Connect\Model\Worldline\Action\UndoCapturePaymentRequest`
+    - `Worldline\Connect\Observer\UndoCapturePaymentObserver`
 
 ## 2.4.1 - 2020-09-17
 
@@ -81,11 +89,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Dispatch Magento events for status handlers. See [the readme](README.md) for more details on this.
 - Status updates for refunds are now added the the comment history on the related credit memo. Earlier all comments where added to the order, unclear if it was about a payment or a refund.
 - The following classes and interfaces have been removed:
-    - `Ingenico\Connect\Model\Ingenico\RefundRequestBuilder`
-    - `Ingenico\Connect\Model\Ingenico\Status\Resolver`
-    - `Ingenico\Connect\Model\Ingenico\Status\ResolverInterface`
-    - `Ingenico\Connect\Model\Ingenico\Status\Refund\RefundHandlerInterface`
-    - `Ingenico\Connect\Model\Ingenico\StatusFactory`
+    - `Worldline\Connect\Model\Worldline\RefundRequestBuilder`
+    - `Worldline\Connect\Model\Worldline\Status\Resolver`
+    - `Worldline\Connect\Model\Worldline\Status\ResolverInterface`
+    - `Worldline\Connect\Model\Worldline\Status\Refund\RefundHandlerInterface`
+    - `Worldline\Connect\Model\Worldline\StatusFactory`
 - Add tooltip with credit card icons to grouped cards.
 
 ## 2.3.2 - 2020-08-02
@@ -129,7 +137,7 @@ an expired session token and not seeing any payment methods.
 
 ### Fixed
 
-- Fixes issue where the title of the payment method was not shown in the order grid if the order was paid with Ingenico.
+- Fixes issue where the title of the payment method was not shown in the order grid if the order was paid with Worldline.
 - Fixes issue where a cancellation on the RPP would not cancel the order in Magento.
 
 ## 2.2.0.1 - 2020-04-09
@@ -151,7 +159,7 @@ an expired session token and not seeing any payment methods.
 
 ### Changed
 
-- Changed the server meta data that is sent to Ingenico to include Magento and module version.
+- Changed the server meta data that is sent to Worldline to include Magento and module version.
 - Disallowed payment products 201, 302, 320, 705, 730 and 770 when using "Payment products and input fields on Hosted Checkout" or "Payment products in Magento checkout, input fields on Hosted Checkout" because they are not supported by the RPP. 
 - Remove secondary API Endpoint
 - Remove secondary Webhook Key
@@ -163,14 +171,14 @@ an expired session token and not seeing any payment methods.
     - When a refund is requested for a processing order the order will be set "on hold" until the refund is approved or cancelled.
     - When a refund is cancelled the order will be set to it's original state before the refund was requested.
     - When a refund is approved the order will follow the default Magento flow for credit memos.
-- Changed `Ingenico\Connect\Model\Ingenico\Webhooks`-namespace to `Ingenico\Connect\Model\Ingenico\Webhook`.
-- Renamed `Ingenico\Connect\Model\Ingenico\Webhooks` to `Ingenico\Connect\Model\Ingenico\Webhook\Handler`.
-- Made the `ingenico_epayments/fraud/manager_email` not mandatory
+- Changed `Worldline\Connect\Model\Worldline\Webhooks`-namespace to `Worldline\Connect\Model\Worldline\Webhook`.
+- Renamed `Worldline\Connect\Model\Worldline\Webhooks` to `Worldline\Connect\Model\Worldline\Webhook\Handler`.
+- Made the `worldline_connect/fraud/manager_email` not mandatory
 
 ### Fixed
 
-- Fixes issue where a refundable payment status from Ingenico would not allow online refunds in Magento.
-- Locales that are unsupported by the Ingenico API will no longer throw an error. Instead they will be mapped. If a locale cannot be determined, the module will fall back to the default locale configured by the merchant in Magento.
+- Fixes issue where a refundable payment status from Worldline would not allow online refunds in Magento.
+- Locales that are unsupported by the Worldline API will no longer throw an error. Instead they will be mapped. If a locale cannot be determined, the module will fall back to the default locale configured by the merchant in Magento.
 - CC Expiry date are now obfuscated in webhook logs.
 - Fixed issue where webhooks would no longer be processed if there were too many failed attempts in the database.
 
@@ -219,7 +227,7 @@ an expired session token and not seeing any payment methods.
 
 ### Changed
 
-- **BC Breaking:** the namespace of the module is changed from `Netresearch\Epayments` to `Ingenico\Connect`. See [the upgrade guide](doc/UPGRADE.md) for more details what this means for you.
+- **BC Breaking:** the namespace of the module is changed from `Netresearch\Epayments` to `Worldline\Connect`. See [the upgrade guide](doc/UPGRADE.md) for more details what this means for you.
 - Updated JavaScript Client SDK from `3.9.0` to `3.13.2`
 
 ### Added
@@ -292,9 +300,9 @@ an expired session token and not seeing any payment methods.
 ### Changed
 
 - webhook endpoints now always return a 200 code, if the event payload could be unwrapped
-- ensure every order has a transaction with the reference to Ingenico's payId if a response was received
+- ensure every order has a transaction with the reference to Worldline's payId if a response was received
 - Invoice for CAPTURE_REQUESTED status on CC is now in Pending state rather then Paid
-- streamline Ingenico status processing notifications in the order history
+- streamline Worldline status processing notifications in the order history
 
 ### Fixed
 
@@ -417,7 +425,7 @@ an expired session token and not seeing any payment methods.
 ### Changed
 
 - updated order item transmission to allow better display on HostedCheckout page for shipping and discount amounts
-- integrate Ingenicos Javascript SDK to fetch the available payment products through the client
+- integrate Worldlines Javascript SDK to fetch the available payment products through the client
 - improved error handling during checkout to enable more graceful checkout expirience
 - make API endpoints required in the configuration
 

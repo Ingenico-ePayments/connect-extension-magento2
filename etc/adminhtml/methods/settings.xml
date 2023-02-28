@@ -4,23 +4,23 @@
         <label>Information &amp; Support</label>
         <field id="module_version" translate="label" type="label" sortOrder="5" showInDefault="1">
             <label>Current Version</label>
-            <frontend_model>Ingenico\Connect\Block\Adminhtml\System\Config\Field\Version</frontend_model>
+            <frontend_model>Worldline\Connect\Block\Adminhtml\System\Config\Field\Version</frontend_model>
         </field>
         <field id="merchant_link" translate="label" type="link" sortOrder="10" showInDefault="1">
             <label>Merchant Support</label>
-            <frontend_model>Ingenico\Connect\Block\Adminhtml\System\Config\Field\Merchant\Link</frontend_model>
+            <frontend_model>Worldline\Connect\Block\Adminhtml\System\Config\Field\Merchant\Link</frontend_model>
         </field>
         <field id="github_link" translate="label" type="link" sortOrder="15" showInDefault="1">
             <label>Technical Support</label>
-            <frontend_model>Ingenico\Connect\Block\Adminhtml\System\Config\Field\GitHub\Link</frontend_model>
+            <frontend_model>Worldline\Connect\Block\Adminhtml\System\Config\Field\GitHub\Link</frontend_model>
         </field>
         <field id="technical_partner" translate="label" type="link" sortOrder="20" showInDefault="1">
             <label>Technical Partner</label>
-            <frontend_model>Ingenico\Connect\Block\Adminhtml\System\Config\Field\TechnicalPartner\Link</frontend_model>
+            <frontend_model>Worldline\Connect\Block\Adminhtml\System\Config\Field\TechnicalPartner\Link</frontend_model>
         </field>
         <field id="documentation_link" translate="label" type="link" sortOrder="25" showInDefault="1">
             <label>ePayments documentation</label>
-            <frontend_model>Ingenico\Connect\Block\Adminhtml\System\Config\Field\Documentation\Link</frontend_model>
+            <frontend_model>Worldline\Connect\Block\Adminhtml\System\Config\Field\Documentation\Link</frontend_model>
         </field>
         <field id="phone_support" translate="label" type="label" sortOrder="30" showInDefault="1">
             <label>Phone Support</label>
@@ -29,149 +29,140 @@
                                 Europe: 0080042347328<br/>
                                 USA: 18553267119<br/>
                                 Singapore: 8003111027<br/>
-                                Korea: 3083110004<br/>
                                 China: 4000023179
                             </p>
-                            <p>In case your telecom provider does not support Universal International Freephone Numbers (UIFN), you can dial +31 6 2040 7670.</p>
+                            <p>In case your telecom provider does not support Universal International Freephone Numbers (UIFN), you can dial +31 23 554 8657.</p>
                     ]]></comment>
         </field>
     </group>
     <group id="settings" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>General settings</label>
-        <field id="active" translate="label tooltip comment" type="Ingenico\Connect\Data\Form\Element\Toggle" sortOrder="5" showInDefault="1" showInWebsite="1">
-            <label>Enable old Ingenico payment method</label>
-            <config_path>ingenico_epayments/general/active</config_path>
-        </field>
-        <field id="test_api_connection" translate="label" type="button" sortOrder="14" showInDefault="1" showInWebsite="1">
-            <frontend_model>Ingenico\Connect\Block\Adminhtml\System\Config\Field\TestApiConnection</frontend_model>
-            <label>API Connection</label>
-        </field>
-        <field id="title" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Checkout label</label>
-            <validate>required-entry</validate>
-            <config_path>ingenico_epayments/general/title</config_path>
-        </field>
-        <field id="inline_payments" translate="label" type="Ingenico\Connect\Data\Form\Element\Radioset" sortOrder="20" showInDefault="1" showInWebsite="1">
-            <label>Payment steps</label>
-            <source_model>Ingenico\Connect\Model\Config\Source\PaymentFlowType</source_model>
-            <config_path>ingenico_epayments/checkout/inline_payments</config_path>
-        </field>
-        <field id="webhooks_endpoint" translate="label comment" type="label" sortOrder="25" showInDefault="1" showInWebsite="1">
+        <field id="webhooks_endpoint" translate="label comment" type="label" sortOrder="10" showInDefault="1" showInWebsite="1">
             <label>Magento webhook endpoint</label>
-            <frontend_model>Ingenico\Connect\Block\Adminhtml\System\Config\Field\WebhookEndpoint</frontend_model>
-            <comment>Configure your webhook in the Ingenico Configuration center with the above URL. Enable all checkboxes for "payment" and "refund".</comment>
+            <frontend_model>Worldline\Connect\Block\Adminhtml\System\Config\Field\WebhookEndpoint</frontend_model>
+            <comment>Configure your webhook in the Worldline Configuration center with the above URL. Enable all checkboxes for "payment" and "refund".</comment>
         </field>
-        <field id="days" translate="label comment tooltip" type="text" sortOrder="30" showInDefault="1">
-            <label>Days before an order gets cancelled in Magento</label>
-            <config_path>ingenico_epayments/pending_orders_cancellation/days</config_path>
-        </field>
-        <field id="allow_offline_refunds" translate="label comment tooltip" type="Ingenico\Connect\Data\Form\Element\Toggle" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Allow Offline Refunds</label>
-            <config_path>ingenico_epayments/settings/allow_offline_refunds</config_path>
-        </field>
-        <field id="manager_email" translate="label" type="text" sortOrder="40" showInDefault="1">
+        <field id="manager_email" translate="label" type="text" sortOrder="20" showInDefault="1">
             <label>Email for manual review</label>
             <validate>validate-email</validate>
-            <config_path>ingenico_epayments/fraud/manager_email</config_path>
+            <config_path>worldline_connect/fraud/manager_email</config_path>
         </field>
-        <field id="system_prefix" translate="label" type="text" sortOrder="45" showInDefault="1" showInWebsite="1">
-            <label>System identifier prefix</label>
-            <backend_model>Ingenico\Connect\Model\Config\Backend\SystemPrefix</backend_model>
-            <config_path>ingenico_epayments/settings/system_prefix</config_path>
-            <validate>validate-length maximum-length-20</validate>
-            <comment>This string combined with the order ID can not exceed 30 characters.</comment>
-        </field>
-        <field id="limit_api_field_length" translate="label" type="Ingenico\Connect\Data\Form\Element\Toggle" sortOrder="65" showInDefault="1">
+        <field id="limit_api_field_length" translate="label" type="Worldline\Connect\Data\Form\Element\Toggle" sortOrder="40" showInDefault="1">
             <label>Limit API field length</label>
             <comment>Enabling this setting will limit the length of the fields sent to the payments API.</comment>
-            <config_path>ingenico_epayments/settings/limit_api_field_length</config_path>
+            <config_path>worldline_connect/settings/limit_api_field_length</config_path>
         </field>
-        <field id="api_endpoint" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1">
+        <field id="log_frontend_requests" translate="label" type="Worldline\Connect\Data\Form\Element\Toggle" sortOrder="50" showInDefault="1">
+            <label>Log client side API communication</label>
+            <config_path>worldline_connect/settings/log_frontend_requests</config_path>
+        </field>
+        <field id="log_all_requests" translate="label" type="Worldline\Connect\Data\Form\Element\Toggle" sortOrder="60" showInDefault="1">
+            <label>Log all server side webhooks and API communication</label>
+            <frontend_model>Worldline\Connect\Block\Adminhtml\System\Config\Field\LogAllRequests</frontend_model>
+            <config_path>worldline_connect/settings/log_all_requests</config_path>
+        </field>
+        <field id="descriptor" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1">
+            <label>Soft descriptor</label>
+            <config_path>worldline_connect/settings/descriptor</config_path>
+        </field>
+        <field id="api_endpoint" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1">
             <label>Active environment</label>
-            <source_model>Ingenico\Connect\Model\Config\Source\ApiEndpoint</source_model>
+            <source_model>Worldline\Connect\Model\Config\Source\ApiEndpoint</source_model>
             <backend_model>Magento\Framework\App\Config\Value</backend_model>
-            <config_path>ingenico_epayments/settings/api_endpoint</config_path>
+            <config_path>worldline_connect/settings/api_endpoint</config_path>
         </field>
-        <group id="api_endpoint_sandbox" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1">
+        <group id="api_endpoint_sandbox" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1">
             <label>Sandbox settings</label>
             <field id="merchant_id" translate="label tooltip" type="text" sortOrder="5" showInDefault="1" showInWebsite="1">
                 <label>Merchant ID (MID)</label>
-                <config_path>ingenico_epayments/settings/merchant_id_sandbox</config_path>
+                <config_path>worldline_connect/settings/merchant_id_sandbox</config_path>
             </field>
             <field id="api_key" translate="label tooltip" type="text" sortOrder="10" showInDefault="1" showInWebsite="1">
                 <label>API key ID</label>
-                <backend_model>Ingenico\Connect\Model\Config\Backend\ApiKey</backend_model>
-                <config_path>ingenico_epayments/settings/api_key_sandbox</config_path>
+                <backend_model>Worldline\Connect\Model\Config\Backend\ApiKey</backend_model>
+                <config_path>worldline_connect/settings/api_key_sandbox</config_path>
             </field>
             <field id="api_secret" translate="label tooltip" type="obscure" sortOrder="15" showInDefault="1" showInWebsite="1">
                 <label>API secret</label>
                 <backend_model>\Magento\Config\Model\Config\Backend\Encrypted</backend_model>
-                <config_path>ingenico_epayments/settings/api_secret_sandbox</config_path>
+                <config_path>worldline_connect/settings/api_secret_sandbox</config_path>
             </field>
             <field id="webhooks_key_id" translate="label tooltip" type="text" sortOrder="20" showInDefault="1" showInWebsite="1">
                 <label>Webhooks key ID</label>
-                <backend_model>Ingenico\Connect\Model\Config\Backend\ApiKey</backend_model>
-                <config_path>ingenico_epayments/webhook/webhooks_key_id_sandbox</config_path>
+                <backend_model>Worldline\Connect\Model\Config\Backend\ApiKey</backend_model>
+                <config_path>worldline_connect/webhook/webhooks_key_id_sandbox</config_path>
             </field>
             <field id="webhooks_secret_key" translate="label tooltip" type="obscure" sortOrder="25" showInDefault="1" showInWebsite="1">
                 <label>Webhooks secret key</label>
                 <backend_model>\Magento\Config\Model\Config\Backend\Encrypted</backend_model>
-                <config_path>ingenico_epayments/webhook/webhooks_secret_key_sandbox</config_path>
+                <config_path>worldline_connect/webhook/webhooks_secret_key_sandbox</config_path>
+            </field>
+            <field id="test_api_connection" translate="label" type="button" sortOrder="30" showInDefault="1" showInWebsite="1">
+                <frontend_model>Worldline\Connect\Block\Adminhtml\System\Config\Field\TestApiConnectionSandbox</frontend_model>
+                <label>API Connection</label>
             </field>
         </group>
-        <group id="api_endpoint_pre_prod" translate="label" type="text" sortOrder="12" showInDefault="1" showInWebsite="1">
+        <group id="api_endpoint_pre_prod" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1">
             <label>Pre-Production settings</label>
             <field id="merchant_id" translate="label tooltip" type="text" sortOrder="5" showInDefault="1" showInWebsite="1">
                 <label>Merchant ID (MID)</label>
-                <config_path>ingenico_epayments/settings/merchant_id_pre_prod</config_path>
+                <config_path>worldline_connect/settings/merchant_id_pre_prod</config_path>
             </field>
             <field id="api_key" translate="label tooltip" type="text" sortOrder="10" showInDefault="1" showInWebsite="1">
                 <label>API key ID</label>
-                <backend_model>Ingenico\Connect\Model\Config\Backend\ApiKey</backend_model>
-                <config_path>ingenico_epayments/settings/api_key_pre_prod</config_path>
+                <backend_model>Worldline\Connect\Model\Config\Backend\ApiKey</backend_model>
+                <config_path>worldline_connect/settings/api_key_pre_prod</config_path>
             </field>
             <field id="api_secret" translate="label tooltip" type="obscure" sortOrder="15" showInDefault="1" showInWebsite="1">
                 <label>API secret</label>
                 <backend_model>\Magento\Config\Model\Config\Backend\Encrypted</backend_model>
-                <config_path>ingenico_epayments/settings/api_secret_pre_prod</config_path>
+                <config_path>worldline_connect/settings/api_secret_pre_prod</config_path>
             </field>
             <field id="webhooks_key_id" translate="label tooltip" type="text" sortOrder="20" showInDefault="1" showInWebsite="1">
                 <label>Webhooks key ID</label>
-                <backend_model>Ingenico\Connect\Model\Config\Backend\ApiKey</backend_model>
-                <config_path>ingenico_epayments/webhook/webhooks_key_id_pre_prod</config_path>
+                <backend_model>Worldline\Connect\Model\Config\Backend\ApiKey</backend_model>
+                <config_path>worldline_connect/webhook/webhooks_key_id_pre_prod</config_path>
             </field>
             <field id="webhooks_secret_key" translate="label tooltip" type="obscure" sortOrder="25" showInDefault="1" showInWebsite="1">
                 <label>Webhooks secret key</label>
                 <backend_model>\Magento\Config\Model\Config\Backend\Encrypted</backend_model>
-                <config_path>ingenico_epayments/webhook/webhooks_secret_key_pre_prod</config_path>
+                <config_path>worldline_connect/webhook/webhooks_secret_key_pre_prod</config_path>
+            </field>
+            <field id="test_api_connection" translate="label" type="button" sortOrder="30" showInDefault="1" showInWebsite="1">
+                <frontend_model>Worldline\Connect\Block\Adminhtml\System\Config\Field\TestApiConnectionPreProduction</frontend_model>
+                <label>API Connection</label>
             </field>
         </group>
-        <group id="api_endpoint_prod" translate="label" type="text" sortOrder="13" showInDefault="1" showInWebsite="1">
+        <group id="api_endpoint_prod" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1">
             <label>Production settings</label>
             <field id="merchant_id" translate="label tooltip" type="text" sortOrder="5" showInDefault="1" showInWebsite="1">
                 <label>Merchant ID (MID)</label>
-                <config_path>ingenico_epayments/settings/merchant_id_prod</config_path>
+                <config_path>worldline_connect/settings/merchant_id_prod</config_path>
             </field>
             <field id="api_key" translate="label tooltip" type="text" sortOrder="10" showInDefault="1" showInWebsite="1">
                 <label>API key ID</label>
-                <backend_model>Ingenico\Connect\Model\Config\Backend\ApiKey</backend_model>
-                <config_path>ingenico_epayments/settings/api_key_prod</config_path>
+                <backend_model>Worldline\Connect\Model\Config\Backend\ApiKey</backend_model>
+                <config_path>worldline_connect/settings/api_key_prod</config_path>
             </field>
             <field id="api_secret" translate="label tooltip" type="obscure" sortOrder="15" showInDefault="1" showInWebsite="1">
                 <label>API secret</label>
                 <backend_model>\Magento\Config\Model\Config\Backend\Encrypted</backend_model>
-                <tooltip>You will receive this information from Ingenico.</tooltip>
-                <config_path>ingenico_epayments/settings/api_secret_prod</config_path>
+                <tooltip>You will receive this information from Worldline.</tooltip>
+                <config_path>worldline_connect/settings/api_secret_prod</config_path>
             </field>
             <field id="webhooks_key_id" translate="label tooltip" type="text" sortOrder="20" showInDefault="1" showInWebsite="1">
                 <label>Webhooks key ID</label>
-                <backend_model>Ingenico\Connect\Model\Config\Backend\ApiKey</backend_model>
-                <config_path>ingenico_epayments/webhook/webhooks_key_id_prod</config_path>
+                <backend_model>Worldline\Connect\Model\Config\Backend\ApiKey</backend_model>
+                <config_path>worldline_connect/webhook/webhooks_key_id_prod</config_path>
             </field>
             <field id="webhooks_secret_key" translate="label tooltip" type="obscure" sortOrder="25" showInDefault="1" showInWebsite="1">
                 <label>Webhooks secret key</label>
                 <backend_model>\Magento\Config\Model\Config\Backend\Encrypted</backend_model>
-                <config_path>ingenico_epayments/webhook/webhooks_secret_key_prod</config_path>
+                <config_path>worldline_connect/webhook/webhooks_secret_key_prod</config_path>
+            </field>
+            <field id="test_api_connection" translate="label" type="button" sortOrder="30" showInDefault="1" showInWebsite="1">
+                <frontend_model>Worldline\Connect\Block\Adminhtml\System\Config\Field\TestApiConnectionProduction</frontend_model>
+                <label>API Connection</label>
             </field>
         </group>
     </group>

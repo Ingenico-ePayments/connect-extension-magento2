@@ -1,7 +1,7 @@
-# Ingenico Connect upgrade guide
+# Worldline Connect upgrade guide
 
 Since v2.0.0, the namespace of the module has changed from `Netresearch\Epayments`
-to `Ingenico\Connect`. This upgrade guide explains what this means for you as a
+to `Worldline\Connect`. This upgrade guide explains what this means for you as a
 merchant, and as a developer / implementing 3rd party.
 
 ## For merchants
@@ -59,12 +59,12 @@ instructions to update your code:
 
 #### Different preference for class or interface
 
-Replace the `Netresearch\Epayments` namespace in the `<preference>` in `di.xml` with the `Ingenico\Connect` namespace:
+Replace the `Netresearch\Epayments` namespace in the `<preference>` in `di.xml` with the `Worldline\Connect` namespace:
     
     // Old situation:
     <preference for="Netresearch\Epayments\Model\ConfigInterface" type="Custom\Module\Model\MyCustomConfig"/>
     // New situation:
-    <preference for="Ingenico\Connect\Model\ConfigInterface" type="Custom\Module\Model\MyCustomConfig"/>
+    <preference for="Worldline\Connect\Model\ConfigInterface" type="Custom\Module\Model\MyCustomConfig"/>
 
 Update your custom code to extend the class from the new namespace, or implement the interface from the new namespace:
 
@@ -72,32 +72,32 @@ Update your custom code to extend the class from the new namespace, or implement
     class MyCustomConfig extends \Netresearch\Epayments\Model\Config { ... }
     class MyCustomConfig implements \Netresearch\Epayments\Model\ConfigInterface { ... }
     // New situation:
-    class MyCustomConfig extends \Ingenico\Connect\Model\Config { ... }
-    class MyCustomConfig implements \Ingenico\Connect\Model\ConfigInterface { ... }
+    class MyCustomConfig extends \Worldline\Connect\Model\Config { ... }
+    class MyCustomConfig implements \Worldline\Connect\Model\ConfigInterface { ... }
 
 #### Plugin on existing class or interface
 
-Replace the `Netresearch\Epayments` namespace in the `<type>` in `di.xml` with the `Ingenico\Connect` namespace:
+Replace the `Netresearch\Epayments` namespace in the `<type>` in `di.xml` with the `Worldline\Connect` namespace:
 
     // Old situation:
-    <type name="Netresearch\Epayments\Model\Ingenico\Status\CaptureRequested"> ...
+    <type name="Netresearch\Epayments\Model\Worldline\Status\CaptureRequested"> ...
     // New situation:
-    <type name="Ingenico\Connect\Model\Ingenico\Status\CaptureRequested">
+    <type name="Worldline\Connect\Model\Worldline\Status\CaptureRequested">
 
 Update your plugin code so that the subject is from the new namespace:
 
     // Old situation:
     public function aroundResolveStatus(
-        \Netresearch\Epayments\Model\Ingenico\Status\CaptureRequested $subject,
+        \Netresearch\Epayments\Model\Worldline\Status\CaptureRequested $subject,
         ...
     // New situation:
     public function aroundResolveStatus(
-        \Ingenico\Connect\Model\Ingenico\Status\CaptureRequested $subject,
+        \Worldline\Connect\Model\Worldline\Status\CaptureRequested $subject,
         ...
 
 #### JavaScript mixin on an existing JavaScript file
 
-Replace the `Netresearch_Epayments` namespace in the declaring `requirejs-config.js`-file with the `Ingenico_Connect` namespace:
+Replace the `Netresearch_Epayments` namespace in the declaring `requirejs-config.js`-file with the `Worldline_Connect` namespace:
 
     // Old situation:
     var config = {
@@ -113,7 +113,7 @@ Replace the `Netresearch_Epayments` namespace in the declaring `requirejs-config
     var config = {
         config: {
             mixins: {
-                'Ingenico_Connect/js/model/client': {
+                'Worldline_Connect/js/model/client': {
                     'Custom_Module/js/model/client-mixin': true
                 }
             }
@@ -129,29 +129,29 @@ Replace the `Netresearch_Epayments` namespace in the dependencies that are used 
         ...
     // New situation:
     define([
-        'Ingenico_Connect/js/action/get-session'
+        'Worldline_Connect/js/action/get-session'
     ], function (getSessionAction) {
         ...
 
 #### Used dependencies of an existing class or interface
 
-Replace the dependencies of the `Netresearch\Epayments` namespace in your source code with the `Ingenico\Connect` namespace:
+Replace the dependencies of the `Netresearch\Epayments` namespace in your source code with the `Worldline\Connect` namespace:
 
     // Old situation:    
     public function __construct(\Netresearch\Epayments\Model\ConfigInterface $config) { ... }
     // New situation:
-    public function __construct(\Ingenico\Connect\Model\ConfigInterface $config) { ... }
+    public function __construct(\Worldline\Connect\Model\ConfigInterface $config) { ... }
 
 This also applies to use-statements:
 
     // Old situation:
     use Netresearch\Epayments\Model\ConfigInterface;
     // New situation:
-    use Ingenico\Connect\Model\ConfigInterface;
+    use Worldline\Connect\Model\ConfigInterface;
 
 #### Customized existing (email) templates
 
-Change the name of the folder `app/design/(area)/Netresearch_Epayments` to `app/design/(area)/Ingenico_Connect`.
+Change the name of the folder `app/design/(area)/Netresearch_Epayments` to `app/design/(area)/Worldline_Connect`.
 Check your `.phtml`-files if there are references to the old namespace. For example:
 
 Helpers:
@@ -159,11 +159,11 @@ Helpers:
     // Old situation:
     $this->helper('Netresearch\Epayments\Helper\Data')
     // New situation:
-    $this->helper('Ingenico\Connect\Helper\Data')
+    $this->helper('Worldline\Connect\Helper\Data')
 
 References in docblocks:
 
     // Old situation:
     /** @var \Netresearch\Epayments\Block\Info $block */
     // New situation:
-    /** @var \Ingenico\Connect\Block\Info $block */
+    /** @var \Worldline\Connect\Block\Info $block */

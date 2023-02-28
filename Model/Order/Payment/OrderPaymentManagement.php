@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\Model\Order\Payment;
+namespace Worldline\Connect\Model\Order\Payment;
 
 use DateTime;
-use Ingenico\Connect\Api\OrderPaymentManagementInterface;
-use Ingenico\Connect\Model\StatusResponseManagerInterface;
 use LogicException;
 use Magento\Framework\Intl\DateTimeFactory;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
+use Worldline\Connect\Api\OrderPaymentManagementInterface;
+use Worldline\Connect\Model\Config;
+use Worldline\Connect\Model\StatusResponseManagerInterface;
 
 class OrderPaymentManagement implements OrderPaymentManagementInterface
 {
@@ -21,11 +22,13 @@ class OrderPaymentManagement implements OrderPaymentManagementInterface
     /**
      * @var DateTimeFactory
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $dateTimeFactory;
 
     /**
      * @var StatusResponseManagerInterface
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $statusResponseManager;
 
     /**
@@ -33,7 +36,7 @@ class OrderPaymentManagement implements OrderPaymentManagementInterface
      *
      * @param DateTimeFactory $dateTimeFactory
      * @param StatusResponseManagerInterface $statusResponseManager This is only used for legacy orders, where the
-     *     Ingenico object is saved in the transaction
+     *     Worldline object is saved in the transaction
      */
     public function __construct(DateTimeFactory $dateTimeFactory, StatusResponseManagerInterface $statusResponseManager)
     {
@@ -44,9 +47,10 @@ class OrderPaymentManagement implements OrderPaymentManagementInterface
     /**
      * {@inheritDoc}
      */
-    public function getIngenicoPaymentStatus(OrderPaymentInterface $payment): string
+    public function getWorldlinePaymentStatus(OrderPaymentInterface $payment): string
     {
-        if (($status = $this->getAdditionalInformation($payment, self::KEY_PAYMENT_STATUS)) ||
+        // phpcs:ignore PSR12.ControlStructures.ControlStructureSpacing.FirstExpressionLine
+        if (($status = $this->getAdditionalInformation($payment, Config::PAYMENT_STATUS_KEY)) ||
             ($status = $this->getLegacyProperty($payment, 'status'))
         ) {
             return $status;
@@ -58,8 +62,9 @@ class OrderPaymentManagement implements OrderPaymentManagementInterface
     /**
      * {@inheritDoc}
      */
-    public function getIngenicoRefundStatus(OrderPaymentInterface $payment): string
+    public function getWorldlineRefundStatus(OrderPaymentInterface $payment): string
     {
+        // phpcs:ignore PSR12.ControlStructures.ControlStructureSpacing.FirstExpressionLine
         if (($status = $this->getAdditionalInformation($payment, self::KEY_REFUND_STATUS)) ||
             ($status = $this->getLegacyProperty($payment, 'status'))
         ) {
@@ -72,8 +77,9 @@ class OrderPaymentManagement implements OrderPaymentManagementInterface
     /**
      * {@inheritDoc}
      */
-    public function getIngenicoPaymentStatusCodeChangeDate(OrderPaymentInterface $payment): DateTime
+    public function getWorldlinePaymentStatusCodeChangeDate(OrderPaymentInterface $payment): DateTime
     {
+        // phpcs:ignore PSR12.ControlStructures.ControlStructureSpacing.FirstExpressionLine
         if (($dateTime = $this->getAdditionalInformation($payment, self::KEY_PAYMENT_STATUS_CODE_CHANGE_DATE_TIME)) ||
             ($dateTime = $this->getLegacyProperty($payment, 'statusOutput', 'statusCodeChangeDateTime'))
         ) {
@@ -86,8 +92,9 @@ class OrderPaymentManagement implements OrderPaymentManagementInterface
     /**
      * {@inheritDoc}
      */
-    public function getIngenicoRefundStatusCodeChangeDate(OrderPaymentInterface $payment): DateTime
+    public function getWorldlineRefundStatusCodeChangeDate(OrderPaymentInterface $payment): DateTime
     {
+        // phpcs:ignore PSR12.ControlStructures.ControlStructureSpacing.FirstExpressionLine
         if (($dateTime = $this->getAdditionalInformation($payment, self::KEY_REFUND_STATUS_CODE_CHANGE_DATE_TIME)) ||
             ($dateTime = $this->getLegacyProperty($payment, 'statusOutput', 'statusCodeChangeDateTime'))
         ) {
@@ -106,14 +113,17 @@ class OrderPaymentManagement implements OrderPaymentManagementInterface
     private function getLegacyProperty(
         OrderPaymentInterface $payment,
         string $key,
+        // phpcs:ignore SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue.NullabilityTypeMissing
         string $nestedKey = null
     ): ?string {
         if ($status = $this->statusResponseManager->get($payment, $payment->getLastTransId())) {
+            // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
             if (property_exists($status, $key)) {
                 if ($nestedKey === null) {
                     return $status->{$key};
                 }
 
+                // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
                 if (property_exists($status->{$key}, $nestedKey)) {
                     return $status->{$key}->{$nestedKey};
                 }

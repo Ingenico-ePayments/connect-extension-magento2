@@ -1,11 +1,10 @@
 /*browser:true*/
 /*global define*/
-
 define([
-    'Ingenico_Connect/js/action/get-payment-products',
-    'Ingenico_Connect/js/action/get-payment-product',
-    'Ingenico_Connect/js/action/get-card-payment-group',
-    'Ingenico_Connect/js/model/payment/config',
+    'Worldline_Connect/js/action/get-payment-products',
+    'Worldline_Connect/js/action/get-payment-product',
+    'Worldline_Connect/js/action/get-card-payment-group',
+    'Worldline_Connect/js/model/payment/config',
     'ko',
     'Magento_Checkout/js/model/quote'
 ], function (fetchPaymentProducts, fetchPaymentProduct, fetchCardPaymentGroup, config, ko, quote) {

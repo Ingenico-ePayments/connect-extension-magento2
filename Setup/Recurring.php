@@ -1,6 +1,6 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
-namespace Ingenico\Connect\Setup;
+namespace Worldline\Connect\Setup;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Module\FullModuleList;
@@ -13,6 +13,7 @@ class Recurring implements InstallSchemaInterface
     /**
      * @var FullModuleList
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $fullModuleList;
 
     public function __construct(FullModuleList $fullModuleList)
@@ -22,10 +23,11 @@ class Recurring implements InstallSchemaInterface
 
     public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
         if (in_array('Netresearch_Epayments', $this->fullModuleList->getNames())) {
             throw new LocalizedException(
-            // phpcs:ignore Generic.Files.LineLength.TooLong
-                __('The Ingenico_Connect module cannot be installed because the Netresearch_Epayments is found. Please read the upgrade instructions in doc/UPGRADE.md')
+            // phpcs:ignore Generic.Files.LineLength.TooLong, SlevomatCodingStandard.Files.LineLength.LineTooLong, SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
+                __('The Worldline_Connect module cannot be installed because the Netresearch_Epayments is found. Please read the upgrade instructions in doc/UPGRADE.md')
             );
         }
     }

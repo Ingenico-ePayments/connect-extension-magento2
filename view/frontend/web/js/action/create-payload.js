@@ -1,5 +1,5 @@
 define([
-    'Ingenico_Connect/js/model/client'
+    'Worldline_Connect/js/model/client'
 ], function (client) {
     'use strict';
     /**

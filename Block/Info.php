@@ -1,40 +1,35 @@
 <?php
 
-namespace Ingenico\Connect\Block;
+declare(strict_types=1);
 
-use Ingenico\Connect\Model\Config;
+namespace Worldline\Connect\Block;
 
-class Info extends \Magento\Payment\Block\Info
+use Magento\Payment\Block\Info as BaseInfo;
+use Worldline\Connect\Model\Config;
+
+use function array_key_exists;
+
+class Info extends BaseInfo
 {
     /**
-     * Init Ingenico epayment info block
+     * Init Worldline epayment info block
      */
+    // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     public function _construct()
     {
         parent::_construct();
-        $this->setTemplate('Ingenico_Connect::info/info.phtml');
+        $this->setTemplate('Worldline_Connect::info/info.phtml');
     }
 
-    /**
-     * Get payment product label
-     *
-     * @return string|void
-     */
-    public function getProductLabel()
+    public function getProductLabel(): string
     {
         $data = $this->getData('info')->getData('additional_information');
-        if (!array_key_exists(Config::PRODUCT_LABEL_KEY, $data)) {
-            return;
-        }
-        $label = $data[Config::PRODUCT_LABEL_KEY];
-        return  '- ' . $label;
+
+        return array_key_exists(Config::PRODUCT_LABEL_KEY, $data) ?  '- ' . $data[Config::PRODUCT_LABEL_KEY] : '';
     }
 
-    /**
-     * @return string
-     */
-    public function getMethodTitle()
+    public function getMethodTitle(): string
     {
-        return $this->getMethod()->getTitle();
+        return (string) $this->getMethod()->getTitle();
     }
 }

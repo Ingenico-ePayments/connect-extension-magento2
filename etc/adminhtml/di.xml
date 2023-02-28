@@ -3,33 +3,20 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <type name="Magento\Sales\Block\Adminhtml\Order\Creditmemo\View">
         <plugin name="addButtonRefundApprove"
-                type="Ingenico\Connect\Plugin\Magento\Sales\Block\Adminhtml\Order\Creditmemo\View"/>
-    </type>
-    <type name="Magento\Sales\Block\Adminhtml\Order\View">
-        <plugin name="update_credit_memo_button"
-                sortOrder="10"
-                type="Ingenico\Connect\Plugin\Magento\Sales\Block\Adminhtml\Order\View"/>
-    </type>
-    <type name="Magento\Sales\Block\Adminhtml\Order\Creditmemo\Create\Items">
-        <plugin name="removeOfflineCreditMemo"
-                type="Ingenico\Connect\Plugin\Magento\Sales\Block\Adminhtml\Order\Creditmemo\Create\Items"/>
+                type="Worldline\Connect\Plugin\Magento\Sales\Block\Adminhtml\Order\Creditmemo\View"/>
     </type>
     <type name="Magento\Framework\Notification\MessageList">
         <arguments>
             <argument name="messages" xsi:type="array">
-                <item name="connect_update_available" xsi:type="string">Ingenico\Connect\Model\System\Message\UpdateAvailable</item>
-                <item name="connect_logging_enabled" xsi:type="string">Ingenico\Connect\Model\System\Message\LoggingEnabled</item>
+                <item name="connect_update_available" xsi:type="string">Worldline\Connect\Model\System\Message\UpdateAvailable</item>
+                <item name="connect_logging_enabled" xsi:type="string">Worldline\Connect\Model\System\Message\LoggingEnabled</item>
             </argument>
         </arguments>
-    </type>
-    <type name="Magento\Sales\Controller\Adminhtml\Order\View">
-        <plugin name="update_order_for_capture_requested"
-                type="Ingenico\Connect\Plugin\Magento\Sales\Controller\Adminhtml\Order\View"/>
     </type>
     <type name="Magento\Vault\Model\Ui\Adminhtml\TokensConfigProvider">
         <arguments>
             <argument name="tokenUiComponentProviders" xsi:type="array">
-                <item name="ingenico" xsi:type="object">Ingenico\Connect\TokenProvider\TokenUiComponentProvider</item>
+                <item name="worldline" xsi:type="object">Worldline\Connect\TokenProvider\TokenUiComponentProvider</item>
             </argument>
         </arguments>
     </type>

@@ -2,33 +2,40 @@
 
 declare(strict_types=1);
 
-namespace Ingenico\Connect\GitHub\Dto;
+namespace Worldline\Connect\GitHub\Dto;
 
 use DateTime;
 
 class Release
 {
     /** @var int|null */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     protected $id;
-    
+
     /** @var string|null */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     protected $url;
-    
+
     /** @var string|null */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     protected $tagName;
-    
+
     /** @var string|null */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     protected $name;
-    
+
     /** @var string|null */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     protected $body;
-    
+
     /** @var DateTime|null */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     protected $createdAt;
-    
+
     /** @var DateTime|null */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     protected $publishedAt;
-    
+
     /**
      * @return int|null
      */
@@ -36,7 +43,7 @@ class Release
     {
         return $this->id;
     }
-    
+
     /**
      * @param int|null $id
      */
@@ -44,7 +51,7 @@ class Release
     {
         $this->id = $id;
     }
-    
+
     /**
      * @return string|null
      */
@@ -52,7 +59,7 @@ class Release
     {
         return $this->url;
     }
-    
+
     /**
      * @param string $url
      */
@@ -60,7 +67,7 @@ class Release
     {
         $this->url = $url;
     }
-    
+
     /**
      * @return string|null
      */
@@ -68,7 +75,7 @@ class Release
     {
         return $this->tagName;
     }
-    
+
     /**
      * @param string $tagName
      */
@@ -76,7 +83,7 @@ class Release
     {
         $this->tagName = $tagName;
     }
-    
+
     /**
      * @return string|null
      */
@@ -84,7 +91,7 @@ class Release
     {
         return $this->name;
     }
-    
+
     /**
      * @param string $name
      */
@@ -92,7 +99,7 @@ class Release
     {
         $this->name = $name;
     }
-    
+
     /**
      * @return string|null
      */
@@ -100,7 +107,7 @@ class Release
     {
         return $this->body;
     }
-    
+
     /**
      * @param string $body
      */
@@ -108,7 +115,7 @@ class Release
     {
         $this->body = $body;
     }
-    
+
     /**
      * @return DateTime|null
      */
@@ -116,7 +123,7 @@ class Release
     {
         return $this->createdAt;
     }
-    
+
     /**
      * @param DateTime $createdAt
      */
@@ -124,7 +131,7 @@ class Release
     {
         $this->createdAt = $createdAt;
     }
-    
+
     /**
      * @return DateTime|null
      */
@@ -132,7 +139,7 @@ class Release
     {
         return $this->publishedAt;
     }
-    
+
     /**
      * @param DateTime $publishedAt
      */

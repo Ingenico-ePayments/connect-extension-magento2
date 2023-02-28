@@ -1,64 +1,65 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
-namespace Ingenico\Connect\Model\OrderUpdate;
+namespace Worldline\Connect\Model\OrderUpdate;
 
 use Magento\Framework\Logger\Monolog;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Sales\Model\OrderRepository;
-use Ingenico\Connect\Model\Config;
-use Ingenico\Connect\Model\ConfigInterface;
-use Ingenico\Connect\Model\Ingenico\Api\ClientInterface;
-use Ingenico\Connect\Model\Ingenico\Status\Payment\ResolverInterface;
+use Worldline\Connect\Model\Config;
+use Worldline\Connect\Model\ConfigInterface;
+use Worldline\Connect\Model\Worldline\Api\ClientInterface;
+use Worldline\Connect\Model\Worldline\Status\Payment\ResolverInterface;
 
 class Order implements OrderInterface
 {
-    const STATUS_WAIT = 'wait';
-    const STATUS_FINISHED = 'finished';
+    public const STATUS_WAIT = 'wait';
+    public const STATUS_FINISHED = 'finished';
 
     /**
      * @var ResolverInterface
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $statusResolver;
 
     /**
      * @var SchedulerInterface
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $scheduler;
-
-    /**
-     * @var HistoryManagerInterface
-     */
-    private $historyApi;
 
     /**
      * @var ClientInterface
      */
-    private $ingenicoClient;
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
+    private $worldlineClient;
 
     /**
      * @var Monolog
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $logger;
 
     /**
      * @var ConfigInterface
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $config;
 
     /**
      * @var OrderRepository
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $orderRepository;
 
     /**
      * @var DateTime
      */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $dateTime;
 
     /**
      * @param ResolverInterface $resolver
      * @param SchedulerInterface $scheduler
-     * @param HistoryManagerInterface $historyManager
      * @param ClientInterface $client
      * @param Monolog $logger
      * @param ConfigInterface $config
@@ -68,7 +69,6 @@ class Order implements OrderInterface
     public function __construct(
         ResolverInterface $resolver,
         SchedulerInterface $scheduler,
-        HistoryManagerInterface $historyManager,
         ClientInterface $client,
         Monolog $logger,
         ConfigInterface $config,
@@ -77,8 +77,7 @@ class Order implements OrderInterface
     ) {
         $this->statusResolver = $resolver;
         $this->scheduler = $scheduler;
-        $this->historyApi = $historyManager;
-        $this->ingenicoClient = $client;
+        $this->worldlineClient = $client;
         $this->logger = $logger;
         $this->config = $config;
         $this->orderRepository = $orderRepository;
@@ -88,48 +87,44 @@ class Order implements OrderInterface
     /**
      * {@inheritdoc}
      */
+    // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     public function process(\Magento\Sales\Model\Order $order)
     {
         $orderId = $order->getEntityId();
         $paymentId = $this->readPaymentId($order);
         if ($paymentId === '') {
-            $this->logger->info("--- Order $orderId skipped, no Ingenico Payment ID found.");
+            // phpcs:ignore Squiz.Strings.DoubleQuoteUsage.ContainsVar
+            $this->logger->info("--- Order $orderId skipped, no Worldline Payment ID found.");
 
             return;
         }
 
-        $this->logger->info("--- Order $orderId with Ingenico Payment ID $paymentId");
+        // phpcs:ignore Squiz.Strings.DoubleQuoteUsage.ContainsVar
+        $this->logger->info("--- Order $orderId with Worldline Payment ID $paymentId");
 
         // skip order if it's not time to pull
         if (!$this->scheduler->timeForAttempt($order)) {
+            // phpcs:ignore Squiz.Strings.DoubleQuoteUsage.ContainsVar
             $this->logger->info("Order $orderId skipped, not due yet");
 
             return;
         }
 
+        // phpcs:ignore Generic.Commenting.Fixme.TaskFound
         // @fixme: this will only process payments, not refunds
         // also: not sure if this code is needed at all...
         // this has something to do with the webhook workaround cron :-/
         try {
-            // call ingenico
+            // call worldline
+            // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
             /** @var \Ingenico\Connect\Sdk\Domain\Payment\PaymentResponse $response */
-            $response = $this->getIngenicoPayment($paymentId, $order->getStoreId());
+            $response = $this->getWorldlinePayment($paymentId, $order->getStoreId());
 
             // update order status
-            $this->logger->info("ingenico status is {$response->status}");
+            // phpcs:ignore Squiz.Strings.DoubleQuoteUsage.ContainsVar
+            $this->logger->info("worldline status is {$response->status}");
             $this->statusResolver->resolve($order, $response);
-
-            // update history
-            $this->historyApi->addHistory(
-                $order,
-                [
-                    'attemptTime' => $this->dateTime->timestamp(),
-                    'status' => $response->status,
-                    'statusCode' => $response->statusOutput->statusCode,
-                    'statusCodeChangeDateTime' => $response->statusOutput->statusCodeChangeDateTime,
-                ],
-                HistoryManager::TYPE_API
-            );
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
         } catch (\Exception $e) {
             $this->logger->info($e->getMessage());
         }
@@ -147,34 +142,41 @@ class Order implements OrderInterface
         $this->orderRepository->save($order);
     }
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
-     * Api call to Ingenico to get payment details
+     * Api call to Worldline to get payment details
      *
-     * @param string $ingenicoPaymentId
+     * @param string $worldlinePaymentId
      * @param string|int $scopeId
      * @return \Ingenico\Connect\Sdk\Domain\Payment\PaymentResponse
      */
-    private function getIngenicoPayment($ingenicoPaymentId, $scopeId)
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
+    private function getWorldlinePayment($worldlinePaymentId, $scopeId)
     {
-        $response = $this->ingenicoClient->getIngenicoClient($scopeId)
+        $response = $this->worldlineClient->getWorldlineClient($scopeId)
             ->merchant($this->config->getMerchantId($scopeId))
             ->payments()
-            ->get($ingenicoPaymentId);
+            ->get($worldlinePaymentId);
 
         return $response;
     }
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
-     * Extract AdditionalInformation JSON and try to read Ingenico Payment ID.
+     * Extract AdditionalInformation JSON and try to read Worldline Payment ID.
      * Returns empty string on failure.
      *
      * @param \Magento\Sales\Model\Order $order
      * @return string
      */
+    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
+    // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     private function readPaymentId(\Magento\Sales\Model\Order $order)
     {
         $paymentId = '';
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
         $paymentData = json_decode($order->getAdditionalInformation(), true);
+        // phpcs:ignore Generic.PHP.ForbiddenFunctions.Found
         if (isset($paymentData[Config::PAYMENT_ID_KEY])) {
             $paymentId = $paymentData[Config::PAYMENT_ID_KEY];
         }
