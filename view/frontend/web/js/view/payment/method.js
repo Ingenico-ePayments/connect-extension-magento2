@@ -8,11 +8,9 @@ define(
     ],
     function (
         Component,
-        rendererList,
-        config
+        rendererList
     ) {
         'use strict';
-        config.init(window.checkoutConfig.payment['worldline']);
         rendererList.push(
             // Cards
             {
