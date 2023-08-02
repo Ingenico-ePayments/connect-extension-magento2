@@ -15,37 +15,20 @@ use Worldline\Connect\Api\Data\EventInterface;
 class DataModel extends \Magento\Framework\Api\AbstractSimpleObject implements EventInterface
 {
     /**
-     * @return string
+     * @return mixed|string|null
      */
-    public function getEventId()
+    public function getId()
     {
-        return (string) $this->_get(self::EVENT_ID);
+        return $this->_get(self::ID);
     }
 
     /**
-     * @param string $eventId
+     * @param string $id
      * @return EventInterface
      */
-    public function setEventId($eventId)
+    public function setId($id)
     {
-        return $this->setData(self::EVENT_ID, $eventId);
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrderIncrementId()
-    {
-        return (string) $this->_get(self::ORDER_INCREMENT_ID);
-    }
-
-    /**
-     * @param string $orderIncrementId
-     * @return EventInterface
-     */
-    public function setOrderIncrementId($orderIncrementId)
-    {
-        return $this->setData(self::ORDER_INCREMENT_ID, $orderIncrementId);
+        return $this->setData(self::ID, $id);
     }
 
     /**

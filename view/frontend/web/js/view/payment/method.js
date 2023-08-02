@@ -3,14 +3,43 @@
 define(
     [
         'uiComponent',
-        'Magento_Checkout/js/model/payment/renderer-list',
-        'Worldline_Connect/js/model/payment/config'
+        'uiLayout',
+        'uiRegistry',
+        'Magento_Checkout/js/model/payment/renderer-list'
     ],
     function (
         Component,
+        layout,
+        registry,
         rendererList
     ) {
         'use strict';
+
+        let instantPurchaseName = 'instantPurchase';
+
+        layout([{
+            name: instantPurchaseName,
+            component: 'Magento_Checkout/js/model/payment/method-group',
+            title: 'Instant purchase',
+            alias: 'instant-purchase',
+            sortOrder: 20
+        }]);
+
+        registry.get(instantPurchaseName, function (instantPurchase) {
+            rendererList.push(
+                {
+                    type: 'worldline_apple_pay',
+                    component: 'Worldline_Connect/js/view/payment/method-renderer/apple-pay',
+                    group: instantPurchase
+                },
+                {
+                    type: 'worldline_google_pay',
+                    component: 'Worldline_Connect/js/view/payment/method-renderer/google-pay',
+                    group: instantPurchase
+                }
+            );
+        });
+
         rendererList.push(
             // Cards
             {
@@ -91,7 +120,7 @@ define(
                 component: 'Worldline_Connect/js/view/payment/method-renderer/method'
             },
             {
-                type: 'worldline_open_banking',
+                type: 'worldline_account_to_account',
                 component: 'Worldline_Connect/js/view/payment/method-renderer/method'
             },
             {
@@ -108,6 +137,11 @@ define(
             },
             {
                 type: 'worldline_trustly',
+                component: 'Worldline_Connect/js/view/payment/method-renderer/method'
+            },
+            // Buy Now Pay Later
+            {
+                type: 'worldline_sezzle',
                 component: 'Worldline_Connect/js/view/payment/method-renderer/method'
             },
             // HPP

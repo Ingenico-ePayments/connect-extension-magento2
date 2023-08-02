@@ -108,6 +108,7 @@ define([
                 text: 'Worldline_Connect/payment/product/field/input',
                 checkbox: 'ui/form/element/single-checkbox',
                 list: 'ui/form/element/select',
+                date: 'Worldline_Connect/payment/product/field/input',
             };
             if (templates[type]) {
                 return templates[type];

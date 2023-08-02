@@ -11,13 +11,11 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\OrderRepository;
 use Psr\Log\LoggerInterface;
-use Worldline\Connect\Helper\Data;
 use Worldline\Connect\Model\Config;
 use Worldline\Connect\Model\ConfigInterface;
 use Worldline\Connect\Model\Order\OrderServiceInterface;
 use Worldline\Connect\Model\Worldline\Api\ClientInterface;
 use Worldline\Connect\Model\Worldline\Status\Payment\ResolverInterface;
-use Worldline\Connect\Model\Worldline\StatusInterface;
 
 use function __;
 
@@ -238,23 +236,11 @@ class GetHostedCheckoutStatus implements ActionInterface
             $statusResponse->createdPaymentOutput->tokens !== null ? '1' : '0'
         );
 
-        $statusChanged = $this->statusResolver->resolve($order, $statusResponse->createdPaymentOutput->payment);
+        $this->statusResolver->resolve($order, $statusResponse->createdPaymentOutput->payment);
 
         $payment->setAdditionalInformation(Config::PAYMENT_ID_KEY, $worldlinePaymentId);
         $payment->setAdditionalInformation(Config::PAYMENT_STATUS_KEY, $worldlinePaymentStatus);
         $payment->setAdditionalInformation(Config::PAYMENT_STATUS_CODE_KEY, $worldlinePaymentStatusCode);
-
-        if ($statusChanged) {
-            $amount = $statusResponse->createdPaymentOutput->payment->paymentOutput->amountOfMoney->amount;
-            switch ($statusResponse->createdPaymentOutput->payment->status) {
-                case StatusInterface::CAPTURE_REQUESTED:
-                    $payment->registerCaptureNotification(Data::reformatMagentoAmount($amount));
-                    break;
-                case StatusInterface::AUTHORIZATION_REQUESTED:
-                    $payment->registerAuthorizationNotification(Data::reformatMagentoAmount($amount));
-                    break;
-            }
-        }
     }
 
     /**

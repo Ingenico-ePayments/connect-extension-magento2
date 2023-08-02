@@ -155,7 +155,7 @@ class RefundRequestBuilder
         }
 
         $this->setAmount(DataHelper::formatWorldlineAmount($amount));
-        $this->setCurrencyCode($order->getBaseCurrencyCode());
+        $this->setCurrencyCode($order->getOrderCurrencyCode());
         $this->setCustomerEmail($order->getCustomerEmail() ?: '');
         $this->setCustomerLastname($order->getCustomerLastname() ?: '');
         $this->setEmailMessageType(self::EMAIL_MESSAGE_TYPE);

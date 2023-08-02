@@ -54,6 +54,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
         if (version_compare($context->getVersion(), '2.1.2', '<')) {
             $this->updateWebhookEventCreatedAtAttribute($setup);
         }
+
+        if (version_compare($context->getVersion(), '3.0.3') < 0) {
+            $this->dropEventIdAndOrderIncrementId($setup);
+        }
     }
 
     /**
@@ -125,7 +129,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     'Id'
                 )
                 ->addColumn(
-                    EventInterface::EVENT_ID,
+                    'event_id',
                     Table::TYPE_TEXT,
                     100,
                     [
@@ -134,7 +138,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     'Webhook event id'
                 )
                 ->addColumn(
-                    EventInterface::ORDER_INCREMENT_ID,
+                    'order_increment_id',
                     Table::TYPE_TEXT,
                     50,
                     [
@@ -222,6 +226,15 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     'MySQL version does not support fractional seconds. Race conditions in webhooks might occur'
                 );
             }
+        }
+    }
+
+    private function dropEventIdAndOrderIncrementId(SchemaSetupInterface $setup)
+    {
+        $tableName = $setup->getTable('epayments_webhook_event');
+        if ($setup->getConnection()->isTableExists($tableName)) {
+            $setup->getConnection()->dropColumn($tableName, 'event_id');
+            $setup->getConnection()->dropColumn($tableName, 'order_increment_id');
         }
     }
 }

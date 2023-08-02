@@ -8,7 +8,6 @@ use Magento\Sales\Api\CreditmemoRepositoryInterface;
 use Magento\Sales\Api\Data\CreditmemoInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
-use Worldline\Connect\Model\Config;
 use Worldline\Connect\Model\Worldline\Api\ClientInterface;
 use Worldline\Connect\Model\Worldline\CallContextBuilder;
 use Worldline\Connect\Model\Worldline\RequestBuilder\Refund\RefundRequestBuilder;
@@ -64,18 +63,17 @@ class CreateRefund extends AbstractRefundAction
     protected function performRefundAction(OrderInterface $order, CreditmemoInterface $creditMemo)
     {
         $payment = $order->getPayment();
-        $amount = $creditMemo->getBaseGrandTotal();
+        $amount = $creditMemo->getGrandTotal();
 
-        $worldlinePaymentId = $payment->getAdditionalInformation(Config::PAYMENT_ID_KEY);
+        $worldlinePaymentId = $payment->getLastTransId();
 
         $worldlinePayment = $this->worldlineClient->worldlinePayment($worldlinePaymentId, $creditMemo->getStoreId());
 
         if ($worldlinePayment->statusOutput->isRefundable) {
-            $callContext = $this->callContextBuilder->create();
             $response = $this->worldlineClient->worldlineRefund(
                 $worldlinePaymentId,
                 $this->refundRequestBuilder->build($order, (float) $amount),
-                $callContext,
+                null,
                 $creditMemo->getStoreId()
             );
             // Call status resolver:

@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "postinstall": ".npm/npm-postinstall.sh"
+  },
+  "author": "Worldline Connect",
+  "license": "ISC",
+  "dependencies": {
+    "connect-sdk-client-js": "^4.0.4"
+  }
+}

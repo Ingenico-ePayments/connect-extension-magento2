@@ -58,8 +58,6 @@ class PendingApproval extends AbstractHandler implements HandlerInterface
 
         $this->dispatchEvent($order, $worldlineStatus);
 
-        $this->addOrderComment($order, $worldlineStatus);
-
         if ($order instanceof Order) {
             $this->tokenService->createByOrderAndPayment($order, $worldlineStatus);
         }

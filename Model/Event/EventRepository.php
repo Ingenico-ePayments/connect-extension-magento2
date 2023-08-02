@@ -2,13 +2,10 @@
 
 namespace Worldline\Connect\Model\Event;
 
-use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Api\SortOrder;
-use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Reflection\DataObjectProcessor;
 use Worldline\Connect\Api\Data\EventInterface;
@@ -71,7 +68,6 @@ class EventRepository implements EventRepositoryInterface
      * @param EventFactory $eventFactory
      * @param EventCollectionFactory $eventCollectionFactory
      * @param EventSearchResultsInterfaceFactory $searchResultsFactory
-     * @param CollectionProcessorInterface $collectionProcessor
      * @param DataObjectProcessor $dataObjectProcessor
      * @param SearchCriteriaBuilder $criteriaBuilder
      */
@@ -102,7 +98,6 @@ class EventRepository implements EventRepositoryInterface
 
         /** @var Event|AbstractModel $eventModel */
         $eventModel = $this->eventFactory->create();
-        $this->resource->load($eventModel, $event->getEventId(), EventInterface::EVENT_ID);
         $eventModel->addData($eventData);
 
         try {
@@ -119,17 +114,6 @@ class EventRepository implements EventRepositoryInterface
         }
 
         return $eventModel->getDataModel();
-    }
-
-    /**
-     * @param string $orderIncrementId
-     * @return EventSearchResultsInterface
-     */
-    public function getListByOrderIncrementId($orderIncrementId)
-    {
-        $this->criteriaBuilder->addFilter(EventInterface::ORDER_INCREMENT_ID, $orderIncrementId);
-
-        return $this->getList($this->criteriaBuilder->create());
     }
 
     /**
@@ -174,61 +158,6 @@ class EventRepository implements EventRepositoryInterface
         $searchResults->setTotalCount($collection->getSize());
 
         return $searchResults;
-    }
-
-    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
-    /**
-     * @param string $eventId
-     * @return bool
-     * @throws \Magento\Framework\Exception\LocalizedException
-     */
-    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
-    public function deleteById($eventId)
-    {
-        return $this->delete($this->getByEventId($eventId));
-    }
-
-    /**
-     * @param EventInterface $event
-     * @return bool
-     * @throws CouldNotDeleteException
-     */
-    public function delete(EventInterface $event)
-    {
-        try {
-            $eventModel = $this->eventFactory->create();
-            $this->resource->load($eventModel, $event->getEventId(), EventInterface::EVENT_ID);
-            $this->resource->delete($eventModel);
-        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
-        } catch (\Exception $exception) {
-            throw new CouldNotDeleteException(
-                // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
-                __(
-                    'Could not delete the Event: %1',
-                    $exception->getMessage()
-                )
-            );
-        }
-
-        return true;
-    }
-
-    /**
-     * @param string $eventId
-     * @return EventInterface
-     * @throws NoSuchEntityException
-     */
-    public function getByEventId($eventId)
-    {
-        /** @var Event $event */
-        $event = $this->eventFactory->create();
-        $this->resource->load($event, $eventId, EventInterface::EVENT_ID);
-        if (!$event->getId()) {
-            // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
-            throw new NoSuchEntityException(__('Event with id "%1" does not exist.', $eventId));
-        }
-
-        return $event->getDataModel();
     }
 
     // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName

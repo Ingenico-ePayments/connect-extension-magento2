@@ -6,7 +6,6 @@ namespace Worldline\Connect\Gateway\Command;
 
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Sales\Model\Order\Payment;
-use Worldline\Connect\Helper\Data;
 use Worldline\Connect\Model\Config;
 use Worldline\Connect\Model\Worldline\Api\ClientInterface;
 use Worldline\Connect\Model\Worldline\StatusInterface;
@@ -30,8 +29,7 @@ class FetchTransactionInfoCommand implements CommandInterface
         );
 
         if (in_array($worldlinePayment->status, StatusInterface::APPROVED_STATUSES, true)) {
-            $amount = $worldlinePayment->paymentOutput->amountOfMoney->amount;
-            $payment->registerCaptureNotification(Data::reformatMagentoAmount($amount));
+            $payment->registerCaptureNotification($payment->getOrder()->getBaseGrandTotal());
             $payment->setIsTransactionApproved(true);
         }
 

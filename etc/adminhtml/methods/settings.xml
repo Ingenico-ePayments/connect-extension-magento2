@@ -19,7 +19,7 @@
             <frontend_model>Worldline\Connect\Block\Adminhtml\System\Config\Field\TechnicalPartner\Link</frontend_model>
         </field>
         <field id="documentation_link" translate="label" type="link" sortOrder="25" showInDefault="1">
-            <label>ePayments documentation</label>
+            <label>Worldline documentation</label>
             <frontend_model>Worldline\Connect\Block\Adminhtml\System\Config\Field\Documentation\Link</frontend_model>
         </field>
         <field id="phone_support" translate="label" type="label" sortOrder="30" showInDefault="1">

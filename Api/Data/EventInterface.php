@@ -11,8 +11,6 @@ namespace Worldline\Connect\Api\Data;
 interface EventInterface
 {
     public const ID = 'id';
-    public const EVENT_ID = 'event_id';
-    public const ORDER_INCREMENT_ID = 'order_increment_id';
     public const CREATED_TIMESTAMP = 'created_at';
     public const PAYLOAD = 'payload';
     public const STATUS = 'status';
@@ -25,38 +23,21 @@ interface EventInterface
     public const STATUS_IGNORED = 4;
 
     /**
-     * Get event_id
+     * Get id
      *
      * @return string|null
      */
-    public function getEventId();
+    public function getId();
 
     // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
-     * Set event_id
+     * Set id
      *
-     * @param string $eventId
+     * @param string $id
      * @return \Worldline\Connect\Api\Data\EventInterface
      */
     // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
-    public function setEventId($eventId);
-
-    /**
-     * Get order increment id
-     *
-     * @return string|null
-     */
-    public function getOrderIncrementId();
-
-    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
-    /**
-     * Set order increment id
-     *
-     * @param string $orderIncrementId
-     * @return \Worldline\Connect\Api\Data\EventInterface
-     */
-    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
-    public function setOrderIncrementId($orderIncrementId);
+    public function setId($id);
 
     /**
      * Get payload

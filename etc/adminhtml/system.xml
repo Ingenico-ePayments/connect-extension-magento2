@@ -29,15 +29,24 @@
                     <include path="Worldline_Connect::methods/card/unionpay_expresspay.xml"/>
                     <include path="Worldline_Connect::methods/card/visa.xml"/>
                 </group>
-                <group id="redirect" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <group id="instant_purchase" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Instant purchase payment methods</label>
+                    <include path="Worldline_Connect::methods/instant_purchase/apple_pay.xml"/>
+                    <include path="Worldline_Connect::methods/instant_purchase/google_pay.xml"/>
+                </group>
+                <group id="redirect" translate="label" type="text" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Redirect payment methods</label>
                     <include path="Worldline_Connect::methods/redirect/giropay.xml"/>
                     <include path="Worldline_Connect::methods/redirect/ideal.xml"/>
-                    <include path="Worldline_Connect::methods/redirect/open_banking.xml"/>
+                    <include path="Worldline_Connect::methods/redirect/account_to_account.xml"/>
                     <include path="Worldline_Connect::methods/redirect/paypal.xml"/>
                     <include path="Worldline_Connect::methods/redirect/paysafecard.xml"/>
                     <include path="Worldline_Connect::methods/redirect/sofort.xml"/>
                     <include path="Worldline_Connect::methods/redirect/trustly.xml"/>
+                </group>
+                <group id="buy_now_pay_later" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Buy Now Pay Later</label>
+                    <include path="Worldline_Connect::methods/buy_now_pay_later/sezzle.xml"/>
                 </group>
             </group>
         </section>

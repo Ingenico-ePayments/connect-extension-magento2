@@ -20,6 +20,6 @@ class GitHub
 
     public function getRepositoryName(): string
     {
-        return 'Worldline-ePayments/connect-extension-magento2';
+        return 'Ingenico-ePayments/connect-extension-magento2';
     }
 }

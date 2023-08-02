@@ -2,10 +2,10 @@
 
 namespace Worldline\Connect\Model\Worldline\Client;
 
+use Ingenico\Connect\Sdk\CommunicatorLogger;
 use Psr\Log\LoggerInterface;
 
-// phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
-class CommunicatorLogger implements \Ingenico\Connect\Sdk\CommunicatorLogger
+class PsrLogger implements CommunicatorLogger
 {
     // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
     public const DATE_FORMAT_STRING = DATE_ATOM;

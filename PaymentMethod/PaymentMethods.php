@@ -46,12 +46,15 @@ class PaymentMethods
     public const VISA = 'worldline_visa';
     public const GIROPAY = 'worldline_giropay';
     public const IDEAL = 'worldline_ideal';
-    public const OPEN_BANKING = 'worldline_open_banking';
+    public const ACCOUNT_TO_ACCOUNT = 'worldline_account_to_account';
     public const PAYPAL = 'worldline_paypal';
     public const PAYSAFECARD = 'worldline_paysafecard';
     public const SOFORT = 'worldline_sofort';
     public const TRUSTLY = 'worldline_trustly';
     public const HOSTED = 'worldline_hpp';
+    public const SEZZLE = 'worldline_sezzle';
+    public const APPLE_PAY = 'worldline_apple_pay';
+    public const GOOGLE_PAY = 'worldline_google_pay';
 
     public function __construct(
         private readonly ClientInterface $client,
@@ -118,14 +121,13 @@ class PaymentMethods
     private function getAvailablePaymentProducts(Quote $quote, string $countryId): array
     {
         try {
-            $paymentProducts = $this->client->getAvailablePaymentProducts(
+            return $this->client->getAvailablePaymentProducts(
                 (int) round($quote->getGrandTotal() * 100),
-                $quote->getBaseCurrencyCode(),
+                $quote->getQuoteCurrencyCode(),
                 $countryId,
                 $this->resolver->getLocale(),
                 $quote->getStoreId()
-            );
-            return $paymentProducts->paymentProducts;
+            )->paymentProducts;
         } catch (Exception $exception) {
             return [];
         }

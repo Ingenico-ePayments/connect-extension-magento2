@@ -28,8 +28,6 @@ class RejectedCapture extends AbstractHandler implements HandlerInterface
             }
         }
 
-        $this->addOrderComment($order, $worldlineStatus);
-
         $this->dispatchEvent($order, $worldlineStatus);
     }
 

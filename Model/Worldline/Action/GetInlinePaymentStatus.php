@@ -9,7 +9,6 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Psr\Log\LoggerInterface;
-use Worldline\Connect\Helper\Data;
 use Worldline\Connect\Model\Config;
 use Worldline\Connect\Model\ConfigInterface;
 use Worldline\Connect\Model\Order\OrderServiceInterface;
@@ -18,7 +17,6 @@ use Worldline\Connect\Model\Transaction\TransactionManager;
 use Worldline\Connect\Model\Worldline\Api\ClientInterface;
 use Worldline\Connect\Model\Worldline\Status\Payment\ResolverInterface;
 use Worldline\Connect\Model\Worldline\StatusInterface;
-use Worldline\Connect\Model\Worldline\Webhook\Event\MerchantReferenceResolver;
 
 class GetInlinePaymentStatus extends AbstractAction implements ActionInterface
 {
@@ -45,12 +43,6 @@ class GetInlinePaymentStatus extends AbstractAction implements ActionInterface
     private $orderService;
 
     /**
-     * @var MerchantReferenceResolver
-     */
-    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
-    private $merchantReferenceResolver;
-
-    /**
      * GetInlinePaymentStatus constructor.
      *
      * @param LoggerInterface $logger
@@ -61,7 +53,6 @@ class GetInlinePaymentStatus extends AbstractAction implements ActionInterface
      * @param ResolverInterface $resolver
      * @param OrderServiceInterface $orderService
      * @param OrderRepositoryInterface $orderRepository
-     * @param MerchantReferenceResolver $merchantReferenceResolver
      */
     public function __construct(
         LoggerInterface $logger,
@@ -71,14 +62,12 @@ class GetInlinePaymentStatus extends AbstractAction implements ActionInterface
         ConfigInterface $config,
         ResolverInterface $resolver,
         OrderServiceInterface $orderService,
-        OrderRepositoryInterface $orderRepository,
-        MerchantReferenceResolver $merchantReferenceResolver
+        OrderRepositoryInterface $orderRepository
     ) {
         $this->logger = $logger;
         $this->statusResolver = $resolver;
         $this->orderService = $orderService;
         $this->orderRepository = $orderRepository;
-        $this->merchantReferenceResolver = $merchantReferenceResolver;
         parent::__construct($statusResponseManager, $worldlineClient, $transactionManager, $config);
     }
 
@@ -120,13 +109,13 @@ class GetInlinePaymentStatus extends AbstractAction implements ActionInterface
         $payment = $order->getPayment();
         $status = $statusResponse->status;
 
-        $amount = $statusResponse->paymentOutput->amountOfMoney->amount;
+        $amount = $order->getBaseGrandTotal();
         switch ($statusResponse->status) {
             case StatusInterface::CAPTURE_REQUESTED:
-                $payment->registerCaptureNotification(Data::reformatMagentoAmount($amount));
+                $payment->registerCaptureNotification($amount);
                 break;
             case StatusInterface::AUTHORIZATION_REQUESTED:
-                $payment->registerAuthorizationNotification(Data::reformatMagentoAmount($amount));
+                $payment->registerAuthorizationNotification($amount);
                 break;
         }
 

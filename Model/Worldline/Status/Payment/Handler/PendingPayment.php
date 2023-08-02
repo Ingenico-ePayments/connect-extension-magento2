@@ -44,8 +44,6 @@ class PendingPayment extends AbstractHandler implements HandlerInterface
             $this->epaymentsConfig->getPaymentStatusInfo(StatusInterface::PENDING_PAYMENT)
         );
 
-        $this->addOrderComment($order, $worldlineStatus);
-
         $this->dispatchEvent($order, $worldlineStatus);
     }
 }

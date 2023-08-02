@@ -147,8 +147,8 @@ class OrderBuilder
     private function getAmountOfMoney(Order $order)
     {
         $amountOfMoney = $this->amountOfMoneyFactory->create();
-        $amountOfMoney->amount = DataHelper::formatWorldlineAmount($order->getBaseGrandTotal());
-        $amountOfMoney->currencyCode = $order->getBaseCurrencyCode();
+        $amountOfMoney->amount = DataHelper::formatWorldlineAmount($order->getGrandTotal());
+        $amountOfMoney->currencyCode = $order->getOrderCurrencyCode();
 
         return $amountOfMoney;
     }

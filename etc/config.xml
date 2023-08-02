@@ -8,11 +8,12 @@
                 <model>Worldline\Connect\PaymentMethod\Cards</model>
                 <title>Worldline Cards</title>
                 <active>1</active>
-                <can_initialize>1</can_initialize>
+                <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
                 <can_capture_vault>1</can_capture_vault>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -24,7 +25,7 @@
                 <can_authorize_vault>1</can_authorize_vault>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>0</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -35,11 +36,12 @@
                 <model>Worldline\Connect\PaymentMethod\AmericanExpress</model>
                 <title>Worldline American Express</title>
                 <active>1</active>
-                <can_initialize>1</can_initialize>
+                <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
                 <can_capture_vault>1</can_capture_vault>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -50,7 +52,7 @@
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>2</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -60,11 +62,12 @@
                 <model>Worldline\Connect\PaymentMethod\BCCard</model>
                 <title>Worldline BC Card</title>
                 <active>1</active>
-                <can_initialize>1</can_initialize>
+                <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
                 <can_capture_vault>1</can_capture_vault>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -75,7 +78,7 @@
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>180</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -85,11 +88,12 @@
                 <model>Worldline\Connect\PaymentMethod\CarteBancaire</model>
                 <title>Worldline Carte Bancaire</title>
                 <active>1</active>
-                <can_initialize>1</can_initialize>
+                <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
                 <can_capture_vault>1</can_capture_vault>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -100,7 +104,7 @@
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>130</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -110,11 +114,12 @@
                 <model>Worldline\Connect\PaymentMethod\DinersClub</model>
                 <title>Worldline Diners Club</title>
                 <active>1</active>
-                <can_initialize>1</can_initialize>
+                <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
                 <can_capture_vault>1</can_capture_vault>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -125,7 +130,7 @@
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>132</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -135,11 +140,12 @@
                 <model>Worldline\Connect\PaymentMethod\Discover</model>
                 <title>Worldline Discover</title>
                 <active>1</active>
-                <can_initialize>1</can_initialize>
+                <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
                 <can_capture_vault>1</can_capture_vault>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -150,7 +156,7 @@
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>128</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -160,11 +166,12 @@
                 <model>Worldline\Connect\PaymentMethod\HyundaiCard</model>
                 <title>Worldline Hyundai Card</title>
                 <active>1</active>
-                <can_initialize>1</can_initialize>
+                <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
                 <can_capture_vault>1</can_capture_vault>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -175,7 +182,7 @@
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>182</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -185,11 +192,12 @@
                 <model>Worldline\Connect\PaymentMethod\JCB</model>
                 <title>Worldline JCB</title>
                 <active>1</active>
-                <can_initialize>1</can_initialize>
+                <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
                 <can_capture_vault>1</can_capture_vault>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -200,7 +208,7 @@
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>125</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -210,11 +218,12 @@
                 <model>Worldline\Connect\PaymentMethod\KBKookminCard</model>
                 <title>Worldline KB Kookmin Card</title>
                 <active>1</active>
-                <can_initialize>1</can_initialize>
+                <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
                 <can_capture_vault>1</can_capture_vault>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -225,7 +234,7 @@
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>183</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -235,11 +244,12 @@
                 <model>Worldline\Connect\PaymentMethod\KEBHanaCard</model>
                 <title>Worldline KEB Hana Card</title>
                 <active>1</active>
-                <can_initialize>1</can_initialize>
+                <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
                 <can_capture_vault>1</can_capture_vault>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -250,7 +260,7 @@
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>181</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -260,11 +270,12 @@
                 <model>Worldline\Connect\PaymentMethod\LotteCard</model>
                 <title>Worldline Lotte Card</title>
                 <active>1</active>
-                <can_initialize>1</can_initialize>
+                <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
                 <can_capture_vault>1</can_capture_vault>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -275,7 +286,7 @@
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>184</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -285,11 +296,12 @@
                 <model>Worldline\Connect\PaymentMethod\Mastercard</model>
                 <title>Worldline Mastercard</title>
                 <active>1</active>
-                <can_initialize>1</can_initialize>
+                <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
                 <can_capture_vault>1</can_capture_vault>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -300,7 +312,7 @@
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>3</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -310,11 +322,12 @@
                 <model>Worldline\Connect\PaymentMethod\NHCard</model>
                 <title>Worldline NH Card</title>
                 <active>1</active>
-                <can_initialize>1</can_initialize>
+                <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
                 <can_capture_vault>1</can_capture_vault>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -325,7 +338,7 @@
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>185</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -335,11 +348,12 @@
                 <model>Worldline\Connect\PaymentMethod\SamsungCard</model>
                 <title>Worldline Samsung Card</title>
                 <active>1</active>
-                <can_initialize>1</can_initialize>
+                <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
                 <can_capture_vault>1</can_capture_vault>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -350,7 +364,7 @@
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>186</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -360,11 +374,12 @@
                 <model>Worldline\Connect\PaymentMethod\ShinhanCard</model>
                 <title>Worldline Shinhan Card</title>
                 <active>1</active>
-                <can_initialize>1</can_initialize>
+                <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
                 <can_capture_vault>1</can_capture_vault>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -375,7 +390,7 @@
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>187</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -385,11 +400,12 @@
                 <model>Worldline\Connect\PaymentMethod\UnionPayExpressPay</model>
                 <title>Worldline UnionPay ExpressPay</title>
                 <active>1</active>
-                <can_initialize>1</can_initialize>
+                <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
                 <can_capture_vault>1</can_capture_vault>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -400,7 +416,7 @@
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>56</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -410,11 +426,12 @@
                 <model>Worldline\Connect\PaymentMethod\Visa</model>
                 <title>Worldline Visa</title>
                 <active>1</active>
-                <can_initialize>1</can_initialize>
+                <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
                 <can_capture_vault>1</can_capture_vault>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -425,21 +442,22 @@
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>1</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
                 <product_id>1</product_id>
             </worldline_visa>
-            <!-- Redirect -->
-            <worldline_giropay>
-                <model>Worldline\Connect\PaymentMethod\Giropay</model>
-                <title>Worldline Giropay</title>
+            <!-- Instant purchase -->
+            <worldline_apple_pay>
+                <model>Worldline\Connect\PaymentMethod\ApplePay</model>
+                <title>Worldline Apple Pay</title>
                 <active>1</active>
                 <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -450,7 +468,65 @@
                 <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
+                <sort_order>302</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>302</product_id>
+                <button_locale>en-US</button_locale>
+                <button_style>black</button_style>
+                <button_type>pay</button_type>
+            </worldline_apple_pay>
+            <worldline_google_pay>
+                <model>Worldline\Connect\PaymentMethod\GooglePay</model>
+                <title>Worldline Google Pay</title>
+                <active>1</active>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_internal>0</can_use_internal>
+                <can_authorize>0</can_authorize>
+                <can_cancel>1</can_cancel>
+                <is_gateway>1</is_gateway>
+                <payment_action>authorize</payment_action>
+                <sort_order>302</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>1</payment_flow>
+                <product_id>320</product_id>
+                <button_color>default</button_color>
+                <button_locale>en</button_locale>
+                <button_size_mode>fill</button_size_mode>
+                <button_type>buy</button_type>
+            </worldline_google_pay>
+            <!-- Redirect -->
+            <worldline_giropay>
+                <model>Worldline\Connect\PaymentMethod\Giropay</model>
+                <title>Worldline Giropay</title>
+                <active>1</active>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_internal>0</can_use_internal>
+                <can_authorize>0</can_authorize>
+                <can_cancel>1</can_cancel>
+                <is_gateway>1</is_gateway>
+                <payment_action>authorize</payment_action>
                 <sort_order>816</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -462,8 +538,9 @@
                 <active>1</active>
                 <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -474,20 +551,21 @@
                 <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>809</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
                 <product_id>809</product_id>
             </worldline_ideal>
-            <worldline_open_banking>
-                <model>Worldline\Connect\PaymentMethod\OpenBanking</model>
-                <title>Worldline Open Banking</title>
+            <worldline_account_to_account>
+                <model>Worldline\Connect\PaymentMethod\AccountToAccount</model>
+                <title>Worldline Account To Account</title>
                 <active>1</active>
                 <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -498,20 +576,21 @@
                 <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>865</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
                 <product_id>865</product_id>
-            </worldline_open_banking>
+            </worldline_account_to_account>
             <worldline_paypal>
                 <model>Worldline\Connect\PaymentMethod\PayPal</model>
                 <title>Worldline PayPal</title>
                 <active>1</active>
                 <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -522,7 +601,7 @@
                 <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>840</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -534,8 +613,9 @@
                 <active>1</active>
                 <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -546,7 +626,7 @@
                 <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>830</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -558,8 +638,9 @@
                 <active>1</active>
                 <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -570,7 +651,7 @@
                 <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>836</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -582,8 +663,9 @@
                 <active>1</active>
                 <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -594,12 +676,38 @@
                 <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>806</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
                 <product_id>806</product_id>
             </worldline_trustly>
+            <!-- Sezzle -->
+            <worldline_sezzle>
+                <model>Worldline\Connect\PaymentMethod\Sezzle</model>
+                <title>Worldline Sezzle</title>
+                <active>1</active>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_internal>0</can_use_internal>
+                <can_authorize>0</can_authorize>
+                <can_cancel>1</can_cancel>
+                <is_gateway>1</is_gateway>
+                <payment_action>authorize</payment_action>
+                <sort_order>806</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>8004</product_id>
+            </worldline_sezzle>
             <!-- Hpp -->
             <worldline_hpp>
                 <model>Worldline\Connect\PaymentMethod\Hpp</model>
@@ -607,8 +715,9 @@
                 <active>1</active>
                 <can_initialize>1</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -619,7 +728,7 @@
                 <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>1000000</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -629,10 +738,11 @@
                 <model>Worldline\Connect\PaymentMethod\Vault</model>
                 <title>Worldline Vault</title>
                 <active>1</active>
-                <can_initialize>1</can_initialize>
+                <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_authorize_vault>1</can_authorize_vault>
                 <can_capture_vault>1</can_capture_vault>
                 <can_use_checkout>1</can_use_checkout>
@@ -645,7 +755,7 @@
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>100</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -654,10 +764,11 @@
                 <model>Worldline\Connect\PaymentMethod\AmericanExpressVault</model>
                 <title>Worldline Vault</title>
                 <active>1</active>
-                <can_initialize>1</can_initialize>
+                <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_authorize_vault>1</can_authorize_vault>
                 <can_capture_vault>1</can_capture_vault>
                 <can_use_checkout>1</can_use_checkout>
@@ -670,7 +781,7 @@
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>100</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -680,10 +791,11 @@
                 <model>Worldline\Connect\PaymentMethod\CarteBancaireVault</model>
                 <title>Worldline Vault</title>
                 <active>1</active>
-                <can_initialize>1</can_initialize>
+                <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_authorize_vault>1</can_authorize_vault>
                 <can_capture_vault>1</can_capture_vault>
                 <can_use_checkout>1</can_use_checkout>
@@ -696,7 +808,7 @@
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>100</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -706,10 +818,11 @@
                 <model>Worldline\Connect\PaymentMethod\DiscoverVault</model>
                 <title>Worldline Vault</title>
                 <active>1</active>
-                <can_initialize>1</can_initialize>
+                <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_authorize_vault>1</can_authorize_vault>
                 <can_capture_vault>1</can_capture_vault>
                 <can_use_checkout>1</can_use_checkout>
@@ -722,7 +835,7 @@
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>100</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -732,10 +845,11 @@
                 <model>Worldline\Connect\PaymentMethod\MastercardVault</model>
                 <title>Worldline Vault</title>
                 <active>1</active>
-                <can_initialize>1</can_initialize>
+                <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_authorize_vault>1</can_authorize_vault>
                 <can_capture_vault>1</can_capture_vault>
                 <can_use_checkout>1</can_use_checkout>
@@ -748,7 +862,7 @@
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>100</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -757,10 +871,11 @@
                 <model>Worldline\Connect\PaymentMethod\VisaVault</model>
                 <title>Worldline Vault</title>
                 <active>1</active>
-                <can_initialize>1</can_initialize>
+                <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
-                <can_refund>1</can_refund>
                 <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_authorize_vault>1</can_authorize_vault>
                 <can_capture_vault>1</can_capture_vault>
                 <can_use_checkout>1</can_use_checkout>
@@ -773,7 +888,7 @@
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <payment_action>authorize_capture</payment_action>
+                <payment_action>authorize</payment_action>
                 <sort_order>100</sort_order>
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
@@ -785,7 +900,7 @@
             <general>
                 <payment_action>authorize</payment_action>
                 <sort_order>500</sort_order>
-                <can_initialize>1</can_initialize>
+                <can_initialize>0</can_initialize>
                 <can_use_checkout>1</can_use_checkout>
                 <can_review_payment>1</can_review_payment>
                 <can_accept_payment>1</can_accept_payment>
@@ -796,7 +911,6 @@
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
                 <is_gateway>1</is_gateway>
-                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
             </general>
             <settings>
                 <hosted_checkout_subdomain>https://payment.</hosted_checkout_subdomain>
@@ -836,9 +950,9 @@
                 <toggle>1</toggle>
                 <payment_flow_type>0</payment_flow_type>
             </giropay>
-            <open_banking>
+            <account_to_account>
                 <toggle>1</toggle>
-            </open_banking>
+            </account_to_account>
             <paysafecard>
                 <toggle>1</toggle>
             </paysafecard>

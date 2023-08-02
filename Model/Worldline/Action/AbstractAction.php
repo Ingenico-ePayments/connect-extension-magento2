@@ -58,9 +58,7 @@ abstract class AbstractAction
     // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
     /**
      * @param Payment $payment
-     * @param \Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment
-     * | \Ingenico\Connect\Sdk\Domain\Capture\CaptureResponse
-     * | \Ingenico\Connect\Sdk\Domain\Refund\RefundResponse $response
+     * @param mixed $response
      * @throws LocalizedException
      */
     // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName

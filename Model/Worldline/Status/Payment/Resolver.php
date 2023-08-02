@@ -7,7 +7,7 @@ namespace Worldline\Connect\Model\Worldline\Status\Payment;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NotFoundException;
-use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Model\Order;
 use Worldline\Connect\Model\Order\Payment\OrderPaymentManagement;
 use Worldline\Connect\Model\StatusResponseManagerInterface;
 use Worldline\Connect\Model\Worldline\Status\AbstractResolver;
@@ -32,13 +32,13 @@ class Resolver extends AbstractResolver implements ResolverInterface
     }
 
     /**
-     * @param OrderInterface $order
+     * @param Order $order
      * @param Payment $payment
      * @throws LocalizedException
      * @throws NotFoundException
      */
     // phpcs:ignore SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
-    public function resolve(OrderInterface $order, Payment $payment)
+    public function resolve(Order $order, Payment $payment)
     {
         $statusChanged = false;
         if (!$this->isStatusNewerThanPreviousStatus($order, $payment)) {

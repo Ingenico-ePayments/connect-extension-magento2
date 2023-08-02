@@ -1,7 +1,67 @@
 var config = {
-    map: {
+    'bundles': {
+        'Worldline_Connect/js/build/connectsdk.noEncrypt.min': [
+            'connectsdk.apimodel',
+            'connectsdk.LabelTemplateElement',
+            'connectsdk.AccountOnFileDisplayHints',
+            'connectsdk.Attribute',
+            'connectsdk.MaskedString',
+            'connectsdk.MaskingUtil',
+            'connectsdk.AccountOnFile',
+            'connectsdk.promise',
+            'connectsdk.types',
+            'connectsdk.Util',
+            'connectsdk.ApplePay',
+            'connectsdk.PaymentProduct302SpecificData',
+            'connectsdk.PaymentProduct320SpecificData',
+            'connectsdk.PaymentProduct863SpecificData',
+            'connectsdk.PaymentProductDisplayHints',
+            'connectsdk.BasicPaymentProduct',
+            'connectsdk.BasicPaymentProductGroup',
+            'connectsdk.BasicPaymentItem',
+            'connectsdk.BasicPaymentProductGroups',
+            'connectsdk.BasicPaymentProducts',
+            'connectsdk.BasicPaymentItems',
+            'connectsdk.C2SCommunicatorConfiguration',
+            'connectsdk.C2SPaymentProductContext',
+            'connectsdk.GooglePay',
+            'connectsdk.IinDetailsResponse',
+            'connectsdk.net',
+            'connectsdk.PublicKeyResponse',
+            'connectsdk.C2SCommunicator',
+            'connectsdk.ValidationRuleBoletoBancarioRequiredness',
+            'connectsdk.ValidationRuleEmailAddress',
+            'connectsdk.ValidationRuleExpirationDate',
+            'connectsdk.ValidationRuleFixedList',
+            'connectsdk.ValidationRuleIban',
+            'connectsdk.ValidationRuleLength',
+            'connectsdk.ValidationRuleLuhn',
+            'connectsdk.ValidationRuleRange',
+            'connectsdk.ValidationRuleRegularExpression',
+            'connectsdk.ValidationRuleResidentIdNumber',
+            'connectsdk.ValidationRuleTermsAndConditions',
+            'connectsdk.ValidationRuleFactory',
+            'connectsdk.DataRestrictions',
+            'connectsdk.JOSEEncryptor',
+            'connectsdk.ValueMappingElement',
+            'connectsdk.FormElement',
+            'connectsdk.Tooltip',
+            'connectsdk.PaymentProductFieldDisplayHints',
+            'connectsdk.PaymentProductField',
+            'connectsdk.PaymentProduct',
+            'connectsdk.PaymentRequest',
+            'connectsdk.Encryptor',
+            'connectsdk.PaymentProductGroup',
+            'connectsdk.PaymentItem',
+            'connectsdk.Session',
+            'connectsdk.core'
+        ]
+    },
+    'map': {
         '*': {
-            'connect-sdk': 'Worldline_Connect/js/model/connect-sdk'
+            'node-forge': 'Worldline_Connect/js/build/forge.min',
+            'apple-pay-sdk': 'https://applepay.cdn-apple.com/jsapi/v1/apple-pay-sdk.js',
+            'google-pay-sdk': 'https://pay.google.com/gp/p/js/pay.js'
         }
     }
 };

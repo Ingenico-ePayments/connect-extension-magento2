@@ -165,6 +165,7 @@ class ConfigProvider implements ConfigProviderInterface
         return [
             'payment' => [
                 'worldline' => [
+                    'merchantId' => $this->config->getMerchantId($storeId),
                     'hostedCheckoutTitle' => $this->config->getHostedCheckoutTitle($storeId),
                     'hostedCheckoutPageUrl' => $this->urlBuilder->getUrl('epayments/hostedCheckoutPage'),
                     'inlineSuccessUrl' => $this->urlBuilder->getUrl('epayments/inlinePayment'),
@@ -175,6 +176,20 @@ class ConfigProvider implements ConfigProviderInterface
                     'logFrontendRequests' => $this->config->getLogFrontendRequests($storeId),
                     'saveForLaterVisible' => $this->config->getSaveForLaterVisible($storeId),
                     'products' => $products,
+                    'applePay' => [
+                        'buttonLocale' => $this->config->getValue('payment/worldline_apple_pay/button_locale'),
+                        'buttonStyle' => $this->config->getValue('payment/worldline_apple_pay/button_style'),
+                        'buttonType' => $this->config->getValue('payment/worldline_apple_pay/button_type'),
+                    ],
+                    'googlePay' => [
+                        'merchantId' => $this->config->getValue('payment/worldline_google_pay/merchant_id'),
+                        'merchantName' => $this->config->getValue('payment/worldline_google_pay/merchant_name'),
+                        'environment' => $this->config->getValue('payment/worldline_google_pay/environment'),
+                        'buttonColor' => $this->config->getValue('payment/worldline_google_pay/button_color'),
+                        'buttonLocale' => $this->config->getValue('payment/worldline_google_pay/button_locale'),
+                        'buttonSizeMode' => $this->config->getValue('payment/worldline_google_pay/button_size_mode'),
+                        'buttonType' => $this->config->getValue('payment/worldline_google_pay/button_type'),
+                    ],
                 ],
             ],
         ];

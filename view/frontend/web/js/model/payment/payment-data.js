@@ -12,6 +12,7 @@ define(['ko'],
         let currentPayload = ko.observable(false);
         let fieldData = {};
         let tokenize = ko.observableArray([]);
+        let token = ko.observable('');
 
         return {
             currentProductIdentifier: currentProductIdentifier,
@@ -21,6 +22,8 @@ define(['ko'],
             fieldData: fieldData,
 
             tokenize: tokenize,
+
+            token: token,
 
             setCurrentProductIdentifier: function (value) {
                 currentProductIdentifier(value)
@@ -42,6 +45,10 @@ define(['ko'],
                 currentPayload(value)
             },
 
+            setToken: function (value) {
+                token(value)
+            },
+
             getCurrentProductIdentifier: function () {
                 return currentProductIdentifier()
             },
@@ -61,6 +68,10 @@ define(['ko'],
             getCurrentPayload: function () {
                 return currentPayload()
             },
+
+            getToken: function() {
+                return token()
+            }
         }
     }
 );

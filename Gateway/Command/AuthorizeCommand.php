@@ -6,7 +6,6 @@ namespace Worldline\Connect\Gateway\Command;
 
 use Ingenico\Connect\Sdk\Domain\Payment\CreatePaymentResponse;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment as PaymentDefinition;
-use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Gateway\Command\CommandException;
 use Magento\Payment\Gateway\CommandInterface;
@@ -14,9 +13,8 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment;
 use Psr\Log\LoggerInterface;
-use Worldline\Connect\Helper\Data;
 use Worldline\Connect\Model\Config;
-use Worldline\Connect\Model\Worldline\Action\ApprovePayment;
+use Worldline\Connect\Model\Worldline\Action\CapturePayment;
 use Worldline\Connect\Model\Worldline\Action\MerchantAction;
 use Worldline\Connect\Model\Worldline\Api\ClientInterface;
 use Worldline\Connect\Model\Worldline\Status\Payment\ResolverInterface;
@@ -25,7 +23,7 @@ use Worldline\Connect\Model\Worldline\Token\TokenService;
 
 // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 
-class InitializeCommand implements CommandInterface
+class AuthorizeCommand implements CommandInterface
 {
     /**
      * @var ClientInterface
@@ -84,7 +82,7 @@ class InitializeCommand implements CommandInterface
     private $createPaymentRequestBuilder;
 
     /**
-     * @var ApprovePayment
+     * @var CapturePayment
      */
     // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $approvePayment;
@@ -105,7 +103,7 @@ class InitializeCommand implements CommandInterface
         Config $config,
         CreateHostedCheckoutRequestBuilder $createHostedCheckoutRequestBuilder,
         CreatePaymentRequestBuilder $createPaymentRequestBuilder,
-        ApprovePayment $approvePayment,
+        CapturePayment $approvePayment,
         TokenService $tokenService
     ) {
         $this->client = $client;
@@ -134,27 +132,26 @@ class InitializeCommand implements CommandInterface
     {
         /** @var Payment $payment */
         $payment = $commandSubject['payment']->getPayment();
-        if ($payment->getLastTransId()) {
-            $this->approvePayment->process($payment->getOrder(), null);
-            return;
-        }
 
+        $order = $payment->getOrder();
         switch ($payment->getMethodInstance()->getConfigData('payment_flow')) {
             case Config::CONFIG_INGENICO_CHECKOUT_TYPE_OPTIMIZED_FLOW:
-                $this->handleCreatePaymentResponse(
-                    $this->client->createPayment(
-                        $this->createPaymentRequestBuilder->build($payment, $commandSubject['paymentAction'])
-                    ),
+                $request = $this->createPaymentRequestBuilder->build(
                     $payment,
-                    $commandSubject['stateObject']
+                    $payment->getMethodInstance()->getConfigData('payment_action')
                 );
+                $order->addCommentToStatusHistory($request->toJson());
+                $response = $this->client->createPayment($request);
+                $order->addCommentToStatusHistory($response->toJson());
+
+                $this->handleCreatePaymentResponse($response, $payment);
                 break;
             case Config::CONFIG_INGENICO_CHECKOUT_TYPE_HOSTED_CHECKOUT:
-                $order = $payment->getOrder();
-                $response = $this->client->createHostedCheckout(
-                    $this->createHostedCheckoutRequestBuilder->build($payment, $commandSubject['paymentAction']),
-                    $order->getStoreId()
-                );
+                $request = $this->createHostedCheckoutRequestBuilder->build($payment, $commandSubject['paymentAction']);
+                $order->addCommentToStatusHistory($request->toJson());
+                $response = $this->client->createHostedCheckout($request, $order->getStoreId());
+                $order->addCommentToStatusHistory($response->toJson());
+
                 $checkoutSubdomain = $this->config->getHostedCheckoutSubDomain($order->getStoreId());
                 $worldlineRedirectUrl = $checkoutSubdomain . $response->partialRedirectUrl;
 
@@ -169,8 +166,7 @@ class InitializeCommand implements CommandInterface
     // phpcs:ignore SlevomatCodingStandard.Functions.FunctionLength.FunctionLength
     private function handleCreatePaymentResponse(
         CreatePaymentResponse $createPaymentResponse,
-        Payment $payment,
-        DataObject $stateObject
+        Payment $payment
     ) {
         $payment->setLastTransId($createPaymentResponse->payment->id);
         $payment->setTransactionId($createPaymentResponse->payment->id);
@@ -187,31 +183,25 @@ class InitializeCommand implements CommandInterface
             return;
         }
 
-        $amount = $paymentResponse->paymentOutput->amountOfMoney->amount;
+        $amount = $order->getBaseGrandTotal();
+
         switch ($paymentResponse->status) {
             case StatusInterface::PENDING_APPROVAL:
-                $stateObject->setData('state', Order::STATE_PAYMENT_REVIEW);
-                $stateObject->setData('status', Order::STATE_PAYMENT_REVIEW);
-
-                $this->tokenService->createByOrderAndPayment($order, $paymentResponse);
-
-                $payment->registerAuthorizationNotification(Data::reformatMagentoAmount($amount));
-                break;
             case StatusInterface::AUTHORIZATION_REQUESTED:
-                $stateObject->setData('state', Order::STATE_PENDING_PAYMENT);
-                $stateObject->setData('status', Order::STATE_PENDING_PAYMENT);
+                $order->setState(Order::STATE_PENDING_PAYMENT);
+                $order->setStatus(Order::STATE_PENDING_PAYMENT);
 
                 $this->tokenService->createByOrderAndPayment($order, $paymentResponse);
 
-                $payment->registerAuthorizationNotification(Data::reformatMagentoAmount($amount));
+                $payment->registerAuthorizationNotification($amount);
                 break;
             case StatusInterface::CAPTURE_REQUESTED:
-                $stateObject->setData('state', Order::STATE_PROCESSING);
-                $stateObject->setData('status', Order::STATE_PROCESSING);
+                $order->setState(Order::STATE_PROCESSING);
+                $order->setStatus(Order::STATE_PROCESSING);
 
                 $this->tokenService->createByOrderAndPayment($order, $paymentResponse);
 
-                $payment->registerCaptureNotification(Data::reformatMagentoAmount($amount));
+                $payment->registerCaptureNotification($amount);
                 break;
         }
 

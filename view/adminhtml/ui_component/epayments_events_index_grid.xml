@@ -36,25 +36,26 @@
         <paging name="listing_paging"/>
     </listingToolbar>
     <columns name="epayments_events_index_columns">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="resizeConfig" xsi:type="array">
+                    <item name="enabled" xsi:type="boolean">true</item><!-- This is required configuration -->
+                </item>
+            </item>
+        </argument>
         <column name="id">
             <settings>
                 <filter>text</filter>
                 <label translate="true">ID</label>
             </settings>
         </column>
-        <column name="event_id">
-            <settings>
-                <filter>text</filter>
-                <label translate="true">Event ID</label>
-            </settings>
-        </column>
-        <column name="order_increment_id">
-            <settings>
-                <filter>text</filter>
-                <label translate="true">Order Increment ID</label>
-            </settings>
-        </column>
         <column name="payload">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="resizeEnabled" xsi:type="boolean">true</item>
+                    <item name="resizeDefaultWidth" xsi:type="number">1000</item>
+                </item>
+            </argument>
             <settings>
                 <filter>text</filter>
                 <label translate="true">Payload</label>

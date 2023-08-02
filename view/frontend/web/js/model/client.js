@@ -3,7 +3,7 @@
 
 define([
     'Worldline_Connect/js/action/get-session',
-    'connect-sdk'
+    'connectsdk.core'
 ], function (getSessionAction, sdk) {
     'use strict';
 
@@ -18,14 +18,7 @@ define([
          */
         initialize: function () {
             if (sdkClient === null) {
-                var sessionData = getSessionAction();
-                sessionData = {
-                    apiBaseUrl: sessionData.clientApiUrl + "/v1",
-                    assetsBaseUrl: sessionData.assetUrl,
-                    clientSessionID: sessionData.clientSessionId,
-                    customerId: sessionData.customerId
-                };
-                sdkClient = new sdk.Session(sessionData);
+                sdkClient = new sdk.Session(getSessionAction());
             }
             return sdkClient;
         },

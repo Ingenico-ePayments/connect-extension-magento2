@@ -73,11 +73,12 @@ define([
                     me.logo(productResponse.displayHints.logo);
 
                     let accounts = productResponse.accountsOnFile.filter(function (accountOnFile) {
-                        return accountOnFile.attributeByKey['alias'].value === me.details.alias;
+                        return accountOnFile.attributeByKey['alias'].value.endsWith(me.details.card);
                     });
 
                     me.product = productResponse;
                     me.account = accounts.length > 0 ? accounts[0] : null;
+
                     if (me.account) {
                         me.maskedCard(me.account.getMaskedValueByAttributeKey('alias').formattedValue);
                     }

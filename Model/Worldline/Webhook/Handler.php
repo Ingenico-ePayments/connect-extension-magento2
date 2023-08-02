@@ -3,15 +3,14 @@
 namespace Worldline\Connect\Model\Worldline\Webhook;
 
 // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
+use DateTimeImmutable;
 use Ingenico\Connect\Sdk\Domain\Webhooks\WebhooksEvent;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\InvalidArgumentException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Psr\Log\LoggerInterface;
 use Worldline\Connect\Api\Data\EventInterface;
 use Worldline\Connect\Api\Data\EventInterfaceFactory;
 use Worldline\Connect\Api\EventRepositoryInterface;
-use Worldline\Connect\Model\Worldline\Webhook\Event\MerchantReferenceResolver;
 
 class Handler
 {
@@ -28,12 +27,6 @@ class Handler
     private $eventFactory;
 
     /**
-     * @var MerchantReferenceResolver
-     */
-    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
-    private $merchantReferenceResolver;
-
-    /**
      * @var LoggerInterface
      */
     // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
@@ -42,27 +35,25 @@ class Handler
     public function __construct(
         EventRepositoryInterface $eventRepository,
         EventInterfaceFactory $eventFactory,
-        MerchantReferenceResolver $merchantReferenceResolver,
         LoggerInterface $logger
     ) {
         $this->eventRepository = $eventRepository;
         $this->eventFactory = $eventFactory;
-        $this->merchantReferenceResolver = $merchantReferenceResolver;
         $this->logger = $logger;
     }
 
     /**
      * @param WebhooksEvent $event
+     * @param DateTimeImmutable $date
      * @throws CouldNotSaveException
      * @throws InvalidArgumentException
-     * @throws NoSuchEntityException
      */
-    public function handle(WebhooksEvent $event): void
+    public function handle(WebhooksEvent $event, DateTimeImmutable $date): void
     {
         $this->logEventData($event);
 
         try {
-            $this->persistEvent($event);
+            $this->persistEvent($event, $date);
         } catch (InvalidArgumentException $exception) {
             $this->logger->debug(
                 // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
@@ -118,24 +109,16 @@ class Handler
 
     /**
      * @param WebhooksEvent $event
+     * @param DateTimeImmutable $date
      * @throws CouldNotSaveException
-     * @throws NoSuchEntityException
-     * @throws InvalidArgumentException
      */
-    private function persistEvent(WebhooksEvent $event)
+    private function persistEvent(WebhooksEvent $event, DateTimeImmutable $date)
     {
-        $eventModel = $this->eventFactory->create(
-            [
-                'data' => [
-                    EventInterface::EVENT_ID => $event->id,
-                    EventInterface::ORDER_INCREMENT_ID => $this->merchantReferenceResolver->getMerchantReference(
-                        $event
-                    ),
-                    EventInterface::PAYLOAD => $event->toJson(),
-                    EventInterface::CREATED_TIMESTAMP => $event->created,
-                ],
-            ]
-        );
-        $this->eventRepository->save($eventModel);
+        $this->eventRepository->save($this->eventFactory->create([
+            'data' => [
+                EventInterface::PAYLOAD => $event->toJson(),
+                EventInterface::CREATED_TIMESTAMP => $date->format('Y-m-d H:i:s.u'),
+            ],
+        ]));
     }
 }

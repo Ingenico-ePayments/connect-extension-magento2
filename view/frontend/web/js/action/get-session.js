@@ -6,6 +6,7 @@ define([
 
     return function () {
         config.init(window.checkoutConfig.payment['worldline']);
+
         let sessionData = config.connectSession();
         if (sessionData.error) {
             let message = 'Could not load Worldline session data: ' + sessionData.error;

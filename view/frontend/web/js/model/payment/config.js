@@ -209,7 +209,7 @@ define([],
             disabledPaymentProducts: disabledPaymentProducts,
             priceRangedPaymentProducts: priceRangedPaymentProducts,
             countryRestrictedPaymentProducts: countryRestrictedPaymentProducts,
-            saveForLaterVisible: saveForLaterVisible,
+            saveForLaterVisible: saveForLaterVisible
         };
     }
 );

@@ -2,6 +2,7 @@
 
 namespace Worldline\Connect\Controller\Webhooks;
 
+use DateTimeImmutable;
 use Exception;
 use Ingenico\Connect\Sdk\Domain\Webhooks\WebhooksEvent;
 use Magento\Framework\App\Action\Context;
@@ -16,6 +17,8 @@ use RuntimeException;
 use Worldline\Connect\Controller\CsrfAware\Action;
 use Worldline\Connect\Model\Worldline\Webhook\Handler;
 use Worldline\Connect\Model\Worldline\Webhook\Unmarshaller;
+
+use function strlen;
 
 /**
  * Webhook class encapsulating general request validation functionality for webhooks
@@ -55,77 +58,38 @@ class Index extends Action
     // phpcs:ignore SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
     public function execute()
     {
-        if ($response = $this->checkVerification()) {
-            return $response;
-        }
-
         $response = $this->resultFactory->create(ResultFactory::TYPE_RAW);
         $response->setHeader('Content-type', 'text/plain');
 
-        try {
-            $event = $this->getWebhookEvent();
-            if (!$this->checkEndpointTest($event)) {
-                $this->handler->handle($event);
+        $verificationString = (string) $this->getRequest()->getHeader('X-GCS-Webhooks-Endpoint-Verification');
+        if (strlen($verificationString) > 0) {
+            $response->setContents($verificationString);
+        } else {
+            try {
+                $signature = (string) $this->getRequest()->getHeader('X-GCS-Signature');
+                $keyId = (string) $this->getRequest()->getHeader('X-GCS-KeyId');
+
+                $this->handler->handle($this->getWebhookEvent($signature, $keyId), new DateTimeImmutable());
+
+                $response->setContents($signature);
+            } catch (RuntimeException $exception) {
+                $this->logException($exception);
+                $response->setHttpResponseCode(WebApiException::HTTP_INTERNAL_ERROR);
+            } catch (Exception $exception) {
+                $this->logException($exception);
+                $response->setContents($exception->getMessage());
             }
-            $response->setContents($this->getSecuritySignature());
-        } catch (RuntimeException $exception) {
-            $this->logException($exception);
-            $response->setHttpResponseCode(WebApiException::HTTP_INTERNAL_ERROR);
-        } catch (Exception $exception) {
-            $this->logException($exception);
-            $response->setContents($exception->getMessage());
         }
 
         return $response;
     }
 
-    private function getWebhookEvent(): WebhooksEvent
+    private function getWebhookEvent(string $signature, string $keyId): WebhooksEvent
     {
-        $securityKey = (string) $this->getRequest()->getHeader('X-GCS-KeyId');
-        $event = $this->unmarshaller->unmarshal(
-            $this->getRequest()->getContent(),
-            [
-                'X-GCS-Signature' => $this->getSecuritySignature(),
-                'X-GCS-KeyId' => $securityKey,
-            ]
-        );
-
-        return $event;
-    }
-
-    /**
-     * Detects Worldline Webhook test request.
-     * When a request is an endpoint test, it should not be processed.
-     *
-     * @param WebhooksEvent $event
-     * @return bool
-     */
-    private function checkEndpointTest(WebhooksEvent $event): bool
-    {
-        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
-        return strpos((string) $event->id, 'TEST') === 0;
-    }
-
-    private function getSecuritySignature(): string
-    {
-        return (string) $this->getRequest()->getHeader('X-GCS-Signature');
-    }
-
-    /**
-     * Checks the headers of the request for a special endpoint verification
-     */
-    private function checkVerification(): ?ResultInterface
-    {
-        $verificationString = $this->getRequest()->getHeader('X-GCS-Webhooks-Endpoint-Verification');
-        if ($verificationString) {
-            $response = $this->resultFactory->create(ResultFactory::TYPE_RAW);
-            $response->setHeader('Content-type', 'text/plain');
-            $response->setContents($verificationString);
-
-            return $response;
-        }
-
-        return null;
+        return $this->unmarshaller->unmarshal($this->getRequest()->getContent(), [
+            'X-GCS-Signature' => $signature,
+            'X-GCS-KeyId' => $keyId,
+        ]);
     }
 
     /**

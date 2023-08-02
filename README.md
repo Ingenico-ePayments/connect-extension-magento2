@@ -18,10 +18,11 @@ Run the following commands in your development environment:
 * `composer require ingenico-epayments/connect-extension-magento2`
 * `bin/magento module:enable Worldline_Connect`
 * `bin/magento setup:upgrade`
+* `npm install --prefix vendor/ingenico-epayments/connect-extension-magento2`
 
 ## Configuration
 
-For configuration details please visit <https://epayments.developer-ingenico.com/documentation/ecommerce-extensions/>.
+For configuration details please visit <https://docs.connect.worldline-solutions.com/documentation/Plugins/magento-2/Configuration/>.
 
 ## Support
 

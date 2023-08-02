@@ -16,8 +16,8 @@ class Link extends Field
     public function render(AbstractElement $element)
     {
         $element->setData('target', '_blank');
-        $element->setData('href', 'https://epayments.developer-ingenico.com/');
-        $element->setData('value', 'https://epayments.developer-ingenico.com/');
+        $element->setData('href', 'https://docs.connect.worldline-solutions.com');
+        $element->setData('value', 'https://docs.connect.worldline-solutions.com');
 
         return parent::render($element);
     }

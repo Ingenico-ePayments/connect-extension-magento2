@@ -28,7 +28,7 @@ use Worldline\Connect\Model\ConfigInterface;
 use Worldline\Connect\Model\Worldline\Api\ClientInterface;
 use Worldline\Connect\Model\Worldline\Client\Communicator\ConfigurationBuilder;
 use Worldline\Connect\Model\Worldline\Client\CommunicatorFactory;
-use Worldline\Connect\Model\Worldline\Client\CommunicatorLoggerFactory;
+use Worldline\Connect\Model\Worldline\Client\CommunicatorLoggerPoolFactory;
 
 // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 
@@ -49,10 +49,10 @@ class Client implements ClientInterface
     private $worldlineClient = [];
 
     /**
-     * @var CommunicatorLoggerFactory
+     * @var CommunicatorLoggerPoolFactory
      */
     // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
-    private $communicatorLoggerFactory;
+    private $communicatorLoggerPoolFactory;
 
     /**
      * @var CommunicatorFactory
@@ -106,7 +106,7 @@ class Client implements ClientInterface
      * Client constructor.
      *
      * @param ConfigInterface $ePaymentsConfig
-     * @param CommunicatorLoggerFactory $communicatorLoggerFactory
+     * @param CommunicatorLoggerPoolFactory $communicatorLoggerPoolFactory
      * @param ConfigurationBuilder $configurationBuilder
      * @param CommunicatorFactory $communicatorFactory
      * @param ClientFactory $clientFactory
@@ -118,7 +118,7 @@ class Client implements ClientInterface
      */
     public function __construct(
         ConfigInterface $ePaymentsConfig,
-        CommunicatorLoggerFactory $communicatorLoggerFactory,
+        CommunicatorLoggerPoolFactory $communicatorLoggerPoolFactory,
         ConfigurationBuilder $configurationBuilder,
         CommunicatorFactory $communicatorFactory,
         ClientFactory $clientFactory,
@@ -129,7 +129,7 @@ class Client implements ClientInterface
         RequestInterface $request
     ) {
         $this->ePaymentsConfig = $ePaymentsConfig;
-        $this->communicatorLoggerFactory = $communicatorLoggerFactory;
+        $this->communicatorLoggerPoolFactory = $communicatorLoggerPoolFactory;
         $this->communicatorFactory = $communicatorFactory;
         $this->clientFactory = $clientFactory;
         $this->defaultConnectionFactory = $defaultConnectionFactory;
@@ -508,7 +508,7 @@ class Client implements ClientInterface
         $client = $this->clientFactory->create($communicator, json_encode($clientMetaInfo));
 
         if ($this->ePaymentsConfig->getLogAllRequests()) {
-            $communicatorLogger = $this->communicatorLoggerFactory
+            $communicatorLogger = $this->communicatorLoggerPoolFactory
                 ->create();
             $client->enableLogging($communicatorLogger);
         }

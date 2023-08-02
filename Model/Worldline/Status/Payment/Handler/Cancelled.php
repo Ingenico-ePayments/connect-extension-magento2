@@ -21,11 +21,10 @@ class Cancelled extends AbstractHandler implements HandlerInterface
         if ($order instanceof Order && !$order->isCanceled()) {
             $order->registerCancellation(
                 // phpcs:ignore Squiz.Strings.DoubleQuoteUsage.ContainsVar
-                "Canceled Order with status {$worldlineStatus->status}"
+                "Canceled Order with status {$worldlineStatus->status}",
+                false
             );
         }
-
-        $this->addOrderComment($order, $worldlineStatus);
 
         $this->dispatchEvent($order, $worldlineStatus);
     }

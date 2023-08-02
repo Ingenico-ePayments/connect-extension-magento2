@@ -4,7 +4,6 @@
 define(
   [
       'jquery',
-      'connect-sdk',
       'underscore',
       'Magento_Checkout/js/view/payment/default',
       'uiLayout',
@@ -17,7 +16,7 @@ define(
       'ko',
       'Magento_Checkout/js/model/quote'
   ],
-  function ($, sdk, _, Component, layout, registry, paymentData, createPayload, redirectOnSuccessAction, config, getCardPaymentGroup, ko, quote) {
+  function ($, _, Component, layout, registry, paymentData, createPayload, redirectOnSuccessAction, config, getCardPaymentGroup, ko, quote) {
       'use strict';
 
       return Component.extend({

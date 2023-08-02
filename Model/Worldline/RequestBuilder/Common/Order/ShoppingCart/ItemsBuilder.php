@@ -77,27 +77,27 @@ class ItemsBuilder
             $lineItem = $this->lineItemFactory->create();
 
             $itemAmountOfMoney = $this->amountOfMoneyFactory->create();
-            $itemAmountOfMoney->amount = DataHelper::formatWorldlineAmount($item->getBaseRowTotalInclTax());
-            $itemAmountOfMoney->currencyCode = $order->getBaseCurrencyCode();
+            $itemAmountOfMoney->amount = DataHelper::formatWorldlineAmount($item->getRowTotalInclTax());
+            $itemAmountOfMoney->currencyCode = $order->getOrderCurrencyCode();
             $lineItem->amountOfMoney = $itemAmountOfMoney;
 
             $lineItemInvoiceData = $this->lineItemInvoiceDataFactory->create();
             $lineItemInvoiceData->nrOfItems = (int) $item->getQtyOrdered();
             $lineItemInvoiceData->description = $item->getName();
-            $lineItemInvoiceData->pricePerItem = DataHelper::formatWorldlineAmount($item->getBasePriceInclTax());
+            $lineItemInvoiceData->pricePerItem = DataHelper::formatWorldlineAmount($item->getPriceInclTax());
             $lineItem->invoiceData = $lineItemInvoiceData;
 
             $orderLineDetails = $this->orderLineDetailsFactory->create();
-            $orderLineDetails->discountAmount = DataHelper::formatWorldlineAmount($item->getBaseDiscountAmount());
-            $orderLineDetails->lineAmountTotal = DataHelper::formatWorldlineAmount($item->getBaseRowTotalInclTax());
+            $orderLineDetails->discountAmount = DataHelper::formatWorldlineAmount($item->getDiscountAmount());
+            $orderLineDetails->lineAmountTotal = DataHelper::formatWorldlineAmount($item->getRowTotalInclTax());
             // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
             $orderLineDetails->productCode = substr($item->getSku(), 0, 12);
-            $orderLineDetails->productPrice = DataHelper::formatWorldlineAmount($item->getBasePriceInclTax());
+            $orderLineDetails->productPrice = DataHelper::formatWorldlineAmount($item->getPriceInclTax());
             $orderLineDetails->productType = $item->getProductType();
             $orderLineDetails->quantity = (int) $item->getQtyOrdered();
             $orderLineDetails->productName = $item->getProduct()->getName();
-            $taxAmount = $item->getBaseTaxBeforeDiscount()
-                ?: $item->getBaseTaxAmount() + $item->getBaseDiscountTaxCompensationAmount();
+            $taxAmount = $item->getTaxBeforeDiscount()
+                ?: $item->getTaxAmount() + $item->getDiscountTaxCompensationAmount();
             $orderLineDetails->taxAmount = DataHelper::formatWorldlineAmount($taxAmount);
             $orderLineDetails->unit = '';
             $lineItem->orderLineDetails = $orderLineDetails;
@@ -108,15 +108,8 @@ class ItemsBuilder
          * Add shipping amount as fake line item
          */
         // phpcs:ignore SlevomatCodingStandard.Operators.DisallowEqualOperators.DisallowedNotEqualOperator
-        if ($order->getBaseShippingAmount() != 0) {
+        if ($order->getShippingAmount() != 0) {
             $lineItems[] = $this->getShippingItem($order);
-        }
-        /**
-         * Add discounts as fake line item
-         */
-        // phpcs:ignore SlevomatCodingStandard.Operators.DisallowEqualOperators.DisallowedNotEqualOperator
-        if ($order->getBaseDiscountAmount() != 0) {
-            $lineItems[] = $this->getDiscountsItem($order);
         }
 
         return $lineItems;
@@ -128,16 +121,16 @@ class ItemsBuilder
      */
     private function getShippingItem(Order $order)
     {
-        $formatAmountShip = DataHelper::formatWorldlineAmount($order->getBaseShippingInclTax());
+        $formatAmountShip = DataHelper::formatWorldlineAmount($order->getShippingInclTax());
         $shippingAmount = $this->amountOfMoneyFactory->create();
         $shippingAmount->amount = $formatAmountShip;
-        $shippingAmount->currencyCode = $order->getBaseCurrencyCode();
+        $shippingAmount->currencyCode = $order->getOrderCurrencyCode();
 
         $shippingDetails = $this->orderLineDetailsFactory->create();
         $shippingDetails->productCode = 'shipping';
         $shippingDetails->productName = 'Shipping';
         $shippingDetails->quantity = 1;
-        $shippingDetails->taxAmount = DataHelper::formatWorldlineAmount($order->getBaseShippingTaxAmount());
+        $shippingDetails->taxAmount = DataHelper::formatWorldlineAmount($order->getShippingTaxAmount());
         $shippingDetails->lineAmountTotal = $formatAmountShip;
         $shippingDetails->productPrice = $formatAmountShip;
 
@@ -160,18 +153,19 @@ class ItemsBuilder
      */
     private function getDiscountsItem(Order $order)
     {
-        $formatAmountDisc = DataHelper::formatWorldlineAmount($order->getBaseDiscountAmount());
+        $formatAmountDisc = DataHelper::formatWorldlineAmount($order->getDiscountAmount());
         $discountAmount = $this->amountOfMoneyFactory->create();
         $discountAmount->amount = $formatAmountDisc;
-        $discountAmount->currencyCode = $order->getBaseCurrencyCode();
+        $discountAmount->currencyCode = $order->getOrderCurrencyCode();
 
         $discountDetails = $this->orderLineDetailsFactory->create();
+        $discountDetails->productCode = 'discount';
         $discountDetails->productName = 'Discount';
         $discountDetails->quantity = 1;
         $discountDetails->lineAmountTotal = $formatAmountDisc;
         $discountDetails->productPrice = $formatAmountDisc;
         $discountDetails->taxAmount = DataHelper::formatWorldlineAmount(
-            -$order->getBaseDiscountTaxCompensationAmount()
+            -$order->getDiscountTaxCompensationAmount()
         );
         $discountInvoice = $this->lineItemInvoiceDataFactory->create();
         $description = $order->getDiscountDescription() ?: 'Discount';

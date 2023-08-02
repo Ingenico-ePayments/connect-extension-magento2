@@ -4,15 +4,11 @@ declare(strict_types=1);
 
 namespace Worldline\Connect\Model\Worldline\Status\Payment\Handler;
 
-use Ingenico\Connect\Sdk\Domain\Capture\Definitions\Capture as WorldlineCapture;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
-use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment as WorldlinePayment;
 use Magento\Framework\Event\ManagerInterface;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Config;
-use Worldline\Connect\Helper\Data;
 use Worldline\Connect\Model\ConfigInterface;
 use Worldline\Connect\Model\StatusResponseManagerInterface;
 use Worldline\Connect\Model\Worldline\Status\Payment\HandlerInterface;
@@ -64,15 +60,6 @@ class Captured extends AbstractHandler implements HandlerInterface
         /** @var Order\Payment $payment */
         $payment = $order->getPayment();
 
-        if ($worldlineStatus instanceof WorldlinePayment) {
-            $amount = $worldlineStatus->paymentOutput->amountOfMoney->amount;
-        } elseif ($worldlineStatus instanceof WorldlineCapture) {
-            $amount = $worldlineStatus->captureOutput->amountOfMoney->amount;
-        } else {
-            // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
-            throw new LocalizedException(__('Unknown order status.'));
-        }
-
         $captureTransaction = $this->statusResponseManager->getTransactionBy($worldlineStatus->id, $payment);
 
         if ($order->getState() === Order::STATE_PAYMENT_REVIEW && $order->getStatus() === Order::STATUS_FRAUD) {
@@ -84,13 +71,11 @@ class Captured extends AbstractHandler implements HandlerInterface
         $payment->setIsTransactionClosed(true);
         $order->setState(Order::STATE_PROCESSING);
         $order->setStatus($this->orderConfig->getStateDefaultStatus(Order::STATE_PROCESSING));
-        $payment->registerCaptureNotification(Data::reformatMagentoAmount($amount));
+        $payment->registerCaptureNotification($order->getBaseGrandTotal());
 
         if ($captureTransaction === null) {
             $payment->setNotificationResult(true);
         }
-
-        $this->addOrderComment($order, $worldlineStatus);
 
         $this->dispatchEvent($order, $worldlineStatus);
     }

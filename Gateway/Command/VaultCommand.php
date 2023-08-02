@@ -9,7 +9,7 @@ use Magento\Payment\Gateway\CommandInterface;
 class VaultCommand implements CommandInterface
 {
     public function __construct(
-        private readonly InitializeCommand $initializeCommand,
+        private readonly AuthorizeCommand $initializeCommand,
         private readonly string $paymentAction
     ) {
     }

@@ -6,14 +6,6 @@ namespace Worldline\Connect\Model;
 interface ConfigInterface
 {
     /**
-     * Returns boolean for module activation status
-     *
-     * @param int|null $storeId
-     * @return bool
-     */
-    public function isActive($storeId = null);
-
-    /**
      * Returns Api Key
      *
      * @param int|null $storeId
@@ -47,25 +39,6 @@ interface ConfigInterface
      * @return string
      */
     public function getApiEndpoint($storeId = null);
-
-    /**
-     * @param string $paymentProductId
-     * @param int|null $storeId
-     * @return string
-     */
-    public function isPaymentProductEnabled(string $paymentProductId, ?int $storeId = null);
-
-    /**
-     * @param int|null $storeId
-     * @return string
-     */
-    public function getCheckoutType($storeId = null);
-
-    /**
-     * @param null|int $storeId
-     * @return string
-     */
-    public function getCaptureMode($storeId = null);
 
     /**
      * Returns WebHooks Key Id

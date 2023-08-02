@@ -6,7 +6,6 @@ use Ingenico\Connect\Sdk\ResponseException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
-use Worldline\Connect\Model\Config;
 use Worldline\Connect\Model\ConfigInterface;
 use Worldline\Connect\Model\StatusResponseManager;
 use Worldline\Connect\Model\Transaction\TransactionManager;
@@ -63,7 +62,7 @@ class CancelPayment extends AbstractAction implements ActionInterface
         /** @var Order\Payment $payment */
         $payment = $order->getPayment();
 
-        $transactionId = $payment->getAdditionalInformation(Config::PAYMENT_ID_KEY);
+        $transactionId = $payment->getLastTransId();
         $authResponseObject = $this->statusResponseManager->get($payment, $transactionId);
         $worldlinePaymentId = $authResponseObject->id;
 

@@ -3,7 +3,6 @@
 namespace Worldline\Connect\Model\Worldline\Token;
 
 use DateTime;
-use Ingenico\Connect\Sdk\Domain\Definitions\CardEssentials;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\CardPaymentMethodSpecificOutput;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
 use Magento\Sales\Model\Order;
@@ -18,43 +17,31 @@ use Worldline\Connect\Model\Worldline\Api\ClientInterface;
 
 use function in_array;
 use function json_encode;
+use function substr;
 
 class TokenService implements TokenServiceInterface
 {
-    /**
-     * @var PaymentTokenManagementInterface
-     */
-    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
-    private $paymentTokenManagement;
-
-    /**
-     * @var PaymentTokenRepository
-     */
-    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
-    private $paymentTokenRepository;
-
-    /**
-     * @var ClientInterface
-     */
-    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
-    private $client;
-
-    /**
-     * @var PaymentTokenFactory
-     */
-    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
-    private $paymentTokenFactory;
+    private const MAP = [
+        2 => 'AE',
+        146 => 'AU',
+        132 => 'DN',
+        128 => 'DI',
+        163 => 'HC',
+        125 => 'JCB',
+        117 => 'SM',
+        3 => 'MC',
+        119 => 'MC',
+        1 => 'VI',
+        114 => 'VI',
+        122 => 'VI',
+    ];
 
     public function __construct(
-        PaymentTokenManagementInterface $paymentTokenManagement,
-        PaymentTokenRepository $paymentTokenRepository,
-        ClientInterface $client,
-        PaymentTokenFactory $paymentTokenFactory
+        private readonly PaymentTokenManagementInterface $paymentTokenManagement,
+        private readonly PaymentTokenRepository $paymentTokenRepository,
+        private readonly ClientInterface $client,
+        private readonly PaymentTokenFactory $paymentTokenFactory
     ) {
-        $this->paymentTokenManagement = $paymentTokenManagement;
-        $this->paymentTokenRepository = $paymentTokenRepository;
-        $this->client = $client;
-        $this->paymentTokenFactory = $paymentTokenFactory;
     }
 
     /**
@@ -141,39 +128,26 @@ class TokenService implements TokenServiceInterface
         $orderPayment = $order->getPayment();
         $orderPayment->setAdditionalInformation(VaultConfigProvider::IS_ACTIVE_CODE, 1);
         $orderPayment->getExtensionAttributes()->setVaultPaymentToken(
-            $this->buildPaymentToken($cardPaymentMethodSpecificOutput, $card, $token, $alias)
+            $this->buildPaymentToken($cardPaymentMethodSpecificOutput, $token)
         );
     }
 
-    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
-    /**
-     * @param CardPaymentMethodSpecificOutput $cardPaymentMethodSpecificOutput
-     * @param CardEssentials $card
-     * @param $token
-     * @param $alias
-     * @return \Magento\Vault\Api\Data\PaymentTokenInterface
-     */
-    // phpcs:enable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
-    // phpcs:ignore SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingAnyTypeHint
     public function buildPaymentToken(
         CardPaymentMethodSpecificOutput $cardPaymentMethodSpecificOutput,
-        CardEssentials $card,
-        $token,
-        $alias
-    ) {
+        string $token
+    ): PaymentTokenInterface {
         $paymentProductId = $cardPaymentMethodSpecificOutput->paymentProductId;
-        $schemeTransactionId = $cardPaymentMethodSpecificOutput->schemeTransactionId;
+        $card = $cardPaymentMethodSpecificOutput->card;
 
         $paymentToken = $this->paymentTokenFactory->create(PaymentTokenFactoryInterface::TOKEN_TYPE_CREDIT_CARD);
         $paymentToken->setExpiresAt((DateTime::createFromFormat('my', $card->expiryDate))->format('Y-m-1 00:00:00'));
         $paymentToken->setGatewayToken($token);
         $paymentToken->setTokenDetails(json_encode([
-            'alias' => $alias,
-            // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
             'card' => substr($card->cardNumber, -4),
             'expiry' => (DateTime::createFromFormat('my', $card->expiryDate))->format('m/y'),
+            'type' => self::MAP[$paymentProductId] ?: null,
             'paymentProductId' => $paymentProductId,
-            'transactionId' => $schemeTransactionId,
+            'transactionId' => $cardPaymentMethodSpecificOutput->schemeTransactionId,
         ]));
 
         return $paymentToken;

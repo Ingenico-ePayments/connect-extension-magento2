@@ -45,7 +45,7 @@ class ApiErrorHandler
             },
             ''
         );
-        $this->messageManager->addErrorMessage($message);
+        $this->manager->addErrorMessage($message);
         $this->logger->error($message);
 
         throw new CommandException(__($e->getMessage()));

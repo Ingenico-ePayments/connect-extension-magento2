@@ -34,8 +34,6 @@ class Redirected extends AbstractHandler implements HandlerInterface
 
 //        $order->getPayment()->setIsTransactionPending(true);
 
-        $this->addOrderComment($order, $worldlineStatus);
-
         $this->dispatchEvent($order, $worldlineStatus);
     }
 }

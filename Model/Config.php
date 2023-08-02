@@ -7,7 +7,6 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Store\Model\ScopeInterface;
-use Worldline\Connect\Helper\MetaData;
 
 use function sprintf;
 
@@ -15,20 +14,8 @@ use function sprintf;
 
 class Config implements ConfigInterface
 {
-    public const CONFIG_INGENICO_ACTIVE = 'worldline_connect/general/active';
-
-    public const CONFIG_INGENICO_PAYMENT_PRODUCT_DISABLED = '0';
-    public const CONFIG_INGENICO_PAYMENT_PRODUCT_ENABLED = '1';
-    public const CONFIG_INGENICO_CREDIT_CARDS_TOGGLE = 'worldline_connect/credit_cards/toggle';
     public const CONFIG_INGENICO_CREDIT_CARDS_SAVE_FOR_LATER_VISIBLE =
         'worldline_connect/credit_cards/save_for_later_visible';
-    public const CONFIG_INGENICO_IDEAL_TOGGLE = 'worldline_connect/ideal/toggle';
-    public const CONFIG_INGENICO_PAYPAL_TOGGLE = 'worldline_connect/paypal/toggle';
-    public const CONFIG_INGENICO_SOFORT_TOGGLE = 'worldline_connect/sofort/toggle';
-    public const CONFIG_INGENICO_TRUSTLY_TOGGLE = 'worldline_connect/trustly/toggle';
-    public const CONFIG_INGENICO_GIROPAY_TOGGLE = 'worldline_connect/giropay/toggle';
-    public const CONFIG_INGENICO_OPEN_BANKING_TOGGLE = 'worldline_connect/open_banking/toggle';
-    public const CONFIG_INGENICO_PAYSAFECARD_TOGGLE = 'worldline_connect/paysafecard/toggle';
 
     public const CONFIG_INGENICO_CHECKOUT_TYPE_HOSTED_CHECKOUT = '0';
     public const CONFIG_INGENICO_CHECKOUT_TYPE_OPTIMIZED_FLOW = '1';
@@ -39,22 +26,6 @@ class Config implements ConfigInterface
     public const CONFIG_INGENICO_IDEAL_PAYMENT_FLOW_TYPE = 'worldline_connect/ideal/payment_flow_type';
     public const CONFIG_INGENICO_TRUSTLY_PAYMENT_FLOW_TYPE = 'worldline_connect/trustly/payment_flow_type';
     public const CONFIG_INGENICO_GIROPAY_PAYMENT_FLOW_TYPE = 'worldline_connect/giropay/payment_flow_type';
-
-    public const CONFIG_INGENICO_CREDIT_CARDS_PRICE_RANGES = 'worldline_connect/credit_cards/price_ranges';
-    public const CONFIG_INGENICO_IDEAL_PRICE_RANGES = 'worldline_connect/ideal/price_ranges';
-    public const CONFIG_INGENICO_PAYPAL_PRICE_RANGES = 'worldline_connect/paypal/price_ranges';
-    public const CONFIG_INGENICO_SOFORT_PRICE_RANGES = 'worldline_connect/sofort/price_ranges';
-    public const CONFIG_INGENICO_TRUSTLY_PRICE_RANGES = 'worldline_connect/trustly/price_ranges';
-    public const CONFIG_INGENICO_GIROPAY_PRICE_RANGES = 'worldline_connect/giropay/price_ranges';
-    public const CONFIG_INGENICO_OPEN_BANKING_PRICE_RANGES = 'worldline_connect/open_banking/price_ranges';
-    public const CONFIG_INGENICO_PAYSAFECARD_PRICE_RANGES = 'worldline_connect/paysafecard/price_ranges';
-
-    public const CONFIG_INGENICO_CREDIT_CARDS_COUNTRY_BLACKLIST = 'worldline_connect/credit_cards/country_blacklist';
-    public const CONFIG_INGENICO_PAYPAL_COUNTRY_BLACKLIST = 'worldline_connect/paypal/country_blacklist';
-    public const CONFIG_INGENICO_SOFORT_COUNTRY_BLACKLIST = 'worldline_connect/sofort/country_blacklist';
-    public const CONFIG_INGENICO_TRUSTLY_COUNTRY_BLACKLIST = 'worldline_connect/trustly/country_blacklist';
-    public const CONFIG_INGENICO_OPEN_BANKING_COUNTRY_BLACKLIST = 'worldline_connect/open_banking/country_blacklist';
-    public const CONFIG_INGENICO_PAYSAFECARD_COUNTRY_BLACKLIST = 'worldline_connect/paysafecard/country_blacklist';
 
     public const CONFIG_INGENICO_API_ENDPOINT = 'worldline_connect/settings/api_endpoint';
     public const CONFIG_INGENICO_API_ENDPOINT_SANDBOX = 'https://eu.sandbox.api-ingenico.com';
@@ -81,26 +52,18 @@ class Config implements ConfigInterface
     public const CONFIG_INGENICO_MERCHANT_ID_PROD = 'worldline_connect/settings/merchant_id_prod';
     public const CONFIG_INGENICO_FIXED_DESCRIPTOR = 'worldline_connect/settings/descriptor';
     public const CONFIG_INGENICO_HOSTED_CHECKOUT_SUBDOMAIN = 'worldline_connect/settings/hosted_checkout_subdomain';
-    // NON-EXISTANT
+
     public const CONFIG_INGENICO_LOG_ALL_REQUESTS = 'worldline_connect/settings/log_all_requests';
-    public const CONFIG_INGENICO_LOG_ALL_REQUESTS_FILE = 'worldline_connect/settings/log_all_requests_file'; // NON-EXISTANT
+    public const CONFIG_INGENICO_LOG_ALL_REQUESTS_FILE = 'worldline_connect/settings/log_all_requests_file';
     public const CONFIG_INGENICO_LOG_FRONTEND_REQUESTS = 'worldline_connect/settings/log_frontend_requests';
     public const CONFIG_INGENICO_LIMIT_API_FIELD_LENGTH = 'worldline_connect/settings/limit_api_field_length';
     public const CONFIG_INGENICO_FRAUD_MANAGER_EMAIL = 'worldline_connect/fraud/manager_email';
-    public const CONFIG_INGENICO_FRAUD_EMAIL_TEMPLATE = 'worldline_connect/fraud/email_template'; // NON-EXISTANT
+    public const CONFIG_INGENICO_FRAUD_EMAIL_TEMPLATE = 'worldline_connect/fraud/email_template';
+
     // phpcs:ignore Generic.Files.LineLength.TooLong
-    public const CONFIG_INGENICO_CANCELLATION_OF_PENDING_ORDERS = 'worldline_connect/order_processing/cancellation_of_pending_orders'; // NO FUNCTION
-    public const CONFIG_INGENICO_PENDING_ORDERS_DAYS = 'worldline_connect/pending_orders_cancellation/days';
-    public const CONFIG_INGENICO_UPDATE_EMAIL = 'worldline_connect/email_settings'; // NON-EXISTANT
-    public const CONFIG_SALES_EMAIL_IDENTITY = 'sales_email/order/identity'; // NON-EXISTANT
-    public const CONFIG_INGENICO_PAYMENT_STATUS = 'worldline_connect/payment_statuses'; // NON-EXISTANT
-    public const CONFIG_INGENICO_REFUND_STATUS = 'worldline_connect/refund_statuses'; // NON-EXISTANT
-    public const CONFIG_ALLOW_OFFLINE_REFUNDS = 'worldline_connect/settings/allow_offline_refunds';
-    // phpcs:ignore SlevomatCodingStandard.Files.LineLength.LineTooLong
-    public const CONFIG_INGENIC_GROUP_CARD_PAYMENT_METHODS = 'worldline_connect/credit_cards/group_card_payment_methods';
-    public const CONFIG_INGENICO_CAPTURES_MODE = 'worldline_connect/captures/capture_mode';
-    public const CONFIG_INGENICO_CAPTURES_MODE_DIRECT = 'direct';
-    public const CONFIG_INGENICO_CAPTURES_MODE_AUTHORIZE = 'authorize';
+    public const CONFIG_SALES_EMAIL_IDENTITY = 'sales_email/order/identity';
+    public const CONFIG_INGENICO_PAYMENT_STATUS = 'worldline_connect/payment_statuses';
+    public const CONFIG_INGENICO_REFUND_STATUS = 'worldline_connect/refund_statuses';
     public const CONFIG_INGENICO_HOSTED_CHECKOUT_VARIANT = 'worldline_connect/checkout/hosted_checkout_variant';
     // phpcs:ignore SlevomatCodingStandard.Files.LineLength.LineTooLong
     public const CONFIG_INGENICO_HOSTED_CHECKOUT_GUEST_VARIANT = 'worldline_connect/checkout/hosted_checkout_guest_variant';
@@ -127,37 +90,6 @@ class Config implements ConfigInterface
     public const ENVIRONMENT_PRE_PRODUCTION = 'Pre-Production';
     public const ENVIRONMENT_PRODUCTION = 'Production';
 
-    public const CONFIGURABLE_TOGGLE_PAYMENT_PRODUCTS = [
-        'cards' => Config::CONFIG_INGENICO_CREDIT_CARDS_TOGGLE,
-        806 => Config::CONFIG_INGENICO_TRUSTLY_TOGGLE,
-        809 => Config::CONFIG_INGENICO_IDEAL_TOGGLE,
-        816 => Config::CONFIG_INGENICO_GIROPAY_TOGGLE,
-        830 => Config::CONFIG_INGENICO_PAYSAFECARD_TOGGLE,
-        836 => Config::CONFIG_INGENICO_SOFORT_TOGGLE,
-        840 => Config::CONFIG_INGENICO_PAYPAL_TOGGLE,
-        865 => Config::CONFIG_INGENICO_OPEN_BANKING_TOGGLE,
-    ];
-
-    public const CONFIGURABLE_PRICE_RANGE_PAYMENT_PRODUCTS = [
-        'cards' => Config::CONFIG_INGENICO_CREDIT_CARDS_PRICE_RANGES,
-        806 => Config::CONFIG_INGENICO_TRUSTLY_PRICE_RANGES,
-        809 => Config::CONFIG_INGENICO_IDEAL_PRICE_RANGES,
-        816 => Config::CONFIG_INGENICO_GIROPAY_PRICE_RANGES,
-        830 => Config::CONFIG_INGENICO_PAYSAFECARD_PRICE_RANGES,
-        836 => Config::CONFIG_INGENICO_SOFORT_PRICE_RANGES,
-        840 => Config::CONFIG_INGENICO_PAYPAL_PRICE_RANGES,
-        865 => Config::CONFIG_INGENICO_OPEN_BANKING_PRICE_RANGES,
-    ];
-
-    public const CONFIGURABLE_COUNTRY_BLACKLIST_PAYMENT_PRODUCTS = [
-        'cards' => Config::CONFIG_INGENICO_CREDIT_CARDS_COUNTRY_BLACKLIST,
-        806 => Config::CONFIG_INGENICO_TRUSTLY_COUNTRY_BLACKLIST,
-        830 => Config::CONFIG_INGENICO_PAYSAFECARD_COUNTRY_BLACKLIST,
-        836 => Config::CONFIG_INGENICO_SOFORT_COUNTRY_BLACKLIST,
-        840 => Config::CONFIG_INGENICO_PAYPAL_COUNTRY_BLACKLIST,
-        865 => Config::CONFIG_INGENICO_OPEN_BANKING_COUNTRY_BLACKLIST,
-    ];
-
     /**
      * @var ScopeConfigInterface
      */
@@ -176,22 +108,14 @@ class Config implements ConfigInterface
     // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $encryptor;
 
-    /**
-     * @var MetaData
-     */
-    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
-    private $metaDataHelper;
-
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         DirectoryList $directoryList,
-        EncryptorInterface $encryptor,
-        MetaData $metaDataHelper
+        EncryptorInterface $encryptor
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->directoryList = $directoryList;
         $this->encryptor = $encryptor;
-        $this->metaDataHelper = $metaDataHelper;
     }
 
     /**
@@ -200,18 +124,9 @@ class Config implements ConfigInterface
      * @return mixed
      */
     // phpcs:ignore SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingAnyTypeHint
-    protected function getValue($field, $storeId = null)
+    public function getValue($field, $storeId = null)
     {
         return $this->scopeConfig->getValue($field, ScopeInterface::SCOPE_STORE, $storeId);
-    }
-
-    /**
-     * @param int|null $storeId
-     * @return bool
-     */
-    public function isActive($storeId = null)
-    {
-        return $this->getValue(self::CONFIG_INGENICO_ACTIVE, $storeId);
     }
 
     /**
@@ -304,46 +219,9 @@ class Config implements ConfigInterface
         return $this->getValue(self::CONFIG_INGENICO_API_ENDPOINT, $storeId);
     }
 
-    /**
-     * @param string $paymentProductId
-     * @param int|null $storeId
-     * @return string
-     */
-    public function isPaymentProductEnabled(string $paymentProductId, ?int $storeId = null)
-    {
-        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
-        if (!array_key_exists($paymentProductId, self::CONFIGURABLE_TOGGLE_PAYMENT_PRODUCTS)) {
-            return true;
-        }
-        return $this->getValue(self::CONFIGURABLE_TOGGLE_PAYMENT_PRODUCTS[$paymentProductId], $storeId) ===
-        self::CONFIG_INGENICO_PAYMENT_PRODUCT_ENABLED ?
-            self::CONFIG_INGENICO_PAYMENT_PRODUCT_ENABLED :
-            self::CONFIG_INGENICO_PAYMENT_PRODUCT_DISABLED;
-    }
-
     public function getSaveForLaterVisible(int $storeId): bool
     {
         return (bool) $this->getValue(self::CONFIG_INGENICO_CREDIT_CARDS_SAVE_FOR_LATER_VISIBLE);
-    }
-
-    /**
-     * @param int|null $storeId
-     * @return string
-     */
-    public function getCheckoutType($storeId = null)
-    {
-        return $this->getValue(self::CONFIG_INGENICO_CHECKOUT_TYPE, $storeId) ===
-        self::CONFIG_INGENICO_CHECKOUT_TYPE_HOSTED_CHECKOUT ?
-            self::CONFIG_INGENICO_CHECKOUT_TYPE_HOSTED_CHECKOUT :
-            self::CONFIG_INGENICO_CHECKOUT_TYPE_OPTIMIZED_FLOW;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCaptureMode($storeId = null)
-    {
-        return $this->getValue(self::CONFIG_INGENICO_CAPTURES_MODE, $storeId);
     }
 
     /**

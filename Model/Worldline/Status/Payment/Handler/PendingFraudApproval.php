@@ -10,7 +10,6 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order\Payment;
-use Worldline\Connect\Helper\Data;
 use Worldline\Connect\Model\Config;
 use Worldline\Connect\Model\ConfigInterface;
 use Worldline\Connect\Model\Order\EmailManagerFraud;
@@ -41,9 +40,6 @@ class PendingFraudApproval extends AbstractHandler implements HandlerInterface
      */
     public function resolveStatus(OrderInterface $order, WorldlinePayment $worldlineStatus)
     {
-        $amount = $worldlineStatus->paymentOutput->amountOfMoney->amount;
-        $amount = Data::reformatMagentoAmount($amount);
-
         /** @var Payment $payment */
         $payment = $order->getPayment();
 
@@ -58,9 +54,7 @@ class PendingFraudApproval extends AbstractHandler implements HandlerInterface
         $payment->setIsTransactionClosed(false);
 
         // register capture or authorization notification for hosted checkout, do nothing for inline payments
-        $this->registerPaymentNotification($order, $amount);
-
-        $this->addOrderComment($order, $worldlineStatus);
+        $this->registerPaymentNotification($order, $order->getBaseGrandTotal());
 
         $this->emailManagerFraud->process($order);
 

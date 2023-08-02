@@ -6,12 +6,31 @@
             <values>
                 <value id="ingenico-api" type="host">*.api-ingenico.com</value>
                 <value id="ingenico-assets" type="host">*.secured-by-ingenico.com</value>
+                <value id="google" type="host">*.gstatic.com</value>
             </values>
         </policy>
         <policy id="connect-src">
             <values>
                 <value id="ingenico-api" type="host">*.api-ingenico.com</value>
                 <value id="ingenico-assets" type="host">*.secured-by-ingenico.com</value>
+            </values>
+        </policy>
+        <policy id="script-src">
+            <values>
+                <value id="apple" type="host">*.cdn-apple.com</value>
+                <value id="google" type="host">*.google.com</value>
+            </values>
+        </policy>
+        <policy id="font-src">
+            <values>
+                <value id="apple" type="host">*.cdn-apple.com</value>
+                <value id="googleapis" type="host">fonts.googleapis.com</value>
+                <value id="gstatic" type="host">fonts.gstatic.com</value>
+            </values>
+        </policy>
+        <policy id="style-src">
+            <values>
+                <value id="google" type="host">*.gstatic.com</value>
             </values>
         </policy>
     </policies>

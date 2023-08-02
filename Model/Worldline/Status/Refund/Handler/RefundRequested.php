@@ -69,8 +69,6 @@ class RefundRequested extends AbstractHandler implements HandlerInterface
     // phpcs:ignore SlevomatCodingStandard.Functions.FunctionLength.FunctionLength
     public function applyCreditmemo(Creditmemo $creditMemo, RefundResult $worldlineStatus)
     {
-        return;
-
         $this->validateCreditMemo($creditMemo);
 
         // If the order cannot be unhold, the refund cannot proceed:

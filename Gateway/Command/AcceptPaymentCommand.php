@@ -5,15 +5,15 @@ namespace Worldline\Connect\Gateway\Command;
 use Ingenico\Connect\Sdk\ResponseException;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Sales\Model\Order\Payment;
-use Worldline\Connect\Model\Worldline\Action\ApprovePayment;
+use Worldline\Connect\Model\Worldline\Api\ClientInterface;
 
 class AcceptPaymentCommand implements CommandInterface
 {
     /**
-     * @var ApprovePayment
+     * @var ClientInterface
      */
     // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
-    private $approvePayment;
+    private $worldlineClient;
 
     /**
      * @var ApiErrorHandler
@@ -24,12 +24,12 @@ class AcceptPaymentCommand implements CommandInterface
     /**
      * WorldlineCancelCommand constructor.
      *
-     * @param ApprovePayment $approvePayment
+     * @param ClientInterface $worldlineClient
      * @param ApiErrorHandler $apiErrorHandler
      */
-    public function __construct(ApprovePayment $approvePayment, ApiErrorHandler $apiErrorHandler)
+    public function __construct(ClientInterface $worldlineClient, ApiErrorHandler $apiErrorHandler)
     {
-        $this->approvePayment = $approvePayment;
+        $this->worldlineClient = $worldlineClient;
         $this->apiErrorHandler = $apiErrorHandler;
     }
 
@@ -46,7 +46,10 @@ class AcceptPaymentCommand implements CommandInterface
         try {
             /** @var Payment $payment */
             $payment = $commandSubject['payment']->getPayment();
-            $this->approvePayment->process($payment->getOrder(), null);
+            $this->worldlineClient->worldlinePaymentAccept(
+                $payment->getLastTransId(),
+                $payment->getOrder()->getStoreId()
+            );
         } catch (ResponseException $e) {
             $this->apiErrorHandler->handleError($e);
         }
