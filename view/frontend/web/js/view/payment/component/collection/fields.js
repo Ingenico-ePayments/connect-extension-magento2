@@ -126,7 +126,7 @@ define([
                 parent: this.name,
                 component: 'Magento_Ui/js/lib/core/element/element',
                 template: 'Worldline_Connect/payment/product/field/info',
-                text: $t('You will be redirected to enter your payment details.'),
+                text: config.redirectText(),
             }
         },
 

@@ -22,7 +22,8 @@ class AuthorizeCapturePayment extends AbstractAction
         TransactionManager $transactionManager,
         ConfigInterface $config,
         private readonly CardRequestBuilder $cardRequestBuilder,
-        private readonly TokenService $tokenService
+        private readonly TokenService $tokenService,
+        private readonly MerchantAction $merchantAction
     ) {
         parent::__construct(
             $statusResponseManager,
@@ -40,6 +41,7 @@ class AuthorizeCapturePayment extends AbstractAction
         $this->postProcess($payment, $response->payment);
 
         $this->tokenService->createByOrderAndPayment($payment->getOrder(), $response->payment);
+        $this->merchantAction->handle($payment, $response);
 
         return $response->payment;
     }

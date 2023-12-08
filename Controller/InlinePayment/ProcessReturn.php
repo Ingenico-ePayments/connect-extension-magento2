@@ -84,8 +84,6 @@ class ProcessReturn extends Action
             /** @var string $worldlinePaymentStatus */
             $worldlinePaymentStatus = $order->getPayment()->getAdditionalInformation(Config::PAYMENT_STATUS_KEY);
 
-            exit;
-
             /** @var string $info */
             // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
             $info = $this->ePaymentsConfig->getPaymentStatusInfo(mb_strtolower($worldlinePaymentStatus));

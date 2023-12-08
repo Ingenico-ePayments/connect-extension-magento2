@@ -165,4 +165,6 @@ interface ConfigInterface
     public function getLimitAPIFieldLength(): bool;
 
     public function getSaveForLaterVisible(int $storeId): bool;
+
+    public function getRedirectText(int $storeId): string;
 }

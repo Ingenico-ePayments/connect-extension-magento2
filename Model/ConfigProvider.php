@@ -175,6 +175,7 @@ class ConfigProvider implements ConfigProviderInterface
                     'connectSession' => $this->connectSession->getSectionData(),
                     'logFrontendRequests' => $this->config->getLogFrontendRequests($storeId),
                     'saveForLaterVisible' => $this->config->getSaveForLaterVisible($storeId),
+                    'redirectText' => $this->config->getRedirectText($storeId),
                     'products' => $products,
                     'applePay' => [
                         'buttonLocale' => $this->config->getValue('payment/worldline_apple_pay/button_locale'),

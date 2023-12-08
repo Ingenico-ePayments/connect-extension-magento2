@@ -25,23 +25,7 @@ define(
             sortOrder: 20
         }]);
 
-        registry.get(instantPurchaseName, function (instantPurchase) {
-            rendererList.push(
-                {
-                    type: 'worldline_apple_pay',
-                    component: 'Worldline_Connect/js/view/payment/method-renderer/apple-pay',
-                    group: instantPurchase
-                },
-                {
-                    type: 'worldline_google_pay',
-                    component: 'Worldline_Connect/js/view/payment/method-renderer/google-pay',
-                    group: instantPurchase
-                }
-            );
-        });
-
         rendererList.push(
-            // Cards
             {
                 type: 'worldline_cards',
                 component: 'Worldline_Connect/js/view/payment/method-renderer/cards'
@@ -87,6 +71,10 @@ define(
                 component: 'Worldline_Connect/js/view/payment/method-renderer/method'
             },
             {
+                type: 'worldline_unionpay_international_securepay',
+                component: 'Worldline_Connect/js/view/payment/method-renderer/method'
+            },
+            {
                 type: 'worldline_mastercard',
                 component: 'Worldline_Connect/js/view/payment/method-renderer/method'
             },
@@ -110,7 +98,6 @@ define(
                 type: 'worldline_visa',
                 component: 'Worldline_Connect/js/view/payment/method-renderer/method'
             },
-            // Redirect
             {
                 type: 'worldline_giropay',
                 component: 'Worldline_Connect/js/view/payment/method-renderer/method'
@@ -139,17 +126,48 @@ define(
                 type: 'worldline_trustly',
                 component: 'Worldline_Connect/js/view/payment/method-renderer/method'
             },
-            // Buy Now Pay Later
             {
                 type: 'worldline_sezzle',
+                component: 'Worldline_Connect/js/view/payment/method-renderer/method'
+            },
+            {
+                type: 'worldline_china_union_pay',
+                component: 'Worldline_Connect/js/view/payment/method-renderer/method'
+            },
+            {
+                type: 'worldline_clearpay',
+                component: 'Worldline_Connect/js/view/payment/method-renderer/method'
+            },
+            {
+                type: 'worldline_afterpay',
                 component: 'Worldline_Connect/js/view/payment/method-renderer/method'
             },
             // HPP
             {
                 type: 'worldline_hpp',
                 component: 'Worldline_Connect/js/view/payment/method-renderer/hpp'
+            },
+            // LinkPlus
+            {
+                type: 'worldline_link_plus_payment_link',
+                component: 'Worldline_Connect/js/view/payment/method-renderer/link-plus/payment-link'
             }
         );
+
+        registry.get(instantPurchaseName, function (instantPurchase) {
+            rendererList.push(
+                {
+                    type: 'worldline_apple_pay',
+                    component: 'Worldline_Connect/js/view/payment/method-renderer/apple-pay',
+                    group: instantPurchase
+                },
+                {
+                    type: 'worldline_google_pay',
+                    component: 'Worldline_Connect/js/view/payment/method-renderer/google-pay',
+                    group: instantPurchase
+                }
+            );
+        });
 
         /** Add view logic here if needed */
         return Component.extend({});

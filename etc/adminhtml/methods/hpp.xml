@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="hpp" translate="label" type="text" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Hosted Payment Pages</label>
+    <group id="hpp" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Worldline MyCheckout hosted payment pages (full redirect)</label>
         <field id="active" translate="label comment" type="Worldline\Connect\Data\Form\Element\Toggle" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Enabled</label>
             <config_path>payment/worldline_hpp/active</config_path>
@@ -50,6 +50,34 @@
         <field id="hosted_checkout_variant" translate="label comment tooltip" type="text" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Variant ID Registered flow</label>
             <config_path>worldline_connect/checkout/hosted_checkout_variant</config_path>
+        </field>
+        <field id="exclude_payment_product_groups" translate="label comment tooltip" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Exclude payment product groups</label>
+            <config_path>payment/worldline_hpp/exclude_payment_product_groups</config_path>
+            <frontend_model>Worldline\Connect\Block\Adminhtml\System\Config\Field\PaymentProductList</frontend_model>
+            <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+            <comment><![CDATA[The available payment product identifiers can be found <a target="_blank" href="https://apireference.connect.worldline-solutions.com/s2sapi/v1/en_US/java/paymentproducts.html?paymentPlatform=GLOBALCOLLECT">here</a>]]></comment>
+        </field>
+        <field id="exclude_payment_products" translate="label comment tooltip" type="text" sortOrder="55" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Exclude payment products</label>
+            <config_path>payment/worldline_hpp/exclude_payment_products</config_path>
+            <frontend_model>Worldline\Connect\Block\Adminhtml\System\Config\Field\PaymentProductList</frontend_model>
+            <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+            <comment><![CDATA[The available payment product identifiers can be found <a target="_blank" href="https://apireference.connect.worldline-solutions.com/s2sapi/v1/en_US/java/paymentproducts.html?paymentPlatform=GLOBALCOLLECT">here</a>]]></comment>
+        </field>
+        <field id="include_payment_product_groups" translate="label comment tooltip" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Include payment product groups</label>
+            <config_path>payment/worldline_hpp/include_payment_product_groups</config_path>
+            <frontend_model>Worldline\Connect\Block\Adminhtml\System\Config\Field\PaymentProductList</frontend_model>
+            <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+            <comment><![CDATA[The available payment product identifiers can be found <a target="_blank" href="https://apireference.connect.worldline-solutions.com/s2sapi/v1/en_US/java/paymentproducts.html?paymentPlatform=GLOBALCOLLECT">here</a>]]></comment>
+        </field>
+        <field id="include_payment_products" translate="label comment tooltip" type="text" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Include payment products</label>
+            <config_path>payment/worldline_hpp/include_payment_products</config_path>
+            <frontend_model>Worldline\Connect\Block\Adminhtml\System\Config\Field\PaymentProductList</frontend_model>
+            <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+            <comment><![CDATA[The available payment product identifiers can be found <a target="_blank" href="https://apireference.connect.worldline-solutions.com/s2sapi/v1/en_US/java/paymentproducts.html?paymentPlatform=GLOBALCOLLECT">here</a>]]></comment>
         </field>
     </group>
 </include>

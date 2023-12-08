@@ -189,6 +189,10 @@ define([],
             return config.saveForLaterVisible;
         }
 
+        let redirectText = function () {
+            return config.redirectText;
+        }
+
         return {
             init: init,
             getHostedCheckoutUrl: getHostedCheckoutUrl,
@@ -209,7 +213,8 @@ define([],
             disabledPaymentProducts: disabledPaymentProducts,
             priceRangedPaymentProducts: priceRangedPaymentProducts,
             countryRestrictedPaymentProducts: countryRestrictedPaymentProducts,
-            saveForLaterVisible: saveForLaterVisible
+            saveForLaterVisible: saveForLaterVisible,
+            redirectText: redirectText
         };
     }
 );

@@ -23,6 +23,7 @@ class AuthorizePayment extends AbstractAction
         ConfigInterface $config,
         private readonly CardRequestBuilder $cardRequestBuilder,
         private readonly TokenService $tokenService,
+        private readonly MerchantAction $merchantAction
     ) {
         parent::__construct(
             $statusResponseManager,
@@ -40,6 +41,7 @@ class AuthorizePayment extends AbstractAction
         $this->postProcess($payment, $response->payment);
 
         $this->tokenService->createByOrderAndPayment($payment->getOrder(), $response->payment);
+        $this->merchantAction->handle($payment, $response);
 
         match ($response->payment->status) {
             StatusInterface::PENDING_APPROVAL => $this->paymentPendingApproval($payment),
@@ -57,7 +59,6 @@ class AuthorizePayment extends AbstractAction
     {
         $payment->setIsTransactionClosed(false);
         $payment->setIsTransactionPending(true);
-        $payment->setIsFraudDetected(true);
     }
 
     private function paymentCaptureRequested(Payment $payment): void

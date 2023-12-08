@@ -52,6 +52,7 @@ class Config implements ConfigInterface
     public const CONFIG_INGENICO_MERCHANT_ID_PROD = 'worldline_connect/settings/merchant_id_prod';
     public const CONFIG_INGENICO_FIXED_DESCRIPTOR = 'worldline_connect/settings/descriptor';
     public const CONFIG_INGENICO_HOSTED_CHECKOUT_SUBDOMAIN = 'worldline_connect/settings/hosted_checkout_subdomain';
+    public const CONFIG_INGENICO_REDIRECT_TEXT = 'worldline_connect/settings/redirect_text';
 
     public const CONFIG_INGENICO_LOG_ALL_REQUESTS = 'worldline_connect/settings/log_all_requests';
     public const CONFIG_INGENICO_LOG_ALL_REQUESTS_FILE = 'worldline_connect/settings/log_all_requests_file';
@@ -85,7 +86,6 @@ class Config implements ConfigInterface
     public const HOSTED_CHECKOUT_ID_KEY = 'worldline_hosted_checkout_id';
     public const RETURNMAC_KEY = 'worldline_returnmac';
     public const IDEMPOTENCE_KEY = 'worldline_idempotence_key';
-
     public const ENVIRONMENT_SANDBOX = 'Sandbox';
     public const ENVIRONMENT_PRE_PRODUCTION = 'Pre-Production';
     public const ENVIRONMENT_PRODUCTION = 'Production';
@@ -222,6 +222,11 @@ class Config implements ConfigInterface
     public function getSaveForLaterVisible(int $storeId): bool
     {
         return (bool) $this->getValue(self::CONFIG_INGENICO_CREDIT_CARDS_SAVE_FOR_LATER_VISIBLE);
+    }
+
+    public function getRedirectText(int $storeId): string
+    {
+        return (string) $this->getValue(self::CONFIG_INGENICO_REDIRECT_TEXT);
     }
 
     /**

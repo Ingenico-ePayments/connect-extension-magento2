@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="link_plus" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Worldline LinkPlus (pay-by-link)</label>
+        <include path="Worldline_Connect::methods/link_plus/payment_link.xml"/>
+    </group>
+</include>

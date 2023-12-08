@@ -2,6 +2,7 @@
 
 namespace Worldline\Connect\Gateway\Command;
 
+use Exception;
 use Ingenico\Connect\Sdk\Domain\Definitions\PaymentProductFilter;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\CreateHostedCheckoutRequest;
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\CreateHostedCheckoutRequestFactory;
@@ -10,6 +11,7 @@ use Ingenico\Connect\Sdk\Domain\Hostedcheckout\Definitions\HostedCheckoutSpecifi
 use Ingenico\Connect\Sdk\Domain\Hostedcheckout\Definitions\PaymentProductFiltersHostedCheckout;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\CardPaymentMethodSpecificInputFactory;
 use Magento\Framework\Locale\ResolverInterface;
+use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Model\MethodInterface;
 use Magento\Sales\Model\Order;
@@ -21,6 +23,10 @@ use Worldline\Connect\Model\Worldline\RequestBuilder\Common\OrderBuilder;
 use Worldline\Connect\Model\Worldline\RequestBuilder\MethodSpecificInput\Card\ThreeDSecureBuilder;
 use Worldline\Connect\Model\Worldline\Token\TokenServiceInterface;
 use Worldline\Connect\PaymentMethod\PaymentMethods;
+
+use function array_key_exists;
+use function count;
+use function is_array;
 
 // phpcs:ignore PSR12.Files.FileHeader.SpacingAfterBlock
 // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
@@ -94,6 +100,12 @@ class CreateHostedCheckoutRequestBuilder implements CreatePaymentRequestBuilder
     private $paymentMethods;
 
     /**
+     * @var Json
+     */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
+    private $json;
+
+    /**
      * @param CreateHostedCheckoutRequestFactory $createHostedCheckoutRequestFactory
      * @param OrderBuilder $orderBuilder
      * @param MerchantBuilder $merchantBuilder
@@ -116,7 +128,8 @@ class CreateHostedCheckoutRequestBuilder implements CreatePaymentRequestBuilder
         ResolverInterface $resolver,
         UrlInterface $urlBuilder,
         TokenServiceInterface $tokenService,
-        PaymentMethods $paymentMethods
+        PaymentMethods $paymentMethods,
+        Json $json
     ) {
         $this->createHostedCheckoutRequestFactory = $createHostedCheckoutRequestFactory;
         $this->orderBuilder = $orderBuilder;
@@ -129,6 +142,7 @@ class CreateHostedCheckoutRequestBuilder implements CreatePaymentRequestBuilder
         $this->urlBuilder = $urlBuilder;
         $this->tokenService = $tokenService;
         $this->paymentMethods = $paymentMethods;
+        $this->json = $json;
     }
 
     // phpcs:ignore SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
@@ -203,14 +217,64 @@ class CreateHostedCheckoutRequestBuilder implements CreatePaymentRequestBuilder
     private function getPaymentProductFilters(Payment $payment)
     {
         $paymentProductFilters = new PaymentProductFiltersHostedCheckout();
-        $filter = new PaymentProductFilter();
+        $paymentProductFilters->restrictTo = $this->filter(
+            $this->getIdentifiers($payment->getMethodInstance()->getConfigData('include_payment_product_groups')),
+            $this->getIdentifiers($payment->getMethodInstance()->getConfigData('include_payment_products')),
+        );
+
+        $paymentProductFilters->exclude = $this->filter(
+            $this->getIdentifiers($payment->getMethodInstance()->getConfigData('exclude_payment_product_groups')),
+            $this->getIdentifiers($payment->getMethodInstance()->getConfigData('exclude_payment_products')),
+        );
 
         $productId = $payment->getMethodInstance()->getConfigData('product_id');
         if ($productId) {
+            $filter = new PaymentProductFilter();
             $filter->products = [$productId];
             $paymentProductFilters->restrictTo = $filter;
         }
 
         return $paymentProductFilters;
+    }
+
+    private function filter(array $groups, array $products): ?PaymentProductFilter
+    {
+        if (count($groups) === 0 && count($products) === 0) {
+            return null;
+        }
+
+        $filter = new PaymentProductFilter();
+        $filter->groups = $groups;
+        $filter->products = $products;
+
+        return $filter;
+    }
+
+    private function getIdentifiers(?string $config): array
+    {
+        if ($config === null) {
+            return [];
+        }
+
+        try {
+            $array = $this->json->unserialize($config);
+        } catch (Exception) {
+            return [];
+        }
+
+        if (!is_array($array)) {
+            return [];
+        }
+
+        $identifiers = [];
+        foreach ($array as $identifier) {
+            if (!is_array($identifier) || !array_key_exists('id', $identifier)) {
+                continue;
+            }
+
+            $identifiers[] = $identifier['id'];
+        }
+
+        return $identifiers;
     }
 }

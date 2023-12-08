@@ -65,7 +65,11 @@
             <label>Soft descriptor</label>
             <config_path>worldline_connect/settings/descriptor</config_path>
         </field>
-        <field id="api_endpoint" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1">
+        <field id="redirect_text" translate="label tooltip" type="text" sortOrder="83" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Redirect text</label>
+            <config_path>worldline_connect/settings/redirect_text</config_path>
+        </field>
+        <field id="api_endpoint" translate="label" type="select" sortOrder="85" showInDefault="1" showInWebsite="1">
             <label>Active environment</label>
             <source_model>Worldline\Connect\Model\Config\Source\ApiEndpoint</source_model>
             <backend_model>Magento\Framework\App\Config\Value</backend_model>
@@ -73,6 +77,7 @@
         </field>
         <group id="api_endpoint_sandbox" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1">
             <label>Sandbox settings</label>
+            <comment><![CDATA[Try out our free testing environment. Sign up <a target="_blank" href="https://docs.connect.worldline-solutions.com/signup-for-sandbox/index">here</a>.]]></comment>
             <field id="merchant_id" translate="label tooltip" type="text" sortOrder="5" showInDefault="1" showInWebsite="1">
                 <label>Merchant ID (MID)</label>
                 <config_path>worldline_connect/settings/merchant_id_sandbox</config_path>
@@ -104,6 +109,7 @@
         </group>
         <group id="api_endpoint_pre_prod" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1">
             <label>Pre-Production settings</label>
+            <comment>You finalize and validate your integration using your custom account(s) and configuration. You get access to this environment once you have become our client.</comment>
             <field id="merchant_id" translate="label tooltip" type="text" sortOrder="5" showInDefault="1" showInWebsite="1">
                 <label>Merchant ID (MID)</label>
                 <config_path>worldline_connect/settings/merchant_id_pre_prod</config_path>
@@ -135,6 +141,7 @@
         </group>
         <group id="api_endpoint_prod" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1">
             <label>Production settings</label>
+            <comment>You process your production transactions in this environment. You get access to this environment once you have become our client.</comment>
             <field id="merchant_id" translate="label tooltip" type="text" sortOrder="5" showInDefault="1" showInWebsite="1">
                 <label>Merchant ID (MID)</label>
                 <config_path>worldline_connect/settings/merchant_id_prod</config_path>

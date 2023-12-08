@@ -38,6 +38,7 @@ class PaymentMethods
     public const KB_KOOKMIN_CARD = 'worldline_kb_kookmin_card';
     public const KEB_HANA_CARD = 'worldline_keb_hana_card';
     public const LOTTE_CARD = 'worldline_lotte_card';
+    public const UNIONPAY_INTERNATIONAL_SECUREPAY = 'worldline_unionpay_international_securepay';
     public const MASTERCARD = 'worldline_mastercard';
     public const NH_CARD = 'worldline_nh_card';
     public const SAMSUNG_CARD = 'worldline_samsung_card';
@@ -45,14 +46,18 @@ class PaymentMethods
     public const UNIONPAY_EXPRESSPAY = 'worldline_unionpay_expresspay';
     public const VISA = 'worldline_visa';
     public const GIROPAY = 'worldline_giropay';
+    public const LINK_PLUS_PAYMENT_LINK = 'worldline_link_plus_payment_link';
     public const IDEAL = 'worldline_ideal';
     public const ACCOUNT_TO_ACCOUNT = 'worldline_account_to_account';
+    public const CHINA_UNION_PAY = 'worldline_china_union_pay';
     public const PAYPAL = 'worldline_paypal';
     public const PAYSAFECARD = 'worldline_paysafecard';
     public const SOFORT = 'worldline_sofort';
     public const TRUSTLY = 'worldline_trustly';
     public const HOSTED = 'worldline_hpp';
     public const SEZZLE = 'worldline_sezzle';
+    public const CLEARPAY = 'worldline_clearpay';
+    public const AFTERPAY = 'worldline_afterpay';
     public const APPLE_PAY = 'worldline_apple_pay';
     public const GOOGLE_PAY = 'worldline_google_pay';
 
