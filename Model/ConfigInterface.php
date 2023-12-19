@@ -9,36 +9,45 @@ interface ConfigInterface
      * Returns Api Key
      *
      * @param int|null $storeId
-     * @param int|null $apiEndpoint
+     * @param string|null $environment
      * @return string
      */
-    public function getApiKey($storeId = null, $apiEndpoint = null);
+    public function getApiKey($storeId = null, $environment = null);
 
     /**
      * Returns Api Secret
      *
      * @param int|null $storeId
-     * @param int|null $apiEndpoint
+     * @param string|null $environment
      * @return string
      */
-    public function getApiSecret($storeId = null, $apiEndpoint = null);
+    public function getApiSecret($storeId = null, $environment = null);
 
     /**
      * Returns Merchant Id
      *
      * @param int|null $storeId
-     * @param int|null $apiEndpoint
+     * @param string|null $environment
      * @return string
      */
-    public function getMerchantId($storeId = null, $apiEndpoint = null);
+    public function getMerchantId($storeId = null, $environment = null);
 
     /**
      * Returns Api Endpoint
      *
      * @param int|null $storeId
+     * @param string|null $environment
      * @return string
      */
-    public function getApiEndpoint($storeId = null);
+    public function getApiEndpoint($storeId = null, $environment = null);
+
+    /**
+     * Returns Api Environment
+     *
+     * @param int|null $storeId
+     * @return string
+     */
+    public function getApiEnvironment($storeId = null);
 
     /**
      * Returns WebHooks Key Id

@@ -175,7 +175,7 @@ class AuthorizeCommand implements CommandInterface
         $order->addRelatedObject($payment);
 
         if ($createPaymentResponse->merchantAction && $createPaymentResponse->merchantAction->actionType) {
-            $this->merchantAction->handle($order, $createPaymentResponse->merchantAction);
+            $this->merchantAction->handle($payment, $createPaymentResponse);
         }
 
         $paymentResponse = $createPaymentResponse->payment;

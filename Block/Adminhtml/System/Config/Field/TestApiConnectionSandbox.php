@@ -11,7 +11,7 @@ class TestApiConnectionSandbox extends TestApiConnection
     public function getAjaxUrl(): string
     {
         return $this->getUrl('epayments/Api/TestConnection', [
-            'environment' => Config::ENVIRONMENT_SANDBOX,
+            'environment' => Config::CONFIG_INGENICO_API_ENDPOINT_SANDBOX,
         ]);
     }
 

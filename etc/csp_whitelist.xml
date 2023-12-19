@@ -4,15 +4,14 @@
     <policies>
         <policy id="img-src">
             <values>
-                <value id="ingenico-api" type="host">*.api-ingenico.com</value>
-                <value id="ingenico-assets" type="host">*.secured-by-ingenico.com</value>
+                <value id="worldline-api" type="host">*.worldline-solutions.com</value>
+                <value id="worldline-assets" type="host">*.secured-by-ingenico.com</value>
                 <value id="google" type="host">*.gstatic.com</value>
             </values>
         </policy>
         <policy id="connect-src">
             <values>
-                <value id="ingenico-api" type="host">*.api-ingenico.com</value>
-                <value id="ingenico-assets" type="host">*.secured-by-ingenico.com</value>
+                <value id="worldline-api" type="host">*.worldline-solutions.com</value>
             </values>
         </policy>
         <policy id="script-src">

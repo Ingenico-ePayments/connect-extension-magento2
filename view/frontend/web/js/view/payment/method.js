@@ -127,19 +127,7 @@ define(
                 component: 'Worldline_Connect/js/view/payment/method-renderer/method'
             },
             {
-                type: 'worldline_sezzle',
-                component: 'Worldline_Connect/js/view/payment/method-renderer/method'
-            },
-            {
                 type: 'worldline_china_union_pay',
-                component: 'Worldline_Connect/js/view/payment/method-renderer/method'
-            },
-            {
-                type: 'worldline_clearpay',
-                component: 'Worldline_Connect/js/view/payment/method-renderer/method'
-            },
-            {
-                type: 'worldline_afterpay',
                 component: 'Worldline_Connect/js/view/payment/method-renderer/method'
             },
             // HPP

@@ -68,16 +68,14 @@ class TestConnection extends Action
             return $this->getFailureResult();
         }
 
-        $apiEndpoint = $this->epaymentsConfig->getApiEndpointByEnvironment($environment);
-
         try {
             $this->worldlineClient->worldlineTestAccount(
                 $scopeId,
                 $this->worldlineClient->buildFromConfiguration($scopeId, [
-                    'api_key' => $this->epaymentsConfig->getApiKey($scopeId, $apiEndpoint),
-                    'api_secret' => $this->epaymentsConfig->getApiSecret($scopeId, $apiEndpoint),
-                    'merchant_id' => $this->epaymentsConfig->getMerchantId($scopeId, $apiEndpoint),
-                    'api_endpoint' => $apiEndpoint,
+                    'api_key' => $this->epaymentsConfig->getApiKey($scopeId, $environment),
+                    'api_secret' => $this->epaymentsConfig->getApiSecret($scopeId, $environment),
+                    'merchant_id' => $this->epaymentsConfig->getMerchantId($scopeId, $environment),
+                    'api_endpoint' => $this->epaymentsConfig->getApiEndpoint($scopeId, $environment),
                 ])
             );
         // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName

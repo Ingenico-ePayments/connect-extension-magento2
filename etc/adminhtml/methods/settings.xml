@@ -82,6 +82,10 @@
                 <label>Merchant ID (MID)</label>
                 <config_path>worldline_connect/settings/merchant_id_sandbox</config_path>
             </field>
+            <field id="api_url" translate="label tooltip" type="text" sortOrder="6" showInDefault="1" showInWebsite="1">
+                <label>API URL</label>
+                <config_path>worldline_connect/settings/api_url_sandbox</config_path>
+            </field>
             <field id="api_key" translate="label tooltip" type="text" sortOrder="10" showInDefault="1" showInWebsite="1">
                 <label>API key ID</label>
                 <backend_model>Worldline\Connect\Model\Config\Backend\ApiKey</backend_model>
@@ -109,10 +113,13 @@
         </group>
         <group id="api_endpoint_pre_prod" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1">
             <label>Pre-Production settings</label>
-            <comment>You finalize and validate your integration using your custom account(s) and configuration. You get access to this environment once you have become our client.</comment>
             <field id="merchant_id" translate="label tooltip" type="text" sortOrder="5" showInDefault="1" showInWebsite="1">
                 <label>Merchant ID (MID)</label>
                 <config_path>worldline_connect/settings/merchant_id_pre_prod</config_path>
+            </field>
+            <field id="api_url" translate="label tooltip" type="text" sortOrder="6" showInDefault="1" showInWebsite="1">
+                <label>API URL</label>
+                <config_path>worldline_connect/settings/api_url_pre_prod</config_path>
             </field>
             <field id="api_key" translate="label tooltip" type="text" sortOrder="10" showInDefault="1" showInWebsite="1">
                 <label>API key ID</label>
@@ -141,10 +148,13 @@
         </group>
         <group id="api_endpoint_prod" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1">
             <label>Production settings</label>
-            <comment>You process your production transactions in this environment. You get access to this environment once you have become our client.</comment>
             <field id="merchant_id" translate="label tooltip" type="text" sortOrder="5" showInDefault="1" showInWebsite="1">
                 <label>Merchant ID (MID)</label>
                 <config_path>worldline_connect/settings/merchant_id_prod</config_path>
+            </field>
+            <field id="api_url" translate="label tooltip" type="text" sortOrder="6" showInDefault="1" showInWebsite="1">
+                <label>API URL</label>
+                <config_path>worldline_connect/settings/api_url_prod</config_path>
             </field>
             <field id="api_key" translate="label tooltip" type="text" sortOrder="10" showInDefault="1" showInWebsite="1">
                 <label>API key ID</label>

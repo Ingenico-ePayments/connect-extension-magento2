@@ -28,9 +28,12 @@ class Config implements ConfigInterface
     public const CONFIG_INGENICO_GIROPAY_PAYMENT_FLOW_TYPE = 'worldline_connect/giropay/payment_flow_type';
 
     public const CONFIG_INGENICO_API_ENDPOINT = 'worldline_connect/settings/api_endpoint';
-    public const CONFIG_INGENICO_API_ENDPOINT_SANDBOX = 'https://eu.sandbox.api-ingenico.com';
-    public const CONFIG_INGENICO_API_ENDPOINT_PRE_PROD = 'https://world.preprod.api-ingenico.com';
-    public const CONFIG_INGENICO_API_ENDPOINT_PROD = 'https://world.api-ingenico.com';
+    public const CONFIG_INGENICO_API_ENDPOINT_SANDBOX = 'sandbox';
+    public const CONFIG_INGENICO_API_ENDPOINT_PRE_PROD = 'preprod';
+    public const CONFIG_INGENICO_API_ENDPOINT_PROD = 'prod';
+    public const CONFIG_INGENICO_API_ENDPOINT_SANDBOX_URL = 'worldline_connect/settings/api_url_sandbox';
+    public const CONFIG_INGENICO_API_ENDPOINT_PRE_PROD_URL = 'worldline_connect/settings/api_url_pre_prod';
+    public const CONFIG_INGENICO_API_ENDPOINT_PROD_URL = 'worldline_connect/settings/api_url_prod';
     public const CONFIG_INGENICO_WEBHOOKS_KEY_ID_SANDBOX = 'worldline_connect/webhook/webhooks_key_id_sandbox';
     public const CONFIG_INGENICO_WEBHOOKS_KEY_ID_PRE_PROD = 'worldline_connect/webhook/webhooks_key_id_pre_prod';
     public const CONFIG_INGENICO_WEBHOOKS_KEY_ID_PROD = 'worldline_connect/webhook/webhooks_key_id_prod';
@@ -86,9 +89,6 @@ class Config implements ConfigInterface
     public const HOSTED_CHECKOUT_ID_KEY = 'worldline_hosted_checkout_id';
     public const RETURNMAC_KEY = 'worldline_returnmac';
     public const IDEMPOTENCE_KEY = 'worldline_idempotence_key';
-    public const ENVIRONMENT_SANDBOX = 'Sandbox';
-    public const ENVIRONMENT_PRE_PRODUCTION = 'Pre-Production';
-    public const ENVIRONMENT_PRODUCTION = 'Production';
 
     /**
      * @var ScopeConfigInterface
@@ -132,10 +132,10 @@ class Config implements ConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function getApiKey($storeId = null, $apiEndpoint = null)
+    public function getApiKey($storeId = null, $environment = null)
     {
-        $apiEndpoint = $apiEndpoint !== null ? $apiEndpoint : $this->getApiEndpoint($storeId);
-        switch ($apiEndpoint) {
+        $environment = $environment !== null ? $environment : $this->getApiEnvironment($storeId);
+        switch ($environment) {
             case self::CONFIG_INGENICO_API_ENDPOINT_SANDBOX:
                 return $this->encryptor->decrypt(
                     $this->getValue(self::CONFIG_INGENICO_API_KEY_SANDBOX, $storeId)
@@ -150,17 +150,17 @@ class Config implements ConfigInterface
                 );
         }
         throw new LogicException(
-            sprintf('No Api Key could be found for API Endpoint "%s".', $apiEndpoint)
+            sprintf('No Api Key could be found for environment "%s".', $environment)
         );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getApiSecret($storeId = null, $apiEndpoint = null)
+    public function getApiSecret($storeId = null, $environment = null)
     {
-        $apiEndpoint = $apiEndpoint !== null ? $apiEndpoint : $this->getApiEndpoint($storeId);
-        switch ($apiEndpoint) {
+        $environment = $environment !== null ? $environment : $this->getApiEnvironment($storeId);
+        switch ($environment) {
             case self::CONFIG_INGENICO_API_ENDPOINT_SANDBOX:
                 return $this->encryptor->decrypt(
                     $this->getValue(self::CONFIG_INGENICO_API_SECRET_SANDBOX, $storeId)
@@ -175,17 +175,17 @@ class Config implements ConfigInterface
                 );
         }
         throw new LogicException(
-            sprintf('No Api Secret could be found for API Endpoint "%s".', $apiEndpoint)
+            sprintf('No Api Secret could be found for environment "%s".', $environment)
         );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getMerchantId($storeId = null, $apiEndpoint = null)
+    public function getMerchantId($storeId = null, $environment = null)
     {
-        $apiEndpoint = $apiEndpoint !== null ? $apiEndpoint : $this->getApiEndpoint($storeId);
-        switch ($apiEndpoint) {
+        $environment = $environment !== null ? $environment : $this->getApiEnvironment($storeId);
+        switch ($environment) {
             case self::CONFIG_INGENICO_API_ENDPOINT_SANDBOX:
                 return $this->getValue(self::CONFIG_INGENICO_MERCHANT_ID_SANDBOX, $storeId);
             case self::CONFIG_INGENICO_API_ENDPOINT_PRE_PROD:
@@ -194,27 +194,33 @@ class Config implements ConfigInterface
                 return $this->getValue(self::CONFIG_INGENICO_MERCHANT_ID_PROD, $storeId);
         }
         throw new LogicException(
-            sprintf('No Merchant ID could be found for API Endpoint "%s".', $apiEndpoint)
+            sprintf('No Merchant ID could be found for environment "%s".', $environment)
         );
-    }
-
-    // phpcs:ignore SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingAnyTypeHint, SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
-    public function getApiEndpointByEnvironment($environment)
-    {
-        switch ($environment) {
-            case self::ENVIRONMENT_SANDBOX:
-                return self::CONFIG_INGENICO_API_ENDPOINT_SANDBOX;
-            case self::ENVIRONMENT_PRE_PRODUCTION:
-                return self::CONFIG_INGENICO_API_ENDPOINT_PRE_PROD;
-            case self::ENVIRONMENT_PRODUCTION:
-                return self::CONFIG_INGENICO_API_ENDPOINT_PROD;
-        }
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getApiEndpoint($storeId = null)
+    public function getApiEndpoint($storeId = null, $environment = null)
+    {
+        $environment = $environment !== null ? $environment : $this->getApiEnvironment($storeId);
+        switch ($environment) {
+            case self::CONFIG_INGENICO_API_ENDPOINT_SANDBOX:
+                return $this->getValue(self::CONFIG_INGENICO_API_ENDPOINT_SANDBOX_URL, $storeId);
+            case self::CONFIG_INGENICO_API_ENDPOINT_PRE_PROD:
+                return $this->getValue(self::CONFIG_INGENICO_API_ENDPOINT_PRE_PROD_URL, $storeId);
+            case self::CONFIG_INGENICO_API_ENDPOINT_PROD:
+                return $this->getValue(self::CONFIG_INGENICO_API_ENDPOINT_PROD_URL, $storeId);
+        }
+        throw new LogicException(
+            sprintf('No API endpoint could be found for environment "%s".', $environment)
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getApiEnvironment($storeId = null)
     {
         return $this->getValue(self::CONFIG_INGENICO_API_ENDPOINT, $storeId);
     }
@@ -234,7 +240,7 @@ class Config implements ConfigInterface
      */
     public function getWebHooksKeyId($storeId = null)
     {
-        $apiEndpoint = $this->getApiEndpoint($storeId);
+        $apiEndpoint = $this->getApiEnvironment($storeId);
         switch ($apiEndpoint) {
             case self::CONFIG_INGENICO_API_ENDPOINT_SANDBOX:
                 return $this->encryptor->decrypt(
@@ -259,7 +265,7 @@ class Config implements ConfigInterface
      */
     public function getWebHooksSecretKey($storeId = null)
     {
-        $apiEndpoint = $this->getApiEndpoint($storeId);
+        $apiEndpoint = $this->getApiEnvironment($storeId);
         switch ($apiEndpoint) {
             case self::CONFIG_INGENICO_API_ENDPOINT_SANDBOX:
                 return $this->encryptor->decrypt(

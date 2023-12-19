@@ -55,9 +55,6 @@ class PaymentMethods
     public const SOFORT = 'worldline_sofort';
     public const TRUSTLY = 'worldline_trustly';
     public const HOSTED = 'worldline_hpp';
-    public const SEZZLE = 'worldline_sezzle';
-    public const CLEARPAY = 'worldline_clearpay';
-    public const AFTERPAY = 'worldline_afterpay';
     public const APPLE_PAY = 'worldline_apple_pay';
     public const GOOGLE_PAY = 'worldline_google_pay';
 

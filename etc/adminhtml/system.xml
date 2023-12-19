@@ -8,7 +8,7 @@
                 <frontend_model>Magento\Paypal\Block\Adminhtml\System\Config\Fieldset\Payment</frontend_model>
                 <include path="Worldline_Connect::methods/settings.xml"/>
                 <group id="payment_products" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Worldline payment product selection</label>
+                    <label>Payment product selection</label>
                     <group id="card" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Card</label>
                         <comment><![CDATA[Payment products from the <a target="_blank" href="https://docs.connect.worldline-solutions.com/payment-methods/view-by-payment-product/?payment-method=CARDS_DEBIT_AND_CREDIT">Cards</a> payment method.]]></comment>
@@ -49,13 +49,6 @@
                         <include path="Worldline_Connect::methods/redirect/sofort.xml"/>
                         <include path="Worldline_Connect::methods/redirect/trustly.xml"/>
                         <include path="Worldline_Connect::methods/redirect/china_union_pay.xml"/>
-                    </group>
-                    <group id="buy_now_pay_later" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Buy Now, Pay Later</label>
-                        <comment><![CDATA[Payment products from the <a target="_blank" href="https://docs.connect.worldline-solutions.com/payment-methods/view-by-payment-product/?payment-method=BUYNOW_PAYLATER">Buy Now, Pay Later</a> payment method.]]></comment>
-                        <include path="Worldline_Connect::methods/buy_now_pay_later/afterpay.xml"/>
-                        <include path="Worldline_Connect::methods/buy_now_pay_later/clearpay.xml"/>
-                        <include path="Worldline_Connect::methods/buy_now_pay_later/sezzle.xml"/>
                     </group>
                 </group>
                 <include path="Worldline_Connect::methods/link_plus.xml"/>

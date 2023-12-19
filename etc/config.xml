@@ -707,32 +707,6 @@
                 <payment_flow>0</payment_flow>
                 <product_id>806</product_id>
             </worldline_trustly>
-            <!-- Sezzle -->
-            <worldline_sezzle>
-                <model>Worldline\Connect\PaymentMethod\Sezzle</model>
-                <title>Worldline Sezzle</title>
-                <active>1</active>
-                <can_initialize>1</can_initialize>
-                <can_capture>1</can_capture>
-                <can_capture_partial>1</can_capture_partial>
-                <can_refund>1</can_refund>
-                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
-                <can_use_checkout>1</can_use_checkout>
-                <can_review_payment>1</can_review_payment>
-                <can_accept_payment>1</can_accept_payment>
-                <can_fetch_transaction_info>1</can_fetch_transaction_info>
-                <can_fetch_transaction_information>1</can_fetch_transaction_information>
-                <can_deny_payment>1</can_deny_payment>
-                <can_use_internal>0</can_use_internal>
-                <can_authorize>0</can_authorize>
-                <can_cancel>1</can_cancel>
-                <is_gateway>1</is_gateway>
-                <payment_action>authorize</payment_action>
-                <sort_order>8004</sort_order>
-                <order_status>pending</order_status>
-                <payment_flow>0</payment_flow>
-                <product_id>8004</product_id>
-            </worldline_sezzle>
             <!-- China UnionPay -->
             <worldline_china_union_pay>
                 <model>Worldline\Connect\PaymentMethod\ChinaUnionPay</model>
@@ -759,58 +733,6 @@
                 <payment_flow>0</payment_flow>
                 <product_id>869</product_id>
             </worldline_china_union_pay>
-            <!-- Clearpay -->
-            <worldline_clearpay>
-                <model>Worldline\Connect\PaymentMethod\Clearpay</model>
-                <title>Worldline Clearpay</title>
-                <active>1</active>
-                <can_initialize>1</can_initialize>
-                <can_capture>1</can_capture>
-                <can_capture_partial>1</can_capture_partial>
-                <can_refund>1</can_refund>
-                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
-                <can_use_checkout>1</can_use_checkout>
-                <can_review_payment>1</can_review_payment>
-                <can_accept_payment>1</can_accept_payment>
-                <can_fetch_transaction_info>1</can_fetch_transaction_info>
-                <can_fetch_transaction_information>1</can_fetch_transaction_information>
-                <can_deny_payment>1</can_deny_payment>
-                <can_use_internal>0</can_use_internal>
-                <can_authorize>0</can_authorize>
-                <can_cancel>1</can_cancel>
-                <is_gateway>1</is_gateway>
-                <payment_action>authorize</payment_action>
-                <sort_order>8013</sort_order>
-                <order_status>pending</order_status>
-                <payment_flow>0</payment_flow>
-                <product_id>8013</product_id>
-            </worldline_clearpay>
-            <!-- Afterpay -->
-            <worldline_afterpay>
-                <model>Worldline\Connect\PaymentMethod\Afterpay</model>
-                <title>Worldline Afterpay</title>
-                <active>1</active>
-                <can_initialize>1</can_initialize>
-                <can_capture>1</can_capture>
-                <can_capture_partial>1</can_capture_partial>
-                <can_refund>1</can_refund>
-                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
-                <can_use_checkout>1</can_use_checkout>
-                <can_review_payment>1</can_review_payment>
-                <can_accept_payment>1</can_accept_payment>
-                <can_fetch_transaction_info>1</can_fetch_transaction_info>
-                <can_fetch_transaction_information>1</can_fetch_transaction_information>
-                <can_deny_payment>1</can_deny_payment>
-                <can_use_internal>0</can_use_internal>
-                <can_authorize>0</can_authorize>
-                <can_cancel>1</can_cancel>
-                <is_gateway>1</is_gateway>
-                <payment_action>authorize</payment_action>
-                <sort_order>8014</sort_order>
-                <order_status>pending</order_status>
-                <payment_flow>0</payment_flow>
-                <product_id>8014</product_id>
-            </worldline_afterpay>
             <!-- Hpp -->
             <worldline_hpp>
                 <model>Worldline\Connect\PaymentMethod\Hpp</model>
@@ -1045,6 +967,9 @@
                 <redirect_text>You will be redirected to enter your payment details.</redirect_text>
                 <log_all_requests_file>worldline_connect.log</log_all_requests_file>
                 <limit_api_field_length>0</limit_api_field_length>
+                <api_url_sandbox>https://eu.sandbox.api-ingenico.com</api_url_sandbox>
+                <api_url_pre_prod>https://api.preprod.connect.worldline-solutions.com</api_url_pre_prod>
+                <api_url_prod>https://api.connect.worldline-solutions.com</api_url_prod>
             </settings>
             <checkout>
                 <inline_payments>0</inline_payments>

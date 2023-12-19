@@ -11,7 +11,7 @@ class TestApiConnectionProduction extends TestApiConnection
     public function getAjaxUrl(): string
     {
         return $this->getUrl('epayments/Api/TestConnection', [
-            'environment' => Config::ENVIRONMENT_PRODUCTION,
+            'environment' => Config::CONFIG_INGENICO_API_ENDPOINT_PROD,
         ]);
     }
 

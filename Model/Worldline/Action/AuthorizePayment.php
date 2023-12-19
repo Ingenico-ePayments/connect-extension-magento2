@@ -7,6 +7,7 @@ namespace Worldline\Connect\Model\Worldline\Action;
 use Magento\Payment\Model\MethodInterface;
 use Magento\Sales\Model\Order\Payment;
 use Worldline\Connect\Gateway\Command\CreatePaymentRequest\CardRequestBuilder;
+use Worldline\Connect\Model\Config;
 use Worldline\Connect\Model\ConfigInterface;
 use Worldline\Connect\Model\StatusResponseManager;
 use Worldline\Connect\Model\Transaction\TransactionManager;
@@ -47,7 +48,16 @@ class AuthorizePayment extends AbstractAction
             StatusInterface::PENDING_APPROVAL => $this->paymentPendingApproval($payment),
             StatusInterface::PENDING_FRAUD_APPROVAL => $this->paymentPendingFraudApproval($payment),
             StatusInterface::CAPTURE_REQUESTED => $this->paymentCaptureRequested($payment),
+            StatusInterface::REDIRECTED => $this->paymentRedirected(
+                $payment,
+                $response->merchantAction->redirectData->redirectURL
+            ),
         };
+    }
+
+    private function paymentRedirected(Payment $payment, string $url): void
+    {
+        $payment->setAdditionalInformation(Config::REDIRECT_URL_KEY, $url);
     }
 
     private function paymentPendingApproval(Payment $payment): void

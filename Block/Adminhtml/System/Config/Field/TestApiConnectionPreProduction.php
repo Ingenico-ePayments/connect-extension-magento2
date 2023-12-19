@@ -11,8 +11,7 @@ class TestApiConnectionPreProduction extends TestApiConnection
     public function getAjaxUrl(): string
     {
         return $this->getUrl('epayments/Api/TestConnection', [
-            // phpcs:ignore SlevomatCodingStandard.Arrays.TrailingArrayComma.MissingTrailingComma
-            'environment' => Config::ENVIRONMENT_PRE_PRODUCTION
+            'environment' => Config::CONFIG_INGENICO_API_ENDPOINT_PRE_PROD,
         ]);
     }
 

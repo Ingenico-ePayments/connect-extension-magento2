@@ -105,9 +105,6 @@
                                                                         <item name="worldline_trustly" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">false</item>
                                                                         </item>
-                                                                        <item name="worldline_sezzle" xsi:type="array">
-                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">false</item>
-                                                                        </item>
                                                                         <item name="worldline_hpp" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">false</item>
                                                                         </item>
