@@ -57,6 +57,7 @@ class AuthorizePayment extends AbstractAction
 
     private function paymentRedirected(Payment $payment, string $url): void
     {
+        $payment->setIsTransactionClosed(false);
         $payment->setAdditionalInformation(Config::REDIRECT_URL_KEY, $url);
     }
 

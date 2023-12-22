@@ -14,8 +14,7 @@ use function sprintf;
 
 class Config implements ConfigInterface
 {
-    public const CONFIG_INGENICO_CREDIT_CARDS_SAVE_FOR_LATER_VISIBLE =
-        'worldline_connect/credit_cards/save_for_later_visible';
+    public const CONFIG_INGENICO_CREDIT_CARDS_SAVE_FOR_LATER_VISIBLE = 'payment/worldline_vault/active';
 
     public const CONFIG_INGENICO_CHECKOUT_TYPE_HOSTED_CHECKOUT = '0';
     public const CONFIG_INGENICO_CHECKOUT_TYPE_OPTIMIZED_FLOW = '1';

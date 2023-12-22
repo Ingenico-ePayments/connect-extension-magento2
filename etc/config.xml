@@ -981,7 +981,6 @@
             </captures>
             <credit_cards>
                 <toggle>1</toggle>
-                <save_for_later_visible>1</save_for_later_visible>
                 <payment_flow_type>1</payment_flow_type>
                 <group_card_payment_methods>1</group_card_payment_methods>
             </credit_cards>

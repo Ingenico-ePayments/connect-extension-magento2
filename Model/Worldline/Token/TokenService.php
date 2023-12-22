@@ -14,6 +14,7 @@ use Magento\Vault\Model\PaymentTokenRepository;
 use Magento\Vault\Model\Ui\VaultConfigProvider;
 use Worldline\Connect\Model\ConfigProvider;
 use Worldline\Connect\Model\Worldline\Api\ClientInterface;
+use Worldline\Connect\Model\Worldline\StatusInterface;
 
 use function in_array;
 use function json_encode;
@@ -95,6 +96,10 @@ class TokenService implements TokenServiceInterface
 
         $customerId = $order->getCustomerId();
         if (!$customerId) {
+            return;
+        }
+
+        if ($payment->status === StatusInterface::REDIRECTED) {
             return;
         }
 

@@ -5,9 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 3.4.0 - 2023-12-22
+
+- Resolve some issues surrounding card tokenization when using 3DS
+- Only show "Save for later"-checkbox when vault is enabled
+
 ## 3.3.0 - 2023-12-19
 
-- Use new Worldline API endpoints
+- Add admin settings for API endpoints, default to the new Worldline API URLs
 - Remove AfterPay, ClearPay and Sezzle
 - Resolve some issues surrounding redirections
 
