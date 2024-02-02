@@ -10,6 +10,7 @@ use Ingenico\Connect\Sdk\CommunicatorConfiguration;
 use Ingenico\Connect\Sdk\Connection;
 use Ingenico\Connect\Sdk\RequestObject;
 use Ingenico\Connect\Sdk\ResponseClassMap;
+use Ingenico\Connect\Sdk\ResponseExceptionFactory;
 use Psr\Log\LoggerInterface;
 
 // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
@@ -46,7 +47,9 @@ class Communicator extends \Ingenico\Connect\Sdk\Communicator
         // phpcs:ignore SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue.NullabilityTypeMissing
         RequestObject $requestParameters = null,
         // phpcs:ignore SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue.NullabilityTypeMissing
-        CallContext $callContext = null
+        CallContext $callContext = null,
+        // phpcs:ignore SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue.NullabilityTypeMissing
+        ResponseExceptionFactory $responseExceptionFactory = null
     ) {
         try {
             // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
@@ -68,7 +71,9 @@ class Communicator extends \Ingenico\Connect\Sdk\Communicator
         // phpcs:ignore SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue.NullabilityTypeMissing
         RequestObject $requestParameters = null,
         // phpcs:ignore SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue.NullabilityTypeMissing
-        CallContext $callContext = null
+        CallContext $callContext = null,
+        // phpcs:ignore SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue.NullabilityTypeMissing
+        ResponseExceptionFactory $responseExceptionFactory = null
     ) {
         try {
             // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
@@ -91,7 +96,9 @@ class Communicator extends \Ingenico\Connect\Sdk\Communicator
         // phpcs:ignore SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue.NullabilityTypeMissing
         RequestObject $requestParameters = null,
         // phpcs:ignore SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue.NullabilityTypeMissing
-        CallContext $callContext = null
+        CallContext $callContext = null,
+        // phpcs:ignore SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue.NullabilityTypeMissing
+        ResponseExceptionFactory $responseExceptionFactory = null
     ) {
         try {
             // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
@@ -114,7 +121,9 @@ class Communicator extends \Ingenico\Connect\Sdk\Communicator
         // phpcs:ignore SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue.NullabilityTypeMissing
         RequestObject $requestParameters = null,
         // phpcs:ignore SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue.NullabilityTypeMissing
-        CallContext $callContext = null
+        CallContext $callContext = null,
+        // phpcs:ignore SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue.NullabilityTypeMissing
+        ResponseExceptionFactory $responseExceptionFactory = null
     ) {
         try {
             // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
