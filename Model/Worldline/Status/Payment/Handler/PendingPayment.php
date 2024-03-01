@@ -5,45 +5,25 @@ declare(strict_types=1);
 namespace Worldline\Connect\Model\Worldline\Status\Payment\Handler;
 
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
-use Magento\Framework\Event\ManagerInterface;
-use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\Data\TransactionInterface;
 use Magento\Sales\Model\Order;
-use Worldline\Connect\Model\ConfigInterface;
+use Magento\Sales\Model\Order\Payment as OrderPayment;
 use Worldline\Connect\Model\Worldline\Status\Payment\HandlerInterface;
-use Worldline\Connect\Model\Worldline\StatusInterface;
 
 class PendingPayment extends AbstractHandler implements HandlerInterface
 {
     protected const EVENT_STATUS = 'pending_payment';
 
     /**
-     * @var ConfigInterface
-     */
-    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
-    private $epaymentsConfig;
-
-    public function __construct(
-        ConfigInterface $epaymentsConfig,
-        ManagerInterface $eventManager
-    ) {
-        parent::__construct($eventManager, $epaymentsConfig);
-        $this->epaymentsConfig = $epaymentsConfig;
-    }
-
-    /**
      * {@inheritDoc}
      */
-    public function resolveStatus(OrderInterface $order, Payment $worldlineStatus)
+    public function resolveStatus(Order $order, Payment $status)
     {
-        $payment = $order->getPayment();
-        $payment->setIsTransactionClosed(false);
-        $payment->addTransaction(
-            Order\Payment\Transaction::TYPE_AUTH,
-            $order,
-            false,
-            $this->epaymentsConfig->getPaymentStatusInfo(StatusInterface::PENDING_PAYMENT)
-        );
+        /** @var OrderPayment $orderPayment */
+        $orderPayment = $order->getPayment();
+        $orderPayment->setIsTransactionClosed(false);
+        $orderPayment->addTransaction(TransactionInterface::TYPE_AUTH, $order);
 
-        $this->dispatchEvent($order, $worldlineStatus);
+        $this->dispatchEvent($order, $status);
     }
 }

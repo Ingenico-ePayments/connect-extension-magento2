@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Worldline\Connect\Model\Worldline\Status\Payment\Handler;
 
-use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment as WorldlinePayment;
-use Magento\Sales\Api\Data\OrderInterface;
+use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Payment as OrderPayment;
 use Worldline\Connect\Model\Worldline\Status\Payment\HandlerInterface;
-
-// phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
-// phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 
 class Redirected extends AbstractHandler implements HandlerInterface
 {
@@ -18,22 +16,12 @@ class Redirected extends AbstractHandler implements HandlerInterface
     /**
      * {@inheritDoc}
      */
-    public function resolveStatus(OrderInterface $order, WorldlinePayment $worldlineStatus)
+    public function resolveStatus(Order $order, Payment $status)
     {
-        /**
-         * For inline payments with redirect actions a transaction is created. If the transaction is not kept open,
-         * a later online capture is impossible
-         */
-        $order->getPayment()->setIsTransactionClosed(false);
+        /** @var OrderPayment $orderPayment */
+        $orderPayment = $order->getPayment();
+        $orderPayment->setIsTransactionClosed(false);
 
-        /**
-         * Mark the transaction as pending, otherwise the invoice will be marked as "paid"
-         * and the order will be set to "processing"
-         */
-
-
-//        $order->getPayment()->setIsTransactionPending(true);
-
-        $this->dispatchEvent($order, $worldlineStatus);
+        $this->dispatchEvent($order, $status);
     }
 }

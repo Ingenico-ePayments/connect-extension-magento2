@@ -168,7 +168,7 @@ class ConfigProvider implements ConfigProviderInterface
                     'merchantId' => $this->config->getMerchantId($storeId),
                     'hostedCheckoutTitle' => $this->config->getHostedCheckoutTitle($storeId),
                     'hostedCheckoutPageUrl' => $this->urlBuilder->getUrl('epayments/hostedCheckoutPage'),
-                    'inlineSuccessUrl' => $this->urlBuilder->getUrl('epayments/inlinePayment'),
+                    'inlineSuccessUrl' => $this->urlBuilder->getUrl('epayments/inlinePayment/processReturn'),
                     'locale' => $this->resolver->getLocale(),
                     'loaderImage' => $this->assetRepo->getUrlWithParams('images/loader-2.gif', []),
                     'isCustomerLoggedIn' => $this->customerSession->isLoggedIn(),

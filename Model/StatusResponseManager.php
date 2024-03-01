@@ -14,6 +14,9 @@ use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository as TransactionRepository;
 
+use function array_key_exists;
+use function is_array;
+
 /**
  * Class StatusResponseManager
  *
@@ -159,6 +162,12 @@ class StatusResponseManager implements StatusResponseManagerInterface
             // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
             get_object_vars($orderStatus->statusOutput)
         );
+
+        $errors = $orderStatus->statusOutput->errors;
+        if (is_array($errors) && array_key_exists(0, $errors)) {
+            $error = $errors[0];
+            $visibleInfo['error'] = [$error->code, $error->message];
+        }
 
         // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
         $visibleInfo = array_map(

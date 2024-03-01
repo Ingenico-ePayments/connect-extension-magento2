@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Worldline\Connect\Model\Worldline\Status\Payment\Handler;
 
-use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment as WorldlinePayment;
+use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Sales\Api\Data\OrderInterface;
-use Magento\Sales\Model\Order\Payment;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Payment as OrderPayment;
 use Worldline\Connect\Model\Config;
 use Worldline\Connect\Model\ConfigInterface;
 use Worldline\Connect\Model\Order\EmailManagerFraud;
@@ -38,10 +39,10 @@ class PendingFraudApproval extends AbstractHandler implements HandlerInterface
     /**
      * {@inheritDoc}
      */
-    public function resolveStatus(OrderInterface $order, WorldlinePayment $worldlineStatus)
+    public function resolveStatus(Order $order, Payment $status)
     {
-        /** @var Payment $payment */
-        $payment = $order->getPayment();
+        /** @var OrderPayment $orderPayment */
+        $orderPayment = $order->getPayment();
 
         /**
          * Set magic data fields on payment:
@@ -49,16 +50,16 @@ class PendingFraudApproval extends AbstractHandler implements HandlerInterface
          * is_fraud_detected: sets order into suspected_fraud status
          * is_transaction_closed: prevents the magento payment transaction from closing, relevent for void actions
          */
-        $payment->setIsTransactionPending(true);
-        $payment->setIsFraudDetected(true);
-        $payment->setIsTransactionClosed(false);
+        $orderPayment->setIsTransactionPending(true);
+        $orderPayment->setIsFraudDetected(true);
+        $orderPayment->setIsTransactionClosed(false);
 
         // register capture or authorization notification for hosted checkout, do nothing for inline payments
         $this->registerPaymentNotification($order, $order->getBaseGrandTotal());
 
         $this->emailManagerFraud->process($order);
 
-        $this->dispatchEvent($order, $worldlineStatus);
+        $this->dispatchEvent($order, $status);
 
         // Also dispatch legacy event to support backward compatibility for 3rd party vendors:
         $this->eventManager->dispatch(self::LEGACY_EVENT_NAME);
@@ -74,7 +75,7 @@ class PendingFraudApproval extends AbstractHandler implements HandlerInterface
     // phpcs:ignore SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingAnyTypeHint
     private function registerPaymentNotification(OrderInterface $order, $amount)
     {
-        /** @var Payment $payment */
+        /** @var OrderPayment $payment */
         $payment = $order->getPayment();
         try {
             if (!$payment->getAdditionalInformation(Config::CLIENT_PAYLOAD_KEY)) {

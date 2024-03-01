@@ -83,26 +83,15 @@ define([
                         me.maskedCard(me.account.getMaskedValueByAttributeKey('alias').formattedValue);
                     }
 
-                    if (product.hosted) {
-                        layout([{
-                            component: 'Worldline_Connect/js/view/payment/component/collection/hosted',
-                            uid: 'worldline-' + code + '-fields',
-                            displayArea: 'worldline-cc-fields',
-                            parent: name,
-                            template: 'Worldline_Connect/payment/product/field-collection',
-                            account: me.account
-                        }]);
-                    } else {
-                        layout([{
-                            component: 'Worldline_Connect/js/view/payment/component/collection/fields-inline',
-                            uid: 'worldline-' + code + '-fields',
-                            displayArea: 'worldline-cc-fields',
-                            parent: name,
-                            template: 'Worldline_Connect/payment/product/field-collection',
-                            product: productResponse,
-                            account: me.account
-                        }]);
-                    }
+                    layout([{
+                        component: 'Worldline_Connect/js/view/payment/component/collection/fields-inline',
+                        uid: 'worldline-' + code + '-vault-fields',
+                        displayArea: 'worldline-cc-fields',
+                        parent: name,
+                        template: 'Worldline_Connect/payment/product/field-collection',
+                        product: productResponse,
+                        account: me.account
+                    }]);
                 });
             }.bind(this));
 
@@ -126,8 +115,6 @@ define([
          */
         createPayload: function () {
             let data = this.assemblePayloadData();
-
-
             return createPayload(data).then(function (payload) {
                 paymentData.setCurrentPayload(payload);
             });
@@ -136,13 +123,8 @@ define([
         validate: function () {
             paymentData.fieldData = {};
 
-            let product = window.checkoutConfig.payment.worldline.products[this.code];
-            if (product.hosted) {
-                return true;
-            }
-
             let fieldsValid = true;
-            let activeFieldsCollection = registry.get('uid = worldline-' + this.code + '-fields');
+            let activeFieldsCollection = registry.get('uid = worldline-' + this.code + '-vault-fields');
             for (let fieldComponent of activeFieldsCollection.elems()) {
                 if (fieldComponent.field) {
                     paymentData.fieldData[fieldComponent.field.id] = fieldComponent.value();
@@ -169,23 +151,15 @@ define([
 
         placeOrder: function (data, event) {
             let parentMethod = this._super.bind(this);
-            // paymentData.setCurrentPaymentProduct(this.product);
-            // paymentData.setCurrentAccountOnFile(this.account);
-
             if (!this.validate()) {
                 return false;
             }
-            let product = window.checkoutConfig.payment.worldline.products[this.code];
-            if (product.hosted) {
+            this.createPayload().then(function () {
                 parentMethod(data, event);
-            } else {
-                this.createPayload().then(function () {
-                    parentMethod(data, event);
-                }, function (error) {
-                    console.error('Could not create payload.', error);
-                    alert('Payment error: ' + error);
-                });
-            }
+            }, function (error) {
+                console.error('Could not create payload.', error);
+                alert('Payment error: ' + error);
+            });
         },
 
         afterPlaceOrder: function () {

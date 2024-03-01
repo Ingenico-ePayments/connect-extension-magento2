@@ -24,6 +24,12 @@ class CancelPayment extends AbstractAction implements ActionInterface
     private $orderRepository;
 
     /**
+     * @var ResolverInterface
+     */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
+    private $statusResolver;
+
+    /**
      * CancelPayment constructor.
      *
      * @param StatusResponseManager $statusResponseManager
@@ -38,7 +44,8 @@ class CancelPayment extends AbstractAction implements ActionInterface
         ClientInterface $worldlineClient,
         TransactionManager $transactionManager,
         ConfigInterface $config,
-        OrderRepositoryInterface $orderRepository
+        OrderRepositoryInterface $orderRepository,
+        ResolverInterface $statusResolver
     ) {
         $this->orderRepository = $orderRepository;
 
@@ -48,6 +55,7 @@ class CancelPayment extends AbstractAction implements ActionInterface
             $transactionManager,
             $config
         );
+        $this->statusResolver = $statusResolver;
     }
 
     /**
@@ -73,6 +81,8 @@ class CancelPayment extends AbstractAction implements ActionInterface
             $transaction->setIsClosed(true);
         }
         $order->addRelatedObject($transaction);
+
+        $this->statusResolver->resolve($order, $response->payment);
 
         $this->orderRepository->save($order);
 

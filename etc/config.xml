@@ -343,6 +343,32 @@
                 <payment_flow>0</payment_flow>
                 <product_id>3</product_id>
             </worldline_mastercard>
+            <worldline_mastercard_debit>
+                <model>Worldline\Connect\PaymentMethod\MastercardDebit</model>
+                <title>Worldline Mastercard Debit</title>
+                <active>1</active>
+                <can_initialize>0</can_initialize>
+                <can_capture>1</can_capture>
+                <can_capture_vault>1</can_capture_vault>
+                <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_internal>0</can_use_internal>
+                <can_authorize>1</can_authorize>
+                <can_cancel>1</can_cancel>
+                <is_gateway>1</is_gateway>
+                <payment_action>authorize</payment_action>
+                <sort_order>3</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>119</product_id>
+            </worldline_mastercard_debit>
             <worldline_nh_card>
                 <model>Worldline\Connect\PaymentMethod\NHCard</model>
                 <title>Worldline NH Card</title>
@@ -423,7 +449,7 @@
             </worldline_shinhan_card>
             <worldline_unionpay_expresspay>
                 <model>Worldline\Connect\PaymentMethod\UnionPayExpressPay</model>
-                <title>Worldline UnionPay ExpressPay</title>
+                <title>Worldline UnionPay International - ExpressPay</title>
                 <active>1</active>
                 <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
@@ -473,6 +499,84 @@
                 <payment_flow>0</payment_flow>
                 <product_id>1</product_id>
             </worldline_visa>
+            <worldline_maestro>
+                <model>Worldline\Connect\PaymentMethod\Maestro</model>
+                <title>Worldline Maestro</title>
+                <active>1</active>
+                <can_initialize>0</can_initialize>
+                <can_capture>1</can_capture>
+                <can_capture_vault>1</can_capture_vault>
+                <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_internal>0</can_use_internal>
+                <can_authorize>1</can_authorize>
+                <can_cancel>1</can_cancel>
+                <is_gateway>1</is_gateway>
+                <payment_action>authorize</payment_action>
+                <sort_order>1</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>117</product_id>
+            </worldline_maestro>
+            <worldline_visa_debit>
+                <model>Worldline\Connect\PaymentMethod\VisaDebit</model>
+                <title>Worldline Visa Debit</title>
+                <active>1</active>
+                <can_initialize>0</can_initialize>
+                <can_capture>1</can_capture>
+                <can_capture_vault>1</can_capture_vault>
+                <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_internal>0</can_use_internal>
+                <can_authorize>1</can_authorize>
+                <can_cancel>1</can_cancel>
+                <is_gateway>1</is_gateway>
+                <payment_action>authorize</payment_action>
+                <sort_order>1</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>114</product_id>
+            </worldline_visa_debit>
+            <worldline_visa_electron>
+                <model>Worldline\Connect\PaymentMethod\VisaElectron</model>
+                <title>Worldline Visa Electron</title>
+                <active>1</active>
+                <can_initialize>0</can_initialize>
+                <can_capture>1</can_capture>
+                <can_capture_vault>1</can_capture_vault>
+                <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_internal>0</can_use_internal>
+                <can_authorize>1</can_authorize>
+                <can_cancel>1</can_cancel>
+                <is_gateway>1</is_gateway>
+                <payment_action>authorize</payment_action>
+                <sort_order>1</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+                <product_id>122</product_id>
+            </worldline_visa_electron>
             <!-- Instant purchase -->
             <worldline_apple_pay>
                 <model>Worldline\Connect\PaymentMethod\ApplePay</model>
@@ -707,32 +811,6 @@
                 <payment_flow>0</payment_flow>
                 <product_id>806</product_id>
             </worldline_trustly>
-            <!-- China UnionPay -->
-            <worldline_china_union_pay>
-                <model>Worldline\Connect\PaymentMethod\ChinaUnionPay</model>
-                <title>Worldline China UnionPay</title>
-                <active>1</active>
-                <can_initialize>1</can_initialize>
-                <can_capture>1</can_capture>
-                <can_capture_partial>1</can_capture_partial>
-                <can_refund>1</can_refund>
-                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
-                <can_use_checkout>1</can_use_checkout>
-                <can_review_payment>1</can_review_payment>
-                <can_accept_payment>1</can_accept_payment>
-                <can_fetch_transaction_info>1</can_fetch_transaction_info>
-                <can_fetch_transaction_information>1</can_fetch_transaction_information>
-                <can_deny_payment>1</can_deny_payment>
-                <can_use_internal>0</can_use_internal>
-                <can_authorize>0</can_authorize>
-                <can_cancel>1</can_cancel>
-                <is_gateway>1</is_gateway>
-                <payment_action>authorize</payment_action>
-                <sort_order>869</sort_order>
-                <order_status>pending</order_status>
-                <payment_flow>0</payment_flow>
-                <product_id>869</product_id>
-            </worldline_china_union_pay>
             <!-- Hpp -->
             <worldline_hpp>
                 <model>Worldline\Connect\PaymentMethod\Hpp</model>
@@ -787,7 +865,7 @@
             </worldline_vault>
             <worldline_americanexpress_vault>
                 <model>Worldline\Connect\PaymentMethod\AmericanExpressVault</model>
-                <title>Worldline Vault</title>
+                <title>Worldline AmericanExpress Vault</title>
                 <active>1</active>
                 <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
@@ -814,7 +892,7 @@
             </worldline_americanexpress_vault>
             <worldline_cartebancaire_vault>
                 <model>Worldline\Connect\PaymentMethod\CarteBancaireVault</model>
-                <title>Worldline Vault</title>
+                <title>Worldline Carte Bancaire Vault</title>
                 <active>1</active>
                 <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
@@ -841,7 +919,7 @@
             </worldline_cartebancaire_vault>
             <worldline_discover_vault>
                 <model>Worldline\Connect\PaymentMethod\DiscoverVault</model>
-                <title>Worldline Vault</title>
+                <title>Worldline Discover Vault</title>
                 <active>1</active>
                 <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
@@ -868,7 +946,7 @@
             </worldline_discover_vault>
             <worldline_mastercard_vault>
                 <model>Worldline\Connect\PaymentMethod\MastercardVault</model>
-                <title>Worldline Vault</title>
+                <title>Worldline Mastercard Vault</title>
                 <active>1</active>
                 <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
@@ -892,9 +970,35 @@
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
             </worldline_mastercard_vault>
+            <worldline_mastercard_debit_vault>
+                <model>Worldline\Connect\PaymentMethod\MastercardDebitVault</model>
+                <title>Worldline Mastercard Debit Vault</title>
+                <active>1</active>
+                <can_initialize>0</can_initialize>
+                <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_authorize_vault>1</can_authorize_vault>
+                <can_capture_vault>1</can_capture_vault>
+                <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_internal>0</can_use_internal>
+                <can_authorize>1</can_authorize>
+                <can_cancel>1</can_cancel>
+                <is_gateway>1</is_gateway>
+                <payment_action>authorize</payment_action>
+                <sort_order>100</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+            </worldline_mastercard_debit_vault>
             <worldline_visa_vault>
                 <model>Worldline\Connect\PaymentMethod\VisaVault</model>
-                <title>Worldline Vault</title>
+                <title>Worldline Visa Vault</title>
                 <active>1</active>
                 <can_initialize>0</can_initialize>
                 <can_capture>1</can_capture>
@@ -918,6 +1022,58 @@
                 <order_status>pending</order_status>
                 <payment_flow>0</payment_flow>
             </worldline_visa_vault>
+            <worldline_visa_debit_vault>
+                <model>Worldline\Connect\PaymentMethod\VisaDebitVault</model>
+                <title>Worldline Debit Vault</title>
+                <active>1</active>
+                <can_initialize>0</can_initialize>
+                <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_authorize_vault>1</can_authorize_vault>
+                <can_capture_vault>1</can_capture_vault>
+                <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_internal>0</can_use_internal>
+                <can_authorize>1</can_authorize>
+                <can_cancel>1</can_cancel>
+                <is_gateway>1</is_gateway>
+                <payment_action>authorize</payment_action>
+                <sort_order>100</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+            </worldline_visa_debit_vault>
+            <worldline_visa_electron_vault>
+                <model>Worldline\Connect\PaymentMethod\VisaElectronVault</model>
+                <title>Worldline Electron Vault</title>
+                <active>1</active>
+                <can_initialize>0</can_initialize>
+                <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_authorize_vault>1</can_authorize_vault>
+                <can_capture_vault>1</can_capture_vault>
+                <can_use_checkout>1</can_use_checkout>
+                <can_review_payment>1</can_review_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <can_deny_payment>1</can_deny_payment>
+                <can_use_internal>0</can_use_internal>
+                <can_authorize>1</can_authorize>
+                <can_cancel>1</can_cancel>
+                <is_gateway>1</is_gateway>
+                <payment_action>authorize</payment_action>
+                <sort_order>100</sort_order>
+                <order_status>pending</order_status>
+                <payment_flow>0</payment_flow>
+            </worldline_visa_electron_vault>
             <worldline_link_plus_payment_link>
                 <model>Worldline\Connect\PaymentMethod\LinkPlusPaymentLink</model>
                 <title>LinkPlus payment link</title>

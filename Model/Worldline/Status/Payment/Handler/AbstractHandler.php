@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace Worldline\Connect\Model\Worldline\Status\Payment\Handler;
 
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
-use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Model\Order;
+use Worldline\Connect\Model\Worldline\Status\AbstractHandler as StatusAbstractHandler;
 
-// phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
-abstract class AbstractHandler extends \Worldline\Connect\Model\Worldline\Status\AbstractHandler
+abstract class AbstractHandler extends StatusAbstractHandler
 {
     public const KEY_ORDER = 'order';
     protected const EVENT_CATEGORY = 'payment';
 
-    protected function dispatchEvent(OrderInterface $order, Payment $worldlineStatus)
+    protected function dispatchEvent(Order $order, Payment $status)
     {
         $this->dispatchMagentoEvent([
             self::KEY_ORDER => $order,
-            self::KEY_INGENICO_STATUS => $worldlineStatus,
+            self::KEY_INGENICO_STATUS => $status,
         ]);
     }
 }

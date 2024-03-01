@@ -9,6 +9,7 @@ use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment as PaymentDefinition
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Gateway\Command\CommandException;
 use Magento\Payment\Gateway\CommandInterface;
+use Magento\Payment\Model\MethodInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment;
@@ -138,7 +139,7 @@ class AuthorizeCommand implements CommandInterface
             case Config::CONFIG_INGENICO_CHECKOUT_TYPE_OPTIMIZED_FLOW:
                 $request = $this->createPaymentRequestBuilder->build(
                     $payment,
-                    $payment->getMethodInstance()->getConfigData('payment_action')
+                    $payment->getMethodInstance()->getConfigData('payment_action') === MethodInterface::ACTION_AUTHORIZE
                 );
                 $order->addCommentToStatusHistory($request->toJson());
                 $response = $this->client->createPayment($request);
@@ -147,7 +148,10 @@ class AuthorizeCommand implements CommandInterface
                 $this->handleCreatePaymentResponse($response, $payment);
                 break;
             case Config::CONFIG_INGENICO_CHECKOUT_TYPE_HOSTED_CHECKOUT:
-                $request = $this->createHostedCheckoutRequestBuilder->build($payment, $commandSubject['paymentAction']);
+                $request = $this->createHostedCheckoutRequestBuilder->build(
+                    $payment,
+                    $commandSubject['paymentAction'] === MethodInterface::ACTION_AUTHORIZE
+                );
                 $order->addCommentToStatusHistory($request->toJson());
                 $response = $this->client->createHostedCheckout($request, $order->getStoreId());
                 $order->addCommentToStatusHistory($response->toJson());
@@ -186,6 +190,9 @@ class AuthorizeCommand implements CommandInterface
         $amount = $order->getBaseGrandTotal();
 
         switch ($paymentResponse->status) {
+            case StatusInterface::REDIRECTED:
+                $payment->setOrderState(Order::STATE_PENDING_PAYMENT);
+                break;
             case StatusInterface::PENDING_APPROVAL:
             case StatusInterface::AUTHORIZATION_REQUESTED:
                 $order->setState(Order::STATE_PENDING_PAYMENT);

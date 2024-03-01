@@ -26,7 +26,7 @@ class CreateHostedCheckout extends AbstractAction
         parent::__construct($statusResponseManager, $worldlineClient, $transactionManager, $config);
     }
 
-    public function process(Payment $payment, string $paymentAction): void
+    public function process(Payment $payment, bool $requiresApproval): void
     {
         $order = $payment->getOrder();
         $payment->setIsTransactionClosed(false);
@@ -34,7 +34,7 @@ class CreateHostedCheckout extends AbstractAction
         $order->setStatus(Order::STATE_PENDING_PAYMENT);
 
         $response = $this->client->createHostedCheckout(
-            $this->createHostedCheckoutRequestBuilder->build($payment, $paymentAction),
+            $this->createHostedCheckoutRequestBuilder->build($payment, $requiresApproval),
             $order->getStoreId()
         );
 

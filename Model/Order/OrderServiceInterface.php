@@ -23,4 +23,9 @@ interface OrderServiceInterface
      * @throws NoSuchEntityException
      */
     public function getByHostedCheckoutId(string $hostedCheckoutId): OrderInterface;
+
+    /**
+     * @param OrderInterface $order
+     */
+    public function save(OrderInterface $order);
 }

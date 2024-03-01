@@ -81,7 +81,7 @@ class RedirectRequestBuilder implements CreatePaymentRequestBuilder
     }
 
     // phpcs:ignore SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
-    public function build(Payment $payment, string $paymentAction)
+    public function build(Payment $payment, bool $requiresApproval)
     {
         $order = $payment->getOrder();
 

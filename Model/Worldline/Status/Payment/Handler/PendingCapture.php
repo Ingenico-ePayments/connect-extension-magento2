@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Worldline\Connect\Model\Worldline\Status\Payment\Handler;
 
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
-use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Payment as OrderPayment;
 use Worldline\Connect\Model\Worldline\Status\Payment\HandlerInterface;
 
 class PendingCapture extends AbstractHandler implements HandlerInterface
@@ -15,13 +16,13 @@ class PendingCapture extends AbstractHandler implements HandlerInterface
     /**
      * {@inheritDoc}
      */
-    public function resolveStatus(OrderInterface $order, Payment $worldlineStatus)
+    public function resolveStatus(Order $order, Payment $status)
     {
-        $payment = $order->getPayment();
+        /** @var OrderPayment $orderPayment */
+        $orderPayment = $order->getPayment();
+        $orderPayment->setIsTransactionClosed(false);
+        $orderPayment->registerAuthorizationNotification($order->getBaseGrandTotal());
 
-        $payment->setIsTransactionClosed(false);
-        $payment->registerAuthorizationNotification($order->getBaseGrandTotal());
-
-        $this->dispatchEvent($order, $worldlineStatus);
+        $this->dispatchEvent($order, $status);
     }
 }

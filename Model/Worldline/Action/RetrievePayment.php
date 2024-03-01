@@ -194,10 +194,10 @@ class RetrievePayment extends AbstractAction implements ActionInterface
     private function updateHostedCheckoutStatus(Order $order)
     {
         $hostedCheckoutId = $order->getPayment()->getAdditionalInformation(Config::HOSTED_CHECKOUT_ID_KEY);
-        $order = $this->getHostedCheckoutStatus->process($hostedCheckoutId);
-        $worldlinePaymentId = $order->getPayment()->getAdditionalInformation(Config::PAYMENT_ID_KEY);
 
-        return $worldlinePaymentId !== null;
+        $this->getHostedCheckoutStatus->process($order, $hostedCheckoutId);
+
+        return $order->getPayment()->getAdditionalInformation(Config::PAYMENT_ID_KEY) !== null;
     }
 
     /**

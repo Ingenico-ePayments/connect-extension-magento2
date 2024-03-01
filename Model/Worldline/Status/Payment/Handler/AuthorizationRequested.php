@@ -4,18 +4,26 @@ declare(strict_types=1);
 
 namespace Worldline\Connect\Model\Worldline\Status\Payment\Handler;
 
+use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Payment as OrderPayment;
+use Worldline\Connect\Model\Worldline\Status\Payment\HandlerInterface;
+
 /**
  * Class AuthorizationRequested
  *
  * @package Worldline\Connect\Model\Worldline\Status
  */
-class AuthorizationRequested extends PendingFraudApproval
+class AuthorizationRequested extends AbstractHandler implements HandlerInterface
 {
     protected const EVENT_STATUS = 'authorization_requested';
 
-    /**
-     * The only difference between the AUTHORIZATION_REQUESTED and the PENDING_FRAUD_APPROVAL status currently is
-     * that AUTHORIZATION_REQUESTED can not be reviewed. This difference is handled in
-     * Worldline\Connect\Gateway\CanReviewPayment
-     */
+    public function resolveStatus(Order $order, Payment $status)
+    {
+        /** @var OrderPayment $orderPayment */
+        $orderPayment = $order->getPayment();
+        $orderPayment->registerAuthorizationNotification($order->getBaseGrandTotal());
+
+        $this->dispatchEvent($order, $status);
+    }
 }

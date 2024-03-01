@@ -2,12 +2,13 @@
 
 namespace Worldline\Connect\Model\Worldline\Action;
 
-use Ingenico\Connect\Sdk\Domain\Payment\PaymentResponse;
+use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
 use Magento\Framework\Exception\InvalidArgumentException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Payment as OrderPayment;
 use Psr\Log\LoggerInterface;
 use Worldline\Connect\Model\Config;
 use Worldline\Connect\Model\ConfigInterface;
@@ -16,7 +17,6 @@ use Worldline\Connect\Model\StatusResponseManager;
 use Worldline\Connect\Model\Transaction\TransactionManager;
 use Worldline\Connect\Model\Worldline\Api\ClientInterface;
 use Worldline\Connect\Model\Worldline\Status\Payment\ResolverInterface;
-use Worldline\Connect\Model\Worldline\StatusInterface;
 
 class GetInlinePaymentStatus extends AbstractAction implements ActionInterface
 {
@@ -66,87 +66,36 @@ class GetInlinePaymentStatus extends AbstractAction implements ActionInterface
     ) {
         $this->logger = $logger;
         $this->statusResolver = $resolver;
-        $this->orderService = $orderService;
         $this->orderRepository = $orderRepository;
         parent::__construct($statusResponseManager, $worldlineClient, $transactionManager, $config);
     }
 
-    // phpcs:ignore SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingAnyTypeHint, SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
-    public function test($referenceId)
-    {
-        return $this->worldlineClient
-            ->getWorldlineClient()
-            ->merchant($this->config->getMerchantId())
-            ->payments()
-            ->get($referenceId)
-            ->status;
-    }
-
     /**
-     * @param $referenceId
-     * @return Order
      * @throws LocalizedException
      * @throws InvalidArgumentException
      * @throws NoSuchEntityException
      */
-    // phpcs:ignore SlevomatCodingStandard.Functions.FunctionLength.FunctionLength, SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingAnyTypeHint
-    public function process($referenceId)
+    // phpcs:ignore SlevomatCodingStandard.Functions.FunctionLength.FunctionLength, SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingAnyTypeHint, Generic.Metrics.CyclomaticComplexity.TooHigh
+    public function process(Order $order, Payment $payment)
     {
-        $statusResponse = $this->worldlineClient->worldlinePayment($referenceId);
+        $this->validateResponse($payment);
 
-        $this->validateResponse($statusResponse);
+        /** @var OrderPayment $orderPayment */
+        $orderPayment = $order->getPayment();
 
-        $incrementId = $statusResponse->paymentOutput->references->merchantReference;
+        $this->statusResolver->resolve($order, $payment);
 
-        /**
-         * @var Order $order
-         */
-        $order = $this->orderService->getByIncrementId($incrementId);
-        $this->statusResolver->resolve($order, $statusResponse);
-        $order->addRelatedObject($order->getPayment());
+        $order->addRelatedObject($orderPayment);
 
-        /** @var Order\Payment $payment */
-        $payment = $order->getPayment();
-        $status = $statusResponse->status;
-
-        $amount = $order->getBaseGrandTotal();
-        switch ($statusResponse->status) {
-            case StatusInterface::CAPTURE_REQUESTED:
-                $payment->registerCaptureNotification($amount);
-                break;
-            case StatusInterface::AUTHORIZATION_REQUESTED:
-                $payment->registerAuthorizationNotification($amount);
-                break;
-        }
-
-
-        $payment->setAdditionalInformation(Config::PAYMENT_STATUS_KEY, $status);
-        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
-        if (in_array($status, StatusInterface::APPROVED_STATUSES, true)) {
-            $payment->setIsTransactionApproved(true);
-//            $payment->capture(null);
-        }
-
-        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
-        if (in_array($status, StatusInterface::DENIED_STATUSES, true)) {
-            $payment->cancel();
-        }
-
-        try {
-            $this->orderRepository->save($order);
-        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
-        } catch (\Exception $exception) {
-            $this->logger->error($exception->getMessage());
-        }
-
-        return $order;
+        $orderPayment->setAdditionalInformation(Config::PAYMENT_ID_KEY, $payment->id);
+        $orderPayment->setAdditionalInformation(Config::PAYMENT_STATUS_KEY, $payment->status);
+        $orderPayment->setAdditionalInformation(Config::PAYMENT_STATUS_CODE_KEY, $payment->statusOutput->statusCode);
     }
 
     /**
-     * @param PaymentResponse $response
      * @throws LocalizedException
      */
-    private function validateResponse(PaymentResponse $response)
+    private function validateResponse(Payment $response)
     {
         if (!$response->paymentOutput) {
             // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName

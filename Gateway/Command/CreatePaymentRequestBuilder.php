@@ -8,5 +8,5 @@ use Magento\Sales\Model\Order\Payment;
 
 interface CreatePaymentRequestBuilder
 {
-    public function build(Payment $payment, string $paymentAction);
+    public function build(Payment $payment, bool $requiresApproval);
 }

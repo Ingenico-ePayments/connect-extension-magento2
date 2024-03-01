@@ -9,7 +9,7 @@ use Worldline\Connect\Gateway\Command\CreatePaymentRequestBuilder;
 
 class BuyNowPayLayerRequestBuilder implements CreatePaymentRequestBuilder
 {
-    public function build(Payment $payment, string $paymentAction)
+    public function build(Payment $payment, bool $requiresApproval)
     {
     }
 }

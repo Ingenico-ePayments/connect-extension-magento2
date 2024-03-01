@@ -6,7 +6,6 @@ use Ingenico\Connect\Sdk\Domain\Payment\CreatePaymentRequest;
 use Ingenico\Connect\Sdk\Domain\Payment\CreatePaymentRequestFactory;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\CardPaymentMethodSpecificInput;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\CardPaymentMethodSpecificInputFactory;
-use Magento\Payment\Model\MethodInterface;
 use Magento\Sales\Model\Order\Payment;
 use Worldline\Connect\Gateway\Command\CreatePaymentRequestBuilder;
 use Worldline\Connect\Model\Worldline\RequestBuilder\Common\FraudFieldsBuilder;
@@ -82,7 +81,7 @@ class CardRequestBuilder implements CreatePaymentRequestBuilder
     }
 
     // phpcs:ignore SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
-    public function build(Payment $payment, string $paymentAction): CreatePaymentRequest
+    public function build(Payment $payment, bool $requiresApproval): CreatePaymentRequest
     {
         $order = $payment->getOrder();
 
@@ -97,7 +96,7 @@ class CardRequestBuilder implements CreatePaymentRequestBuilder
         $input->threeDSecure = $this->threeDSecureBuilder->create($order);
         $input->transactionChannel = self::TRANSACTION_CHANNEL;
         $input->paymentProductId = $payment->getAdditionalInformation('product');
-        $input->requiresApproval = $paymentAction === MethodInterface::ACTION_AUTHORIZE;
+        $input->requiresApproval = $requiresApproval;
         $input->tokenize = $payment->getAdditionalInformation('tokenize');
 
         $this->setUnscheduledCardOnFileInformation($input, $payment);

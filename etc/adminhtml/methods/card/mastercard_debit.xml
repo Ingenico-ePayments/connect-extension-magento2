@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="worldline_china_union_pay" translate="label" type="text" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>China UnionPay</label>
+    <group id="mastercard_debit" translate="label" type="text" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Mastercard Debit</label>
         <field id="active" translate="label comment" type="Worldline\Connect\Data\Form\Element\Toggle" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Enabled</label>
-            <config_path>payment/worldline_china_union_pay/active</config_path>
+            <config_path>payment/worldline_mastercard_debit/active</config_path>
         </field>
         <field id="sort_order" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Sort Order</label>
-            <config_path>payment/worldline_china_union_pay/sort_order</config_path>
+            <config_path>payment/worldline_mastercard_debit/sort_order</config_path>
         </field>
         <field id="allowspecific" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Allowed Countries</label>
-            <config_path>payment/worldline_china_union_pay/allowspecific</config_path>
+            <config_path>payment/worldline_mastercard_debit/allowspecific</config_path>
             <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
             <comment>If set to specific, guest customers will not have a billing country and may not be able to checkout.</comment>
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Payment from Specific countries</label>
-            <config_path>payment/worldline_china_union_pay/specificcountry</config_path>
+            <config_path>payment/worldline_mastercard_debit/specificcountry</config_path>
             <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
             <depends>
                 <field id="allowspecific">1</field>
@@ -27,17 +27,22 @@
         <field id="min_order_total" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1">
             <label>Minimum Order Total</label>
             <validate>validate-number validate-zero-or-greater</validate>
-            <config_path>payment/worldline_china_union_pay/min_order_total</config_path>
+            <config_path>payment/worldline_mastercard_debit/min_order_total</config_path>
         </field>
         <field id="max_order_total" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1">
             <label>Maximum Order Total</label>
             <validate>validate-number validate-zero-or-greater</validate>
-            <config_path>payment/worldline_china_union_pay/max_order_total</config_path>
+            <config_path>payment/worldline_mastercard_debit/max_order_total</config_path>
         </field>
-        <field id="payment_flow" translate="label" type="select" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="payment_action" translate="label" type="select" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Payment Action</label>
+            <source_model>Worldline\Connect\Model\Config\Source\PaymentAction</source_model>
+            <config_path>payment/worldline_mastercard_debit/payment_action</config_path>
+        </field>
+        <field id="payment_flow" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Payment flow type</label>
             <source_model>Worldline\Connect\Model\Config\Source\PaymentFlowType</source_model>
-            <config_path>payment/worldline_china_union_pay/payment_flow</config_path>
+            <config_path>payment/worldline_mastercard_debit/payment_flow</config_path>
         </field>
     </group>
 </include>

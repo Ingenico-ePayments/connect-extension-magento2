@@ -75,7 +75,15 @@ define(
                 component: 'Worldline_Connect/js/view/payment/method-renderer/method'
             },
             {
+                type: 'worldline_maestro',
+                component: 'Worldline_Connect/js/view/payment/method-renderer/method'
+            },
+            {
                 type: 'worldline_mastercard',
+                component: 'Worldline_Connect/js/view/payment/method-renderer/method'
+            },
+            {
+                type: 'worldline_mastercard_debit',
                 component: 'Worldline_Connect/js/view/payment/method-renderer/method'
             },
             {
@@ -96,6 +104,14 @@ define(
             },
             {
                 type: 'worldline_visa',
+                component: 'Worldline_Connect/js/view/payment/method-renderer/method'
+            },
+            {
+                type: 'worldline_visa_debit',
+                component: 'Worldline_Connect/js/view/payment/method-renderer/method'
+            },
+            {
+                type: 'worldline_visa_electron',
                 component: 'Worldline_Connect/js/view/payment/method-renderer/method'
             },
             {
@@ -124,10 +140,6 @@ define(
             },
             {
                 type: 'worldline_trustly',
-                component: 'Worldline_Connect/js/view/payment/method-renderer/method'
-            },
-            {
-                type: 'worldline_china_union_pay',
                 component: 'Worldline_Connect/js/view/payment/method-renderer/method'
             },
             // HPP

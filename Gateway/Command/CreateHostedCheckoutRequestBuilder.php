@@ -13,7 +13,6 @@ use Ingenico\Connect\Sdk\Domain\Payment\Definitions\CardPaymentMethodSpecificInp
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\UrlInterface;
-use Magento\Payment\Model\MethodInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment;
 use Worldline\Connect\Gateway\Command\CreatePaymentRequest\RedirectRequestBuilder;
@@ -146,7 +145,7 @@ class CreateHostedCheckoutRequestBuilder implements CreatePaymentRequestBuilder
     }
 
     // phpcs:ignore SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
-    public function build(Payment $payment, string $paymentAction): CreateHostedCheckoutRequest
+    public function build(Payment $payment, bool $requiresApproval): CreateHostedCheckoutRequest
     {
         $order = $payment->getOrder();
 
@@ -158,7 +157,7 @@ class CreateHostedCheckoutRequestBuilder implements CreatePaymentRequestBuilder
         );
 
         $input->transactionChannel = 'ECOMMERCE';
-        $input->requiresApproval = $paymentAction === MethodInterface::ACTION_AUTHORIZE;
+        $input->requiresApproval = $requiresApproval;
         $input->tokenize = $payment->getAdditionalInformation('tokenize');
 
         $orderPaymentExtension = $payment->getExtensionAttributes();

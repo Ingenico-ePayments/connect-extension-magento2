@@ -25,7 +25,7 @@ class Link extends Field
      */
     public function render(AbstractElement $element)
     {
-        $element->setData('href', 'mailto:merchantservices@ingenico.com');
+        $element->setData('href', 'mailto:merchantservices@worldline.com');
         $element->setData('value', 'Worldline ePayments - Merchant Services');
 
         return parent::render($element);

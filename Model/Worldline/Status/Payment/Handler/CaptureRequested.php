@@ -6,9 +6,8 @@ namespace Worldline\Connect\Model\Worldline\Status\Payment\Handler;
 
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\Payment;
 use Magento\Framework\Event\ManagerInterface;
-use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Config;
+use Magento\Sales\Model\Order\Payment as OrderPayment;
 use Worldline\Connect\Model\ConfigInterface;
 use Worldline\Connect\Model\Worldline\Status\Payment\HandlerInterface;
 use Worldline\Connect\Model\Worldline\Token\TokenService;
@@ -16,12 +15,6 @@ use Worldline\Connect\Model\Worldline\Token\TokenService;
 class CaptureRequested extends AbstractHandler implements HandlerInterface
 {
     protected const EVENT_STATUS = 'capture_requested';
-
-    /**
-     * @var Config
-     */
-    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
-    private $orderConfig;
 
     /**
      * @var TokenService
@@ -32,34 +25,29 @@ class CaptureRequested extends AbstractHandler implements HandlerInterface
     public function __construct(
         ManagerInterface $eventManager,
         ConfigInterface $config,
-        Config $orderConfig,
         TokenService $tokenService
     ) {
         parent::__construct($eventManager, $config);
-        $this->orderConfig = $orderConfig;
         $this->tokenService = $tokenService;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function resolveStatus(OrderInterface $order, Payment $worldlineStatus)
+    public function resolveStatus(Order $order, Payment $status)
     {
-        /** @var Order\Payment $payment */
-        $payment = $order->getPayment();
+        $order->setState(Order::STATE_PROCESSING);
+        $order->setStatus(Order::STATE_PROCESSING);
 
-        $payment->setIsTransactionPending(false);
-        $payment->setIsTransactionClosed(true);
+        /** @var OrderPayment $orderPayment */
+        $orderPayment = $order->getPayment();
+        $orderPayment->setIsTransactionPending(false);
+        $orderPayment->setIsTransactionClosed(true);
 
-//        $order->setState(Order::STATE_PROCESSING);
-//        $order->setStatus($this->orderConfig->getStateDefaultStatus(Order::STATE_PROCESSING));
+        $orderPayment->registerCaptureNotification($order->getBaseGrandTotal());
 
-        $payment->registerCaptureNotification($order->getBaseGrandTotal());
+        $this->tokenService->createByOrderAndPayment($order, $status);
 
-        $this->dispatchEvent($order, $worldlineStatus);
-
-        if ($order instanceof Order) {
-            $this->tokenService->createByOrderAndPayment($order, $worldlineStatus);
-        }
+        $this->dispatchEvent($order, $status);
     }
 }

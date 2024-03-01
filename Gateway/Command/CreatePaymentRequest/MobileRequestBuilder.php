@@ -7,7 +7,6 @@ use Ingenico\Connect\Sdk\Domain\Payment\CreatePaymentRequestFactory;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\CardPaymentMethodSpecificInputFactory;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\MobilePaymentMethodSpecificInput;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\MobilePaymentMethodSpecificInputFactory;
-use Magento\Payment\Model\MethodInterface;
 use Magento\Sales\Model\Order\Payment;
 use Worldline\Connect\Gateway\Command\CreatePaymentRequestBuilder;
 use Worldline\Connect\Model\Worldline\RequestBuilder\Common\FraudFieldsBuilder;
@@ -76,7 +75,7 @@ class MobileRequestBuilder implements CreatePaymentRequestBuilder
     }
 
     // phpcs:ignore SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
-    public function build(Payment $payment, string $paymentAction): CreatePaymentRequest
+    public function build(Payment $payment, bool $requiresApproval): CreatePaymentRequest
     {
         $order = $payment->getOrder();
 
@@ -88,7 +87,7 @@ class MobileRequestBuilder implements CreatePaymentRequestBuilder
         /** @var MobilePaymentMethodSpecificInput $input */
         $input = $this->mobilePaymentMethodSpecificInputFactory->create();
         $input->paymentProductId = $payment->getAdditionalInformation('product');
-        $input->requiresApproval = $paymentAction === MethodInterface::ACTION_AUTHORIZE;
+        $input->requiresApproval = $requiresApproval;
         $input->encryptedPaymentData = $payment->getAdditionalInformation('token');
 
         $request->mobilePaymentMethodSpecificInput = $input;

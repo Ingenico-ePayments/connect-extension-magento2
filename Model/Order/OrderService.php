@@ -77,6 +77,11 @@ class OrderService implements OrderServiceInterface
         return $this->orderRepository->get($payment->getParentId());
     }
 
+    public function save(OrderInterface $order)
+    {
+        $this->orderRepository->save($order);
+    }
+
     /**
      * @param SearchCriteriaInterface $searchCriteria
      * @return OrderInterface

@@ -33,48 +33,159 @@
             <argument name="tokenUiComponentProviders" xsi:type="array">
                 <item name="worldline_cards" xsi:type="object">Worldline\Connect\Model\Ui\CardsTokenUiComponentProvider</item>
                 <item name="worldline_americanexpress" xsi:type="object">Worldline\Connect\Model\Ui\AmericanExpressTokenUiComponentProvider</item>
+                <item name="worldline_bc_card" xsi:type="object">Worldline\Connect\Model\Ui\BcCardTokenUiComponentProvider</item>
                 <item name="worldline_cartebancaire" xsi:type="object">Worldline\Connect\Model\Ui\CarteBancaireTokenUiComponentProvider</item>
+                <item name="worldline_dinersclub" xsi:type="object">Worldline\Connect\Model\Ui\DinersclubTokenUiComponentProvider</item>
                 <item name="worldline_discover" xsi:type="object">Worldline\Connect\Model\Ui\DiscoverTokenUiComponentProvider</item>
+                <item name="worldline_hyundai_card" xsi:type="object">Worldline\Connect\Model\Ui\HyundaiCardTokenUiComponentProvider</item>
+                <item name="worldline_jcb" xsi:type="object">Worldline\Connect\Model\Ui\JcbTokenUiComponentProvider</item>
+                <item name="worldline_kb_kookmin_card" xsi:type="object">Worldline\Connect\Model\Ui\KbKookminCardTokenUiComponentProvider</item>
+                <item name="worldline_keb_hana_card" xsi:type="object">Worldline\Connect\Model\Ui\KebHanaCardTokenUiComponentProvider</item>
+                <item name="worldline_lotte_card" xsi:type="object">Worldline\Connect\Model\Ui\LotteCardTokenUiComponentProvider</item>
+                <item name="worldline_maestro" xsi:type="object">Worldline\Connect\Model\Ui\MaestroTokenUiComponentProvider</item>
                 <item name="worldline_mastercard" xsi:type="object">Worldline\Connect\Model\Ui\MastercardTokenUiComponentProvider</item>
+                <item name="worldline_mastercard_debit" xsi:type="object">Worldline\Connect\Model\Ui\MastercardDebitTokenUiComponentProvider</item>
+                <item name="worldline_nh_card" xsi:type="object">Worldline\Connect\Model\Ui\NhCardTokenUiComponentProvider</item>
+                <item name="worldline_samsung_card" xsi:type="object">Worldline\Connect\Model\Ui\SamsungCardTokenUiComponentProvider</item>
+                <item name="worldline_shinhan_card" xsi:type="object">Worldline\Connect\Model\Ui\ShinhanCardTokenUiComponentProvider</item>
+                <item name="worldline_unionpay_expresspay" xsi:type="object">Worldline\Connect\Model\Ui\UnionpayExpresspayTokenUiComponentProvider</item>
+                <item name="worldline_unionpay_international_securepay" xsi:type="object">Worldline\Connect\Model\Ui\UnionpayInternationalSecurepayTokenUiComponentProvider</item>
                 <item name="worldline_visa" xsi:type="object">Worldline\Connect\Model\Ui\VisaTokenUiComponentProvider</item>
+                <item name="worldline_visa_debit" xsi:type="object">Worldline\Connect\Model\Ui\VisaDebitTokenUiComponentProvider</item>
+                <item name="worldline_visa_electron" xsi:type="object">Worldline\Connect\Model\Ui\VisaElectronTokenUiComponentProvider</item>
             </argument>
         </arguments>
     </type>
 
     <virtualType name="Worldline\Connect\Model\Ui\CardsTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
         <arguments>
-            <argument name="code" xsi:type="const">Worldline\Connect\PaymentMethod\PaymentMethods::CARDS_VAULT</argument>
+            <argument name="code" xsi:type="string">worldline_cards</argument>
         </arguments>
     </virtualType>
 
     <virtualType name="Worldline\Connect\Model\Ui\AmericanExpressTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
         <arguments>
-            <argument name="code" xsi:type="const">Worldline\Connect\PaymentMethod\PaymentMethods::AMERICAN_EXPRESS_VAULT</argument>
+            <argument name="code" xsi:type="string">worldline_americanexpress</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Worldline\Connect\Model\Ui\BcCardTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
+        <arguments>
+            <argument name="code" xsi:type="string">worldline_bc_card</argument>
         </arguments>
     </virtualType>
 
     <virtualType name="Worldline\Connect\Model\Ui\CarteBancaireTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
         <arguments>
-            <argument name="code" xsi:type="const">Worldline\Connect\PaymentMethod\PaymentMethods::CARTE_BANCAIRE_VAULT</argument>
+            <argument name="code" xsi:type="string">worldline_cartebancaire</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Worldline\Connect\Model\Ui\DinersclubTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
+        <arguments>
+            <argument name="code" xsi:type="string">worldline_dinersclub</argument>
         </arguments>
     </virtualType>
 
     <virtualType name="Worldline\Connect\Model\Ui\DiscoverTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
         <arguments>
-            <argument name="code" xsi:type="const">Worldline\Connect\PaymentMethod\PaymentMethods::DISCOVER_VAULT</argument>
+            <argument name="code" xsi:type="string">worldline_discover</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Worldline\Connect\Model\Ui\HyundaiCardTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
+        <arguments>
+            <argument name="code" xsi:type="string">worldline_hyundai_card</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Worldline\Connect\Model\Ui\JcbTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
+        <arguments>
+            <argument name="code" xsi:type="string">worldline_jcb</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Worldline\Connect\Model\Ui\KbKookminCardTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
+        <arguments>
+            <argument name="code" xsi:type="string">worldline_kb_kookmin_card</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Worldline\Connect\Model\Ui\KebHanaCardTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
+        <arguments>
+            <argument name="code" xsi:type="string">worldline_keb_hana_card</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Worldline\Connect\Model\Ui\LotteCardTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
+        <arguments>
+            <argument name="code" xsi:type="string">worldline_lotte_card</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Worldline\Connect\Model\Ui\MaestroTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
+        <arguments>
+            <argument name="code" xsi:type="string">worldline_maestro</argument>
         </arguments>
     </virtualType>
 
     <virtualType name="Worldline\Connect\Model\Ui\MastercardTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
         <arguments>
-            <argument name="code" xsi:type="const">Worldline\Connect\PaymentMethod\PaymentMethods::MASTERCARD_VAULT</argument>
+            <argument name="code" xsi:type="string">worldline_mastercard</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Worldline\Connect\Model\Ui\MastercardDebitTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
+        <arguments>
+            <argument name="code" xsi:type="string">worldline_mastercard_debit</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Worldline\Connect\Model\Ui\NhCardTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
+        <arguments>
+            <argument name="code" xsi:type="string">worldline_nh_card</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Worldline\Connect\Model\Ui\SamsungCardTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
+        <arguments>
+            <argument name="code" xsi:type="string">worldline_samsung_card</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Worldline\Connect\Model\Ui\ShinhanCardTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
+        <arguments>
+            <argument name="code" xsi:type="string">worldline_shinhan_card</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Worldline\Connect\Model\Ui\UnionpayExpresspayTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
+        <arguments>
+            <argument name="code" xsi:type="string">worldline_unionpay_expresspay</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Worldline\Connect\Model\Ui\UnionpayInternationalSecurepayTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
+        <arguments>
+            <argument name="code" xsi:type="string">worldline_unionpay_international_securepay</argument>
         </arguments>
     </virtualType>
 
     <virtualType name="Worldline\Connect\Model\Ui\VisaTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
         <arguments>
-            <argument name="code" xsi:type="const">Worldline\Connect\PaymentMethod\PaymentMethods::VISA_VAULT</argument>
+            <argument name="code" xsi:type="string">worldline_visa</argument>
         </arguments>
     </virtualType>
 
+    <virtualType name="Worldline\Connect\Model\Ui\VisaDebitTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
+        <arguments>
+            <argument name="code" xsi:type="string">worldline_visa_debit</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Worldline\Connect\Model\Ui\VisaElectronTokenUiComponentProvider" type="Worldline\Connect\Model\Ui\TokenUiComponentProvider">
+        <arguments>
+            <argument name="code" xsi:type="string">worldline_visa_electron</argument>
+        </arguments>
+    </virtualType>
 </config>

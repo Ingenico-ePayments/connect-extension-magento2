@@ -5,16 +5,10 @@ namespace Worldline\Connect\Gateway\Command;
 use Ingenico\Connect\Sdk\ResponseException;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Sales\Model\Order\Payment;
-use Worldline\Connect\Model\Worldline\Api\ClientInterface;
+use Worldline\Connect\Model\Worldline\Action\CapturePayment;
 
 class AcceptPaymentCommand implements CommandInterface
 {
-    /**
-     * @var ClientInterface
-     */
-    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
-    private $worldlineClient;
-
     /**
      * @var ApiErrorHandler
      */
@@ -22,15 +16,19 @@ class AcceptPaymentCommand implements CommandInterface
     private $apiErrorHandler;
 
     /**
-     * WorldlineCancelCommand constructor.
-     *
-     * @param ClientInterface $worldlineClient
-     * @param ApiErrorHandler $apiErrorHandler
+     * @var CapturePayment
      */
-    public function __construct(ClientInterface $worldlineClient, ApiErrorHandler $apiErrorHandler)
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
+    private $capturePayment;
+
+    /**
+     * @param ApiErrorHandler $apiErrorHandler
+     * @param CapturePayment $capturePayment
+     */
+    public function __construct(ApiErrorHandler $apiErrorHandler, CapturePayment $capturePayment)
     {
-        $this->worldlineClient = $worldlineClient;
         $this->apiErrorHandler = $apiErrorHandler;
+        $this->capturePayment = $capturePayment;
     }
 
     // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName, SlevomatCodingStandard.TypeHints.DisallowArrayTypeHintSyntax.DisallowedArrayTypeHintSyntax
@@ -46,10 +44,7 @@ class AcceptPaymentCommand implements CommandInterface
         try {
             /** @var Payment $payment */
             $payment = $commandSubject['payment']->getPayment();
-            $this->worldlineClient->worldlinePaymentAccept(
-                $payment->getLastTransId(),
-                $payment->getOrder()->getStoreId()
-            );
+            $this->capturePayment->process($payment, $payment->getOrder()->getBaseGrandTotal());
         } catch (ResponseException $e) {
             $this->apiErrorHandler->handleError($e);
         }

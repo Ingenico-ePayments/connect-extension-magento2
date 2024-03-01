@@ -4,6 +4,7 @@ namespace Worldline\Connect\Model\Worldline\Action;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order\Payment;
+use Worldline\Connect\Model\Config;
 use Worldline\Connect\Model\ConfigInterface;
 use Worldline\Connect\Model\StatusResponseManager;
 use Worldline\Connect\Model\Transaction\TransactionManager;
@@ -66,6 +67,7 @@ abstract class AbstractAction
         Payment $payment,
         $response
     ) {
+        $payment->setAdditionalInformation(Config::PAYMENT_ID_KEY, $response->id);
         $payment->setTransactionId($response->id);
         $this->statusResponseManager->set($payment, $response->id, $response);
     }

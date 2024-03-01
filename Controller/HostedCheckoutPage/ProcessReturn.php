@@ -18,6 +18,7 @@ use Psr\Log\LoggerInterface;
 use Worldline\Connect\Model\Config;
 use Worldline\Connect\Model\ConfigInterface;
 use Worldline\Connect\Model\Worldline\Action\GetHostedCheckoutStatus;
+use Worldline\Connect\Model\Worldline\Api\ClientInterface;
 
 class ProcessReturn extends Action
 {
@@ -44,6 +45,7 @@ class ProcessReturn extends Action
      */
     // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $logger;
+    private ClientInterface $client;
 
     /**
      * ProcessReturn constructor.
@@ -59,7 +61,8 @@ class ProcessReturn extends Action
         SessionManagerInterface $checkoutSession,
         GetHostedCheckoutStatus $checkoutStatus,
         ConfigInterface $config,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ClientInterface $client,
     ) {
         parent::__construct($context);
 
@@ -67,6 +70,7 @@ class ProcessReturn extends Action
         $this->checkoutStatus = $checkoutStatus;
         $this->ePaymentsConfig = $config;
         $this->logger = $logger;
+        $this->client = $client;
     }
 
     /**
@@ -77,8 +81,10 @@ class ProcessReturn extends Action
     public function execute()
     {
         try {
-            $hostedCheckoutId = $this->retrieveHostedCheckoutId();
-            $order = $this->checkoutStatus->process($hostedCheckoutId);
+            $order = $this->checkoutSession->getLastRealOrder();
+            $getHostedCheckoutResponse = $this->client->getHostedCheckout($this->retrieveHostedCheckoutId($order));
+
+            $this->checkoutStatus->process($order, $getHostedCheckoutResponse);
 
             // Handle order cancellation:
             if ($order->getState() === Order::STATE_CANCELED) {
@@ -89,14 +95,6 @@ class ProcessReturn extends Action
                 $this->checkoutSession->restoreQuote();
                 return $this->redirect('checkout/cart');
             }
-
-            /** @var string $transactionStatus */
-            // phpcs:ignore SlevomatCodingStandard.Variables.UnusedVariable.UnusedVariable
-            $transactionStatus = $order->getPayment()->getAdditionalInformation(Config::PAYMENT_STATUS_KEY);
-//            /** @var string $info */
-//            $info = $this->ePaymentsConfig->getPaymentStatusInfo(mb_strtolower($transactionStatus));
-
-//            $this->messageManager->addSuccessMessage(__('Payment status:') . ' ' . ($info ?: 'Unknown status'));
 
             return $this->redirect('checkout/onepage/success');
         } catch (Exception $e) {
@@ -129,15 +127,11 @@ class ProcessReturn extends Action
      * @return string
      * @throws NotFoundException
      */
-    private function retrieveHostedCheckoutId()
+    private function retrieveHostedCheckoutId(Order $order)
     {
         $hostedCheckoutId = $this->getRequest()->getParam('hostedCheckoutId', false);
-
         if ($hostedCheckoutId === false && $this->checkoutSession->getLastRealOrder()->getPayment() !== null) {
-            $hostedCheckoutId = $this->checkoutSession
-                ->getLastRealOrder()
-                ->getPayment()
-                ->getAdditionalInformation(Config::HOSTED_CHECKOUT_ID_KEY);
+            $hostedCheckoutId = $order->getPayment()->getAdditionalInformation(Config::HOSTED_CHECKOUT_ID_KEY);
         }
 
         // $hostedCheckoutId can be false or null in error case

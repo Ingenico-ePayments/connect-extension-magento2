@@ -8,6 +8,7 @@ use Ingenico\Connect\Sdk\Domain\Payment\Definitions\ContactDetailsFactory;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\CustomerFactory;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\PersonalInformationFactory;
 use Ingenico\Connect\Sdk\Domain\Payment\Definitions\PersonalNameFactory;
+use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
@@ -100,6 +101,12 @@ class CustomerBuilder
     // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $format;
 
+    /**
+     * @var ResolverInterface
+     */
+    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
+    private $resolver;
+
     public function __construct(
         CustomerFactory $customerFactory,
         PersonalInformationFactory $personalInformationFactory,
@@ -112,7 +119,8 @@ class CustomerBuilder
         DeviceBuilder $deviceBuilder,
         CompanyInformationBuilder $companyInformationBuilder,
         TimezoneInterface $timezone,
-        Format $format
+        Format $format,
+        ResolverInterface $resolver
     ) {
         $this->customerFactory = $customerFactory;
         $this->personalInformationFactory = $personalInformationFactory;
@@ -126,6 +134,7 @@ class CustomerBuilder
         $this->companyInformationBuilder = $companyInformationBuilder;
         $this->addressBuilder = $addressBuilder;
         $this->format = $format;
+        $this->resolver = $resolver;
     }
 
     // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName
@@ -137,6 +146,7 @@ class CustomerBuilder
     public function create(OrderInterface $order)
     {
         $worldlineCustomer = $this->customerFactory->create();
+        $worldlineCustomer->locale = $this->resolver->getLocale();
 
         $worldlineCustomer->personalInformation = $this->getPersonalInformation($order);
         // create dummy customer id
