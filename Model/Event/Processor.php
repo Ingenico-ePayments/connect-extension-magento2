@@ -10,23 +10,19 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SortOrderBuilder;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Sales\Api\Data\CreditmemoInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Creditmemo\CreationArguments;
-use Magento\Sales\Model\RefundOrder;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Throwable;
 use Worldline\Connect\Api\Data\EventInterface;
 use Worldline\Connect\Api\EventRepositoryInterface;
-use Worldline\Connect\Helper\Data;
 use Worldline\Connect\Model\Order\OrderServiceInterface;
 use Worldline\Connect\Model\Worldline\Status\Payment\ResolverInterface as PaymentResolverInterface;
 use Worldline\Connect\Model\Worldline\Status\Refund\ResolverInterface as RefundResolverInterface;
 
-use function __;
 use function sprintf;
+use function str_starts_with;
 
 class Processor
 {
@@ -86,12 +82,6 @@ class Processor
     // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
     private $refundResolver;
 
-    /**
-     * @var RefundOrder
-     */
-    // phpcs:ignore SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
-    private $refundOrder;
-
     public function __construct(
         WebhooksEventFactory $webhookEventFactory,
         EventRepositoryInterface $eventRepository,
@@ -102,7 +92,6 @@ class Processor
         OrderServiceInterface $orderService,
         PaymentResolverInterface $paymentResolver,
         RefundResolverInterface $refundResolver,
-        RefundOrder $refundOrder
     ) {
         $this->webhookEventFactory = $webhookEventFactory;
         $this->eventRepository = $eventRepository;
@@ -113,7 +102,6 @@ class Processor
         $this->orderService = $orderService;
         $this->paymentResolver = $paymentResolver;
         $this->refundResolver = $refundResolver;
-        $this->refundOrder = $refundOrder;
     }
 
     /**
@@ -176,35 +164,18 @@ class Processor
      * @param EventInterface $event
      * @throws LocalizedException
      */
-    // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded, SlevomatCodingStandard.Functions.FunctionLength.FunctionLength
     private function processEvent(EventInterface $event): void
     {
+        /** @var WebhooksEvent $webhookEvent */
         $webhookEvent = $this->webhookEventFactory->create()->fromJson($event->getPayload());
-
         if ($this->checkEndpointTest($webhookEvent)) {
             return;
         }
 
         if ($webhookEvent->payment !== null) {
-            $order = $this->orderService->getByIncrementId(
-                $webhookEvent->payment->paymentOutput->references->merchantReference
-            );
-            $this->paymentResolver->resolve($order, $webhookEvent->payment);
+            $order = $this->handlePaymentEvent($webhookEvent);
         } elseif ($webhookEvent->refund !== null) {
-            $order = $this->orderService->getByIncrementId(
-                $webhookEvent->refund->refundOutput->references->merchantReference
-            );
-            $refundedAmount = Data::reformatMagentoAmount(
-                $webhookEvent->refund->refundOutput->amountOfMoney->amount
-            );
-
-            $creditMemo = $this->getOrCreateCreditMemo($order, $refundedAmount);
-            if ($creditMemo->getEntityId() === null) {
-                // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
-                throw new LocalizedException(__('No credit memo found for this order'));
-            }
-
-            $this->refundResolver->resolve($creditMemo, $webhookEvent->refund);
+            $order = $this->handleRefundEvent($webhookEvent);
         } else {
             throw new RuntimeException(sprintf('Event type %s not supported.', $webhookEvent->type));
         }
@@ -215,55 +186,40 @@ class Processor
         $this->orderRepository->save($order);
     }
 
-    /**
-     * Detects Worldline Webhook test request.
-     * When a request is an endpoint test, it should not be processed.
-     *
-     * @param WebhooksEvent $event
-     * @return bool
-     */
     private function checkEndpointTest(WebhooksEvent $event): bool
     {
-        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
-        return strpos((string) $event->id, 'TEST') === 0;
+        return str_starts_with((string) $event->id, 'TEST');
     }
 
-    private function getOrCreateCreditMemo(Order $order, float $refundedAmount): CreditmemoInterface
+    private function handlePaymentEvent(WebhooksEvent $webhookEvent): Order
     {
-        $creditMemo = $this->getCreditMemoByRefundedAmount($order, $refundedAmount);
-        if ($creditMemo->getEntityId() !== null) {
-            return $creditMemo;
+        $payment = $webhookEvent->payment;
+
+        /** @var Order $order */
+        $order = $this->orderService->getByIncrementId($payment->paymentOutput->references->merchantReference);
+
+        try {
+            $this->paymentResolver->resolve($order, $payment);
+            // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+        } catch (Throwable) {
         }
 
-        $this->createCreditMemoByRefundedAmount($order, $refundedAmount);
-
-        return $this->getCreditMemoByRefundedAmount($order, $refundedAmount);
+        return $order;
     }
 
-    private function getCreditMemoByRefundedAmount(Order $order, float $refundedAmount): CreditmemoInterface
+    private function handleRefundEvent(WebhooksEvent $webhookEvent): Order
     {
-        /** @var CreditmemoInterface $creditMemo */
-        $creditMemo = $order
-            ->getCreditmemosCollection()
-            ->addFieldToFilter('base_grand_total', (string) $refundedAmount)
-            ->getFirstItem();
+        $refund = $webhookEvent->refund;
 
-        return $creditMemo;
-    }
+        /** @var Order $order */
+        $order = $this->orderService->getByIncrementId($refund->refundOutput->references->merchantReference);
 
-    private function createCreditMemoByRefundedAmount(Order $order, float $refundedAmount): void
-    {
-        $creditMemoCreationArguments = new CreationArguments();
-        $creditMemoCreationArguments->setAdjustmentPositive($refundedAmount);
-        $creditMemoCreationArguments->setShippingAmount(0.0);
+        try {
+            $this->refundResolver->resolve($order, $refund);
+            // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+        } catch (Throwable) {
+        }
 
-        $this->refundOrder->execute(
-            $order->getId(),
-            [],
-            false,
-            false,
-            null,
-            $creditMemoCreationArguments
-        );
+        return $order;
     }
 }

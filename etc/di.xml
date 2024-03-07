@@ -2173,13 +2173,7 @@
     <virtualType name="refundStatusHandlerPool" type="Worldline\Connect\Model\Worldline\Status\Refund\Pool">
         <arguments>
             <argument name="statusHandlers" xsi:type="array">
-                <item name="CREATED" xsi:type="string">Worldline\Connect\Model\Worldline\Status\Refund\Handler\NullStatus</item>
-                <item name="PENDING_APPROVAL" xsi:type="string">Worldline\Connect\Model\Worldline\Status\Refund\Handler\PendingApproval</item>
-                <item name="REJECTED" xsi:type="string">Worldline\Connect\Model\Worldline\Status\Refund\Handler\NullStatus</item>
-                <item name="REFUND_REQUESTED" xsi:type="string">Worldline\Connect\Model\Worldline\Status\Refund\Handler\RefundRequested</item>
-                <item name="CAPTURED" xsi:type="string">Worldline\Connect\Model\Worldline\Status\Refund\Handler\Refunded</item>
-                <item name="REFUNDED" xsi:type="string">Worldline\Connect\Model\Worldline\Status\Refund\Handler\Refunded</item>
-                <item name="CANCELLED" xsi:type="string">Worldline\Connect\Model\Worldline\Status\Refund\Handler\Cancelled</item>
+                <item name="CREATED" xsi:type="string">Worldline\Connect\Model\Worldline\Status\Refund\Handler\Created</item>
             </argument>
         </arguments>
     </virtualType>
@@ -2199,18 +2193,6 @@
     <!--
         The following plugins are required to implement Worldline's refund flow into Magento:
     -->
-    <type name="Worldline\Connect\Plugin\Magento\Sales\Model\Service\CreditmemoService">
-        <arguments>
-            <argument name="createRefundAction" xsi:type="object">Worldline\Connect\Model\Worldline\Action\Refund\CreateRefund</argument>
-        </arguments>
-    </type>
-    <type name="Magento\Sales\Api\CreditmemoManagementInterface">
-        <plugin name="allowPendingRefunds" type="Worldline\Connect\Plugin\Magento\Sales\Model\Service\CreditmemoService"/>
-    </type>
-
-    <type name="Magento\Sales\Model\Order\Payment">
-        <plugin name="preventUniqueConstraintViolation" type="Worldline\Connect\Plugin\Magento\Sales\Model\Order\Payment"/>
-    </type>
 
     <type name="Worldline\Connect\Controller\HostedCheckoutPage\ProcessReturn">
         <arguments>

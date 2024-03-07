@@ -7,13 +7,17 @@ namespace Worldline\Connect\Gateway\Command;
 use Ingenico\Connect\Sdk\ResponseException;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Sales\Model\Order\Payment;
-use Worldline\Connect\Model\Worldline\Action\Refund\CreateRefund;
+use Worldline\Connect\Model\StatusResponseManagerInterface;
+use Worldline\Connect\Model\Worldline\Api\ClientInterface;
+use Worldline\Connect\Model\Worldline\RequestBuilder\Refund\RefundRequestBuilder;
 
 class RefundCommand implements CommandInterface
 {
     public function __construct(
-        private readonly CreateRefund $createRefund,
-        private readonly ApiErrorHandler $apiErrorHandler
+        private readonly RefundRequestBuilder $refundRequestBuilder,
+        private readonly ClientInterface $worldlineClient,
+        private readonly ApiErrorHandler $apiErrorHandler,
+        private readonly StatusResponseManagerInterface $statusResponseManager
     ) {
     }
 
@@ -22,9 +26,21 @@ class RefundCommand implements CommandInterface
         /** @var Payment $payment */
         $payment = $commandSubject['payment']->getPayment();
         $creditmemo = $payment->getCreditmemo();
+        $order = $creditmemo->getOrder();
+        $storeId = $creditmemo->getStoreId();
 
         try {
-            $this->createRefund->process($creditmemo);
+            $response = $this->worldlineClient->worldlineRefund(
+                $payment->getRefundTransactionId(),
+                $this->refundRequestBuilder->build($order, (float) $creditmemo->getGrandTotal()),
+                null,
+                $storeId
+            );
+
+            $this->statusResponseManager->set($payment, $response->id, $response);
+
+            $payment->setLastTransId($response->id);
+            $payment->setTransactionId($response->id);
         } catch (ResponseException $e) {
             $this->apiErrorHandler->handleError($e);
         }
