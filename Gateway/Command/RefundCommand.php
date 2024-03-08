@@ -25,24 +25,45 @@ class RefundCommand implements CommandInterface
     {
         /** @var Payment $payment */
         $payment = $commandSubject['payment']->getPayment();
-        $creditmemo = $payment->getCreditmemo();
-        $order = $creditmemo->getOrder();
-        $storeId = $creditmemo->getStoreId();
+        $worldlinePaymentId = $payment->getRefundTransactionId();
 
         try {
-            $response = $this->worldlineClient->worldlineRefund(
-                $payment->getRefundTransactionId(),
-                $this->refundRequestBuilder->build($order, (float) $creditmemo->getGrandTotal()),
-                null,
-                $storeId
-            );
-
-            $this->statusResponseManager->set($payment, $response->id, $response);
-
-            $payment->setLastTransId($response->id);
-            $payment->setTransactionId($response->id);
+            $response = $this->worldlineClient->worldlinePayment($worldlinePaymentId);
+            if ($response->statusOutput->isRefundable) {
+                $this->refundPayment($worldlinePaymentId, $payment);
+            } elseif ($response->statusOutput->isCancellable) {
+                $this->cancelPayment($worldlinePaymentId, $payment);
+            }
         } catch (ResponseException $e) {
             $this->apiErrorHandler->handleError($e);
         }
+    }
+
+    private function refundPayment(string $worldlinePaymentId, Payment $payment): void
+    {
+        $creditmemo = $payment->getCreditmemo();
+        $response = $this->worldlineClient->worldlineRefund(
+            $worldlinePaymentId,
+            $this->refundRequestBuilder->build($creditmemo->getOrder(), (float) $creditmemo->getGrandTotal()),
+            null,
+            $creditmemo->getStoreId()
+        );
+
+        $this->statusResponseManager->set($payment, $response->id, $response);
+
+        $payment->setLastTransId($response->id);
+        $payment->setTransactionId($response->id);
+    }
+
+    private function cancelPayment(string $worldlinePaymentId, Payment $payment): void
+    {
+        $this->worldlineClient->worldlinePaymentCancel($worldlinePaymentId);
+
+        $response = $this->worldlineClient->worldlinePayment($worldlinePaymentId);
+
+        $this->statusResponseManager->set($payment, $response->id, $response);
+
+        $payment->setLastTransId($response->id);
+        $payment->setTransactionId($response->id);
     }
 }

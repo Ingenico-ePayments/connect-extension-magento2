@@ -24,6 +24,7 @@
                 <can_authorize>1</can_authorize>
                 <can_authorize_vault>1</can_authorize_vault>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>0</sort_order>
@@ -51,6 +52,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>2</sort_order>
@@ -77,6 +79,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>180</sort_order>
@@ -103,6 +106,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>130</sort_order>
@@ -129,6 +133,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>132</sort_order>
@@ -155,6 +160,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>128</sort_order>
@@ -181,6 +187,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>182</sort_order>
@@ -207,6 +214,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>125</sort_order>
@@ -233,6 +241,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>183</sort_order>
@@ -259,6 +268,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>181</sort_order>
@@ -285,6 +295,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>184</sort_order>
@@ -310,6 +321,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>430</sort_order>
@@ -336,6 +348,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>3</sort_order>
@@ -362,6 +375,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>3</sort_order>
@@ -388,6 +402,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>185</sort_order>
@@ -414,6 +429,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>186</sort_order>
@@ -440,6 +456,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>187</sort_order>
@@ -466,6 +483,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>56</sort_order>
@@ -492,6 +510,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>1</sort_order>
@@ -518,6 +537,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>1</sort_order>
@@ -544,6 +564,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>1</sort_order>
@@ -570,6 +591,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>1</sort_order>
@@ -596,6 +618,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>302</sort_order>
@@ -624,6 +647,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>302</sort_order>
@@ -654,6 +678,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>816</sort_order>
@@ -679,6 +704,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>809</sort_order>
@@ -704,6 +730,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>865</sort_order>
@@ -729,6 +756,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>840</sort_order>
@@ -754,6 +782,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>830</sort_order>
@@ -779,6 +808,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>836</sort_order>
@@ -804,6 +834,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>806</sort_order>
@@ -830,6 +861,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>1000000</sort_order>
@@ -857,6 +889,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>100</sort_order>
@@ -883,6 +916,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>100</sort_order>
@@ -910,6 +944,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>100</sort_order>
@@ -937,6 +972,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>100</sort_order>
@@ -964,6 +1000,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>100</sort_order>
@@ -990,6 +1027,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>100</sort_order>
@@ -1016,6 +1054,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>100</sort_order>
@@ -1042,6 +1081,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>100</sort_order>
@@ -1068,6 +1108,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize</payment_action>
                 <sort_order>100</sort_order>
@@ -1092,6 +1133,7 @@
                 <can_use_internal>1</can_use_internal>
                 <can_authorize>0</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize_capture</payment_action>
                 <sort_order>1000000</sort_order>
@@ -1115,6 +1157,7 @@
                 <can_use_internal>0</can_use_internal>
                 <can_authorize>1</can_authorize>
                 <can_cancel>1</can_cancel>
+                <can_void>1</can_void>
                 <is_gateway>1</is_gateway>
             </general>
             <settings>
