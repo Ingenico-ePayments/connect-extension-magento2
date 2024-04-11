@@ -2,6 +2,8 @@
 
 Payment extension for accepting Worldline Connect payments on the Magento 2 platform.
 
+**This extension has been rebranded to Worldline. As part of the rebranding the extension has moved to https://github.com/Worldline-Global-Collect/connect-sdk-ruby.**
+
 ## Requirements
 
 To use this extension you need to have a Worldline Connect account. This can be obtained by contacting Worldline on <https://worldline.com/en/home/solutions/online-payments/large-global-businesses.html>.
